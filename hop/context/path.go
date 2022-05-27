@@ -53,7 +53,7 @@ func getPath() (string, error) {
 
 	pathPrefix := ""
 
-	if len(nextmvLibraryPath) > 0 {
+	if nextmvLibraryPath != "" {
 		nextmvLibraryCleanPath := path.Clean(nextmvLibraryPath)
 
 		if _, err := os.Stat(nextmvLibraryCleanPath); os.IsNotExist(err) {
