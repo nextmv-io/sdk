@@ -8,32 +8,32 @@ import (
 	"runtime"
 )
 
-type SupportedOperatingSystem string
+type operatingSystem string
 
 const (
-	SupportedOperatingSystemDarwin = SupportedOperatingSystem("darwin")
-	SupportedOperatingSystemLinux  = SupportedOperatingSystem("linux")
+	supportedOperatingSystemDarwin = operatingSystem("darwin")
+	supportedOperatingSystemLinux  = operatingSystem("linux")
 )
 
-type SupportedArchitecture string
+type architecture string
 
 const (
-	SupportedArchitecture386   = SupportedArchitecture("386")
-	SupportedArchitectureAmd64 = SupportedArchitecture("amd64")
-	SupportedArchitectureArm64 = SupportedArchitecture("arm64")
+	supportedArchitecture386   = architecture("386")
+	supportedArchitectureAmd64 = architecture("amd64")
+	supportedArchitectureArm64 = architecture("arm64")
 )
 
-type SupportedTargets map[SupportedOperatingSystem]map[SupportedArchitecture][]string
+type targets map[operatingSystem]map[architecture][]string
 
-var supportedTargets = SupportedTargets{
-	SupportedOperatingSystemDarwin: {
-		SupportedArchitectureAmd64: {},
-		SupportedArchitectureArm64: {},
+var supportedTargets = targets{
+	supportedOperatingSystemDarwin: {
+		supportedArchitectureAmd64: {},
+		supportedArchitectureArm64: {},
 	},
-	SupportedOperatingSystemLinux: {
-		SupportedArchitecture386:   {},
-		SupportedArchitectureAmd64: {},
-		SupportedArchitectureArm64: {},
+	supportedOperatingSystemLinux: {
+		supportedArchitecture386:   {},
+		supportedArchitectureAmd64: {},
+		supportedArchitectureArm64: {},
 	},
 }
 
@@ -113,7 +113,7 @@ func getTarget() (Target, error) {
 		goarch = runtime.GOARCH
 	}
 
-	_, exists := supportedTargets[SupportedOperatingSystem(goos)][SupportedArchitecture(goarch)]
+	_, exists := supportedTargets[operatingSystem(goos)][architecture(goarch)]
 
 	if !exists {
 		return Target{
