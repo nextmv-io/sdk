@@ -5,6 +5,8 @@ import (
 	"reflect"
 )
 
+// Declared represents data declared on a context that can be queried and
+// modified.
 type Declared[T any] interface {
 	Declarable
 
@@ -44,4 +46,5 @@ func (d declaredProxy[T]) MarshalJSON() ([]byte, error) {
 }
 
 var declaredGetFunc func(Context, uint64) (any, bool)
+
 var declaredSetFunc func(Context, Declarable, any)

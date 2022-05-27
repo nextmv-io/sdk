@@ -21,7 +21,10 @@ func main() {
 	x := context.Declare(global, 42)
 
 	enc := json.NewEncoder(os.Stdout)
-	enc.Encode(global)
+	err := enc.Encode(global)
+	if err != nil {
+		panic(err)
+	}
 
 	global = global.Apply(x.Set(13))
 	global = global.Format(
@@ -32,5 +35,8 @@ func main() {
 	global = global.Value(x.Get)
 	global = global.Check(context.False)
 
-	enc.Encode(global)
+	err = enc.Encode(global)
+	if err != nil {
+		panic(err)
+	}
 }
