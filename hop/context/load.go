@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os"
 	"plugin"
+	"reflect"
 	"sync"
 )
 
 var loaded bool
+
 var mtx sync.Mutex
 
 func load() {
@@ -60,5 +62,10 @@ func connect[T any](p *plugin.Plugin, name string, target *T) {
 	if err != nil {
 		panic(err)
 	}
-	*target = sym.(T)
+
+	// Names in the plugin are associated with pointers to functions.
+	// Thus we cannot: *target = sym(T)
+	*target = reflect.ValueOf(sym). // *func(...) as reflect.Value
+					Elem().         // dereferences to func(...)
+					Interface().(T) // any.(func(...))
 }
