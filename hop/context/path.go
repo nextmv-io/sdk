@@ -115,15 +115,14 @@ func getTarget() (Target, error) {
 
 	_, exists := supportedTargets[operatingSystem(goos)][architecture(goarch)]
 
+	var err error
+
 	if !exists {
-		return Target{
-			os:   goos,
-			arch: goarch,
-		}, fmt.Errorf("unsupported target, os %s, architecture %s", goos, goarch)
+		err = fmt.Errorf("unsupported target, os %s, architecture %s", goos, goarch)
 	}
 
 	return Target{
 		os:   goos,
 		arch: goarch,
-	}, nil
+	}, err
 }
