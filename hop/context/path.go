@@ -83,13 +83,13 @@ func getPath() (string, error) {
 		return "", err
 	}
 
-	versionDeliminator := ""
+	versionDelimiter := ""
 
 	if len(version) > 0 {
-		versionDeliminator = "-"
+		versionDelimiter = "-"
 	}
 
-	fileName := fmt.Sprintf("%s-%s-%s%s%s.so", nextmvLibraryNamePrefix, target.os, target.arch, versionDeliminator, version)
+	fileName := fmt.Sprintf("%s-%s-%s%s%s.so", nextmvLibraryNamePrefix, target.os, target.arch, versionDelimiter, version)
 
 	return filepath.Join(pathPrefix, fileName), nil
 }
