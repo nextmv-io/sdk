@@ -9,6 +9,7 @@ import (
 const path = "nextmv-sdk-darwin-amd64.so"
 
 var loaded bool
+
 var mtx sync.Mutex
 
 func load() {
