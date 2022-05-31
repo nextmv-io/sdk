@@ -77,27 +77,17 @@ func getPath() (string, error) {
 		return "", err
 	}
 
-	version, err := getVersion()
-
-	if err != nil {
-		return "", err
-	}
+	version := os.Getenv("NEXTMV_SDK_VERSION")
 
 	versionDelimiter := ""
 
-	if len(version) > 0 {
+	if version != "" {
 		versionDelimiter = "-"
 	}
 
 	fileName := fmt.Sprintf("%s-%s-%s%s%s.so", nextmvLibraryNamePrefix, target.os, target.arch, versionDelimiter, version)
 
 	return filepath.Join(pathPrefix, fileName), nil
-}
-
-func getVersion() (string, error) {
-	version := os.Getenv("NEXTMV_SDK_VERSION")
-
-	return version, nil
 }
 
 func getTarget() (Target, error) {
