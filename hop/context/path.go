@@ -42,7 +42,7 @@ const (
 	defaultNextmvLibraryNamePrefix = "nextmv-sdk"
 )
 
-type Target struct {
+type target struct {
 	os, arch string
 }
 
@@ -63,7 +63,6 @@ func getPath() (string, error) {
 		pathPrefix = nextmvLibraryCleanPath
 	} else {
 		home, err := os.UserHomeDir()
-
 		if err != nil {
 			return "", err
 		}
@@ -72,7 +71,6 @@ func getPath() (string, error) {
 	}
 
 	target, err := getTarget()
-
 	if err != nil {
 		return "", err
 	}
@@ -90,7 +88,7 @@ func getPath() (string, error) {
 	return filepath.Join(pathPrefix, fileName), nil
 }
 
-func getTarget() (Target, error) {
+func getTarget() (target, error) {
 	goos := os.Getenv("NEXTMV_SDK_OS")
 
 	if goos == "" {
@@ -111,7 +109,7 @@ func getTarget() (Target, error) {
 		err = fmt.Errorf("unsupported target, os %s, architecture %s", goos, goarch)
 	}
 
-	return Target{
+	return target{
 		os:   goos,
 		arch: goarch,
 	}, err

@@ -26,20 +26,27 @@ func load() {
 	loaded = true
 
 	path, err := getPath()
-
 	if err != nil {
 		panic(err)
 	}
 
 	p, err := plugin.Open(path)
-
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Loading %s failed\n", path)
 		panic(err)
 	}
 
-	os.Stderr.WriteString("This early release software is provided for evaluation and feedback only\n")
-	os.Stderr.WriteString("© 2019-2022 nextmv.io inc. All rights reserved.\n")
+	_, err = os.Stderr.WriteString("This early release software is provided for evaluation and feedback only\n")
+
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = os.Stderr.WriteString("© 2019-2022 nextmv.io inc. All rights reserved.\n")
+
+	if err != nil {
+		panic(err)
+	}
 
 	connect(p, "NewContext", &newContextFunc)
 
