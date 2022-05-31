@@ -4,15 +4,19 @@ import "github.com/nextmv-io/sdk/hop/solve"
 
 // Context represents a context for making decisions.
 type Context interface {
-	// Methods that change search logic and representation of a context.
-	Bound(Bounder) Context
-	Check(...Condition) Context
-	Format(Formatter) Context
-	Value(Valuer) Context
-
-	// Methods that change variables in a context.
+	// Apply lets you apply changes to a context.
 	Apply(...Change) Context
+	// Bound lets you bound the value of a context. Specify the value using the
+	// Value function.
+	Bound(Bounder) Context
+	// Format lets you format a context into a JSON representation.
+	Format(Formatter) Context
+	// Propagate lets you propagate into multiple contexts.
 	Propagate(...Propagator) Context
+	// Value lets you specify the numerical value of a context.
+	Value(Valuer) Context
+	// Generate lets you genereate new contexts from different alternatives.
+	Generate(...Alternative) Context
 
 	// Methods that build a solver to search the space defined by a context.
 	Maximizer(solve.Options) solve.Solver

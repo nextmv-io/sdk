@@ -16,10 +16,6 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 
 	child := root.Apply(
 		x.Set(x.Get(root) / 2),
-	).Check(
-		func(ctx context.Context) bool {
-			return x.Get(ctx)%2 == 0
-		},
 	).Value(
 		x.Get,
 	).Format(

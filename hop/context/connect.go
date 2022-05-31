@@ -39,4 +39,7 @@ func connect() {
 	plugin.Connect(slug, "HopContextOr", &orFunc)
 	plugin.Connect(slug, "HopContextTrue", &trueFunc)
 	plugin.Connect(slug, "HopContextXor", &xorFunc)
+
+	// State generation
+	plugin.Connect(slug, "HopContextWhen", &whenFunc)
 }
