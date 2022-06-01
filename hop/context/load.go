@@ -8,6 +8,9 @@ import (
 	"sync"
 )
 
+const header = "This early release software is provided for evaluation and " +
+	"feedback only.\n© 2019-2022 nextmv.io inc. All rights reserved."
+
 var loaded bool
 
 var mtx sync.Mutex
@@ -26,23 +29,21 @@ func load() {
 	loaded = true
 
 	path, err := getPath()
+
 	if err != nil {
 		panic(err)
 	}
 
 	p, err := plugin.Open(path)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Loading %s failed\n", path)
-		panic(err)
-	}
-
-	_, err = os.Stderr.WriteString("This early release software is provided for evaluation and feedback only\n")
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("failed to load plugin file %q\n\n%w",
+			path,
+			err),
+		)
 	}
 
-	_, err = os.Stderr.WriteString("© 2019-2022 nextmv.io inc. All rights reserved.\n")
+	_, err = fmt.Fprintln(os.Stderr, header)
 
 	if err != nil {
 		panic(err)

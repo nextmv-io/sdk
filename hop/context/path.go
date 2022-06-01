@@ -6,6 +6,8 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+
+	"github.com/nextmv-io/sdk"
 )
 
 type operatingSystem string
@@ -42,10 +44,6 @@ const (
 	defaultNextmvLibraryNamePrefix = "nextmv-sdk"
 )
 
-type target struct {
-	os, arch string
-}
-
 func getPath() (string, error) {
 	nextmvLibraryNamePrefix := defaultNextmvLibraryNamePrefix
 
@@ -57,7 +55,9 @@ func getPath() (string, error) {
 		nextmvLibraryCleanPath := path.Clean(nextmvLibraryPath)
 
 		if _, err := os.Stat(nextmvLibraryCleanPath); os.IsNotExist(err) {
-			return "", fmt.Errorf("nextmv library path '%s' does not exist", nextmvLibraryCleanPath)
+			return "",
+				fmt.Errorf("nextmv library path '%s' does not exist",
+					nextmvLibraryCleanPath)
 		}
 
 		pathPrefix = nextmvLibraryCleanPath
@@ -70,47 +70,28 @@ func getPath() (string, error) {
 		pathPrefix = filepath.Join(home, defaultNextmvLibraryPath)
 	}
 
-	target, err := getTarget()
-	if err != nil {
-		return "", err
-	}
-
-	version := os.Getenv("NEXTMV_SDK_VERSION")
-
-	versionDelimiter := ""
-
-	if version != "" {
-		versionDelimiter = "-"
-	}
-
-	fileName := fmt.Sprintf("%s-%s-%s%s%s.so", nextmvLibraryNamePrefix, target.os, target.arch, versionDelimiter, version)
-
-	return filepath.Join(pathPrefix, fileName), nil
-}
-
-func getTarget() (target, error) {
-	goos := os.Getenv("NEXTMV_SDK_OS")
-
-	if goos == "" {
-		goos = runtime.GOOS
-	}
-
-	goarch := os.Getenv("NEXTMV_SDK_ARCH")
-
-	if goarch == "" {
-		goarch = runtime.GOARCH
-	}
+	goos := runtime.GOOS
+	goarch := runtime.GOARCH
 
 	_, exists := supportedTargets[operatingSystem(goos)][architecture(goarch)]
 
 	var err error
 
 	if !exists {
-		err = fmt.Errorf("unsupported target, os %s, architecture %s", goos, goarch)
+		err = fmt.Errorf("unsupported target, os %s, architecture %s",
+			goos,
+			goarch)
 	}
 
-	return target{
-		os:   goos,
-		arch: goarch,
-	}, err
+	if err != nil {
+		return "", err
+	}
+
+	fileName := fmt.Sprintf("%s-%s-%s-%s.so",
+		nextmvLibraryNamePrefix,
+		goos,
+		goarch,
+		sdk.VERSION)
+
+	return filepath.Join(pathPrefix, fileName), nil
 }
