@@ -3,9 +3,13 @@ package context
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"plugin"
 	"reflect"
+	"runtime"
 	"sync"
+
+	"github.com/nextmv-io/sdk"
 )
 
 const header = "This early release software is provided for evaluation and " +
@@ -28,22 +32,13 @@ func load() {
 	}
 	loaded = true
 
-	path, err := getPath()
-	if err != nil {
-		panic(err)
-	}
-
+	path := pluginPath()
 	p, err := plugin.Open(path)
 	if err != nil {
-		panic(fmt.Errorf("failed to load plugin file %q\n\n%w",
-			path,
-			err),
-		)
+		panic(fmt.Errorf("failed to load plugin file %q\n\n%w", path, err))
 	}
 
-	_, err = fmt.Fprintln(os.Stderr, header)
-
-	if err != nil {
+	if _, err := fmt.Fprintln(os.Stderr, header); err != nil {
 		panic(err)
 	}
 
@@ -74,4 +69,19 @@ func connect[T any](p *plugin.Plugin, name string, target *T) {
 	*target = reflect.ValueOf(sym). // *func(...) as reflect.Value
 					Elem().         // dereferences to func(...)
 					Interface().(T) // any.(func(...))
+}
+
+func pluginPath() string {
+	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
+	if libraryPath == "" {
+		libraryPath = "."
+	}
+
+	fileName := fmt.Sprintf(
+		"nextmv-sdk-%s-%s-%s.so",
+		runtime.GOOS,
+		runtime.GOARCH,
+		sdk.VERSION,
+	)
+	return filepath.Join(libraryPath, fileName)
 }
