@@ -1,3 +1,4 @@
+// Package sdk provides modeling tools.
 package sdk
 
 // VERSION of SDK.
