@@ -31,6 +31,9 @@ linters-settings:
       use-field-name: true
       rules:
         json: snake
+  # Check line length
+  lll:
+    line-length: 80
 
 # Specifies which linters are enabled. Full list: https://golangci-lint.run/usage/linters/
 linters:
