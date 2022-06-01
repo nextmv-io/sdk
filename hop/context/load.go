@@ -29,13 +29,11 @@ func load() {
 	loaded = true
 
 	path, err := getPath()
-
 	if err != nil {
 		panic(err)
 	}
 
 	p, err := plugin.Open(path)
-
 	if err != nil {
 		panic(fmt.Errorf("failed to load plugin file %q\n\n%w",
 			path,
