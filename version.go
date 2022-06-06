@@ -1,3 +1,4 @@
+// Package sdk provides API declarations.
 package sdk
 
 // VERSION of Nextmv SDK.
