@@ -15,9 +15,9 @@ import (
 // Connect a symbol in a plugin to a func target.
 //
 //    var fooFunc func()
-//    plugin.Connect("Foo", &func)
-func Connect[T any](name string, target *T) {
-	p, err := loadPlugin()
+//    plugin.Connect("sdk", "Foo", &func)
+func Connect[T any](slug string, name string, target *T) {
+	p, err := loadPlugin(slug)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ var loadedPlugin *plugin.Plugin
 
 var mtx sync.Mutex
 
-func loadPlugin() (*plugin.Plugin, error) {
+func loadPlugin(slug string) (*plugin.Plugin, error) {
 	// Only load the plugin once. Then reuse the plugin pointer.
 	if loadedPlugin != nil {
 		return loadedPlugin, nil
@@ -51,7 +51,7 @@ func loadPlugin() (*plugin.Plugin, error) {
 		return loadedPlugin, nil
 	}
 
-	p, err := plugin.Open(pluginPath())
+	p, err := plugin.Open(pluginPath(slug))
 	if err != nil {
 		return nil, err
 	}
@@ -60,14 +60,15 @@ func loadPlugin() (*plugin.Plugin, error) {
 	return loadedPlugin, nil
 }
 
-func pluginPath() string {
+func pluginPath(slug string) string {
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
 	if libraryPath == "" {
 		libraryPath = "."
 	}
 
 	filename := fmt.Sprintf(
-		"nextmv-sdk-%s-%s-%s.so",
+		"nextmv-%s-%s-%s-%s.so",
+		slug,
 		runtime.GOOS,
 		runtime.GOARCH,
 		sdk.VERSION,

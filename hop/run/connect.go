@@ -1,6 +1,7 @@
 package run
 
 import (
+	"os"
 	"sync"
 
 	"github.com/nextmv-io/sdk/hop/plugin"
@@ -23,5 +24,11 @@ func connect() {
 	}
 	connected = true
 
-	plugin.Connect("HopRunRun", &runFunc)
+	slug := os.Getenv("NEXTMV_RUNNER")
+	if slug == "" {
+		slug = "cli"
+	}
+	slug = "run-" + slug
+
+	plugin.Connect(slug, "HopRunRun", &runFunc)
 }

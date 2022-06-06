@@ -6,6 +6,8 @@ import (
 	"github.com/nextmv-io/sdk/hop/plugin"
 )
 
+const slug = "sdk"
+
 var connected bool
 
 var mtx sync.Mutex
@@ -23,18 +25,18 @@ func connect() {
 	}
 	connected = true
 
-	plugin.Connect("HopContextNewContext", &newContextFunc)
+	plugin.Connect(slug, "HopContextNewContext", &newContextFunc)
 
 	// Declare variables
-	plugin.Connect("HopContextDeclare", &declareFunc)
-	plugin.Connect("HopContextDeclaredGet", &declaredGetFunc)
-	plugin.Connect("HopContextDeclaredSet", &declaredSetFunc)
+	plugin.Connect(slug, "HopContextDeclare", &declareFunc)
+	plugin.Connect(slug, "HopContextDeclaredGet", &declaredGetFunc)
+	plugin.Connect(slug, "HopContextDeclaredSet", &declaredSetFunc)
 
 	// Conditions
-	plugin.Connect("HopContextAnd", &andFunc)
-	plugin.Connect("HopContextFalse", &falseFunc)
-	plugin.Connect("HopContextNot", &notFunc)
-	plugin.Connect("HopContextOr", &orFunc)
-	plugin.Connect("HopContextTrue", &trueFunc)
-	plugin.Connect("HopContextXor", &xorFunc)
+	plugin.Connect(slug, "HopContextAnd", &andFunc)
+	plugin.Connect(slug, "HopContextFalse", &falseFunc)
+	plugin.Connect(slug, "HopContextNot", &notFunc)
+	plugin.Connect(slug, "HopContextOr", &orFunc)
+	plugin.Connect(slug, "HopContextTrue", &trueFunc)
+	plugin.Connect(slug, "HopContextXor", &xorFunc)
 }
