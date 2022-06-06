@@ -34,20 +34,20 @@ func Connect[T any](slug string, name string, target *T) {
 					Interface().(T) // any.(func(...))
 }
 
-var loadedPlugins = map[string]*plugin.Plugin{}
+var loaded = map[string]*plugin.Plugin{}
 
 var mtx sync.Mutex
 
 func loadPlugin(slug string) (*plugin.Plugin, error) {
 	// Only load the plugin once. Then reuse the plugin pointer.
-	if p, ok := loadedPlugins[slug]; ok {
+	if p, ok := loaded[slug]; ok {
 		return p, nil
 	}
 
 	mtx.Lock()
 	defer mtx.Unlock()
 
-	if p, ok := loadedPlugins[slug]; ok {
+	if p, ok := loaded[slug]; ok {
 		return p, nil
 	}
 
@@ -55,7 +55,7 @@ func loadPlugin(slug string) (*plugin.Plugin, error) {
 	if err != nil {
 		return nil, err
 	}
-	loadedPlugins[slug] = p
+	loaded[slug] = p
 
 	return p, nil
 }
