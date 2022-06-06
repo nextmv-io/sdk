@@ -15,9 +15,9 @@ type Context interface {
 	Propagate(...Propagator) Context
 
 	// Methods that build a solver to search the space defined by a context.
-	Maximizer() solve.Solver
-	Minimizer() solve.Solver
-	Satisfier() solve.Solver
+	Maximizer(solve.Options) solve.Solver
+	Minimizer(solve.Options) solve.Solver
+	Satisfier(solve.Options) solve.Solver
 }
 
 // NewContext returns a new Context.
