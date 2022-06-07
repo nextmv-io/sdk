@@ -1,42 +1,32 @@
-// © 2019-2022 nextmv.io inc. All rights reserved.
-// nextmv.io, inc. CONFIDENTIAL
-//
-// This file includes unpublished proprietary source code of nextmv.io, inc.
-// The copyright notice above does not evidence any actual or intended
-// publication of such source code. Disclosure of this source code or any
-// related proprietary information is strictly prohibited without the express
-// written permission of nextmv.io, inc.
-
 package main
 
 import (
-	"encoding/json"
-	"os"
-
 	"github.com/nextmv-io/sdk/hop/context"
+	"github.com/nextmv-io/sdk/hop/run"
+	"github.com/nextmv-io/sdk/hop/solve"
 )
 
 func main() {
-	global := context.NewContext()
-	x := context.Declare(global, 42)
+	run.Run(handler)
+}
 
-	enc := json.NewEncoder(os.Stdout)
-	err := enc.Encode(global)
-	if err != nil {
-		panic(err)
-	}
+func handler(v int, opt solve.Options) (solve.Solver, error) {
+	root := context.NewContext()
+	x := context.Declare(root, v)
 
-	global = global.Apply(x.Set(13))
-	global = global.Format(
-		func(local context.Context) any {
-			return map[string]any{"x": x.Get(local)}
+	child := root.Apply(
+		x.Set(x.Get(root) / 2),
+	).Check(
+		func(ctx context.Context) bool {
+			return x.Get(ctx)%2 == 0
+		},
+	).Value(
+		x.Get,
+	).Format(
+		func(ctx context.Context) any {
+			return map[string]any{"x": x.Get(ctx)}
 		},
 	)
-	global = global.Value(x.Get)
-	global = global.Check(context.False)
 
-	err = enc.Encode(global)
-	if err != nil {
-		panic(err)
-	}
+	return child.Maximizer(opt), nil
 }
