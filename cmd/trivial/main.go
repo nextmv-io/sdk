@@ -22,6 +22,12 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 		func(ctx context.Context) any {
 			return map[string]any{"x": x.Get(ctx)}
 		},
+	).Value(
+		x.Get,
+	).Format(
+		func(ctx context.Context) any {
+			return map[string]any{"x": x.Get(ctx)}
+		},
 	)
 
 	return child.Maximizer(opt), nil
