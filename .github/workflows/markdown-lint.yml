@@ -1,8 +1,5 @@
 name: markdown lint
-on:
-  workflow_dispatch: # Allow manual triggering
-  pull_request:
-    types: [opened, ready_for_review]
+on: [push]
 jobs:
   sdk:
     runs-on: ubuntu-latest
