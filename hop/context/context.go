@@ -16,7 +16,7 @@ type Context interface {
 	// Value lets you specify the numerical value of a context.
 	Value(Valuer) Context
 	// Generate lets you genereate new contexts from different alternatives.
-	Generate(...Alternative) Context
+	Generate(...Generator) Context
 
 	// Methods that build a solver to search the space defined by a context.
 	Maximizer(solve.Options) solve.Solver

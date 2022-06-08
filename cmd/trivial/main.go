@@ -30,5 +30,21 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 		},
 	)
 
+	// child = child.Generate(
+	// 	// Infeasible states to infinity.
+	// 	context.If(context.True).Discard(),
+	// 	// Feasible states to infinity.
+	// 	context.If(context.True).Return(),
+	// 	// Never generate anything.
+	// 	context.If(context.True).Then(nil).With(context.True),
+	// 	// Never generate anything.
+	// 	context.If(context.True).Then(nil),
+	// 	// Use a lexical scope.
+	// 	context.Scope(func(ctx context.Context) context.Generator {
+	// 		// Update variables and the model here!
+	// 		return context.If(context.True).Then(nil).With(context.True)
+	// 	}),
+	// )
+
 	return child.Maximizer(opt), nil
 }
