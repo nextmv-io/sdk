@@ -1,7 +1,6 @@
 package context
 
-// Generator has precise instructions to generate new contexts from an existing
-// one.
+// A Generator generates new contexts from an existing one.
 type Generator interface {
 	Condition() Condition
 	Generate() func() Context
