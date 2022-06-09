@@ -16,9 +16,11 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 
 	child := root.Apply(
 		x.Set(x.Get(root) / 2),
-	).Check(
-		func(ctx context.Context) bool {
-			return x.Get(ctx)%2 == 0
+	).Value(
+		x.Get,
+	).Format(
+		func(ctx context.Context) any {
+			return map[string]any{"x": x.Get(ctx)}
 		},
 	).Value(
 		x.Get,
@@ -26,6 +28,18 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 		func(ctx context.Context) any {
 			return map[string]any{"x": x.Get(ctx)}
 		},
+	).Generate(
+		context.Scope(func(ctx context.Context) context.Generator {
+			value := x.Get(ctx)
+			f := func() bool { return value < 100 }
+			return context.If(f).
+				Then(func() context.Context {
+					value++
+					x.Set(value)
+					return ctx
+				}).
+				With(f)
+		}),
 	)
 
 	return child.Maximizer(opt), nil

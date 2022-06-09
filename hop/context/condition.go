@@ -1,7 +1,7 @@
 package context
 
 // Condition represents a logical condition on a context.
-type Condition func(Context) bool
+type Condition func() bool
 
 // And uses the conditional "AND" logical operator on all given conditions. It
 // returns true if all conditions are true.
@@ -10,8 +10,8 @@ func And(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 }
 
 // False is a convenience function that is always false.
-func False(ctx Context) bool {
-	return falseFunc(ctx)
+func False() bool {
+	return falseFunc()
 }
 
 // Not negates the given condition.
@@ -26,8 +26,8 @@ func Or(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 }
 
 // True is a convenience function that is always true.
-func True(ctx Context) bool {
-	return trueFunc(ctx)
+func True() bool {
+	return trueFunc()
 }
 
 // Xor uses the conditional "Exclusive OR" logical operator on all given
@@ -38,9 +38,9 @@ func Xor(c1, c2 Condition) Condition {
 
 var (
 	andFunc   func(Condition, Condition, ...Condition) Condition
-	falseFunc func(Context) bool
+	falseFunc func() bool
 	notFunc   func(Condition) Condition
 	orFunc    func(Condition, Condition, ...Condition) Condition
-	trueFunc  func(Context) bool
+	trueFunc  func() bool
 	xorFunc   func(Condition, Condition) Condition
 )
