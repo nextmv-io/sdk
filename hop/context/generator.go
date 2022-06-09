@@ -15,8 +15,7 @@ type Action interface {
 	Discard() Generator
 }
 
-// If lets you specify under what condition you want to keep generating new
-// contexts.
+// If specifies conditions for generating new contexts.
 func If(c Condition) Action {
 	return ifFunc(c)
 }
