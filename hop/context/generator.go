@@ -25,7 +25,6 @@ func Scope(f func(Context) Generator) Generator {
 	return scopeFunc(f)
 }
 
-// ifFunc holds the implementation of the If function.
 var ifFunc func(Condition) Action
 
 // scopeFunc holds the implementation of the Scope function.
