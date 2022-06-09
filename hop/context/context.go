@@ -8,7 +8,7 @@ type Context interface {
 	Apply(...Change) Context
 	// Bound the value of a context.
 	Bound(Bounder) Context
-	// Format lets you format a context into a JSON representation.
+	// Format a context into any structure prior to JSON encoding.
 	Format(Formatter) Context
 	// Propagate lets you propagate into multiple contexts.
 	Propagate(...Propagator) Context
