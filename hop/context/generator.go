@@ -27,5 +27,4 @@ func Scope(f func(Context) Generator) Generator {
 
 var ifFunc func(Condition) Action
 
-// scopeFunc holds the implementation of the Scope function.
 var scopeFunc func(func(Context) Generator) Generator
