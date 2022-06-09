@@ -20,7 +20,7 @@ func If(c Condition) Action {
 	return ifFunc(c)
 }
 
-// Scope lets you create a new generator using the same lexical scope.
+// Scope creates a new generator within a lexical scope.
 func Scope(f func(Context) Generator) Generator {
 	return scopeFunc(f)
 }
