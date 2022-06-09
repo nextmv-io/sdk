@@ -4,10 +4,9 @@ import "github.com/nextmv-io/sdk/hop/solve"
 
 // Context represents a context for making decisions.
 type Context interface {
-	// Apply lets you apply changes to a context.
+	// Apply changes to a context.
 	Apply(...Change) Context
-	// Bound lets you bound the value of a context. Specify the value using the
-	// Value function.
+	// Bound the value of a context.
 	Bound(Bounder) Context
 	// Format lets you format a context into a JSON representation.
 	Format(Formatter) Context
