@@ -10,7 +10,7 @@ type Context interface {
 	Bound(Bounder) Context
 	// Format a context into any structure prior to JSON encoding.
 	Format(Formatter) Context
-	// Propagate lets you propagate into multiple contexts.
+	// Propagate changes into a context until it reaches a fix point.
 	Propagate(...Propagator) Context
 	// Value lets you specify the numerical value of a context.
 	Value(Valuer) Context
