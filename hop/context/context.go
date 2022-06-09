@@ -12,9 +12,9 @@ type Context interface {
 	Format(Formatter) Context
 	// Propagate changes into a context until it reaches a fix point.
 	Propagate(...Propagator) Context
-	// Value lets you specify the numerical value of a context.
+	// Value specifies the integer value of a context.
 	Value(Valuer) Context
-	// Generate lets you genereate new contexts from different alternatives.
+	// Generate new contexts from different alternatives.
 	Generate(...Generator) Context
 
 	// Methods that build a solver to search the space defined by a context.
