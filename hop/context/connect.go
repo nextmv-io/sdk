@@ -43,4 +43,7 @@ func connect() {
 	// State generation
 	plugin.Connect(slug, "HopContextIf", &ifFunc)
 	plugin.Connect(slug, "HopContextScope", &scopeFunc)
+
+	// Collections
+	plugin.Connect(slug, "HopContextNewVector", &newVectorFunc)
 }
