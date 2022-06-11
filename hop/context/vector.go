@@ -1,5 +1,10 @@
 package context
 
+import (
+	"encoding/json"
+	"reflect"
+)
+
 // A Vector stores a contiguous list of some type.
 type Vector[T any] interface {
 	// Append one or more values to the end of a vector.
@@ -65,6 +70,15 @@ func (v vectorProxy[T]) Remove(start, end int) Change {
 
 func (v vectorProxy[T]) Set(index int, value T) Change {
 	return v.vector.Set(index, value)
+}
+
+func (d vectorProxy[T]) String() string {
+	var x []T
+	return reflect.TypeOf(x).String()
+}
+
+func (d vectorProxy[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(d.String())
 }
 
 var newVectorFunc func(Context, ...any) Vector[any]
