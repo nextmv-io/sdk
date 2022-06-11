@@ -60,7 +60,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 				f := func() bool { return v%2 != 0 }
 				return context.If(f).Then(
 					func() context.Context {
-						v = v / 2
+						v /= 2
 						return ctx.Apply(
 							x.Set(v),
 							y.Prepend(v, v*2, v*v),
