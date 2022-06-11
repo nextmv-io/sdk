@@ -72,13 +72,13 @@ func (v vectorProxy[T]) Set(index int, value T) Change {
 	return v.vector.Set(index, value)
 }
 
-func (d vectorProxy[T]) String() string {
+func (v vectorProxy[T]) String() string {
 	var x []T
 	return reflect.TypeOf(x).String()
 }
 
-func (d vectorProxy[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.String())
+func (v vectorProxy[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.String())
 }
 
 var newVectorFunc func(Context, ...any) Vector[any]
