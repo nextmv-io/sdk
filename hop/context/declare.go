@@ -29,10 +29,14 @@ func (d declaredProxy[T]) Set(data T) Change {
 	return d.declared.Set(data)
 }
 
+// Implements fmt.Stringer
+
 func (d declaredProxy[T]) String() string {
 	var x T
 	return reflect.TypeOf(x).String()
 }
+
+// Implements json.Marshaler
 
 func (d declaredProxy[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(d.String())

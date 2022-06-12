@@ -13,7 +13,7 @@ func main() {
 func handler(v int, opt solve.Options) (solve.Solver, error) {
 	root := context.NewContext()
 	x := context.Declare(root, v)
-	y := context.NewVector(root, 4, 5, 6)
+	y := context.NewSlice(root, 4, 5, 6)
 
 	root = root.Value(
 		x.Get,
@@ -21,7 +21,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 		func(ctx context.Context) any {
 			return map[string]any{
 				"x": x.Get(ctx),
-				"y": y.Data(ctx),
+				"y": y.Slice(ctx),
 			}
 		},
 	).Generate(

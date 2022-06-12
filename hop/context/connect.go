@@ -44,5 +44,5 @@ func connect() {
 	plugin.Connect(slug, "HopContextScope", &scopeFunc)
 
 	// Collections
-	plugin.Connect(slug, "HopContextNewVector", &newVectorFunc)
+	plugin.Connect(slug, "HopContextNewSlice", &newSliceFunc)
 }
