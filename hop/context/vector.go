@@ -27,7 +27,6 @@ type Vector[T any] interface {
 
 // NewVector returns a new Vector.
 func NewVector[T any](ctx Context, values ...T) Vector[T] {
-	connect()
 	return vectorProxy[T]{vector: newVectorFunc(ctx, anySlice(values)...)}
 }
 

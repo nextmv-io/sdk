@@ -7,7 +7,6 @@ import (
 
 // Declare declares new data on a context.
 func Declare[T any](ctx Context, data T) Declared[T] {
-	connect()
 	return declaredProxy[T]{declared: declareFunc(ctx, data)}
 }
 
