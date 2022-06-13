@@ -25,12 +25,11 @@ func connect() {
 	}
 	connected = true
 
+	// Create a new context
 	plugin.Connect(slug, "HopContextNewContext", &newContextFunc)
 
 	// Declare variables
 	plugin.Connect(slug, "HopContextDeclare", &declareFunc)
-	plugin.Connect(slug, "HopContextDeclaredGet", &declaredGetFunc)
-	plugin.Connect(slug, "HopContextDeclaredSet", &declaredSetFunc)
 
 	// Conditions
 	plugin.Connect(slug, "HopContextAnd", &andFunc)
@@ -43,4 +42,7 @@ func connect() {
 	// State generation
 	plugin.Connect(slug, "HopContextIf", &ifFunc)
 	plugin.Connect(slug, "HopContextScope", &scopeFunc)
+
+	// Collections
+	plugin.Connect(slug, "HopContextNewSlice", &newSliceFunc)
 }
