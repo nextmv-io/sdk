@@ -1,6 +1,8 @@
+// Package plugin provides functions for loading Hop plugins.
 package plugin
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,9 +10,10 @@ import (
 	"reflect"
 	"runtime"
 	"sync"
-
-	"github.com/nextmv-io/sdk"
 )
+
+//go:embed version.txt
+var version string
 
 // Connect a symbol in a plugin to a func target.
 //
@@ -71,7 +74,7 @@ func pluginPath(slug string) string {
 		slug,
 		runtime.GOOS,
 		runtime.GOARCH,
-		sdk.VERSION,
+		version,
 	)
 	return filepath.Join(libraryPath, filename)
 }

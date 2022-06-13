@@ -1,3 +1,4 @@
+// Package model provides modeling tools.
 package model
 
 // Bounds on an objective value at some node in the search tree consist of a

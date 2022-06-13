@@ -1,8 +1,9 @@
+// Package run provides tools for running solvers.
 package run
 
 import "github.com/nextmv-io/sdk/hop/solve"
 
-// Run a solver by a handler.
+// Run a solver via a handler.
 func Run[T any](handler func(T, solve.Options) (solve.Solver, error)) {
 	connect()
 
