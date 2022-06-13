@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/nextmv-io/sdk/hop/context"
 	"github.com/nextmv-io/sdk/hop/run"
 	"github.com/nextmv-io/sdk/hop/solve"
@@ -14,6 +16,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 	root := context.NewContext()
 	x := context.Declare(root, v)
 	y := context.NewSlice(root, 4, 5, 6)
+	z := context.NewMap[int, string](root)
 
 	root = root.Value(
 		x.Get,
@@ -22,6 +25,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 			return map[string]any{
 				"x": x.Get(ctx),
 				"y": y.Slice(ctx),
+				"z": z.Map(ctx),
 			}
 		},
 	).Generate(
@@ -65,6 +69,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 							x.Set(v),
 							y.Prepend(v, v*2, v*v),
 							y.Append(v/2, v/4, v/8),
+							z.Set(v, strconv.Itoa(v)),
 						)
 					},
 				)

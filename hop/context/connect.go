@@ -44,5 +44,7 @@ func connect() {
 	plugin.Connect(slug, "HopContextScope", &scopeFunc)
 
 	// Collections
+	plugin.Connect(slug, "HopContextNewMapInt", &newMapIntFunc)
+	plugin.Connect(slug, "HopContextNewMapString", &newMapStringFunc)
 	plugin.Connect(slug, "HopContextNewSlice", &newSliceFunc)
 }
