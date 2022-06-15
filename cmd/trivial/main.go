@@ -3,69 +3,65 @@ package main
 import (
 	"strconv"
 
-	"github.com/nextmv-io/sdk/hop/context"
 	"github.com/nextmv-io/sdk/hop/run"
-	"github.com/nextmv-io/sdk/hop/solve"
+	"github.com/nextmv-io/sdk/hop/store"
+	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
 func main() {
 	run.Run(handler)
 }
 
-func handler(v int, opt solve.Options) (solve.Solver, error) {
-	root := context.NewContext()
-	x := context.Declare(root, v)
-	y := context.NewSlice(root, 4, 5, 6)
-	z := context.NewMap[int, string](root)
+func handler(v int, opt types.Options) (types.Solver, error) {
+	root := store.New()
+	x := store.Var(root, v)
+	y := store.Slice(root, 4, 5, 6)
+	z := store.Map[int, string](root)
 
 	root = root.Value(
 		x.Get,
 	).Format(
-		func(ctx context.Context) any {
+		func(s types.Store) any {
 			return map[string]any{
-				"x": x.Get(ctx),
-				"y": y.Slice(ctx),
-				"z": z.Map(ctx),
+				"x": x.Get(s),
+				"y": y.Slice(s),
+				"z": z.Map(s),
 			}
 		},
 	).Generate(
 		/*
-			context.Scope(
-				func(ctx context.Context) context.Generator {
-					return context.If(
-						func() bool { return x.Get(ctx)%2 != 0 },
+			store.Scope(
+				func(s types.Store) types.Generator {
+					return store.If(
+						func(s types.Store) bool { return x.Get(s)%2 != 0 },
 					).Then(
-						func() context.Context {
-							return ctx.Apply(x.Set(x.Get(ctx) / 2))
+						func(s types.Store) types.Store {
+							return s.Apply(x.Set(x.Get(s) / 2))
+						},
+					)
+				},
+			),
+			store.Scope(
+				func(s types.Store) types.Generator {
+					v := x.Get(s)
+					f := func(s types.Store) bool { return v%2 != 0 }
+					return store.If(f).Then(
+						func(s types.Store) types.Store {
+							v /= 2
+							return s.Apply(x.Set(v))
 						},
 					)
 				},
 			),
 		*/
-
-		/*
-			context.Scope(
-				func(ctx context.Context) context.Generator {
-					v := x.Get(ctx)
-					f := func() bool { return v%2 != 0 }
-					return context.If(f).Then(
-						func() context.Context {
-							v = v / 2
-							return ctx.Apply(x.Set(v))
-						},
-					)
-				},
-			),
-		*/
-
-		context.Scope(
-			func(ctx context.Context) context.Generator {
-				v := x.Get(ctx)
-				f := func() bool { return v%2 != 0 }
-				return context.If(f).Then(
-					func() context.Context {
+		store.Scope(
+			func(s types.Store) types.Generator {
+				v := x.Get(s)
+				f := func(s types.Store) bool { return v%2 != 0 }
+				return store.If(f).Then(
+					func(s types.Store) types.Store {
 						v /= 2
-						return ctx.Apply(
+						return s.Apply(
 							x.Set(v),
 							y.Prepend(v, v*2, v*v),
 							y.Append(v/2, v/4, v/8),
@@ -75,7 +71,7 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 				)
 			},
 		),
-		context.If(context.True).Return(),
+		store.If(store.True).Return(),
 	)
 
 	return root.Maximizer(opt), nil
