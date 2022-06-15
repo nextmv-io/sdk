@@ -1,70 +1,88 @@
 package store
 
-// // Domain creates a domain in a store.
-// func Domain(s Store, ranges ...model.Range) Domain {
-// 	return domainProxy{domain: Var(s, model.NewDomain(ranges...))}
-// }
+import (
+	"github.com/nextmv-io/sdk/hop/model"
+	modeltypes "github.com/nextmv-io/sdk/hop/model/types"
+	"github.com/nextmv-io/sdk/hop/store/types"
+)
 
-// // Singleton creates a domain with one value.
-// func Singleton(s Store, value int) Domain {
-// 	return domainProxy{domain: Var(s, model.Singleton(value))}
-// }
+// Domain creates a domain of integers.
+func Domain(s types.Store, ranges ...modeltypes.Range) types.Domain {
+	return domainProxy{domain: Var(s, model.Domain(ranges...))}
+}
 
-// // Multiple creates a domain with multiple values.
-// func Multiple(s Store, values ...int) Domain {
-// 	return domainProxy{domain: Var(s, model.Multiple(values...))}
-// }
+// Singleton creates a domain containing one integer value.
+func Singleton(s types.Store, value int) types.Domain {
+	return domainProxy{domain: Var(s, model.Singleton(value))}
+}
 
-// type domainProxy struct {
-// 	domain types.Var[model.Domain]
-// }
+// Multiple creates a domain containing multiple integer values.
+func Multiple(s types.Store, values ...int) types.Domain {
+	return domainProxy{domain: Var(s, model.Multiple(values...))}
+}
 
-// // Implements Domain
+type domainProxy struct {
+	domain types.Variable[modeltypes.Domain]
+}
 
-// func (d domainProxy) Add(values ...int) Change {
-// 	return func(s Store) { d.domain.Set(d.domain.Get(s).Add(values...)) }
-// }
+// Implements types.Domain.
 
-// func (d domainProxy) AtLeast(value int) Change {
-// 	return func(s Store) { d.domain.Set(d.domain.Get(s).AtLeast(value)) }
-// }
+func (d domainProxy) Add(values ...int) types.Change {
+	return func(s types.Store) {
+		d.domain.Set(d.Domain(s).Add(values...))(s)
+	}
+}
 
-// func (d domainProxy) AtMost(value int) Change {
-// 	return func(s Store) { d.domain.Set(d.domain.Get(s).AtMost(value)) }
-// }
+func (d domainProxy) AtLeast(value int) types.Change {
+	return func(s types.Store) {
+		d.domain.Set(d.Domain(s).AtLeast(value))(s)
+	}
+}
 
-// func (d domainProxy) Contains(s Store, value int) bool {
-// 	return d.domain.Get(s).Contains(value)
-// }
+func (d domainProxy) AtMost(value int) types.Change {
+	return func(s types.Store) {
+		d.domain.Set(d.Domain(s).AtMost(value))(s)
+	}
+}
 
-// func (d domainProxy) Domain(s Store) model.Domain {
-// 	return d.domain.Get(s)
-// }
+func (d domainProxy) Cmp(s types.Store, d2 types.Domain) int {
+	return d.Domain(s).Cmp(d2.Domain(s))
+}
 
-// func (d domainProxy) Empty(s Store) bool {
-// 	return d.domain.Get(s).Empty()
-// }
+func (d domainProxy) Contains(s types.Store, value int) bool {
+	return d.Domain(s).Contains(value)
+}
 
-// func (d domainProxy) Len(s Store) int {
-// 	return d.domain.Get(s).Len()
-// }
+func (d domainProxy) Domain(s types.Store) modeltypes.Domain {
+	return d.domain.Get(s)
+}
 
-// func (d domainProxy) Max(s Store) (int, bool) {
-// 	return d.domain.Get(s).Max()
-// }
+func (d domainProxy) Empty(s types.Store) bool {
+	return d.Domain(s).Empty()
+}
 
-// func (d domainProxy) Min(s Store) (int, bool) {
-// 	return d.domain.Get(s).Min()
-// }
+func (d domainProxy) Len(s types.Store) int {
+	return d.Domain(s).Len()
+}
 
-// func (d domainProxy) Remove(values ...int) Change {
-// 	return func(s Store) { d.domain.Set(d.domain.Get(s).Remove(values...)) }
-// }
+func (d domainProxy) Max(s types.Store) (int, bool) {
+	return d.Domain(s).Max()
+}
 
-// func (d domainProxy) Slice(s Store) []int {
-// 	return d.domain.Get(s).Slice()
-// }
+func (d domainProxy) Min(s types.Store) (int, bool) {
+	return d.Domain(s).Min()
+}
 
-// func (d domainProxy) Value(s Store) (int, bool) {
-// 	return d.domain.Get(s).Value()
-// }
+func (d domainProxy) Remove(values ...int) types.Change {
+	return func(s types.Store) {
+		d.domain.Set(d.Domain(s).Remove(values...))(s)
+	}
+}
+
+func (d domainProxy) Slice(s types.Store) []int {
+	return d.Domain(s).Slice()
+}
+
+func (d domainProxy) Value(s types.Store) (int, bool) {
+	return d.Domain(s).Value()
+}

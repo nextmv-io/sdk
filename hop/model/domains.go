@@ -14,5 +14,7 @@ func Repeat(n int, d types.Domain) types.Domains {
 	return repeatFunc(n, d)
 }
 
-var domainsFunc func(...types.Domain) types.Domains
-var repeatFunc func(int, types.Domain) types.Domains
+var (
+	domainsFunc func(...types.Domain) types.Domains
+	repeatFunc  func(int, types.Domain) types.Domains
+)

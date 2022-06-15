@@ -55,14 +55,14 @@ func (s sliceProxy[T]) Slice(store types.Store) []T {
 	return sliceT
 }
 
-// Implements fmt.Stringer
+// Implements fmt.Stringer.
 
 func (s sliceProxy[T]) String() string {
 	var x []T
 	return reflect.TypeOf(x).String()
 }
 
-// Implements json.Marshaler
+// Implements json.Marshaler.
 
 func (s sliceProxy[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.String())

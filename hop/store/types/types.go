@@ -1,6 +1,8 @@
 // Package types holds type definitions.
 package types
 
+import "github.com/nextmv-io/sdk/hop/model/types"
+
 /*
 Store represents a store of variables and logic to solve decision automation
 problems. Adding logic to the store updates it (functions may be called
@@ -318,33 +320,86 @@ type Map[K Key, V any] interface {
 	Set(K, V) Change
 }
 
-// // A Domain of integers.
-// type Domain interface {
-// 	// Add values to a domain.
-// 	Add(...int) Change
-// 	// AtLeast updates the domain to the subdomain of at least some value.
-// 	AtLeast(int) Change
-// 	// AtMost updaetes the domain to the subdomain of at most some value.
-// 	AtMost(int) Change
-// 	// Contains returns true if a domain contains a given value.
-// 	Contains(Store, int) bool
-// 	// Domain returns a domain without a store.
-// 	Domain(Store) types.Domain
-// 	// Empty is true if a domain is empty.
-// 	Empty(Store) bool
-// 	// Len of a domain, counting all values within ranges.
-// 	Len(Store) int
-// 	// Max of a domain and a boolean indicating it is nonempty.
-// 	Max(Store) (int, bool)
-// 	// Min of a domain and a boolean indicating it is nonempty.
-// 	Min(Store) (int, bool)
-// 	// Remove values from a domain.
-// 	Remove(...int) Change
-// 	// Slice representation of a domain.
-// 	Slice(Store) []int
-// 	// Value returns an int and true if a domain is singleton.
-// 	Value(Store) (int, bool)
-// }
+// A Domain of integers.
+type Domain interface {
+	// Add values to a domain.
+	Add(...int) Change
+	// AtLeast updates the domain to the subdomain of at least some value.
+	AtLeast(int) Change
+	// AtMost updaetes the domain to the subdomain of at most some value.
+	AtMost(int) Change
+	// Cmp lexically compares two integer domains. It returns a negative value
+	// if the receiver is less, 0 if they are equal, and a positive value if the
+	// receiver domain is greater.
+	Cmp(Store, Domain) int
+	// Contains returns true if a domain contains a given value.
+	Contains(Store, int) bool
+	// Domain returns a domain unattached to a store.
+	Domain(Store) types.Domain
+	// Empty is true if a domain is empty.
+	Empty(Store) bool
+	// Len of a domain, counting all values within ranges.
+	Len(Store) int
+	// Max of a domain and a boolean indicating it is nonempty.
+	Max(Store) (int, bool)
+	// Min of a domain and a boolean indicating it is nonempty.
+	Min(Store) (int, bool)
+	// Remove values from a domain.
+	Remove(...int) Change
+	// Slice representation of a domain.
+	Slice(Store) []int
+	// Value returns an int and true if a domain is singleton.
+	Value(Store) (int, bool)
+}
+
+// Domains of integers.
+type Domains interface {
+	// Add values to a domain by index.
+	Add(int, ...int) Change
+	// Assign a singleton value to a domain by index.
+	Assign(int, int) Change
+	// AtLeast updates the domain to the subdomain of at least some value.
+	AtLeast(int, int) Change
+	// AtMost updates the domain to the subdomain of at most some value.
+	AtMost(int, int) Change
+	// Cmp lexically compares two sequences of integer domains.
+	Cmp(Store, Domains) int
+	// Domain by index.
+	Domain(Store, int) types.Domain
+	// Domains in the sequence.
+	Domains(Store) types.Domains
+	// Empty is true if all domains are empty.
+	Empty(Store) bool
+	// Len returns the number of domains.
+	Len(Store) int
+	// Remove values from a domain by index.
+	Remove(int, ...int) Change
+	// Singleton is true if all domains are Singleton.
+	Singleton(Store) bool
+	// Slices convert domains to a slice of int slices.
+	Slices(Store) [][]int
+	// Values returns the values of a sequence of singleton domains/
+	Values(Store) ([]int, bool)
+
+	/* Domain selectors */
+
+	// First returns the first domain index with length above 1.
+	First(Store) (int, bool)
+	// Largest returns the index of the largest domain with length above 1 by
+	// number of elements.
+	Largest(Store) (int, bool)
+	// Last returns the last domain index with length above 1.
+	Last(Store) (int, bool)
+	// Maximum returns the index of the domain containing the maximum value with
+	// length above 1.
+	Maximum(Store) (int, bool)
+	// Minimum returns the index of the domain containing the minimum value with
+	// length above 1.
+	Minimum(Store) (int, bool)
+	// Smallest returns the index of the smallest domain with length above 1 by
+	// number of elements.
+	Smallest(Store) (int, bool)
+}
 
 // Options for a solver.
 type Options any

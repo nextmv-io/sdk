@@ -20,6 +20,8 @@ func Multiple(values ...int) types.Domain {
 	return multipleFunc(values...)
 }
 
-var domainFunc func(...types.Range) types.Domain
-var singletonFunc func(int) types.Domain
-var multipleFunc func(...int) types.Domain
+var (
+	domainFunc    func(...types.Range) types.Domain
+	singletonFunc func(int) types.Domain
+	multipleFunc  func(...int) types.Domain
+)
