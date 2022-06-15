@@ -25,7 +25,7 @@ func connect() {
 	}
 	connected = true
 
-	plugin.Connect(slug, "HopStoreNewStore", &newStoreFunc)
+	plugin.Connect(slug, "HopStoreNew", &newFunc)
 
 	// Declare variables
 	plugin.Connect(slug, "HopStoreVar", &varFunc)
@@ -43,7 +43,7 @@ func connect() {
 	plugin.Connect(slug, "HopStoreScope", &scopeFunc)
 
 	// Collections
-	plugin.Connect(slug, "HopStoreNewMapInt", &newMapIntFunc)
-	plugin.Connect(slug, "HopStoreNewMapString", &newMapStringFunc)
-	plugin.Connect(slug, "HopStoreNewSlice", &newSliceFunc)
+	plugin.Connect(slug, "HopStoreMapInt", &mapIntFunc)
+	plugin.Connect(slug, "HopStoreMapString", &mapStringFunc)
+	plugin.Connect(slug, "HopStoreSlice", &sliceFunc)
 }

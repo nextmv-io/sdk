@@ -4,24 +4,24 @@ import (
 	"strconv"
 
 	"github.com/nextmv-io/sdk/hop/run"
-	"github.com/nextmv-io/sdk/hop/solve"
 	"github.com/nextmv-io/sdk/hop/store"
+	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
 func main() {
 	run.Run(handler)
 }
 
-func handler(v int, opt solve.Options) (solve.Solver, error) {
-	root := store.NewStore()
+func handler(v int, opt types.Options) (types.Solver, error) {
+	root := store.New()
 	x := store.Var(root, v)
-	y := store.NewSlice(root, 4, 5, 6)
-	z := store.NewMap[int, string](root)
+	y := store.Slice(root, 4, 5, 6)
+	z := store.Map[int, string](root)
 
 	root = root.Value(
 		x.Get,
 	).Format(
-		func(s store.Store) any {
+		func(s types.Store) any {
 			return map[string]any{
 				"x": x.Get(s),
 				"y": y.Slice(s),
@@ -31,22 +31,22 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 	).Generate(
 		/*
 			store.Scope(
-				func(s store.Store) store.Generator {
+				func(s types.Store) types.Generator {
 					return store.If(
-						func(s store.Store) bool { return x.Get(s)%2 != 0 },
+						func(s types.Store) bool { return x.Get(s)%2 != 0 },
 					).Then(
-						func(s store.Store) store.Store {
+						func(s types.Store) types.Store {
 							return s.Apply(x.Set(x.Get(s) / 2))
 						},
 					)
 				},
 			),
 			store.Scope(
-				func(s store.Store) store.Generator {
+				func(s types.Store) types.Generator {
 					v := x.Get(s)
-					f := func(s store.Store) bool { return v%2 != 0 }
+					f := func(s types.Store) bool { return v%2 != 0 }
 					return store.If(f).Then(
-						func(s store.Store) store.Store {
+						func(s types.Store) types.Store {
 							v /= 2
 							return s.Apply(x.Set(v))
 						},
@@ -55,11 +55,11 @@ func handler(v int, opt solve.Options) (solve.Solver, error) {
 			),
 		*/
 		store.Scope(
-			func(s store.Store) store.Generator {
+			func(s types.Store) types.Generator {
 				v := x.Get(s)
-				f := func(s store.Store) bool { return v%2 != 0 }
+				f := func(s types.Store) bool { return v%2 != 0 }
 				return store.If(f).Then(
-					func(s store.Store) store.Store {
+					func(s types.Store) types.Store {
 						v /= 2
 						return s.Apply(
 							x.Set(v),

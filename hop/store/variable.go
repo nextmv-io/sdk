@@ -3,30 +3,26 @@ package store
 import (
 	"encoding/json"
 	"reflect"
+
+	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Variable that can be stored in a Store.
-type Variable[T any] interface {
-	Get(Store) T
-	Set(T) Change
-}
-
 // Var stores a new Variable in a Store.
-func Var[T any](s Store, data T) Variable[T] {
+func Var[T any](s types.Store, data T) types.Variable[T] {
 	return variable[T]{variable: varFunc(s, data)}
 }
 
 type variable[T any] struct {
-	variable Variable[any]
+	variable types.Variable[any]
 }
 
-// Implements Variable
+// Implements types.Variable.
 
-func (v variable[T]) Get(s Store) T {
+func (v variable[T]) Get(s types.Store) T {
 	return v.variable.Get(s).(T)
 }
 
-func (v variable[T]) Set(data T) Change {
+func (v variable[T]) Set(data T) types.Change {
 	return v.variable.Set(data)
 }
 
@@ -43,4 +39,4 @@ func (v variable[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.String())
 }
 
-var varFunc func(Store, any) Variable[any]
+var varFunc func(types.Store, any) types.Variable[any]
