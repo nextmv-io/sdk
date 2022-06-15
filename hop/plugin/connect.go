@@ -2,7 +2,6 @@
 package plugin
 
 import (
-	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,10 +9,9 @@ import (
 	"reflect"
 	"runtime"
 	"sync"
-)
 
-//go:embed version.txt
-var version string
+	"github.com/nextmv-io/sdk"
+)
 
 // Connect a symbol in a plugin to a func target.
 //
@@ -74,7 +72,7 @@ func pluginPath(slug string) string {
 		slug,
 		runtime.GOOS,
 		runtime.GOARCH,
-		version,
+		sdk.VERSION,
 	)
 	return filepath.Join(libraryPath, filename)
 }
