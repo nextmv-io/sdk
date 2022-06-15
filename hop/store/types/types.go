@@ -318,6 +318,34 @@ type Map[K Key, V any] interface {
 	Set(K, V) Change
 }
 
+// // A Domain of integers.
+// type Domain interface {
+// 	// Add values to a domain.
+// 	Add(...int) Change
+// 	// AtLeast updates the domain to the subdomain of at least some value.
+// 	AtLeast(int) Change
+// 	// AtMost updaetes the domain to the subdomain of at most some value.
+// 	AtMost(int) Change
+// 	// Contains returns true if a domain contains a given value.
+// 	Contains(Store, int) bool
+// 	// Domain returns a domain without a store.
+// 	Domain(Store) types.Domain
+// 	// Empty is true if a domain is empty.
+// 	Empty(Store) bool
+// 	// Len of a domain, counting all values within ranges.
+// 	Len(Store) int
+// 	// Max of a domain and a boolean indicating it is nonempty.
+// 	Max(Store) (int, bool)
+// 	// Min of a domain and a boolean indicating it is nonempty.
+// 	Min(Store) (int, bool)
+// 	// Remove values from a domain.
+// 	Remove(...int) Change
+// 	// Slice representation of a domain.
+// 	Slice(Store) []int
+// 	// Value returns an int and true if a domain is singleton.
+// 	Value(Store) (int, bool)
+// }
+
 // Options for a solver.
 type Options any
 
