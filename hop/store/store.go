@@ -94,6 +94,11 @@ func Scope(f func(types.Store) types.Generator) types.Generator {
 	return scopeFunc(f)
 }
 
+// DefaultOptions give sensible defaults for a Solver.
+func DefaultOptions() types.Options {
+	return defaultOptionsFunc()
+}
+
 var (
 	newFunc func() types.Store
 	andFunc func(
@@ -108,8 +113,9 @@ var (
 		types.Condition,
 		...types.Condition,
 	) types.Condition
-	trueFunc  func(types.Store) bool
-	xorFunc   func(types.Condition, types.Condition) types.Condition
-	ifFunc    func(types.Condition) types.Action
-	scopeFunc func(func(types.Store) types.Generator) types.Generator
+	trueFunc           func(types.Store) bool
+	xorFunc            func(types.Condition, types.Condition) types.Condition
+	ifFunc             func(types.Condition) types.Action
+	scopeFunc          func(func(types.Store) types.Generator) types.Generator
+	defaultOptionsFunc func() types.Options
 )

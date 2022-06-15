@@ -3,6 +3,12 @@ on: [push]
 jobs:
   sdk:
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/nextmv-io/*
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      RESOURCES_PATH: resources
+      PLUGINS_PATH: $RESOURCES_PATH/plugins
+      SDK_PLUGIN: nextmv-sdk
     steps:
       - name: set up go
         uses: actions/setup-go@v3
@@ -12,6 +18,38 @@ jobs:
 
       - name: git clone
         uses: actions/checkout@v3
+
+      - name: clone plugins repository
+        uses: actions/checkout@v3
+        with:
+          repository: nextmv-io/plugins
+          path: $PLUGINS_PATH
+          ref: feature/DEC-497-API-refinement
+          ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
+          ssh-known-hosts: ssh-keyscan github.com
+
+      - name: setup SSH Keys and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
+
+      - name: use ssh instead of https for git
+        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      - name: export sdk version
+        run: echo "VERSION=$(cat hop/plugin/version.txt)" >> $GITHUB_ENV
+        working-directory: ${{env.working-directory}}
+
+      - name: build plugins
+        run: |
+          cd plugins/sdk
+          GOOS=$(go env GOOS)
+          GOARCH=$(go env GOARCH)
+          go build -buildmode plugin -o $RESOURCES_PATH/$SDK_PLUGIN-$GOOS-$GOARCH-${{ env.VERSION }}.so
+          echo "NEXTMV_LIBRARY_PATH=$RESOURCES_PATH" >> $GITHUB_ENV
+        working-directory: $PLUGINS_PATH
 
       - name: go build
         run: go build -race -v ./...

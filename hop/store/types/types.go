@@ -1,6 +1,11 @@
 // Package types holds type definitions.
 package types
 
+import (
+	"context"
+	"time"
+)
+
 /*
 Store represents a store of variables and logic to solve decision automation
 problems. Adding logic to the store updates it (functions may be called
@@ -318,11 +323,56 @@ type Map[K Key, V any] interface {
 	Set(K, V) Change
 }
 
-// Options for a solver.
-type Options any
+// DiagramOptions are the options for diagram.
+type DiagramOptions struct {
+	Reducer    any
+	Restrictor any
+	Width      int
+	Expansion  struct {
+		Limit int `json:"limit"`
+	}
+}
 
-// A Solver searches a space.
-type Solver any
+// Limits include termination criteria.
+type Limits struct {
+	Duration  time.Duration
+	Nodes     int
+	Solutions int
+}
+
+// Options for a solver.
+type Options struct {
+	// User-defined tags.
+	Tags    map[string]interface{}
+	Diagram DiagramOptions
+	Search  struct {
+		Queuer   any
+		Searcher any
+		Buffer   int
+	}
+	Limits Limits
+	Random struct {
+		Seed int64 `json:"seed,omitempty"`
+	}
+	Pool struct {
+		Size int `json:"size,omitempty"`
+	}
+}
+
+// A Solver searches the space of diagrams. It requires a root state to start
+// the search from. The Search() method returns the current incumbent solution,
+// solver statistics, and a flag indicating if Search() may be called again to
+// improve the incumbent solution or prove its optimality. All() and Last()
+// provide convenient wrappers that return all solutions and search statistics
+// found in the search and the last ones, respectively.
+type Solver interface {
+	// All solutions found by the solver.
+	All(ctx context.Context) <-chan Store
+	// Last solution found by the solver
+	Last(ctx context.Context) Store
+	// Options provided to the solver.
+	Options() Options
+}
 
 // Bounds on an objective value at some node in the search tree consist of a
 // lower value and an upper value. If the lower and upper value are the same,
