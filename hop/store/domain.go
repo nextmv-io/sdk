@@ -6,7 +6,7 @@ import (
 	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Domain creates a domain of integers.
+// Domain creates a domain of integers and stores it in a Store.
 func Domain(s types.Store, ranges ...modeltypes.Range) types.Domain {
 	return domainProxy{domain: Var(s, model.Domain(ranges...))}
 }
