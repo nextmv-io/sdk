@@ -26,14 +26,14 @@ func (v variable[T]) Set(data T) types.Change {
 	return v.variable.Set(data)
 }
 
-// Implements fmt.Stringer
+// Implements fmt.Stringer.
 
 func (v variable[T]) String() string {
 	var x T
 	return reflect.TypeOf(x).String()
 }
 
-// Implements json.Marshaler
+// Implements json.Marshaler.
 
 func (v variable[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.String())

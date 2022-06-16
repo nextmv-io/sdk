@@ -1,6 +1,8 @@
 // Package types holds type definitions.
 package types
 
+import "github.com/nextmv-io/sdk/hop/model/types"
+
 /*
 Store represents a store of variables and logic to solve decision automation
 problems. Adding logic to the store updates it (functions may be called
@@ -283,21 +285,76 @@ type Variable[T any] interface {
 
 // Slice manages an immutable slice container of some type in a Store.
 type Slice[T any] interface {
-	// Append one or more values to the end of a slice.
+	/*
+		Append one or more values to the end of a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3)   // [1, 2, 3]
+			s2 := s1.Apply(x.Append(4, 5)) // [1, 2, 3, 4, 5]
+	*/
 	Append(value T, values ...T) Change
-	// Get an index of a slice.
+
+	/*
+		Get an index of a slice.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Get(s, 2) // 3
+	*/
 	Get(Store, int) T
-	// Insert one or more values at an index in a slice.
+
+	/*
+		Insert one or more values at an index in a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, "a", "b", "c")
+			s2 := s1.Apply(s.Insert(2, "d", "e")) // [a, b, d, e, c]
+	*/
 	Insert(index int, value T, values ...T) Change
-	// Len returns the length of a slice.
+
+	/*
+		Len returns the length of a slice.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Len(s) // 3
+	*/
 	Len(Store) int
-	// Prepend one or more values at the beginning of a slice.
+
+	/*
+		Prepend one or more values at the beginning of a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3)    // [1, 2, 3]
+			s2 := s1.Apply(x.Prepend(4, 5)) // [4, 5, 1, 2, 3]
+	*/
 	Prepend(value T, values ...T) Change
-	// Remove a subslice from a start to an end index.
+
+	/*
+		Remove a subslice from a start to an end index.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Remove(1))  // [1, 3]
+	*/
 	Remove(start, end int) Change
-	// Set a value by index.
+
+	/*
+		Set a value by index.
+
+			s1 := store.New()
+			x := store.Slice(s, "a", "b", "c") // [a, b, c]
+			s2 := s1.Apply(x.Set(1, "d"))      // [a, d, c]
+	*/
 	Set(int, T) Change
-	// Slice representation that is mutable.
+
+	/*
+		Slice representation that is mutable.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Slice(s) // []int{1, 2, 3}
+	*/
 	Slice(Store) []T
 }
 
@@ -306,16 +363,372 @@ type Key interface{ int | string }
 
 // A Map stores key-value pairs in a Store.
 type Map[K Key, V any] interface {
-	// Delete a key from the map.
+	/*
+		Delete a key from the map.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s1 = s1.Apply( // {42: foo, 13: bar}
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			s2 := s1.Apply(m, Delete("foo")) // {13: bar}
+	*/
 	Delete(K) Change
-	// Get an index of a vector.
+
+	/*
+		Get a value for a key.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo"))
+			m.Get(s2) // (foo, true)
+			m.Get(s2) // (_, false)
+	*/
 	Get(Store, K) (V, bool)
-	// Len returns the number of keys in a map,
+
+	/*
+		Len returns the number of keys in a map,
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Len(s1) // 0
+			m.Len(s2) // 2
+	*/
 	Len(Store) int
-	// Map representation that is mutable.
+
+	/*
+		Map representation that is mutable.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Map(s2) // map[int]string{42: "foo", 13: "bar"}
+	*/
 	Map(Store) map[K]V
-	// Set a key to a value.
+
+	/*
+		Set a key to a value.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo")) // 42 -> foo
+			s3 := s2.Apply(m.Set(42, "bar")) // 42 -> bar
+	*/
 	Set(K, V) Change
+}
+
+// A Domain of integers.
+type Domain interface {
+	/*
+		Add values to a domain.
+
+			s1 := store.New()
+			d := store.Multiple(s, 1, 3, 5)
+			s2 := s1.Apply(d.Add(2, 4))
+
+			d.Domain(s1) // {1, 3, 5}}
+			d.Domain(s2) // [1, 5]]
+	*/
+	Add(...int) Change
+
+	/*
+		AtLeast updates the domain to the subdomain of at least some value.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(101, 110))
+			s2 := s1.Apply(d.AtLeast(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [101, 110]
+	*/
+	AtLeast(int) Change
+
+	/*
+		AtMost updates the domain to the subdomain of at most some value.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(101, 110))
+			s2 := s1.Apply(d.AtMost(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [1, 10]
+	*/
+	AtMost(int) Change
+
+	/*
+		Cmp lexically compares two integer domains. It returns a negative value
+		if the receiver is less, 0 if they are equal, and a positive value if
+		the receiver domain is greater.
+
+			s := store.New()
+			d1 := store.Domain(s, model.Range(1, 5), model.Range(8, 10))
+			d2 := store.Multiple(s, -1, 1)
+			d1.Cmp(s, d2) // > 0
+	*/
+	Cmp(Store, Domain) int
+
+	/*
+		Contains returns true if a domain contains a given value.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10))
+			d.Contains(s, 5)  // true
+			d.Contains(s, 15) // false
+	*/
+	Contains(Store, int) bool
+
+	/*
+		Domain returns a domain unattached to a store.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10))
+			d.Domain(s) // model.Domain(model.Range(1, 10))
+	*/
+	Domain(Store) types.Domain
+
+	/*
+		Empty is true if a domain is empty for a store.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Singleton(s, 42)
+			d1.Empty() // true
+			d2.Empty() // false
+	*/
+	Empty(Store) bool
+
+	/*
+		Len of a domain, counting all values within ranges.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d.Len(s) // 15
+	*/
+	Len(Store) int
+
+	/*
+		Max of a domain and a boolean indicating it is nonempty.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d1.Max() // returns (_, false)
+			d2.Max() // returns (10, true)
+	*/
+	Max(Store) (int, bool)
+
+	/*
+		Min of a domain and a boolean indicating it is nonempty.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d1.Min() // returns (_, false)
+			d2.Min() // returns (-5, true)
+
+	*/
+	Min(Store) (int, bool)
+
+	/*
+		Remove values from a domain.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 5))
+			s2 := s1.Apply(d.Remove(2, 4))
+
+			d.Domain(s1) // [1, 5]
+			d.Domain(s2) // {1, 3, 5}
+	*/
+	Remove(...int) Change
+
+	/*
+		Slice representation of a domain.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 5))
+			d.Slice(s) // [1, 2, 3, 4, 5]
+	*/
+	Slice(Store) []int
+
+	/*
+		Value returns an int and true if a domain is singleton.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Singleton(s, 42)
+			d3 := store.Multiple(s, 1, 3, 5)
+			d1.Value() // returns (_, false)
+			d2.Value() // returns (42, true)
+			d3.Value() // returns (_, false)
+	*/
+	Value(Store) (int, bool)
+}
+
+// Domains of integers.
+type Domains interface {
+	/*
+		Add values to a domain by index.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 1, model.Singleton(42)) // [42, 42, 42]
+			s2 := s1.Apply(d.Add(1, 41, 43))              // [42, [41,43], 42]
+	*/
+	Add(int, ...int) Change
+
+	/*
+		Assign a singleton value to a domain by index.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 3, model.Singleton(42)) // [42, 42, 42]
+			s2 := s1.Apply(d.Assign(0, 10))               // [10, 42, 42]
+	*/
+	Assign(int, int) Change
+
+	/*
+		AtLeast updates the domain to the subdomain of at least some value.
+
+			s1 := store.New()
+			d := store.Repeat( // [[1, 100], [1, 100]]
+				s1,
+				2,
+				model.Domain(model.Range(1, 100)),
+			)
+			s2 := s1.Apply(d.AtLeast(1, 50)) // [[1, 100], [50, 100]]
+	*/
+	AtLeast(int, int) Change
+
+	/*
+		AtMost updates the domain to the subdomain of at most some value.
+
+			s1 := store.New()
+			d := store.Repeat( // [[1, 100], [1, 100]]
+				s1,
+				2,
+				model.Domain(model.Range(1, 100)),
+			)
+			s2 := s1.Apply(d.AtMost(1, 50)) // [[1, 100], [1, 50]]
+	*/
+	AtMost(int, int) Change
+
+	/*
+		Cmp lexically compares two sequences of integer domains.
+
+			s := store.New()
+			d1 := store.Repeat(s, 3, model.Singleton(42)) // [42, 42, 42]
+			d2 := store.Repeat(s, 2, model.Singleton(43)) // [43, 43]]
+			d1.Cmp(s, d2) // < 0
+	*/
+	Cmp(Store, Domains) int
+
+	/*
+		Domain by index.
+
+			s := store.New()
+			d := store.Domains(
+				s,
+				model.Domain(),
+				model.Singleton(42),
+			)
+			d.Domain(s, 0) // {}
+			d.Domain(s, 1) // 42
+	*/
+	Domain(Store, int) types.Domain
+
+	/*
+		Domains in the sequence.
+
+			s := store.New()
+			d := store.Domains(
+				s,
+				model.Domain(),
+				model.Singleton(42),
+			)
+			d.Domains(s) // [{}, 42}
+	*/
+	Domains(Store) types.Domains
+
+	/*
+		Empty is true if all domains are empty.
+
+			s := store.New()
+			d := store.Domains(s, model.Domain())
+			d.Empty(s) // true
+	*/
+	Empty(Store) bool
+
+	/*
+		Len returns the number of domains.
+
+			s := store.New()
+			d := store.Repeat(s, 5, model.Domain())
+			d.Len(s) // 5
+	*/
+	Len(Store) int
+
+	/*
+		Remove values from a domain by index.
+
+			s1 := store.New()
+			d := store.Domains(s1, model.Multiple(42, 13)) // {13, 42}
+			s2 := s1.Apply(d.Remove(13))                   // {42}
+	*/
+	Remove(int, ...int) Change
+
+	/*
+		Singleton is true if all domains are Singleton.
+
+			s := store.New()
+			d := store.Repeat(s, 5, model.Singleton(42))
+			d.Singleton(s) // true
+	*/
+	Singleton(Store) bool
+
+	/*
+		Slices converts domains to a slice of int slices.
+
+			s := store.New()
+			d := store.Domains(s, model.Domain(), model.Multiple(1, 3))
+			d.Slices(s) // [[], [1, 2, 3]]
+	*/
+	Slices(Store) [][]int
+
+	/*
+		Values returns the values of a sequence of singleton domains.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 3, model.Singleton(42))
+			s2 := store.Apply(d.Add(0, 41))
+			d.Values(s1) // ([42, 42, 42], true)
+			d.Values(s2) // (_, false)
+	*/
+	Values(Store) ([]int, bool)
+
+	/* Domain selectors */
+
+	// First returns the first domain index with length above 1.
+	First(Store) (int, bool)
+	// Largest returns the index of the largest domain with length above 1 by
+	// number of elements.
+	Largest(Store) (int, bool)
+	// Last returns the last domain index with length above 1.
+	Last(Store) (int, bool)
+	// Maximum returns the index of the domain containing the maximum value with
+	// length above 1.
+	Maximum(Store) (int, bool)
+	// Minimum returns the index of the domain containing the minimum value with
+	// length above 1.
+	Minimum(Store) (int, bool)
+	// Smallest returns the index of the smallest domain with length above 1 by
+	// number of elements.
+	Smallest(Store) (int, bool)
 }
 
 // Options for a solver.
