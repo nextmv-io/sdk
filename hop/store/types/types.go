@@ -285,21 +285,76 @@ type Variable[T any] interface {
 
 // Slice manages an immutable slice container of some type in a Store.
 type Slice[T any] interface {
-	// Append one or more values to the end of a slice.
+	/*
+		Append one or more values to the end of a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3)   // [1, 2, 3]
+			s2 := s1.Apply(x.Append(4, 5)) // [1, 2, 3, 4, 5]
+	*/
 	Append(value T, values ...T) Change
-	// Get an index of a slice.
+
+	/*
+		Get an index of a slice.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Get(s, 2) // 3
+	*/
 	Get(Store, int) T
-	// Insert one or more values at an index in a slice.
+
+	/*
+		Insert one or more values at an index in a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, "a", "b", "c")
+			s2 := s1.Apply(s.Insert(2, "d", "e")) // [a, b, d, e, c]
+	*/
 	Insert(index int, value T, values ...T) Change
-	// Len returns the length of a slice.
+
+	/*
+		Len returns the length of a slice.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Len(s) // 3
+	*/
 	Len(Store) int
-	// Prepend one or more values at the beginning of a slice.
+
+	/*
+		Prepend one or more values at the beginning of a slice.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3)    // [1, 2, 3]
+			s2 := s1.Apply(x.Prepend(4, 5)) // [4, 5, 1, 2, 3]
+	*/
 	Prepend(value T, values ...T) Change
-	// Remove a subslice from a start to an end index.
+
+	/*
+		Remove a subslice from a start to an end index.
+
+			s1 := store.New()
+			x := store.Slice(s, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Remove(1))  // [1, 3]
+	*/
 	Remove(start, end int) Change
-	// Set a value by index.
+
+	/*
+		Set a value by index.
+
+			s1 := store.New()
+			x := store.Slice(s, "a", "b", "c") // [a, b, c]
+			s2 := s1.Apply(x.Set(1, "d"))      // [a, d, c]
+	*/
 	Set(int, T) Change
-	// Slice representation that is mutable.
+
+	/*
+		Slice representation that is mutable.
+
+			s := store.New()
+			x := store.Slice(s, 1, 2, 3)
+			x.Slice(s) // []int{1, 2, 3}
+	*/
 	Slice(Store) []T
 }
 
@@ -308,15 +363,65 @@ type Key interface{ int | string }
 
 // A Map stores key-value pairs in a Store.
 type Map[K Key, V any] interface {
-	// Delete a key from the map.
+	/*
+		Delete a key from the map.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s1 = s1.Apply( // {42: foo, 13: bar}
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			s2 := s1.Apply(m, Delete("foo")) // {13: bar}
+	*/
 	Delete(K) Change
-	// Get an index of a vector.
+
+	/*
+		Get a value for a key.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo"))
+			m.Get(s2) // (foo, true)
+			m.Get(s2) // (_, false)
+	*/
 	Get(Store, K) (V, bool)
-	// Len returns the number of keys in a map,
+
+	/*
+		Len returns the number of keys in a map,
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Len(s1) // 0
+			m.Len(s2) // 2
+	*/
 	Len(Store) int
-	// Map representation that is mutable.
+
+	/*
+		Map representation that is mutable.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Map(s2) // map[int]string{42: "foo", 13: "bar"}
+	*/
 	Map(Store) map[K]V
-	// Set a key to a value.
+
+	/*
+		Set a key to a value.
+
+			s1 := store.New()
+			m := store.Map[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo")) // 42 -> foo
+			s3 := s2.Apply(m.Set(42, "bar")) // 42 -> bar
+	*/
 	Set(K, V) Change
 }
 
