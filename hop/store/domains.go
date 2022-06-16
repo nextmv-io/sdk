@@ -11,7 +11,7 @@ func Domains(s types.Store, domains ...modeltypes.Domain) types.Domains {
 	return domainsProxy{domains: Var(s, model.Domains(domains...))}
 }
 
-// Repeat repeats a domain n times.
+// Repeat repeats a domain n times and stores them in a Store.
 func Repeat(s types.Store, n int, domain modeltypes.Domain) types.Domains {
 	return domainsProxy{domains: Var(s, model.Repeat(n, domain))}
 }
