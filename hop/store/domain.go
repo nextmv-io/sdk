@@ -16,7 +16,7 @@ func Singleton(s types.Store, value int) types.Domain {
 	return domainProxy{domain: Var(s, model.Singleton(value))}
 }
 
-// Multiple creates a domain containing multiple integer values.
+// Multiple creates a domain containing multiple integer values and stores it in a Store.
 func Multiple(s types.Store, values ...int) types.Domain {
 	return domainProxy{domain: Var(s, model.Multiple(values...))}
 }
