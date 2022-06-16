@@ -11,7 +11,7 @@ func Domain(s types.Store, ranges ...modeltypes.Range) types.Domain {
 	return domainProxy{domain: Var(s, model.Domain(ranges...))}
 }
 
-// Singleton creates a domain containing one integer value.
+// Singleton creates a domain containing one integer value and stores it in a Store.
 func Singleton(s types.Store, value int) types.Domain {
 	return domainProxy{domain: Var(s, model.Singleton(value))}
 }
