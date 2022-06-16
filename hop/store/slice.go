@@ -7,7 +7,13 @@ import (
 	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Slice returns a new Slice and stores it in a Store.
+/*
+Slice returns a new Slice and stores it in a Store.
+
+	s := store.New()
+	x := store.Slice[int](s)        // []int{}
+	y := store.Slice(s, 3.14, 2.72) // []float64{3.14, 2.72}
+*/
 func Slice[T any](s types.Store, values ...T) types.Slice[T] {
 	return sliceProxy[T]{slice: sliceFunc(s, anySlice(values)...)}
 }

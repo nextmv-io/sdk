@@ -322,33 +322,148 @@ type Map[K Key, V any] interface {
 
 // A Domain of integers.
 type Domain interface {
-	// Add values to a domain.
+	/*
+		Add values to a domain.
+
+			s1 := store.New()
+			d := store.Multiple(s, 1, 3, 5)
+			s2 := s1.Apply(d.Add(2, 4))
+
+			d.Domain(s1) // {1, 3, 5}}
+			d.Domain(s2) // [1, 5]]
+	*/
 	Add(...int) Change
-	// AtLeast updates the domain to the subdomain of at least some value.
+
+	/*
+		AtLeast updates the domain to the subdomain of at least some value.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(101, 110))
+			s2 := s1.Apply(d.AtLeast(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [101, 110]
+	*/
 	AtLeast(int) Change
-	// AtMost updaetes the domain to the subdomain of at most some value.
+
+	/*
+		AtMost updates the domain to the subdomain of at most some value.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(101, 110))
+			s2 := s1.Apply(d.AtMost(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [1, 10]
+	*/
 	AtMost(int) Change
-	// Cmp lexically compares two integer domains. It returns a negative value
-	// if the receiver is less, 0 if they are equal, and a positive value if the
-	// receiver domain is greater.
+
+	/*
+		Cmp lexically compares two integer domains. It returns a negative value
+		if the receiver is less, 0 if they are equal, and a positive value if
+		the receiver domain is greater.
+
+			s := store.New()
+			d1 := store.Domain(s, model.Range(1, 5), model.Range(8, 10))
+			d2 := store.Multiple(s, -1, 1)
+			d1.Cmp(s, d2) // > 0
+	*/
 	Cmp(Store, Domain) int
-	// Contains returns true if a domain contains a given value.
+
+	/*
+		Contains returns true if a domain contains a given value.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10))
+			d.Contains(s, 5)  // true
+			d.Contains(s, 15) // false
+	*/
 	Contains(Store, int) bool
-	// Domain returns a domain unattached to a store.
+
+	/*
+		Domain returns a domain unattached to a store.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10))
+			d.Domain(s) // model.Domain(model.Range(1, 10))
+	*/
 	Domain(Store) types.Domain
-	// Empty is true if a domain is empty.
+
+	/*
+		Empty is true if a domain is empty for a store.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Singleton(s, 42)
+			d1.Empty() // true
+			d2.Empty() // false
+	*/
 	Empty(Store) bool
-	// Len of a domain, counting all values within ranges.
+
+	/*
+		Len of a domain, counting all values within ranges.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d.Len(s) // 15
+	*/
 	Len(Store) int
-	// Max of a domain and a boolean indicating it is nonempty.
+
+	/*
+		Max of a domain and a boolean indicating it is nonempty.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d1.Max() // returns (_, false)
+			d2.Max() // returns (10, true)
+	*/
 	Max(Store) (int, bool)
-	// Min of a domain and a boolean indicating it is nonempty.
+
+	/*
+		Min of a domain and a boolean indicating it is nonempty.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Domain(s, model.Range(1, 10), model.Range(-5, -1))
+			d1.Min() // returns (_, false)
+			d2.Min() // returns (-5, true)
+
+	*/
 	Min(Store) (int, bool)
-	// Remove values from a domain.
+
+	/*
+		Remove values from a domain.
+
+			s1 := store.New()
+			d := store.Domain(s, model.Range(1, 5))
+			s2 := s1.Apply(d.Remove(2, 4))
+
+			d.Domain(s1) // [1, 5]
+			d.Domain(s2) // {1, 3, 5}
+	*/
 	Remove(...int) Change
-	// Slice representation of a domain.
+
+	/*
+		Slice representation of a domain.
+
+			s := store.New()
+			d := store.Domain(s, model.Range(1, 5))
+			d.Slice(s) // [1, 2, 3, 4, 5]
+	*/
 	Slice(Store) []int
-	// Value returns an int and true if a domain is singleton.
+
+	/*
+		Value returns an int and true if a domain is singleton.
+
+			s := store.New()
+			d1 := store.Domain(s)
+			d2 := store.Singleton(s, 42)
+			d3 := store.Multiple(s, 1, 3, 5)
+			d1.Value() // returns (_, false)
+			d2.Value() // returns (42, true)
+			d3.Value() // returns (_, false)
+	*/
 	Value(Store) (int, bool)
 }
 

@@ -6,7 +6,13 @@ import (
 	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Map returns a new Map and stores it in a Store.
+/*
+Map returns a new Map and associates it with a store.
+
+	s := store.New()
+	m1 := store.Map[int, [2]float64](s) // map of {int -> [2]float64}
+	m2 := store.Map[string, int](s)     // map of {string -> int}
+*/
 func Map[K types.Key, V any](s types.Store) types.Map[K, V] {
 	p := mapProxy[K, V]{}
 

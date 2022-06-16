@@ -6,12 +6,28 @@ import (
 	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Domains creates a sequence of domains.
+/*
+Domains creates a sequence of domains associated with a store.
+
+	s := store.New()
+	domains := store.Domains( // [1 to 10, 42, odds, evens]
+		s,
+		model.Domain(model.Range(1, 10)),
+		model.Singleton(42),
+		model.Multiple(1, 3, 5, 7),
+		model.Multiple(2, 4, 6, 8),
+	)
+*/
 func Domains(s types.Store, domains ...modeltypes.Domain) types.Domains {
 	return domainsProxy{domains: Var(s, model.Domains(domains...))}
 }
 
-// Repeat repeats a domain n times.
+/*
+Repeat repeats a domain n times and assioctes the sequence with a store.
+
+	s := store.New()
+	domains := store.Repeat(s, 3, model.Domain(model.Range(1, 10)))
+*/
 func Repeat(s types.Store, n int, domain modeltypes.Domain) types.Domains {
 	return domainsProxy{domains: Var(s, model.Repeat(n, domain))}
 }

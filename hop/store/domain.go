@@ -6,17 +6,37 @@ import (
 	"github.com/nextmv-io/sdk/hop/store/types"
 )
 
-// Domain creates a domain of integers.
+/*
+Domain creates a domain of integers associated with a store.
+
+	s := store.New()
+	d1 := store.Domain(s, model.Range(1, 10)) // 1 through 10
+	d2 := store.Domain( // 1 through 10 and 20 through 29
+		s,
+		model.Range(1, 10),
+		model.Range(20, 29),
+	)
+*/
 func Domain(s types.Store, ranges ...modeltypes.Range) types.Domain {
 	return domainProxy{domain: Var(s, model.Domain(ranges...))}
 }
 
-// Singleton creates a domain containing one integer value.
+/*
+Singleton creates a domain containing one integer value in a store.
+
+	s := store.New()
+	fortyTwo := store.Singleton(s, 42)
+*/
 func Singleton(s types.Store, value int) types.Domain {
 	return domainProxy{domain: Var(s, model.Singleton(value))}
 }
 
-// Multiple creates a domain containing multiple integer values.
+/*
+Multiple creates a domain containing multiple integer values.
+
+	s := store.New()
+	even := store.Multiple(2, 4, 6, 8)
+*/
 func Multiple(s types.Store, values ...int) types.Domain {
 	return domainProxy{domain: Var(s, model.Multiple(values...))}
 }
