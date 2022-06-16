@@ -574,31 +574,141 @@ type Domain interface {
 
 // Domains of integers.
 type Domains interface {
-	// Add values to a domain by index.
+	/*
+		Add values to a domain by index.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 1, model.Singleton(42)) // [42, 42, 42]
+			s2 := s1.Apply(d.Add(1, 41, 43))              // [42, [41,43], 42]
+	*/
 	Add(int, ...int) Change
-	// Assign a singleton value to a domain by index.
+
+	/*
+		Assign a singleton value to a domain by index.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 3, model.Singleton(42)) // [42, 42, 42]
+			s2 := s1.Apply(d.Assign(0, 10))               // [10, 42, 42]
+	*/
 	Assign(int, int) Change
-	// AtLeast updates the domain to the subdomain of at least some value.
+
+	/*
+		AtLeast updates the domain to the subdomain of at least some value.
+
+			s1 := store.New()
+			d := store.Repeat( // [[1, 100], [1, 100]]
+				s1,
+				2,
+				model.Domain(model.Range(1, 100)),
+			)
+			s2 := s1.Apply(d.AtLeast(1, 50)) // [[1, 100], [50, 100]]
+	*/
 	AtLeast(int, int) Change
-	// AtMost updates the domain to the subdomain of at most some value.
+
+	/*
+		AtMost updates the domain to the subdomain of at most some value.
+
+			s1 := store.New()
+			d := store.Repeat( // [[1, 100], [1, 100]]
+				s1,
+				2,
+				model.Domain(model.Range(1, 100)),
+			)
+			s2 := s1.Apply(d.AtMost(1, 50)) // [[1, 100], [1, 50]]
+	*/
 	AtMost(int, int) Change
-	// Cmp lexically compares two sequences of integer domains.
+
+	/*
+		Cmp lexically compares two sequences of integer domains.
+
+			s := store.New()
+			d1 := store.Repeat(s, 3, model.Singleton(42)) // [42, 42, 42]
+			d2 := store.Repeat(s, 2, model.Singleton(43)) // [43, 43]]
+			d1.Cmp(s, d2) // < 0
+	*/
 	Cmp(Store, Domains) int
-	// Domain by index.
+
+	/*
+		Domain by index.
+
+			s := store.New()
+			d := store.Domains(
+				s,
+				model.Domain(),
+				model.Singleton(42),
+			)
+			d.Domain(s, 0) // {}
+			d.Domain(s, 1) // 42
+	*/
 	Domain(Store, int) types.Domain
-	// Domains in the sequence.
+
+	/*
+		Domains in the sequence.
+
+			s := store.New()
+			d := store.Domains(
+				s,
+				model.Domain(),
+				model.Singleton(42),
+			)
+			d.Domains(s) // [{}, 42}
+	*/
 	Domains(Store) types.Domains
-	// Empty is true if all domains are empty.
+
+	/*
+		Empty is true if all domains are empty.
+
+			s := store.New()
+			d := store.Domains(s, model.Domain())
+			d.Empty(s) // true
+	*/
 	Empty(Store) bool
-	// Len returns the number of domains.
+
+	/*
+		Len returns the number of domains.
+
+			s := store.New()
+			d := store.Repeat(s, 5, model.Domain())
+			d.Len(s) // 5
+	*/
 	Len(Store) int
-	// Remove values from a domain by index.
+
+	/*
+		Remove values from a domain by index.
+
+			s1 := store.New()
+			d := store.Domains(s1, model.Multiple(42, 13)) // {13, 42}
+			s2 := s1.Apply(d.Remove(13))                   // {42}
+	*/
 	Remove(int, ...int) Change
-	// Singleton is true if all domains are Singleton.
+
+	/*
+		Singleton is true if all domains are Singleton.
+
+			s := store.New()
+			d := store.Repeat(s, 5, model.Singleton(42))
+			d.Singleton(s) // true
+	*/
 	Singleton(Store) bool
-	// Slices convert domains to a slice of int slices.
+
+	/*
+		Slices converts domains to a slice of int slices.
+
+			s := store.New()
+			d := store.Domains(s, model.Domain(), model.Multiple(1, 3))
+			d.Slices(s) // [[], [1, 2, 3]]
+	*/
 	Slices(Store) [][]int
-	// Values returns the values of a sequence of singleton domains/
+
+	/*
+		Values returns the values of a sequence of singleton domains.
+
+			s1 := store.New()
+			d := store.Repeat(s1, 3, model.Singleton(42))
+			s2 := store.Apply(d.Add(0, 41))
+			d.Values(s1) // ([42, 42, 42], true)
+			d.Values(s2) // (_, false)
+	*/
 	Values(Store) ([]int, bool)
 
 	/* Domain selectors */
