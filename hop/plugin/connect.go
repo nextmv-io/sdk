@@ -2,6 +2,7 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,13 +19,21 @@ import (
 //    var fooFunc func()
 //    plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
-	p, err := loadPlugin(slug)
+	path := pluginPath(slug)
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		fmt.Fprintf(os.Stderr, "plugin file %q does not exist\n\n", path)
+		os.Exit(1)
+	}
+
+	p, err := loadPlugin(slug, path)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "error loading plugin %q\n\n", path)
 		panic(err)
 	}
 
 	sym, err := p.Lookup(name)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "error connecting symbol %q\n\n", name)
 		panic(err)
 	}
 
@@ -39,7 +48,7 @@ var loaded = map[string]*plugin.Plugin{}
 
 var mtx sync.Mutex
 
-func loadPlugin(slug string) (*plugin.Plugin, error) {
+func loadPlugin(slug, path string) (*plugin.Plugin, error) {
 	// Only load the plugin once. Then reuse the plugin pointer.
 	if p, ok := loaded[slug]; ok {
 		return p, nil
@@ -52,7 +61,7 @@ func loadPlugin(slug string) (*plugin.Plugin, error) {
 		return p, nil
 	}
 
-	p, err := plugin.Open(pluginPath(slug))
+	p, err := plugin.Open(path)
 	if err != nil {
 		return nil, err
 	}
