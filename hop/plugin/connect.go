@@ -68,11 +68,12 @@ func pluginPath(slug string) string {
 	}
 
 	filename := fmt.Sprintf(
-		"nextmv-%s-%s-%s-%s.so",
+		"nextmv-%s-%s-%s-%s-%s.so",
 		slug,
+		sdk.VERSION,
+		runtime.Version(),
 		runtime.GOOS,
 		runtime.GOARCH,
-		sdk.VERSION,
 	)
 	return filepath.Join(libraryPath, filename)
 }
