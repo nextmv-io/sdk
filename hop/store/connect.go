@@ -46,4 +46,7 @@ func connect() {
 	plugin.Connect(slug, "HopStoreMapInt", &mapIntFunc)
 	plugin.Connect(slug, "HopStoreMapString", &mapStringFunc)
 	plugin.Connect(slug, "HopStoreSlice", &sliceFunc)
+
+	// Solver
+	plugin.Connect(slug, "HopStoreDefaultOptions", &defaultOptionsFunc)
 }

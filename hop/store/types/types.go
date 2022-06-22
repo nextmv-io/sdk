@@ -1,7 +1,12 @@
 // Package types holds type definitions.
 package types
 
-import "github.com/nextmv-io/sdk/hop/model/types"
+import (
+	"context"
+	"time"
+
+	"github.com/nextmv-io/sdk/hop/model/types"
+)
 
 /*
 Store represents a store of variables and logic to solve decision automation
@@ -157,7 +162,7 @@ type Store interface {
 	Minimizer(Options) Solver
 
 	// Satisfier builds a solver that searches the space defined by the Store
-	// to satisfy operational validity
+	// to satisfy operational validity.
 	Satisfier(Options) Solver
 }
 
@@ -732,15 +737,132 @@ type Domains interface {
 }
 
 // Options for a solver.
-type Options any
+type Options struct {
+	// Sense specifies whether one is maximizing, minimizing, or satisfying.
+	Sense string
+	// Tags are custom key-value pairs that the user defines for
+	// record-keeping.
+	Tags    map[string]any
+	Diagram Diagram
+	// Search options.
+	Search struct {
+		// Buffer represents the maximum number of Stores that can be buffered
+		// when generating more Stores.
+		Buffer int
+	}
+	Limits Limits
+	// Options for random number generation.
+	Random struct {
+		// Seed for generating random numbers.
+		Seed int64 `json:"seed,omitempty"`
+	}
+	// Pool that is used in specific engines.
+	Pool struct {
+		// Maximum Size of the Pool.
+		Size int `json:"size,omitempty"`
+	}
+}
 
-// A Solver searches a space.
-type Solver any
+// Diagram options. The Store search is based on Decision Diagrams. These
+// options configure the mechanics of using DD.
+type Diagram struct {
+	// Maximum Width of the Decision Diagram.
+	Width int
+	// Maximum Expansion that can be generated from a Store.
+	Expansion struct {
+		// Limit represents the maximum number of children Stores that can
+		// be generated from a parent.
+		Limit int `json:"limit"`
+	}
+}
+
+// Limits when performing a search. The search will stop if any one of these
+// limits are encountered.
+type Limits struct {
+	// Time Duration.
+	Duration time.Duration
+	// Nodes reprent active Stores in the search.
+	Nodes int
+	// Solutions represent operationally valid Stores.
+	Solutions int
+}
+
+// A Solver searches a space and finds the best Solution possible, this is, the
+// best collection of Variable assignments in an operationally valid Store.
+type Solver interface {
+	// All Solutions found by the Solver.
+	All(context.Context) []Solution
+
+	/*
+		Last Solution found by the Solver. When running a Maximizer or
+		Minimizer, the last Solution is the best one found (highest or smallest
+		value, respectively) with the given options. Using this function is
+		equivalent to getting the last element when using All:
+
+		    s := store.New()
+		    x := store.Var(s, 0)
+		    opt := store.DefaultOptions()
+		    // Minimizer and Satisfier may also be used
+		    solver = s.Generate(...).Value(...).Format(...).Maximizer(opt)
+		    all := solver.All(context.Background())
+		    last := all[len(all)-1]
+
+	*/
+	Last(context.Context) Solution
+
+	// Options provided to the Solver.
+	Options() Options
+}
+
+// Solution of a decision automation problem. A Solution is an operationally
+// valid Store.
+type Solution struct {
+	// Store of the Solution. If nil, it means that the solution is
+	// operationally invalid.
+	Store      Store      `json:"store"`
+	Statistics Statistics `json:"statistics"`
+}
+
+// Statistics of the search.
+type Statistics struct {
+	// Bounds of the store. Nil when using a Satisfier.
+	Bounds *Bounds `json:"bounds,omitempty"`
+	Search Search  `json:"search"`
+	Time   Time    `json:"time"`
+	// Value of the store. Nil when using a Satisfier.
+	Value *int `json:"value,omitempty"`
+}
+
+// Search statistics of the Store generation.
+type Search struct {
+	// Generated stores in the search.
+	Generated int `json:"generated"`
+	// Filtered stores in the search.
+	Filtered int `json:"filtered"`
+	// Expanded stores in the search.
+	Expanded int `json:"expanded"`
+	// Reduced stores in the search.
+	Reduced int `json:"reduced"`
+	// Restricted stores in the search.
+	Restricted int `json:"restricted"`
+	// Deferred stores in the search.
+	Deferred int `json:"deferred"`
+	// Explored stores in the search.
+	Explored int `json:"explored"`
+	// Operationally valid stores in the search.
+	Solutions int `json:"solutions"`
+}
+
+// Time statistics.
+type Time struct {
+	Start   time.Time     `json:"start"`
+	Elapsed time.Duration `json:"elapsed"`
+}
 
 // Bounds on an objective value at some node in the search tree consist of a
 // lower value and an upper value. If the lower and upper value are the same,
 // the bounds have converged.
 type Bounds struct {
-	Lower int
-	Upper int
+	Lower int `json:"lower"`
+	Upper int `json:"upper"`
 }
