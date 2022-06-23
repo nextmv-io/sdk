@@ -1,7 +1,7 @@
-# Hopping About / Getting Started / Setting up Hop
+# ![ears](../img/ears.png) Setting up Hop
 
 In order to run the code in this tour, you should use [a Go module][modules]. A
-module manages your dependencies, including the  Nextmv SDK. Let's create one
+module manages your dependencies, including the Nextmv SDK. Let's create one
 called `hoppity`.
 
 ```bash

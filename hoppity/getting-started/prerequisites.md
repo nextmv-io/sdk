@@ -1,4 +1,4 @@
-# Hopping About / Getting Started / Prerequisites
+# ![ears](../img/ears.png) Prerequisites
 
 To get started you need Go 1.18.3. If you don't have Go installed, you can get 
 it [here][download]. If you already have Go, you can see which version it is by

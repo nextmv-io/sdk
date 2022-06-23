@@ -1,4 +1,4 @@
-# Hoppity
+# ![ears](img/ears.png) Hoppity
 
 A tour of data store modeling with Hop.
 
@@ -32,28 +32,28 @@ Let's see how.
 
 ## Getting Started
 
-1. [Prerequisites](getting-started/prerequisites.md)
-1. [Setting up Hop](getting-started/setting-up-hop.md)
+- [Prerequisites](getting-started/prerequisites.md)
+- [Setting up Hop](getting-started/setting-up-hop.md)
 
 ## Working with Stores
 
-1. [Creating Stores](working-with-stores/creating-stores.md)
-1. [Storing Custom Data](working-with-stores/storing-custom-data.md)
-1. [Updating Data](working-with-stores/updating-data.md)
-1. [Formatting Stores](working-with-stores/formatting-stores.md)
+- [Creating Stores](working-with-stores/creating-stores.md)
+- [Storing Custom Data](working-with-stores/storing-custom-data.md)
+- [Updating Data](working-with-stores/updating-data.md)
+- [Formatting Stores](working-with-stores/formatting-stores.md)
 
 ## Working with Collections
 
-1. [Slices](working-with-collections/slices.md)
-1. [Maps](working-with-collections/maps.md)
-1. [Domains](working-with-collections/domains.md)
+- [Slices](working-with-collections/slices.md)
+- [Maps](working-with-collections/maps.md)
+- [Domains](working-with-collections/domains.md)
 
 ## Building Models
 
-1. Generating Stores
-1. Returning Data
-1. Discarding Stores
+- Generating Stores
+- Returning Data
+- Discarding Stores
 
 ## Putting it All Together
 
-1. A Sudoku Solver
+- A Sudoku Solver

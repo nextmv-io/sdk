@@ -1,4 +1,4 @@
-# Hopping About / Working with Stores / Storing Custom Data
+# ![ears](../img/ears.png) Storing Custom Data
 
 A Hop store can manage any concrete type, including custom structs. Let's define
 a `bunny` type with a few fields and a `String` method.

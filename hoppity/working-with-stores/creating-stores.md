@@ -1,4 +1,4 @@
-# Hopping About / Working with Stores / Creating Stores
+# ![ears](../img/ears.png) Creating Stores
 
 [home](../README.md)
 

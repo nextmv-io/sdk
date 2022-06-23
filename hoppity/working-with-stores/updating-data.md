@@ -1,4 +1,4 @@
-# Hopping About / Working with Stores / Updating Data
+# ![ears](../img/ears.png) Updating Data
 
 We can think of a store as a lexical scope containing variable declarations,
 variable assignments, and logic. Thus a store has similar mechanics to a block

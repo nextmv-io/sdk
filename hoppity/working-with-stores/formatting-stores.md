@@ -1,4 +1,4 @@
-# Hopping About / Working with Stores / Formatting Stores
+# ![ears](../img/ears.png) Formatting Stores
 
 Hop was designed to work well with JSON data. This makes it easy to deploy Hop
 models into microservices, run them as serverless functions, and many other
