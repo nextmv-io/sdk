@@ -2,7 +2,7 @@
 
 A tour of data store modeling with Hop.
 
-```
+```txt
 Christopher Robin goes
 Hoppity, hoppity,
 Hoppity, hoppity, hop.
