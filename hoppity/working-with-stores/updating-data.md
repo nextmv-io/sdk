@@ -35,7 +35,6 @@ Now we apply a change set to `s1`. This results in a new store, `s2`. `s2` is
 functionally a copy of `s1` with a new value associated with `y` and a new
 variable, `pi`.
 
-
 ```go
 s2 := s1.Apply(y.Set("bar"))
 pi := store.Var(s2, 3.14)
