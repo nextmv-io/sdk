@@ -12,12 +12,16 @@ func main() {
 	enc := json.NewEncoder(os.Stdout)
 
 	s := store.New()
-	enc.Encode(s)
+	if err := enc.Encode(s); err != nil {
+		panic(err)
+	}
 
 	x := store.Var(s, 42)
 	y := store.Var(s, "foo")
 	pi := store.Var(s, 3.14)
-	enc.Encode(s)
+	if err := enc.Encode(s); err != nil {
+		panic(err)
+	}
 
 	s = s.Format(func(s types.Store) any {
 		return map[string]any{
@@ -26,7 +30,11 @@ func main() {
 			"pi": pi.Get(s),
 		}
 	})
-	enc.Encode(s)
+	if err := enc.Encode(s); err != nil {
+		panic(err)
+	}
 
-	enc.Encode(s.Apply(y.Set("bar")))
+	if err := enc.Encode(s.Apply(y.Set("bar"))); err != nil {
+		panic(err)
+	}
 }

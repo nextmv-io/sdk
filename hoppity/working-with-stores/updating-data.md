@@ -2,22 +2,22 @@
 
 We can think of a store as a lexical scope containing variable declarations,
 variable assignments, and logic. Thus a store has similar mechanics to a block
-in a lexically scoped programming language without destructive assignment. For 
+in a lexically scoped programming language without destructive assignment. For
 example, say we have outer and inner blocks with the following assignments.
 
 ```txt
 {
-	x = 42
-	y = "foo"
+    x = 42
+    y = "foo"
 
-	{
-		y = "bar"
-		pi = 3.14
-	}
+    {
+        y = "bar"
+        pi = 3.14
+    }
 }
 ```
 
-The outer block contains two variables, `x = 42` and `y = "foo"`. The inner 
+The outer block contains two variables, `x = 42` and `y = "foo"`. The inner
 block inherits `x = 42` from the outer block which contains it, overrides
 `y = "bar"`, and adds a new variable `pi = 3.14`. Assignments in the inner
 block do not impact the outer block.
@@ -31,7 +31,7 @@ x := store.Var(s1, 42)
 y := store.Var(s1, "foo")
 ```
 
-Now we apply a change set to `s1`. This results in a new store, `s2`. `s2` is 
+Now we apply a change set to `s1`. This results in a new store, `s2`. `s2` is
 functionally a copy of `s1` with a new value associated with `y` and a new
 variable, `pi`.
 
@@ -61,11 +61,11 @@ code below creates a single store with `x = 10` and `y = "abc"`.
 
 ```go
 s1.Apply(
-	x.Set(-3),
-	y.Set("bar"),
-	y.Set("abc"),
-	x.Set(100),
-	x.Set(10),
+    x.Set(-3),
+    y.Set("bar"),
+    y.Set("abc"),
+    x.Set(100),
+    x.Set(10),
 )
 ```
 

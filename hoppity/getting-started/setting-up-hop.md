@@ -38,16 +38,16 @@ hoppity$ cat << EOF > ehlo/main.go
 package main
 
 import (
-	"fmt"
+    "fmt"
 
-	"github.com/nextmv-io/sdk"
-	"github.com/nextmv-io/sdk/hop/store"
+    "github.com/nextmv-io/sdk"
+    "github.com/nextmv-io/sdk/hop/store"
 )
 
 func main() {
-	s := store.New()
-	version := store.Var(s, sdk.VERSION)
-	fmt.Println("Hello Hop", version.Get(s))
+    s := store.New()
+    version := store.Var(s, sdk.VERSION)
+    fmt.Println("Hello Hop", version.Get(s))
 }
 EOF
 ```
@@ -55,13 +55,13 @@ EOF
 We can run it using `go run`.
 
 ```bash
-hoppity$ go run -trimpath ehlo/main.go 
+hoppity$ go run -trimpath ehlo/main.go
 go: downloading github.com/nextmv-io/sdk v0.16.0-dev.0-2
 Hello Hop v0.16.0-dev.0-2
 ```
 
-If you see see output like the above, you're ready to get hopping! Each of the 
-examples in this tour constitutes a complete `main.go` Put them in unique 
+If you see see output like the above, you're ready to get hopping! Each of the
+examples in this tour constitutes a complete `main.go` Put them in unique
 directories  inside your `hoppity` folder and run them using the same `go run`
 command shown above.
 

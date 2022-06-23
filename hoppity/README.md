@@ -23,9 +23,9 @@ Hop.
 -- A. A. Milne
 ```
 
-Nextmv's decision modeling interface lets you automate any operational decision 
-in a way that looks and feels like writing other code. Hop provides the 
-guardrails to turn your data into automated decisions, and test and deploy them 
+Nextmv's decision modeling interface lets you automate any operational decision
+in a way that looks and feels like writing other code. Hop provides the
+guardrails to turn your data into automated decisions, and test and deploy them
 into production environments.
 
 Let's see how.

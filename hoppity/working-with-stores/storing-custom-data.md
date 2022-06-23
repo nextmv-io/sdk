@@ -5,17 +5,17 @@ a `bunny` type with a few fields and a `String` method.
 
 ```go
 type bunny struct {
-	name       string
-	fluffiness float64
-	activities []string
+    name       string
+    fluffiness float64
+    activities []string
 }
 
 func (b bunny) String() string {
-	fluffy := "fluffy"
-	if b.fluffiness < 0.5 {
-		fluffy = "not fluffy"
-	}
-	return fmt.Sprintf("%s is %s and likes %v", b.name, fluffy, b.activities)
+    fluffy := "fluffy"
+    if b.fluffiness < 0.5 {
+        fluffy = "not fluffy"
+    }
+    return fmt.Sprintf("%s is %s and likes %v", b.name, fluffy, b.activities)
 }
 ```
 
@@ -25,12 +25,12 @@ Now we create a bunny and add it to our store.
 s := store.New()
 
 peter := store.Var(s, bunny{
-	name:       "Peter Rabbit",
-	fluffiness: 0.52,
-	activities: []string{
-		"stealing and eating vegetables",
-		"losing his jacket and shoes",
-	},
+    name:       "Peter Rabbit",
+    fluffiness: 0.52,
+    activities: []string{
+        "stealing and eating vegetables",
+        "losing his jacket and shoes",
+    },
 })
 ```
 

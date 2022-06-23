@@ -9,17 +9,17 @@ Let's create a new store and encode it into JSON.
 
 ```go
 import (
-	"encoding/json"
-	"os"
+    "encoding/json"
+    "os"
 
-	"github.com/nextmv-io/sdk/hop/store"
+    "github.com/nextmv-io/sdk/hop/store"
 )
 
 func main() {
-	enc := json.NewEncoder(os.Stdout)
+    enc := json.NewEncoder(os.Stdout)
 
-	s := store.New()
-	enc.Encode(s)
+    s := store.New()
+    enc.Encode(s)
 }
 ```
 
@@ -59,11 +59,11 @@ logic.
 
 ```go
 s = s.Format(func(s types.Store) any {
-	return map[string]any{
-		"x":  x.Get(s),
-		"y":  y.Get(s),
-		"pi": pi.Get(s),
-	}
+    return map[string]any{
+        "x":  x.Get(s),
+        "y":  y.Get(s),
+        "pi": pi.Get(s),
+    }
 })
 enc.Encode(s)
 ```
@@ -74,18 +74,18 @@ so they look like this.
 
 ```go
 import (
-	"encoding/json"
-	"os"
+    "encoding/json"
+    "os"
 
-	"github.com/nextmv-io/sdk/hop/store"
-	"github.com/nextmv-io/sdk/hop/store/types"
+    "github.com/nextmv-io/sdk/hop/store"
+    "github.com/nextmv-io/sdk/hop/store/types"
 )
 ```
 
 Now we should see our store encoded as a map. This isn't that far from where we
 started, but is more useful! Since `Format` can reshape a store into anything
 that can be encoded in JSON, its easy to make Hop output match anything we
-might expect in a production environment. 
+might expect in a production environment.
 
 ```json
 {
@@ -114,9 +114,9 @@ Note how the new store inherits our formatting logic.
 
 ## Exercises
 
-* Start with the [example above][source] and reshape the output into something 
-  more complex than a map. Can you format it as a map of maps or as a 
-  user-defined structure? How do the rules of the [`encoding/json`][json] 
+* Start with the [example above][source] and reshape the output into something
+  more complex than a map. Can you format it as a map of maps or as a
+  user-defined structure? How do the rules of the [`encoding/json`][json]
   library apply to the output?
 * What happens if you override the formatting logic of a child store? Does that
   impact the parent or any sibling stores?
