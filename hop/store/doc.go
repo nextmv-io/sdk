@@ -10,49 +10,49 @@ impact its parent.
 
 A new Store is defined.
 
-    s := store.New()
+  s := store.New()
 
 Variables are stored in the Store.
 
-    x := store.Var(s, 1)
-    y := store.Slice(s, 2, 3, 4)
-    z := store.Map[string, int](s)
+  x := store.Var(s, 1)
+  y := store.Slice(s, 2, 3, 4)
+  z := store.Map[string, int](s)
 
 The Format of the Store can be set and one can get the value of a Variable.
 
-    s = s.Format(
-        func(s types.Store) any {
-            return map[string]any{
-                "x": x.Get(s),
-                "y": y.Slice(s),
-                "z": z.Map(s),
-            }
-        },
-    )
+	s = s.Format(
+		func(s types.Store) any {
+			return map[string]any{
+				"x": x.Get(s),
+				"y": y.Slice(s),
+				"z": z.Map(s),
+			}
+		},
+	)
 
 The Value of the Store can be set. When maximizing or minimizing, Variable
 assignments are chosen so that this value increases or decreases, respectively.
 
-    s = s.Value(
-        func(s types.Store) int {
-            sum := 0
-            for i := 0; i < y.Len(s); i++ {
-                sum += y.Get(s, i)
-            }
-            return x.Get(s) + sum
-        },
-    )
+	s = s.Value(
+		func(s types.Store) int {
+			sum := 0
+			for i := 0; i < y.Len(s); i++ {
+				sum += y.Get(s, i)
+			}
+			return x.Get(s) + sum
+		},
+	)
 
 Changes, like setting a new value on a Variable, can be applied to the Store.
 
-    s = s.Apply(
-        x.Set(10),
-        y.Append(5, 6),
-    )
+	s = s.Apply(
+		x.Set(10),
+		y.Append(5, 6),
+	)
 
 To broaden the search space, new Stores can be generated.
 
-    s = s.Generate(
+  	s = s.Generate(
 		// If x is odd, divide the value in half and modify y. Operationally
 		// valid.
 		store.Scope(
@@ -95,10 +95,10 @@ When setting a Value, it can be maximized or minimized. Alternatively,
 operational validity on the Store can be satisfied, in which case setting a
 Value is not needed. Options are required to specify the search mechanics.
 
-    // DefaultOptions provide sensible defaults.
-    opt := store.DefaultOptions()
-    // Options can be modified, e.g.: changing the duration.
-    // opt.Limits.Duration = time.Duration(4) * time.Second
+	// DefaultOptions provide sensible defaults.
+	opt := store.DefaultOptions()
+	// Options can be modified, e.g.: changing the duration.
+	// opt.Limits.Duration = time.Duration(4) * time.Second
 	solver := s.Value(...).Minimizer(opt)
 	// solver := s.Value(...).Minimizer(opt)
 	// solver := s.Satisfier(opt)
@@ -107,7 +107,7 @@ To find the best collection of Variable assignments in the Store, the last
 Solution can be obtained from the given Solver. Alternatively, all Solutions
 can be retrieved to debug the search mechanics of the Solver.
 
-    solver := s.Maximizer(opt)
+	solver := s.Maximizer(opt)
 	last := solver.Last(context.Background())
 	// all := solver.All(context.Background())
 	best := x.Get(last.Store)
@@ -124,16 +124,16 @@ variable defines the type of runner used:
 
 The runner receives a handler that specifies the data type and expects a Solver.
 
-    func main() {
-        handler := func(v int, opt types.Options) (types.Solver, error) {
-            s := store.New()
-            x := store.Var(s, v) // Initialized from the runner.
-            s = s.Value(...).Format(...) // Modify the Store.
+  func main() {
+  	handler := func(v int, opt types.Options) (types.Solver, error) {
+  		s := store.New()
+  		x := store.Var(s, v)         // Initialized from the runner.
+  		s = s.Value(...).Format(...) // Modify the Store.
 
-            return s.Maximizer(opt), nil // Options are passed by the runner.
-        }
-        run.Run(handler)
-    }
+  		return s.Maximizer(opt), nil // Options are passed by the runner.
+  	}
+  	run.Run(handler)
+  }
 
 Compile the binary and use the -h flag to see available options to configure a
 runner. You can use command-line flags or environment variables. When using
