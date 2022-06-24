@@ -94,6 +94,17 @@ func Scope(f func(types.Store) types.Generator) types.Generator {
 	return scopeFunc(f)
 }
 
+/*
+DefaultOptions for running a solver. Options can be customized after using
+these sensitive defaults.
+
+	opt := store.DefaultOptions()
+	opt.Limits.Duration = time.Duration(5) * time.Second
+*/
+func DefaultOptions() types.Options {
+	return defaultOptionsFunc()
+}
+
 var (
 	newFunc func() types.Store
 	andFunc func(
@@ -108,8 +119,9 @@ var (
 		types.Condition,
 		...types.Condition,
 	) types.Condition
-	trueFunc  func(types.Store) bool
-	xorFunc   func(types.Condition, types.Condition) types.Condition
-	ifFunc    func(types.Condition) types.Action
-	scopeFunc func(func(types.Store) types.Generator) types.Generator
+	trueFunc           func(types.Store) bool
+	xorFunc            func(types.Condition, types.Condition) types.Condition
+	ifFunc             func(types.Condition) types.Action
+	scopeFunc          func(func(types.Store) types.Generator) types.Generator
+	defaultOptionsFunc func() types.Options
 )
