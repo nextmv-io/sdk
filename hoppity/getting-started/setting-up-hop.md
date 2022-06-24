@@ -34,7 +34,7 @@ require github.com/nextmv-io/sdk v0.16.0-dev.0-2 // indirect
 Now we can create a test file that prints Hop's version.
 
 ```bash
-hoppity$ cat << EOF > ehlo/main.go
+hoppity$ cat << EOF > main.go
 package main
 
 import (
