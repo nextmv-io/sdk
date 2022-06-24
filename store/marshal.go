@@ -1,4 +1,4 @@
-package types
+package store
 
 import (
 	"encoding/json"
@@ -33,8 +33,8 @@ func (o Options) MarshalJSON() ([]byte, error) {
 	if o.Random.Seed != 0 {
 		m["random"] = o.Random
 	}
-	if o.Sense != "" {
-		m["sense"] = o.Sense
+	if o.Sense.String() != "" {
+		m["sense"] = o.Sense.String()
 	}
 	if len(o.Tags) > 0 {
 		m["tags"] = o.Tags

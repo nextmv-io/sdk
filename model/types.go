@@ -1,5 +1,4 @@
-// Package types holds type definitions.
-package types
+package model
 
 // A Domain of integers.
 type Domain interface {

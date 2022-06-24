@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/nextmv-io/sdk/hop/plugin"
+	"github.com/nextmv-io/sdk/plugin"
 )
 
 var connected bool
@@ -30,5 +30,5 @@ func connect() {
 	}
 	slug = "run-" + slug
 
-	plugin.Connect(slug, "HopRunRun", &runFunc)
+	plugin.Connect(slug, "RunRun", &runFunc)
 }

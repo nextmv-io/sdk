@@ -73,7 +73,7 @@ func loadPlugin(slug, path string) (*plugin.Plugin, error) {
 func pluginPath(slug string) string {
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
 	if libraryPath == "" {
-		libraryPath = "."
+		libraryPath = "~/.nextmv/lib"
 	}
 
 	filename := fmt.Sprintf(
