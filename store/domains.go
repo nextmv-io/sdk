@@ -10,7 +10,7 @@ NewDomains creates a sequence of Domains and stores the sequence in a Store.
 	s := store.New()
 	domains := store.NewDomains( // [1 to 10, 42, odds, evens]
 		s,
-		model.Domain(model.Range(1, 10)),
+		model.Domain(model.NewRange(1, 10)),
 		model.Singleton(42),
 		model.Multiple(1, 3, 5, 7),
 		model.Multiple(2, 4, 6, 8),

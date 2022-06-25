@@ -75,7 +75,7 @@ If specifies under what condition a Generator can be used.
 		// This generator can never be used.
 		store.If(store.False).Discard(),
 		// This generator can only be used if the condition holds.
-		store.If(func(s Store) bool { return x.Get(s) < 10 }).Return(),
+		store.If(func(s store.Store) bool { return x.Get(s) < 10 }).Return(),
 	)
 */
 func If(c Condition) Action {
@@ -89,16 +89,15 @@ is useful for reusing Variables and calculations among functions.
 	s := store.New()
 	x := store.NewVar(s, 1)
 	s = s.Generate(
-		store.Scope(func(s Store) Generator {
+		store.Scope(func(s store.Store) store.Generator {
 			v := x.Get(s)
-			return store.If(func(s Store) bool {
+			return store.If(func(s store.Store) bool {
 				// v is used here.
 				return v < 10
-			}).Then(func(s Store) Store {
+			}).Then(func(s store.Store) store.Store {
 				// v is also used here.
 				v++
-				s.Apply(x.Set(v))
-				return s
+				return s.Apply(x.Set(v))
 			})
 		}),
 	)

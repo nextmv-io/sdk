@@ -8,11 +8,11 @@ import (
 NewDomain creates a Domain of integers and stores it in a Store.
 
 	s := store.New()
-	d1 := store.NewDomain(s, model.Range(1, 10)) // 1 through 10
+	d1 := store.NewDomain(s, model.NewRange(1, 10)) // 1 through 10
 	d2 := store.NewDomain( // 1 through 10 and 20 through 29
 		s,
-		model.Range(1, 10),
-		model.Range(20, 29),
+		model.NewRange(1, 10),
+		model.NewRange(20, 29),
 	)
 */
 func NewDomain(s Store, ranges ...model.Range) Domain {
@@ -20,25 +20,25 @@ func NewDomain(s Store, ranges ...model.Range) Domain {
 }
 
 /*
-NewSingleton creates a Domain containing one integer value and stores it in a
+Singleton creates a Domain containing one integer value and stores it in a
 Store.
 
     s := store.New()
-    fortyTwo := store.NewSingleton(s, 42)
+    fortyTwo := store.Singleton(s, 42)
 */
-func NewSingleton(s Store, value int) Domain {
-	return domainProxy{domain: NewVar(s, model.NewSingleton(value))}
+func Singleton(s Store, value int) Domain {
+	return domainProxy{domain: NewVar(s, model.Singleton(value))}
 }
 
 /*
-NewMultiple creates a Domain containing multiple integer values and stores it
+Multiple creates a Domain containing multiple integer values and stores it
 in a Store.
 
 	s := store.New()
-	even := store.NewMultiple(2, 4, 6, 8)
+	even := store.Multiple(2, 4, 6, 8)
 */
-func NewMultiple(s Store, values ...int) Domain {
-	return domainProxy{domain: NewVar(s, model.NewMultiple(values...))}
+func Multiple(s Store, values ...int) Domain {
+	return domainProxy{domain: NewVar(s, model.Multiple(values...))}
 }
 
 type domainProxy struct {

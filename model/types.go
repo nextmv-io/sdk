@@ -9,8 +9,8 @@ type Domain interface {
 	// AtMost updates the domain to the subdomain of at most some value.
 	AtMost(int) Domain
 	// Cmp lexically compares two integer domains. It returns a negative value
-	// if the receiver is less, 0 if they are equal, and a positive value if the
-	// receiver domain is greater.
+	// if the receiver is less, 0 if they are equal, and a positive value if
+	// the receiver domain is greater.
 	Cmp(Domain) int
 	// Contains returns true if a domain contains a given value.
 	Contains(int) bool

@@ -374,7 +374,7 @@ type Map[K Key, V any] interface {
 				m.Set(42, "foo"),
 				m.Set(13, "bar"),
 			)
-			s2 := s1.Apply(m, Delete("foo")) // {13: bar}
+			s2 := s1.Apply(m.Delete("foo")) // {13: bar}
 	*/
 	Delete(K) Change
 
@@ -433,7 +433,7 @@ type Domain interface {
 		Add values to a Domain.
 
 			s1 := store.New()
-			d := store.NewMultiple(s, 1, 3, 5)
+			d := store.Multiple(s, 1, 3, 5)
 			s2 := s1.Apply(d.Add(2, 4))
 
 			d.Domain(s1) // {1, 3, 5}}
@@ -445,7 +445,7 @@ type Domain interface {
 		AtLeast updates the Domain to the sub-Domain of at least some value.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.Range(1, 10), model.Range(101, 110))
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
 			s2 := s1.Apply(d.AtLeast(50))
 
 			d.Domain(s1) // {[1, 10], [101, 110]}
@@ -457,7 +457,7 @@ type Domain interface {
 		AtMost updates the Domain to the sub-Domain of at most some value.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.Range(1, 10), model.Range(101, 110))
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
 			s2 := s1.Apply(d.AtMost(50))
 
 			d.Domain(s1) // {[1, 10], [101, 110]}
@@ -471,8 +471,8 @@ type Domain interface {
 		the receiver Domain is greater.
 
 			s := store.New()
-			d1 := store.NewDomain(s, model.Range(1, 5), model.Range(8, 10))
-			d2 := store.NewMultiple(s, -1, 1)
+			d1 := store.NewDomain(s, model.NewRange(1, 5), model.NewRange(8, 10))
+			d2 := store.Multiple(s, -1, 1)
 			d1.Cmp(s, d2) // > 0
 	*/
 	Cmp(Store, Domain) int
@@ -481,7 +481,7 @@ type Domain interface {
 		Contains returns true if a Domain contains a given value.
 
 			s := store.New()
-			d := store.NewDomain(s, model.Range(1, 10))
+			d := store.NewDomain(s, model.NewRange(1, 10))
 			d.Contains(s, 5)  // true
 			d.Contains(s, 15) // false
 	*/
@@ -491,8 +491,8 @@ type Domain interface {
 		Domain returns a Domain unattached to a Store.
 
 			s := store.New()
-			d := store.NewDomain(s, model.Range(1, 10))
-			d.Domain(s) // model.Domain(model.Range(1, 10))
+			d := store.NewDomain(s, model.NewRange(1, 10))
+			d.Domain(s) // model.NewDomain(model.NewRange(1, 10))
 	*/
 	Domain(Store) model.Domain
 
@@ -501,7 +501,7 @@ type Domain interface {
 
 			s := store.New()
 			d1 := store.NewDomain(s)
-			d2 := store.NewSingleton(s, 42)
+			d2 := store.Singleton(s, 42)
 			d1.Empty() // true
 			d2.Empty() // false
 	*/
@@ -511,7 +511,7 @@ type Domain interface {
 		Len of a Domain, counting all values within ranges.
 
 			s := store.New()
-			d := store.NewDomain(s, model.Range(1, 10), model.Range(-5, -1))
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
 			d.Len(s) // 15
 	*/
 	Len(Store) int
@@ -521,7 +521,7 @@ type Domain interface {
 
 			s := store.New()
 			d1 := store.NewDomain(s)
-			d2 := store.NewDomain(s, model.Range(1, 10), model.Range(-5, -1))
+			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
 			d1.Max() // returns (_, false)
 			d2.Max() // returns (10, true)
 	*/
@@ -532,7 +532,7 @@ type Domain interface {
 
 			s := store.New()
 			d1 := store.NewDomain(s)
-			d2 := store.NewDomain(s, model.Range(1, 10), model.Range(-5, -1))
+			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
 			d1.Min() // returns (_, false)
 			d2.Min() // returns (-5, true)
 
@@ -543,7 +543,7 @@ type Domain interface {
 		Remove values from a Domain.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.Range(1, 5))
+			d := store.NewDomain(s, model.NewRange(1, 5))
 			s2 := s1.Apply(d.Remove(2, 4))
 
 			d.Domain(s1) // [1, 5]
@@ -555,7 +555,7 @@ type Domain interface {
 		Slice representation of a Domain.
 
 			s := store.New()
-			d := store.NewDomain(s, model.Range(1, 5))
+			d := store.NewDomain(s, model.NewRange(1, 5))
 			d.Slice(s) // [1, 2, 3, 4, 5]
 	*/
 	Slice(Store) []int
@@ -565,8 +565,8 @@ type Domain interface {
 
 			s := store.New()
 			d1 := store.NewDomain(s)
-			d2 := store.NewSingleton(s, 42)
-			d3 := store.NewMultiple(s, 1, 3, 5)
+			d2 := store.Singleton(s, 42)
+			d3 := store.Multiple(s, 1, 3, 5)
 			d1.Value() // returns (_, false)
 			d2.Value() // returns (42, true)
 			d3.Value() // returns (_, false)
@@ -601,7 +601,7 @@ type Domains interface {
 			d := store.Repeat( // [[1, 100], [1, 100]]
 				s1,
 				2,
-				model.Domain(model.Range(1, 100)),
+				model.NewDomain(model.NewRange(1, 100)),
 			)
 			s2 := s1.Apply(d.AtLeast(1, 50)) // [[1, 100], [50, 100]]
 	*/
@@ -614,7 +614,7 @@ type Domains interface {
 			d := store.Repeat( // [[1, 100], [1, 100]]
 				s1,
 				2,
-				model.Domain(model.Range(1, 100)),
+				model.NewDomain(model.NewRange(1, 100)),
 			)
 			s2 := s1.Apply(d.AtMost(1, 50)) // [[1, 100], [1, 50]]
 	*/
@@ -636,7 +636,7 @@ type Domains interface {
 			s := store.New()
 			d := store.NewDomains(
 				s,
-				model.Domain(),
+				model.NewDomain(),
 				model.Singleton(42),
 			)
 			d.Domain(s, 0) // {}
@@ -650,7 +650,7 @@ type Domains interface {
 			s := store.New()
 			d := store.NewDomains(
 				s,
-				model.Domain(),
+				model.NewDomain(),
 				model.Singleton(42),
 			)
 			d.Domains(s) // [{}, 42}
@@ -661,7 +661,7 @@ type Domains interface {
 		Empty is true if all Domains are empty.
 
 			s := store.New()
-			d := store.NewDomains(s, model.Domain())
+			d := store.NewDomains(s, model.NewDomain())
 			d.Empty(s) // true
 	*/
 	Empty(Store) bool
@@ -670,7 +670,7 @@ type Domains interface {
 		Len returns the number of Domains.
 
 			s := store.New()
-			d := store.Repeat(s, 5, model.Domain())
+			d := store.Repeat(s, 5, model.NewDomain())
 			d.Len(s) // 5
 	*/
 	Len(Store) int
@@ -680,7 +680,7 @@ type Domains interface {
 
 			s1 := store.New()
 			d := store.NewDomains(s1, model.Multiple(42, 13)) // {13, 42}
-			s2 := s1.Apply(d.Remove(13))                   // {42}
+			s2 := s1.Apply(d.Remove(13)) // {42}
 	*/
 	Remove(int, ...int) Change
 
@@ -697,7 +697,7 @@ type Domains interface {
 		Slices converts Domains to a slice of int slices.
 
 			s := store.New()
-			d := store.NewDomains(s, model.Domain(), model.Multiple(1, 3))
+			d := store.NewDomains(s, model.NewDomain(), model.Multiple(1, 3))
 			d.Slices(s) // [[], [1, 2, 3]]
 	*/
 	Slices(Store) [][]int

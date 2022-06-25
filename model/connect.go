@@ -27,8 +27,8 @@ func connect() {
 
 	// Domain
 	plugin.Connect(slug, "ModelNewDomain", &newDomainFunc)
-	plugin.Connect(slug, "ModelNewSingleton", &newSingletonFunc)
-	plugin.Connect(slug, "ModelNewMultiple", &newMultipleFunc)
+	plugin.Connect(slug, "ModelSingleton", &singletonFunc)
+	plugin.Connect(slug, "ModelMultiple", &multipleFunc)
 
 	// Domains
 	plugin.Connect(slug, "ModelNewDomains", &newDomainsFunc)

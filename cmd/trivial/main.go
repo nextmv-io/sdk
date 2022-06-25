@@ -17,7 +17,7 @@ func handler(v int, opt store.Options) (store.Solver, error) {
 	x := store.NewVar(root, v)
 	y := store.NewSlice(root, 4, 5, 6)
 	z := store.NewMap[int, string](root)
-	d := store.NewSingleton(root, 42)
+	d := store.Singleton(root, 42)
 	ds := store.Repeat(root, 10, model.NewDomain(model.NewRange(1, 10)))
 
 	root = root.Value(
