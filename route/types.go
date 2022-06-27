@@ -16,7 +16,7 @@ type Router interface {
 	Solver(opt store.Options) (store.Solver, error)
 }
 
-// An Option configures a router.
+// An Option configures a Router.
 type Option func(r Router) error
 
 // Stop to service in a Vehicle Routing Problem.
@@ -32,14 +32,14 @@ type TimeWindow struct {
 }
 
 // Backlog represents the backlog, a list of stops for a vehicle.
-type Backlog stopsToVehicle
+type Backlog struct {
+	VehicleID string   `json:"vehicle_id"`
+	Stops     []string `json:"stops"`
+}
 
 // Alternate represents alternate stops, a list of stops for a vehicle.
-type Alternate stopsToVehicle
-
-// stopsToVehicle represents a relation between stops and a vehicle.
-type stopsToVehicle struct {
-	VehicleID string   `json:"id"` //nolint:tagliatelle
+type Alternate struct {
+	VehicleID string   `json:"vehicle_id"`
 	Stops     []string `json:"stops"`
 }
 

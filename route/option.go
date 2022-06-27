@@ -141,10 +141,7 @@ func Limits(
 // LimitDistances limits the distances of the routes by the given values. The
 // values are indexed by vehicle and must be given in meters. To not limit a
 // route to any value, use model.MaxInt.
-func LimitDistances(
-	maxDistances []float64,
-	ignoreTriangular bool,
-) Option {
+func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
 	connect()
 	return limitDistancesFunc(maxDistances, ignoreTriangular)
 }
@@ -152,10 +149,7 @@ func LimitDistances(
 // LimitDurations limits the the durations of the routes to the given values.
 // The values are indexed by vehicle and must be given in seconds. To not limit
 // a route to any value, use model.MaxInt.
-func LimitDurations(
-	maxDurations []float64,
-	ignoreTriangular bool,
-) Option {
+func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
 	connect()
 	return limitDurationsFunc(maxDurations, ignoreTriangular)
 }
@@ -180,9 +174,7 @@ func Grouper(groups [][]string) Option {
 // the `Update()` function. In the `Update()` function you can request a
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
-func ValueFunctionMeasures(
-	valueFunctionMeasures []ByIndex,
-) Option {
+func ValueFunctionMeasures(valueFunctionMeasures []ByIndex) Option {
 	connect()
 	return valueFunctionMeasuresFunc(valueFunctionMeasures)
 }
@@ -211,10 +203,7 @@ func TravelTimeMeasures(timeMeasures []ByIndex) Option {
 // attributes for stops and vehicles. Stops that are not provided are compatible
 // with any vehicle. Vehicles that are not provided are only compatible with
 // stops without attributes.
-func Attribute(
-	vehicles []Attributes,
-	stops []Attributes,
-) Option {
+func Attribute(vehicles []Attributes, stops []Attributes) Option {
 	connect()
 	return attributeFunc(vehicles, stops)
 }
@@ -286,12 +275,10 @@ var (
 	grouperFunc               func([][]string) Option
 	valueFunctionMeasuresFunc func([]ByIndex) Option
 	travelTimeMeasuresFunc    func([]ByIndex) Option
-	attributeFunc             func(
-		[]Attributes, []Attributes,
-	) Option
-	feasibleFunc      func(store.Options) Option
-	threadsFunc       func(int) Option
-	alternatesFunc    func([]Alternate) Option
-	velocitiesFunc    func([]float64) Option
-	serviceGroupsFunc func([]ServiceGroup) Option
+	attributeFunc             func([]Attributes, []Attributes) Option
+	feasibleFunc              func(store.Options) Option
+	threadsFunc               func(int) Option
+	alternatesFunc            func([]Alternate) Option
+	velocitiesFunc            func([]float64) Option
+	serviceGroupsFunc         func([]ServiceGroup) Option
 )

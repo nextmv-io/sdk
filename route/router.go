@@ -5,7 +5,8 @@ package route
 // applied, an error is returned if there are validation issues. The router is
 // composable, meaning that several options may be used or none at all. The
 // options, unless otherwise noted, can be used independently of each other.
-func NewRouter(stops []Stop,
+func NewRouter(
+	stops []Stop,
 	vehicles []string,
 	opts ...Option,
 ) (Router, error) {
@@ -13,7 +14,4 @@ func NewRouter(stops []Stop,
 	return newRouterFunc(stops, vehicles, opts...)
 }
 
-var newRouterFunc func(
-	[]Stop,
-	[]string, ...Option,
-) (Router, error)
+var newRouterFunc func([]Stop, []string, ...Option) (Router, error)
