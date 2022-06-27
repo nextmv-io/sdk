@@ -1,4 +1,3 @@
-// Package types holds type definitions.
 package route
 
 import (
