@@ -4,6 +4,73 @@ import (
 	"reflect"
 )
 
+// A Key for a Map.
+type Key interface{ int | string }
+
+// A Map stores key-value pairs in a Store.
+type Map[K Key, V any] interface {
+	/*
+		Delete a Key from the Map.
+
+			s1 := store.New()
+			m := store.NewMap[int, string](s1)
+			s1 = s1.Apply( // {42: foo, 13: bar}
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			s2 := s1.Apply(m.Delete("foo")) // {13: bar}
+	*/
+	Delete(K) Change
+
+	/*
+		Get a value for a Key.
+
+			s1 := store.New()
+			m := store.NewMap[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo"))
+			m.Get(s2) // (foo, true)
+			m.Get(s2) // (_, false)
+	*/
+	Get(Store, K) (V, bool)
+
+	/*
+		Len returns the number of Keys in a Map.
+
+			s1 := store.New()
+			m := store.NewMap[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Len(s1) // 0
+			m.Len(s2) // 2
+	*/
+	Len(Store) int
+
+	/*
+		Map representation that is mutable.
+
+			s1 := store.New()
+			m := store.NewMap[int, string](s1)
+			s2 := s1.Apply(
+				m.Set(42, "foo"),
+				m.Set(13, "bar"),
+			)
+			m.Map(s2) // map[int]string{42: "foo", 13: "bar"}
+	*/
+	Map(Store) map[K]V
+
+	/*
+		Set a Key to a Value.
+
+			s1 := store.New()
+			m := store.NewMap[int, string](s1)
+			s2 := s1.Apply(m.Set(42, "foo")) // 42 -> foo
+			s3 := s2.Apply(m.Set(42, "bar")) // 42 -> bar
+	*/
+	Set(K, V) Change
+}
+
 /*
 NewMap returns a new NewMap and stores it in a Store.
 
@@ -12,6 +79,7 @@ NewMap returns a new NewMap and stores it in a Store.
 	m2 := store.NewMap[string, int](s)     // map of {string -> int}
 */
 func NewMap[K Key, V any](s Store) Map[K, V] {
+	connect()
 	p := mapProxy[K, V]{}
 
 	var k K

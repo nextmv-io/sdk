@@ -5,6 +5,30 @@ import (
 	"reflect"
 )
 
+// Variable stored in a Store.
+type Variable[T any] interface {
+	/*
+		Get the current value of the Variable in the Store.
+
+			s := store.New()
+			x := store.NewVar(s, 10)
+			s = s.Format(func(s store.Store) any {
+				return map[string]int{"x": x.Get(s)}
+			})
+
+	*/
+	Get(Store) T
+
+	/*
+		Set a new value on the Variable.
+
+			s := store.New()
+			x := store.NewVar(s, 10)
+			s = s.Apply(x.Set(15))
+	*/
+	Set(T) Change
+}
+
 /*
 NewVar stores a new Variable in a Store.
 

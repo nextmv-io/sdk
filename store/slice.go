@@ -5,6 +5,81 @@ import (
 	"reflect"
 )
 
+// Slice manages an immutable slice container of some type in a Store.
+type Slice[T any] interface {
+	/*
+		Append one or more values to the end of a Slice.
+
+			s1 := store.New()
+			x := store.NewSlice(s, 1, 2, 3)   // [1, 2, 3]
+			s2 := s1.Apply(x.Append(4, 5)) // [1, 2, 3, 4, 5]
+	*/
+	Append(value T, values ...T) Change
+
+	/*
+		Get an index of a Slice.
+
+			s := store.New()
+			x := store.NewSlice(s, 1, 2, 3)
+			x.Get(s, 2) // 3
+	*/
+	Get(Store, int) T
+
+	/*
+		Insert one or more values at an index in a Slice.
+
+			s1 := store.New()
+			x := store.NewSlice(s, "a", "b", "c")
+			s2 := s1.Apply(s.Insert(2, "d", "e")) // [a, b, d, e, c]
+	*/
+	Insert(index int, value T, values ...T) Change
+
+	/*
+		Len returns the length of a Slice.
+
+			s := store.New()
+			x := store.NewSlice(s, 1, 2, 3)
+			x.Len(s) // 3
+	*/
+	Len(Store) int
+
+	/*
+		Prepend one or more values at the beginning of a Slice.
+
+			s1 := store.New()
+			x := store.NewSlice(s, 1, 2, 3)    // [1, 2, 3]
+			s2 := s1.Apply(x.Prepend(4, 5)) // [4, 5, 1, 2, 3]
+	*/
+	Prepend(value T, values ...T) Change
+
+	/*
+		Remove a sub-Slice from a starting to an ending index.
+
+			s1 := store.New()
+			x := store.NewSlice(s, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Remove(1))  // [1, 3]
+	*/
+	Remove(start, end int) Change
+
+	/*
+		Set a value by index.
+
+			s1 := store.New()
+			x := store.NewSlice(s, "a", "b", "c") // [a, b, c]
+			s2 := s1.Apply(x.Set(1, "d"))      // [a, d, c]
+	*/
+	Set(int, T) Change
+
+	/*
+		Slice representation that is mutable.
+
+			s := store.New()
+			x := store.NewSlice(s, 1, 2, 3)
+			x.Slice(s) // []int{1, 2, 3}
+	*/
+	Slice(Store) []T
+}
+
 /*
 NewSlice returns a new NewSlice and stores it in a Store.
 
@@ -13,6 +88,7 @@ NewSlice returns a new NewSlice and stores it in a Store.
 	y := store.NewSlice(s, 3.14, 2.72) // []float64{3.14, 2.72}
 */
 func NewSlice[T any](s Store, values ...T) Slice[T] {
+	connect()
 	return sliceProxy[T]{slice: newSliceFunc(s, anySlice(values)...)}
 }
 

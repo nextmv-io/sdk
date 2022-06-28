@@ -4,6 +4,153 @@ import (
 	"github.com/nextmv-io/sdk/model"
 )
 
+// A Domain of integers.
+type Domain interface {
+	/*
+		Add values to a Domain.
+
+			s1 := store.New()
+			d := store.Multiple(s, 1, 3, 5)
+			s2 := s1.Apply(d.Add(2, 4))
+
+			d.Domain(s1) // {1, 3, 5}}
+			d.Domain(s2) // [1, 5]]
+	*/
+	Add(...int) Change
+
+	/*
+		AtLeast updates the Domain to the sub-Domain of at least some value.
+
+			s1 := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
+			s2 := s1.Apply(d.AtLeast(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [101, 110]
+	*/
+	AtLeast(int) Change
+
+	/*
+		AtMost updates the Domain to the sub-Domain of at most some value.
+
+			s1 := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
+			s2 := s1.Apply(d.AtMost(50))
+
+			d.Domain(s1) // {[1, 10], [101, 110]}
+			d.Domain(s2) // [1, 10]
+	*/
+	AtMost(int) Change
+
+	/*
+		Cmp lexically compares two integer Domains. It returns a negative value
+		if the receiver is less, 0 if they are equal, and a positive value if
+		the receiver Domain is greater.
+
+			s := store.New()
+			d1 := store.NewDomain(s, model.NewRange(1, 5), model.NewRange(8, 10))
+			d2 := store.Multiple(s, -1, 1)
+			d1.Cmp(s, d2) // > 0
+	*/
+	Cmp(Store, Domain) int
+
+	/*
+		Contains returns true if a Domain contains a given value.
+
+			s := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 10))
+			d.Contains(s, 5)  // true
+			d.Contains(s, 15) // false
+	*/
+	Contains(Store, int) bool
+
+	/*
+		Domain returns a Domain unattached to a Store.
+
+			s := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 10))
+			d.Domain(s) // model.NewDomain(model.NewRange(1, 10))
+	*/
+	Domain(Store) model.Domain
+
+	/*
+		Empty is true if a Domain is empty for a Store.
+
+			s := store.New()
+			d1 := store.NewDomain(s)
+			d2 := store.Singleton(s, 42)
+			d1.Empty() // true
+			d2.Empty() // false
+	*/
+	Empty(Store) bool
+
+	/*
+		Len of a Domain, counting all values within ranges.
+
+			s := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
+			d.Len(s) // 15
+	*/
+	Len(Store) int
+
+	/*
+		Max of a Domain and a boolean indicating it is non-empty.
+
+			s := store.New()
+			d1 := store.NewDomain(s)
+			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
+			d1.Max() // returns (_, false)
+			d2.Max() // returns (10, true)
+	*/
+	Max(Store) (int, bool)
+
+	/*
+		Min of a Domain and a boolean indicating it is non-empty.
+
+			s := store.New()
+			d1 := store.NewDomain(s)
+			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
+			d1.Min() // returns (_, false)
+			d2.Min() // returns (-5, true)
+
+	*/
+	Min(Store) (int, bool)
+
+	/*
+		Remove values from a Domain.
+
+			s1 := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 5))
+			s2 := s1.Apply(d.Remove(2, 4))
+
+			d.Domain(s1) // [1, 5]
+			d.Domain(s2) // {1, 3, 5}
+	*/
+	Remove(...int) Change
+
+	/*
+		Slice representation of a Domain.
+
+			s := store.New()
+			d := store.NewDomain(s, model.NewRange(1, 5))
+			d.Slice(s) // [1, 2, 3, 4, 5]
+	*/
+	Slice(Store) []int
+
+	/*
+		Value returns an int and true if a Domain is Singleton.
+
+			s := store.New()
+			d1 := store.NewDomain(s)
+			d2 := store.Singleton(s, 42)
+			d3 := store.Multiple(s, 1, 3, 5)
+			d1.Value() // returns (_, false)
+			d2.Value() // returns (42, true)
+			d3.Value() // returns (_, false)
+	*/
+	Value(Store) (int, bool)
+}
+
 /*
 NewDomain creates a Domain of integers and stores it in a Store.
 
