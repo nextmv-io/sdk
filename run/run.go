@@ -2,16 +2,16 @@
 package run
 
 import (
-	"github.com/nextmv-io/sdk/hop/store/types"
+	"github.com/nextmv-io/sdk/store"
 )
 
 /*
 Run a solver via a handler.
 
 	func main() {
-		handler := func(v int, opt types.Options) (types.Solver, error) {
+		handler := func(v int, opt store.Options) (store.Solver, error) {
 			s := store.New()
-			x := store.Var(s, v)
+			x := store.NewVar(s, v)
 			s = s.Value(...).Format(...).Generate(...) // Modify the Store.
 
 			return s.Maximizer(opt), nil
@@ -21,7 +21,7 @@ Run a solver via a handler.
 		run.Run(handler)
 	}
 */
-func Run[T any](handler func(T, types.Options) (types.Solver, error)) {
+func Run[T any](handler func(T, store.Options) (store.Solver, error)) {
 	connect()
 
 	runFunc(handler)

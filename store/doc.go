@@ -14,14 +14,14 @@ A new Store is defined.
 
 Variables are stored in the Store.
 
-  x := store.Var(s, 1)
-  y := store.Slice(s, 2, 3, 4)
-  z := store.Map[string, int](s)
+  x := store.NewVar(s, 1)
+  y := store.NewSlice(s, 2, 3, 4)
+  z := store.NewMap[string, int](s)
 
 The Format of the Store can be set and one can get the value of a Variable.
 
 	s = s.Format(
-		func(s types.Store) any {
+		func(s store.Store) any {
 			return map[string]any{
 				"x": x.Get(s),
 				"y": y.Slice(s),
@@ -34,7 +34,7 @@ The Value of the Store can be set. When maximizing or minimizing, Variable
 assignments are chosen so that this value increases or decreases, respectively.
 
 	s = s.Value(
-		func(s types.Store) int {
+		func(s store.Store) int {
 			sum := 0
 			for i := 0; i < y.Len(s); i++ {
 				sum += y.Get(s, i)
@@ -56,11 +56,11 @@ To broaden the search space, new Stores can be generated.
 		// If x is odd, divide the value in half and modify y. Operationally
 		// valid.
 		store.Scope(
-			func(s types.Store) types.Generator {
+			func(s store.Store) store.Generator {
 				v := x.Get(s)
-				f := func(s types.Store) bool { return v%2 != 0 }
+				f := func(s store.Store) bool { return v%2 != 0 }
 				return store.If(f).
-					Then(func(s types.Store) types.Store {
+					Then(func(s store.Store) store.Store {
 						v /= 2
 						return s.Apply(
 							x.Set(v),
@@ -72,23 +72,23 @@ To broaden the search space, new Stores can be generated.
 		),
 		// If x is even, increase the value by 1. Operationally valid.
 		store.Scope(
-			func(s types.Store) types.Generator {
+			func(s store.Store) store.Generator {
 				v := x.Get(s)
-				f := func(s types.Store) bool { return v%2 == 0 }
+				f := func(s store.Store) bool { return v%2 == 0 }
 				return store.If(f).
-					Then(func(s types.Store) types.Store {
+					Then(func(s store.Store) store.Store {
 						return s.Apply(x.Set(v + 1))
 					})
 			},
 		),
 		// If x is greater than 75, then generate the same store with
 		// operational validity based on x being divisible by 5.
-		store.If(func(s types.Store) bool { return x.Get(s) > 75 }).
-			Then(func(s types.Store) types.Store { return s }).
-			With(func(s types.Store) bool { return y.Len(s)%5 == 0 }),
+		store.If(func(s store.Store) bool { return x.Get(s) > 75 }).
+			Then(func(s store.Store) store.Store { return s }).
+			With(func(s store.Store) bool { return y.Len(s)%5 == 0 }),
 		// If x is greater than or equal to 100, return the same Store and it
 		// is operationally valid.
-		store.If(func(s types.Store) bool { return x.Get(s) >= 100 }).Return(),
+		store.If(func(s store.Store) bool { return x.Get(s) >= 100 }).Return(),
 	)
 
 When setting a Value, it can be maximized or minimized. Alternatively,
@@ -115,19 +115,19 @@ can be retrieved to debug the search mechanics of the Solver.
 
 Runners are provided for convenience when running the Store. They read data and
 options and manage the call to the Solver. The `NEXTMV_RUNNER` environment
-variable defines the type of runner used:
+variable defines the type of runner used.
 
-    - "cli": Command Line Interface runner. Useful for running from a terminal.
-    Can read from a file or stdin and write to a file or stdout.
-    - "http": HTTP runner. Useful for sending requests and receiving responses
-    on the specified port.
+	- "cli": (Default) Command Line Interface runner. Useful for running from a
+	terminal. Can read from a file or stdin and write to a file or stdout.
+	- "http": HTTP runner. Useful for sending requests and receiving responses
+	on the specified port.
 
 The runner receives a handler that specifies the data type and expects a Solver.
 
   func main() {
-  	handler := func(v int, opt types.Options) (types.Solver, error) {
+  	handler := func(v int, opt store.Options) (store.Solver, error) {
   		s := store.New()
-  		x := store.Var(s, v)         // Initialized from the runner.
+  		x := store.NewVar(s, v)      // Initialized from the runner.
   		s = s.Value(...).Format(...) // Modify the Store.
 
   		return s.Maximizer(opt), nil // Options are passed by the runner.
