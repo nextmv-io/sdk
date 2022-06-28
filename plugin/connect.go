@@ -19,7 +19,10 @@ import (
 //    var fooFunc func()
 //    plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
-	path := pluginPath(slug)
+	path, err := pluginPath(slug)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "err getting plugin path: %v", err)
+	}
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		fmt.Fprintf(os.Stderr, "plugin file %q does not exist\n\n", path)
 		os.Exit(1)
@@ -70,10 +73,14 @@ func loadPlugin(slug, path string) (*plugin.Plugin, error) {
 	return p, nil
 }
 
-func pluginPath(slug string) string {
+func pluginPath(slug string) (string, error) {
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
 	if libraryPath == "" {
-		libraryPath = "~/.nextmv/lib"
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("could not fetch user home dir: %v", err)
+		}
+		libraryPath = filepath.Join(homeDir, ".nextmv", "lib")
 	}
 
 	filename := fmt.Sprintf(
@@ -84,5 +91,5 @@ func pluginPath(slug string) string {
 		runtime.GOOS,
 		runtime.GOARCH,
 	)
-	return filepath.Join(libraryPath, filename)
+	return filepath.Join(libraryPath, filename), nil
 }
