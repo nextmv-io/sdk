@@ -1,5 +1,26 @@
 package route
 
+// Point represents a point in space. It may have any dimension.
+type Point []float64
+
+// ByIndex estimates the cost of going from one index to another.
+type ByIndex interface {
+	// Cost estimates the cost of going from one index to another.
+	Cost(from, to int) float64
+}
+
+// ByPoint estimates the cost of going from one point to another.
+type ByPoint interface {
+	// Cost estimates the cost of going from one point to another.
+	Cost(from, to Point) float64
+}
+
+// Triangular indicates that the triangle inequality holds for every
+// measure that implements it.
+type Triangular interface {
+	Triangular() bool
+}
+
 // Override measure uses a default measure for all arcs that are not true for a
 // condition. It uses an override measure for all arcs that are true for the
 // condition.
@@ -8,6 +29,7 @@ func Override(
 	overrideByIndex ByIndex,
 	condition func(from, to int) bool,
 ) ByIndex {
+	connect()
 	return overrideFunc(defaultByIndex, overrideByIndex, condition)
 }
 

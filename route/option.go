@@ -4,6 +4,9 @@ import (
 	"github.com/nextmv-io/sdk/store"
 )
 
+// An Option configures a Router.
+type Option func(Router) error
+
 // Starts sets the starting locations indexed by vehicle. The length must match
 // the vehicles' length.
 func Starts(starts []Position) Option {
