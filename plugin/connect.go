@@ -75,11 +75,11 @@ func loadPlugin(slug, path string) (*plugin.Plugin, error) {
 
 func pluginPath(slug string) (string, error) {
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("could not fetch user home dir: %v", err)
-	}
 	if libraryPath == "" {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("could not fetch user home dir: %v", err)
+		}
 		libraryPath = filepath.Join(homeDir, ".nextmv", "lib")
 	}
 
