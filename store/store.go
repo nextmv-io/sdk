@@ -8,15 +8,15 @@ import (
 )
 
 const (
-	// Minimizer indicates the solution space is being searched to find the
+	// Minimize indicates the solution space is being searched to find the
 	// smallest possible value.
-	Minimizer Sense = iota
-	// Maximizer indicates the solution space is being searched to find the
+	Minimize Sense = iota
+	// Maximize indicates the solution space is being searched to find the
 	// biggest possible value.
-	Maximizer
-	// Satisfier indicates the solution space is being searched to find
+	Maximize
+	// Satisfy indicates the solution space is being searched to find
 	// operationally valid Stores.
-	Satisfier
+	Satisfy
 )
 
 /*
@@ -279,12 +279,12 @@ type Sense int
 
 func (s Sense) String() string {
 	switch s {
-	case Maximizer:
-		return "maximizer"
-	case Satisfier:
-		return "satisfier"
-	case Minimizer:
-		return "minimizer"
+	case Maximize:
+		return "maximize"
+	case Satisfy:
+		return "satisfy"
+	case Minimize:
+		return "minimize"
 	default:
 		panic("sense not defined")
 	}
