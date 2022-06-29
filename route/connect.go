@@ -54,6 +54,7 @@ func connect() {
 	plugin.Connect(slug, "RouteServiceGroups", &serviceGroupsFunc)
 
 	// measures
+	plugin.Connect(slug, "RouteHaversineByPoint", &haversineByPointFunc)
 	plugin.Connect(slug, "RouteIndexed", &indexedFunc)
 	plugin.Connect(slug, "RouteConstantByPoint", &constantByPointFunc)
 	plugin.Connect(slug, "RouteConstant", &constantFunc)
