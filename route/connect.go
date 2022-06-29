@@ -32,11 +32,7 @@ func connect() {
 	plugin.Connect(slug, "RouteStarts", &startsFunc)
 	plugin.Connect(slug, "RouteEnds", &endsFunc)
 	plugin.Connect(slug, "RouteCapacity", &capacityFunc)
-	plugin.Connect(
-		slug,
-		"RouteInitializationCosts",
-		&initializationCostsFunc,
-	)
+	plugin.Connect(slug, "RouteInitializationCosts", &initializationCostsFunc)
 	plugin.Connect(slug, "RoutePrecedence", &precedenceFunc)
 	plugin.Connect(slug, "RouteServices", &servicesFunc)
 	plugin.Connect(slug, "RouteShifts", &shiftsFunc)
@@ -49,16 +45,8 @@ func connect() {
 	plugin.Connect(slug, "RouteLimitDistances", &limitDistancesFunc)
 	plugin.Connect(slug, "RouteLimitDurations", &limitDurationsFunc)
 	plugin.Connect(slug, "RouteGrouper", &grouperFunc)
-	plugin.Connect(
-		slug,
-		"RouteValueFunctionMeasures",
-		&valueFunctionMeasuresFunc,
-	)
-	plugin.Connect(
-		slug,
-		"RouteTravelTimeMeasures",
-		&travelTimeMeasuresFunc,
-	)
+	plugin.Connect(slug, "RouteValueFunctionMeasures", &valueFunctionMeasuresFunc)
+	plugin.Connect(slug, "RouteTravelTimeMeasures", &travelTimeMeasuresFunc)
 	plugin.Connect(slug, "RouteAttribute", &attributeFunc)
 	plugin.Connect(slug, "RouteThreads", &threadsFunc)
 	plugin.Connect(slug, "RouteAlternates", &alternatesFunc)
