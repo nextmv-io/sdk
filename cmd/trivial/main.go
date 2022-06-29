@@ -3,28 +3,27 @@ package main
 import (
 	"strconv"
 
-	"github.com/nextmv-io/sdk/hop/model"
-	"github.com/nextmv-io/sdk/hop/run"
-	"github.com/nextmv-io/sdk/hop/store"
-	"github.com/nextmv-io/sdk/hop/store/types"
+	"github.com/nextmv-io/sdk/model"
+	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/store"
 )
 
 func main() {
 	run.Run(handler)
 }
 
-func handler(v int, opt types.Options) (types.Solver, error) {
+func handler(v int, opt store.Options) (store.Solver, error) {
 	root := store.New()
-	x := store.Var(root, v)
-	y := store.Slice(root, 4, 5, 6)
-	z := store.Map[int, string](root)
+	x := store.NewVar(root, v)
+	y := store.NewSlice(root, 4, 5, 6)
+	z := store.NewMap[int, string](root)
 	d := store.Singleton(root, 42)
-	ds := store.Repeat(root, 10, model.Domain(model.Range(1, 10)))
+	ds := store.Repeat(root, 10, model.NewDomain(model.NewRange(1, 10)))
 
 	root = root.Value(
 		x.Get,
 	).Format(
-		func(s types.Store) any {
+		func(s store.Store) any {
 			return map[string]any{
 				"x":  x.Get(s),
 				"y":  y.Slice(s),
@@ -35,11 +34,11 @@ func handler(v int, opt types.Options) (types.Solver, error) {
 		},
 	).Generate(
 		store.If(
-			func(s types.Store) bool {
+			func(s store.Store) bool {
 				return x.Get(s)%2 != 0
 			},
 		).Then(
-			func(s types.Store) types.Store {
+			func(s store.Store) store.Store {
 				v := x.Get(s) / 2
 				child := s.Apply(
 					x.Set(v),

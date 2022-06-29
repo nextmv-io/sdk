@@ -1,5 +1,4 @@
-// Package types holds type definitions.
-package types
+package model
 
 // A Domain of integers.
 type Domain interface {
@@ -10,8 +9,8 @@ type Domain interface {
 	// AtMost updates the domain to the subdomain of at most some value.
 	AtMost(int) Domain
 	// Cmp lexically compares two integer domains. It returns a negative value
-	// if the receiver is less, 0 if they are equal, and a positive value if the
-	// receiver domain is greater.
+	// if the receiver is less, 0 if they are equal, and a positive value if
+	// the receiver domain is greater.
 	Cmp(Domain) int
 	// Contains returns true if a domain contains a given value.
 	Contains(int) bool
@@ -83,3 +82,48 @@ type Range interface {
 	Min() int
 	Max() int
 }
+
+// NewDomain creates a domain of integers.
+func NewDomain(ranges ...Range) Domain {
+	connect()
+	return newDomainFunc(ranges...)
+}
+
+// Singleton creates a domain containing one integer value.
+func Singleton(value int) Domain {
+	connect()
+	return singletonFunc(value)
+}
+
+// Multiple creates a domain containing multiple integer values.
+func Multiple(values ...int) Domain {
+	connect()
+	return multipleFunc(values...)
+}
+
+// NewDomains creates a sequence of domains.
+func NewDomains(domains ...Domain) Domains {
+	connect()
+	return newDomainsFunc(domains...)
+}
+
+// Repeat a domain n times.
+func Repeat(n int, d Domain) Domains {
+	connect()
+	return repeatFunc(n, d)
+}
+
+// NewRange create a new integer range.
+func NewRange(min, max int) Range {
+	connect()
+	return newRangeFunc(min, max)
+}
+
+var (
+	newDomainFunc  func(...Range) Domain
+	singletonFunc  func(int) Domain
+	multipleFunc   func(...int) Domain
+	newDomainsFunc func(...Domain) Domains
+	repeatFunc     func(int, Domain) Domains
+	newRangeFunc   func(int, int) Range
+)
