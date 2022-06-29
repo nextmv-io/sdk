@@ -60,7 +60,6 @@ func connect() {
 		&travelTimeMeasuresFunc,
 	)
 	plugin.Connect(slug, "RouteAttribute", &attributeFunc)
-	plugin.Connect(slug, "RouteFeasible", &feasibleFunc)
 	plugin.Connect(slug, "RouteThreads", &threadsFunc)
 	plugin.Connect(slug, "RouteAlternates", &alternatesFunc)
 	plugin.Connect(slug, "RouteVelocities", &velocitiesFunc)

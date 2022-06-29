@@ -1,9 +1,5 @@
 package route
 
-import (
-	"github.com/nextmv-io/sdk/store"
-)
-
 // An Option configures a Router.
 type Option func(Router) error
 
@@ -94,17 +90,6 @@ func Unassigned(penalties []int) Option {
 func Backlogs(backlogs []Backlog) Option {
 	connect()
 	return backlogsFunc(backlogs)
-}
-
-// Optimal sets the solver options for the underlying optimal search in the
-// internal vehicle engine, when using multiple vehicles. To configure the
-// internal fleet engine, refer to the options passed to the Solver() function
-// of the router engine. When using one vehicle, this option can not be used
-// because solver options are read from the Solver() function. As a default, the
-// options provided by fleetEngine.DefaultRouterOptions() are used.
-func Optimal(optimal store.Options) Option {
-	connect()
-	return optimalFunc()
 }
 
 // Minimize sets the solver type of the router to minimize the value with a
@@ -211,17 +196,6 @@ func Attribute(vehicles []Attributes, stops []Attributes) Option {
 	return attributeFunc(vehicles, stops)
 }
 
-// Feasible sets the solver options for the underlying feasible search in the
-// internal vehicle engine, when using multiple vehicles. To configure the
-// internal fleet engine, refer to the options passed to the Solver() function
-// of the router engine. When using one vehicle, this option can not be used
-// because solver options are read from the Solver() function. As a default, the
-// options provided by fleetEngine.DefaultRouterOptions() are used.
-func Feasible(feasible store.Options) Option {
-	connect()
-	return feasibleFunc(feasible)
-}
-
 // Threads sets the number of threads that the internal solver uses. The router
 // engine's solver is a hybrid solver that uses a Decision Diagram (DD) solver
 // and various ALNS solvers with DD sub-solvers. If threads = 1, it means that
@@ -269,7 +243,6 @@ var (
 	windowsFunc               func([]Window) Option
 	unassignedFunc            func([]int) Option
 	backlogsFunc              func([]Backlog) Option
-	optimalFunc               func() Option
 	minimizeFunc              func() Option
 	maximizeFunc              func() Option
 	limitsFunc                func([]Limit, bool) Option
@@ -279,7 +252,6 @@ var (
 	valueFunctionMeasuresFunc func([]ByIndex) Option
 	travelTimeMeasuresFunc    func([]ByIndex) Option
 	attributeFunc             func([]Attributes, []Attributes) Option
-	feasibleFunc              func(store.Options) Option
 	threadsFunc               func(int) Option
 	alternatesFunc            func([]Alternate) Option
 	velocitiesFunc            func([]float64) Option
