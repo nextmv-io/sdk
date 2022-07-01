@@ -10,8 +10,9 @@ type Domains interface {
 		Add values to a Domain by index.
 
 			s1 := store.New()
-			d := store.Repeat(s1, 1, model.Singleton(42)) // [42, 42, 42]
-			s2 := s1.Apply(d.Add(1, 41, 43))              // [42, [41,43], 42]
+			d := store.Repeat(s1, 3, model.Singleton(42)) // [42, 42, 42]
+			s2 := s1.Apply(d.Add(1, 41, 43))
+			d.Domains(s2)                                 // [42, [41,43], 42]
 	*/
 	Add(int, ...int) Change
 
@@ -20,7 +21,8 @@ type Domains interface {
 
 			s1 := store.New()
 			d := store.Repeat(s1, 3, model.Singleton(42)) // [42, 42, 42]
-			s2 := s1.Apply(d.Assign(0, 10))               // [10, 42, 42]
+			s2 := s1.Apply(d.Assign(0, 10))
+			d.Domains(s2)                                 // [10, 42, 42]
 	*/
 	Assign(int, int) Change
 
@@ -33,7 +35,8 @@ type Domains interface {
 				2,
 				model.NewDomain(model.NewRange(1, 100)),
 			)
-			s2 := s1.Apply(d.AtLeast(1, 50)) // [[1, 100], [50, 100]]
+			s2 := s1.Apply(d.AtLeast(1, 50))
+			d.Domains(s2) // [[1, 100], [50, 100]]
 	*/
 	AtLeast(int, int) Change
 
@@ -46,16 +49,19 @@ type Domains interface {
 				2,
 				model.NewDomain(model.NewRange(1, 100)),
 			)
-			s2 := s1.Apply(d.AtMost(1, 50)) // [[1, 100], [1, 50]]
+			s2 := s1.Apply(d.AtMost(1, 50))
+			d.Domains(s2) // [[1, 100], [1, 50]]
 	*/
 	AtMost(int, int) Change
 
 	/*
-		Cmp lexically compares two sequences of integer Domains.
+		Cmp lexically compares two sequences of integer Domains. It returns a
+		negative value if the receiver is less, 0 if they are equal, and a
+		positive value if the receiver Domain is greater.
 
 			s := store.New()
-			d1 := store.Repeat(s, 3, model.Singleton(42)) // [42, 42, 42]
-			d2 := store.Repeat(s, 2, model.Singleton(43)) // [43, 43]]
+			d1 := store.Repeat(s, 2, model.Singleton(42)) // [42, 42, 42]
+			d2 := store.Repeat(s, 3, model.Singleton(43)) // [43, 43]]
 			d1.Cmp(s, d2) // < 0
 	*/
 	Cmp(Store, Domains) int
@@ -64,11 +70,7 @@ type Domains interface {
 		Domain by index.
 
 			s := store.New()
-			d := store.NewDomains(
-				s,
-				model.NewDomain(),
-				model.Singleton(42),
-			)
+			d := store.NewDomains(s, model.NewDomain(), model.Singleton(42))
 			d.Domain(s, 0) // {}
 			d.Domain(s, 1) // 42
 	*/
@@ -78,11 +80,7 @@ type Domains interface {
 		Domains in the sequence.
 
 			s := store.New()
-			d := store.NewDomains(
-				s,
-				model.NewDomain(),
-				model.Singleton(42),
-			)
+			d := store.NewDomains(s, model.NewDomain(), model.Singleton(42))
 			d.Domains(s) // [{}, 42}
 	*/
 	Domains(Store) model.Domains
@@ -110,7 +108,8 @@ type Domains interface {
 
 			s1 := store.New()
 			d := store.NewDomains(s1, model.Multiple(42, 13)) // {13, 42}
-			s2 := s1.Apply(d.Remove(13)) // {42}
+			s2 := s1.Apply(d.Remove(0, 13))
+			d.Domains(s2) // {42}
 	*/
 	Remove(int, ...int) Change
 
@@ -137,29 +136,111 @@ type Domains interface {
 
 			s1 := store.New()
 			d := store.Repeat(s1, 3, model.Singleton(42))
-			s2 := store.Apply(d.Add(0, 41))
+			s2 := s1.Apply(d.Add(0, 41))
 			d.Values(s1) // ([42, 42, 42], true)
-			d.Values(s2) // (_, false)
+			d.Values(s2) // ([], false)
 	*/
 	Values(Store) ([]int, bool)
 
-	/* Domain selectors */
+	// Domain selectors
 
-	// First returns the first Domain index with length above 1.
+	/*
+		First returns the first Domain index with length above 1 and true if it
+		is found. If no Domain has a length above 1, the function returns 0 and
+		false.
+
+			s := store.New()
+			d := store.NewDomains(
+				s,
+				model.Singleton(88),   // Length 1
+				model.Multiple(1, 3),  // Length above 1
+				model.Multiple(4, 76), // Length above 1
+			)
+			d.First(s) // (1, true)
+	*/
 	First(Store) (int, bool)
-	// Largest returns the index of the largest Domain with length above 1 by
-	// number of elements.
+
+	/*
+		Largest returns the index of the largest Domain with length above 1 by
+		number of elements and true if it is found. If no Domain has a length
+		above 1, the function returns 0 and false.
+
+		    s := store.New()
+		    d := store.NewDomains(
+		        s,
+		        model.Singleton(88),       // Length 1
+		        model.Multiple(1, 3),      // Length 2
+		        model.Multiple(4, 76, 97), // Length 3
+		    )
+		    d.Largest(s) // (2, true)
+	*/
 	Largest(Store) (int, bool)
-	// Last returns the last Domain index with length above 1.
+
+	/*
+		Last returns the last Domain index with length above 1 and true if it
+		is found. If no Domain has a length above 1, the function returns 0 and
+		false.
+
+		    s := store.New()
+		    d := store.NewDomains(
+		        s,
+		        model.Singleton(88),       // Length 1
+		        model.Multiple(1, 3),      // Length above 1
+		        model.Multiple(4, 76, 97), // Length above 1
+				model.Singleton(45),       // Length 1
+		    )
+		    d.Last(s) // (2, true)
+	*/
 	Last(Store) (int, bool)
-	// Maximum returns the index of the Domain containing the maximum value
-	// with length above 1.
+
+	/*
+		Maximum returns the index of the Domain containing the maximum value
+		with length above 1 and true if it is found. If no Domain has a length
+		above 1, the function returns 0 and false.
+
+			s := store.New()
+			d := store.NewDomains(
+		        s,
+		        model.Singleton(88),       // Length 1
+		        model.Multiple(4, 76, 97), // Length above 1
+		        model.Multiple(1, 3),      // Length above 1
+				model.Singleton(45),       // Length 1
+		    )
+			d.Maximum(s) // (1, true)
+	*/
 	Maximum(Store) (int, bool)
-	// Minimum returns the index of the Domain containing the minimum value
-	// with length above 1.
+
+	/*
+		Minimum returns the index of the Domain containing the minimum value
+		with length above 1 and true if it is found. If no Domain has a length
+		above 1, the function returns 0 and false.
+
+			s := store.New()
+			d := store.NewDomains(
+		        s,
+		        model.Singleton(88),       // Length 1
+		        model.Multiple(4, 76, 97), // Length above 1
+		        model.Multiple(1, 3),      // Length above 1
+				model.Singleton(45),       // Length 1
+		    )
+			d.Minimum(s) // (2, true)
+	*/
 	Minimum(Store) (int, bool)
-	// Smallest returns the index of the smallest Domain with length above 1 by
-	// number of elements.
+
+	/*
+		Smallest returns the index of the smallest Domain with length above 1
+		by number of elements and true if it is found. If no Domain has a
+		length above 1, the function returns 0 and false.
+
+		    s := store.New()
+		    d := store.NewDomains(
+		        s,
+		        model.Singleton(88),       // Length 1
+		        model.Multiple(1, 3),      // Length 2
+		        model.Multiple(4, 76, 97), // Length 3
+		    )
+		    d.Smallest(s) // (1, true)
+	*/
 	Smallest(Store) (int, bool)
 }
 
@@ -167,12 +248,11 @@ type Domains interface {
 NewDomains creates a sequence of Domains and stores the sequence in a Store.
 
 	s := store.New()
-	domains := store.NewDomains( // [1 to 10, 42, odds, evens]
+	d := store.NewDomains( // [1 to 10, 42, odds]
 		s,
-		model.Domain(model.NewRange(1, 10)),
+		model.NewDomain(model.NewRange(1, 10)),
 		model.Singleton(42),
 		model.Multiple(1, 3, 5, 7),
-		model.Multiple(2, 4, 6, 8),
 	)
 */
 func NewDomains(s Store, domains ...model.Domain) Domains {
@@ -183,7 +263,7 @@ func NewDomains(s Store, domains ...model.Domain) Domains {
 Repeat a Domain n times and store the sequence in a Store.
 
 	s := store.New()
-	domains := store.Repeat(s, 3, model.Domain(model.Range(1, 10)))
+	d := store.Repeat(s, 3, model.NewDomain(model.NewRange(1, 10)))
 */
 func Repeat(s Store, n int, domain model.Domain) Domains {
 	return domainsProxy{domains: NewVar(s, model.Repeat(n, domain))}
