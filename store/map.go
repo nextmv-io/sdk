@@ -84,9 +84,9 @@ func NewMap[K Key, V any](s Store) Map[K, V] {
 
 	var k K
 	if isInt(k) {
-		p.mapInt = mapIntFunc(s)
+		p.mapInt = newMapIntFunc(s)
 	} else {
-		p.mapString = mapStringFunc(s)
+		p.mapString = newMapStringFunc(s)
 	}
 
 	return p
@@ -159,6 +159,6 @@ func isInt[K Key](k K) bool {
 }
 
 var (
-	mapIntFunc    func(Store) Map[int, any]
-	mapStringFunc func(Store) Map[string, any]
+	newMapIntFunc    func(Store) Map[int, any]
+	newMapStringFunc func(Store) Map[string, any]
 )
