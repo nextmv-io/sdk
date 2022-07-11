@@ -10,9 +10,35 @@ import (
 type Router interface {
 	// Options configures the router with the given options. An error is
 	// returned if validation issues exist.
-	Options(opts ...Option) error
+	Options(...Option) error
 	// Solver receives solve options and returns a Solver interface.
-	Solver(opt store.Options) (store.Solver, error)
+	Solver(store.Options) (store.Solver, error)
+	// Plan returns a variable which holds information
+	// about the current set of unassigned stops and vehicles.
+	// The plan variable can be used to retrieve the values from the
+	// store of a solution.
+	Plan() store.Variable[Plan]
+}
+
+// Plan describes a solution to a Vehicle Routing Problem.
+type Plan struct {
+	Unassigned []Stop    `json:"unassigned"`
+	Vehicles   []Vehicle `json:"vehicles"`
+}
+
+// Vehicle information of a solution to a Vehicle Routing Problem.
+type Vehicle struct {
+	ID            string        `json:"id"`
+	Route         []VehicleStop `json:"route"`
+	RouteDuration int           `json:"route_duration"`
+}
+
+// VehicleStop describes a stop as part of a Vehicle's route of solution
+// to a Vehicle Routing Problem.
+type VehicleStop struct {
+	Stop
+	ETA *time.Time `json:"eta,omitempty"`
+	ETD *time.Time `json:"etd,omitempty"`
 }
 
 // Stop to service in a Vehicle Routing Problem.
