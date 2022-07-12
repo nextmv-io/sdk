@@ -3,6 +3,9 @@ on: [push]
 jobs:
   sdk:
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/nextmv-io/*
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     steps:
       - name: set up go
         uses: actions/setup-go@v3
@@ -13,10 +16,54 @@ jobs:
       - name: git clone
         uses: actions/checkout@v3
 
+      - name: clone plugins repository
+        uses: actions/checkout@v3
+        with:
+          repository: nextmv-io/plugins
+          path: ${{env.working-directory}}/plugins
+          ref: develop
+          ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
+          ssh-known-hosts: ssh-keyscan github.com
+
+      - name: verify stuff
+        run: ls -lah
+        working-directory: ${{env.working-directory}}
+
+      - name: setup SSH Keys and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
+
+      - name: use ssh instead of https for git
+        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      - name: export sdk version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+        working-directory: ${{env.working-directory}}
+
+      - name: build plugins
+        run: |
+          cd plugins/plugins/sdk
+          GOOS=$(go env GOOS)
+          GOARCH=$(go env GOARCH)
+          go build -buildmode plugin -o ${{env.working-directory}}/nextmv-sdk-$GOOS-$GOARCH-${{ env.VERSION }}.so
+        working-directory: ${{env.working-directory}}
+
+      - name: export Nextmv lib path
+        run: echo "NEXTMV_LIBRARY_PATH=${{env.working-directory}}" >> $GITHUB_ENV
+        working-directory: ${{env.working-directory}}
+
+      - name: verify stuff
+        run: |
+          ls -lah $NEXTMV_LIBRARY_PATH
+        working-directory: ${{env.working-directory}}
+
       - name: go build
         run: go build -race -v ./...
         working-directory: ${{env.working-directory}}
 
       - name: go test
-        run: go test -cover -race -v ./...
+        run: go test -v ./...
         working-directory: ${{env.working-directory}}
