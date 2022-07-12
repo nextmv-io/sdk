@@ -41,23 +41,24 @@ type Router interface {
 
 // Plan describes a solution to a Vehicle Routing Problem.
 type Plan struct {
-	Unassigned []Stop    `json:"unassigned"`
-	Vehicles   []Vehicle `json:"vehicles"`
+	Unassigned []Stop           `json:"unassigned"`
+	Vehicles   []PlannedVehicle `json:"vehicles"`
 }
 
-// Vehicle information of a solution to a Vehicle Routing Problem.
-type Vehicle struct {
+// PlannedVehicle holds information about the vehicle in a solution to a Vehicle
+// Routing Problem.
+type PlannedVehicle struct {
 	ID            string        `json:"id"`
-	Route         []VehicleStop `json:"route"`
+	Route         []PlannedStop `json:"route"`
 	RouteDuration int           `json:"route_duration"`
 }
 
-// VehicleStop describes a stop as part of a Vehicle's route of solution
+// PlannedStop describes a stop as part of a Vehicle's route of solution
 // to a Vehicle Routing Problem.
-type VehicleStop struct {
+type PlannedStop struct {
 	Stop
-	ETA *time.Time `json:"eta,omitempty"`
-	ETD *time.Time `json:"etd,omitempty"`
+	EstimatedArrival   *time.Time `json:"estimated_arrival,omitempty"`
+	EstimatedDeparture *time.Time `json:"estimated_departure,omitempty"`
 }
 
 // Stop to service in a Vehicle Routing Problem.
