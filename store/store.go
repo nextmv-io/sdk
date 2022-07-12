@@ -182,7 +182,8 @@ type Store interface {
 // requirements; e.g., all stops have been assigned to vehicles, all shifts are
 // covered with the necessary personnel, all assignment have been made,
 // quantity respects an alloted capacity, etc. Setting operational validity is
-// optional and the default is true.
+// optional and the default is true. A user is not encouraged to implement the
+// Generator interface.
 type Generator interface {
 	// Condition returns the generating Condition. The Generator may generate
 	// new Stores as long as this Condition holds.

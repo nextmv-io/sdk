@@ -149,7 +149,6 @@ func Example_longestUncrossedKnightsPath() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "0": "00 -- 02 -- -- ",

@@ -186,7 +186,6 @@ func Example_knightsTour() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "0": "00 17 06 11 20 ",

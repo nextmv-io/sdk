@@ -127,7 +127,6 @@ func Example_sudoku() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "0": "8 2 9 4 5 6 7 3 1",

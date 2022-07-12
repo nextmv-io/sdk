@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/nextmv-io/sdk/store"
 )
@@ -12,7 +13,6 @@ func ExampleFalse() {
 	s := store.New()
 	f := store.False(s)
 	fmt.Println(f)
-
 	// Output: false
 }
 
@@ -20,7 +20,6 @@ func ExampleTrue() {
 	s := store.New()
 	f := store.True(s)
 	fmt.Println(f)
-
 	// Output: true
 }
 
@@ -38,7 +37,6 @@ func ExampleAnd() {
 	fmt.Println(c)
 	c = store.And(store.True, store.True, store.True)(s)
 	fmt.Println(c)
-
 	// Output:
 	// false
 	// true
@@ -54,7 +52,6 @@ func ExampleNot() {
 	fmt.Println(f)
 	t := store.Not(store.False)(s)
 	fmt.Println(t)
-
 	// Output:
 	// false
 	// true
@@ -74,7 +71,6 @@ func ExampleOr() {
 	fmt.Println(c)
 	c = store.Or(store.True, store.True, store.True)(s)
 	fmt.Println(c)
-
 	// Output:
 	// true
 	// true
@@ -94,7 +90,6 @@ func ExampleXor() {
 	fmt.Println(c)
 	c = store.Xor(store.False, store.False)(s)
 	fmt.Println(c)
-
 	// Output:
 	// true
 	// false
@@ -141,7 +136,6 @@ func ExampleAction_discard() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// null
 }
@@ -181,7 +175,6 @@ func ExampleAction_return() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "x": 3
@@ -217,7 +210,6 @@ func ExampleAction_then() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "f": [
@@ -261,7 +253,6 @@ func ExampleIf() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "x": 10
@@ -286,7 +277,6 @@ func ExampleBounder() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-
 	// Output:
 	// {
 	//   "lower": 15,
@@ -304,7 +294,6 @@ func ExampleChange() {
 	// Value after store changed.
 	s = s.Apply(x.Set(42))
 	fmt.Println(x.Get(s))
-
 	// Output:
 	// 15
 	// 42
@@ -317,7 +306,6 @@ func ExampleCondition() {
 	b := func(store.Store) bool { return 1 > 2 }
 	c := store.And(a, b)(s)
 	fmt.Println(c)
-
 	// Output:
 	// false
 }
@@ -346,4 +334,165 @@ func ExampleFormatter() {
 	// Output:
 	// [1,2,3]
 	// {"x":[1,2,3]}
+}
+
+// If a Generator is not used, new Stores are not created and thus there is no
+// search.
+func ExampleGenerator() {
+	s := store.New().Generate()
+
+	// Define any solver.
+	solver := s.Satisfier(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	fmt.Println(last.Store)
+	// Output:
+	// <nil>
+}
+
+// Define a custom operational validity.
+func ExampleGenerator_with() {
+	s := store.New()
+	x := store.NewVar(s, 0)
+	s = s.
+		Generate(
+			store.
+				If(store.True).
+				Then(func(s store.Store) store.Store {
+					return s.Apply(x.Set(x.Get(s) + 1))
+				}).
+				With(func(s store.Store) bool {
+					// The Store is operationally valid if x is even.
+					return x.Get(s)%2 == 0
+				}),
+		).
+		Value(x.Get)
+
+	// The solver type is a maximizer to increase the value of x.
+	opt := store.DefaultOptions()
+	opt.Limits.Solutions = 1
+	opt.Diagram.Expansion.Limit = 1
+	opt.Limits.Nodes = 10
+	solver := s.Maximizer(opt)
+
+	// Get the stats of the solution and print them.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Statistics.Search, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "generated": 2,
+	//   "filtered": 0,
+	//   "expanded": 2,
+	//   "reduced": 0,
+	//   "restricted": 2,
+	//   "deferred": 2,
+	//   "explored": 0,
+	//   "solutions": 1
+	// }
+}
+
+// Define a Generator using a lexical scope, where variable definitions may be
+// reused.
+func ExampleScope() {
+	s := store.New()
+	x := store.NewVar(s, 1)
+	s = s.
+		Generate(
+			store.Scope(func(s store.Store) store.Generator {
+				v := x.Get(s)
+				return store.If(func(s store.Store) bool {
+					// v is used here.
+					return v < 10
+				}).Then(func(s store.Store) store.Store {
+					// v is also used here.
+					v++
+					return s.Apply(x.Set(v))
+				})
+			}),
+		).
+		Value(x.Get)
+
+	// The solver type is a maximizer to increase the value of x.
+	opt := store.DefaultOptions()
+	solver := s.Maximizer(opt)
+
+	// Get the stats of the solution and print them.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Statistics.Search, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "generated": 9,
+	//   "filtered": 0,
+	//   "expanded": 9,
+	//   "reduced": 0,
+	//   "restricted": 9,
+	//   "deferred": 0,
+	//   "explored": 1,
+	//   "solutions": 9
+	// }
+}
+
+// DefaultOptions provide sensible defaults but they can (and should) be
+// modified.
+func ExampleDefaultOptions() {
+	opt := store.DefaultOptions()
+	b, err := json.MarshalIndent(opt, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+
+	// Modify options
+	opt.Diagram.Expansion.Limit = 1
+	opt.Limits.Duration = time.Duration(4) * time.Second
+	opt.Tags = map[string]any{"foo": 1, "bar": 2}
+	b, err = json.MarshalIndent(opt, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "diagram": {
+	//     "expansion": {
+	//       "limit": 0
+	//     },
+	//     "width": 10
+	//   },
+	//   "limits": {
+	//     "duration": "10s"
+	//   },
+	//   "search": {
+	//     "buffer": 100
+	//   },
+	//   "sense": "minimize"
+	// }
+	// {
+	//   "diagram": {
+	//     "expansion": {
+	//       "limit": 1
+	//     },
+	//     "width": 10
+	//   },
+	//   "limits": {
+	//     "duration": "4s"
+	//   },
+	//   "search": {
+	//     "buffer": 100
+	//   },
+	//   "sense": "minimize",
+	//   "tags": {
+	//     "bar": 2,
+	//     "foo": 1
+	//   }
+	// }
 }

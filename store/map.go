@@ -18,18 +18,19 @@ type Map[K Key, V any] interface {
 				m.Set(42, "foo"),
 				m.Set(13, "bar"),
 			)
-			s2 := s1.Apply(m.Delete("foo")) // {13: bar}
+			s2 := s1.Apply(m.Delete(42)) // {13: bar}
 	*/
 	Delete(K) Change
 
 	/*
-		Get a value for a Key.
+		Get a value for a Key. If the Key is not present in the Map for the
+		given Store, the zero value and false are returned.
 
 			s1 := store.New()
 			m := store.NewMap[int, string](s1)
 			s2 := s1.Apply(m.Set(42, "foo"))
-			m.Get(s2) // (foo, true)
-			m.Get(s2) // (_, false)
+			m.Get(s2, 42) // (foo, true)
+			m.Get(s2, 88) // (_, false)
 	*/
 	Get(Store, K) (V, bool)
 
@@ -113,12 +114,20 @@ func (m mapProxy[K, V]) Get(s Store, key K) (V, bool) {
 	k := any(key)
 
 	if m.mapInt != nil {
-		value, ok := m.mapInt.Get(s, k.(int))
+		if value, ok := m.mapInt.Get(s, k.(int)); value != nil {
+			return value.(V), ok
+		}
+		goto ret
+	}
+
+	if value, ok := m.mapString.Get(s, k.(string)); value != nil {
 		return value.(V), ok
 	}
 
-	value, ok := m.mapString.Get(s, k.(string))
-	return value.(V), ok
+ret:
+	// zero-value of variable
+	var value V
+	return value, false
 }
 
 func (m mapProxy[K, V]) Len(s Store) int {
