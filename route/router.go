@@ -13,10 +13,29 @@ type Router interface {
 	Options(...Option) error
 	// Solver receives solve options and returns a Solver interface.
 	Solver(store.Options) (store.Solver, error)
-	// Plan returns a variable which holds information
-	// about the current set of unassigned stops and vehicles.
-	// The plan variable can be used to retrieve the values from the
-	// store of a solution.
+	/*
+		Plan returns a variable which holds information about the current set of
+		vehicles with their respective routes and any unassigned stops. The Plan
+		variable can be used to retrieve the values from the Store of a
+		Solution.
+
+			router, err := route.NewRouter(
+				stops,
+				vehicles,
+				route.Capacity(quantities, capacities),
+			)
+			if err != nil {
+				panic(err)
+			}
+			solver, err := router.Solver(store.DefaultOptions())
+			if err != nil {
+				panic(err)
+			}
+			solution := solver.Last(context.Background())
+			s := solution.Store
+			p := router.Plan()
+			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
+	*/
 	Plan() store.Variable[Plan]
 }
 
