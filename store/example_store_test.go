@@ -496,3 +496,225 @@ func ExampleDefaultOptions() {
 	//   }
 	// }
 }
+
+// Run the longest uncrossed knight's path package example but visualize all
+// solutions.
+func ExampleSolver_all() {
+	// Board size and initial position.
+	n := 5
+	p := position{row: 0, col: 0}
+
+	// Create the knight's tour model.
+	knight := store.New()
+
+	// Track the sequence of moves.
+	tour := store.NewSlice(knight, p)
+
+	// Define the output format.
+	knight = knight.Format(format(tour, n))
+
+	// Define the value to maximize: the number of jumps made.
+	knight = knight.Value(func(s store.Store) int { return tour.Len(s) - 1 })
+
+	// Define the generation of the tour.
+	knight = knight.Generate(
+		store.Scope(func(s store.Store) store.Generator {
+			// Gets the last move made and all the candidate positions from
+			// there.
+			lastMove := tour.Get(s, tour.Len(s)-1)
+			candidates := unintersected(
+				n,
+				lastMove.row,
+				lastMove.col,
+				tour.Slice(s),
+			)
+
+			// Create new stores by adding each candidate to the tour.
+			stores := make([]store.Store, len(candidates))
+			for i, candidate := range candidates {
+				stores[i] = s.Apply(tour.Append(candidate))
+			}
+
+			return store.
+				// Generate new stores as long as there are elements left.
+				If(func(s store.Store) bool { return len(stores) > 0 }).
+				Then(func(s store.Store) store.Store {
+					// Get the first element of the stores' queue and pop it.
+					generated := stores[0]
+					stores = stores[1:]
+					return generated
+				}) // The store is always operationally valid.
+		}),
+	)
+
+	// The solver type is a maximizer because the store is searching for the
+	// highest number of moves.
+	solver := knight.Maximizer(store.DefaultOptions())
+
+	// Print all solutions.
+	all := solver.All(context.Background())
+	solutions := make([]store.Store, len(all))
+	for solution := range all {
+		solutions = append(solutions, solution.Store)
+	}
+	b, err := json.MarshalIndent(solutions, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// [
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- -- -- ",
+	//     "2": "-- 01 -- -- -- ",
+	//     "3": "-- -- -- -- -- ",
+	//     "4": "-- -- -- -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- -- -- ",
+	//     "2": "-- 01 -- -- -- ",
+	//     "3": "-- -- -- -- -- ",
+	//     "4": "-- -- 02 -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- -- -- ",
+	//     "2": "-- 01 -- -- -- ",
+	//     "3": "03 -- -- -- -- ",
+	//     "4": "-- -- 02 -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- -- -- ",
+	//     "2": "04 01 -- -- -- ",
+	//     "3": "-- -- -- 02 -- ",
+	//     "4": "-- 03 -- -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- -- -- ",
+	//     "2": "04 01 -- -- -- ",
+	//     "3": "-- -- 05 02 -- ",
+	//     "4": "-- 03 -- -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- -- -- -- ",
+	//     "1": "-- -- -- 02 -- ",
+	//     "2": "-- 01 06 -- -- ",
+	//     "3": "05 -- -- -- 03 ",
+	//     "4": "-- -- 04 -- -- "
+	//   },
+	//   {
+	//     "0": "00 -- 02 -- -- ",
+	//     "1": "-- -- -- -- 03 ",
+	//     "2": "06 01 -- -- -- ",
+	//     "3": "-- -- 07 04 -- ",
+	//     "4": "-- 05 -- -- -- "
+	//   }
+	// ]
+}
+
+// Run the longest uncrossed knight's path package example and get all
+// solutions. Obtain the last solution from the last element of the slice.
+func ExampleSolver_last() {
+	// Board size and initial position.
+	n := 5
+	p := position{row: 0, col: 0}
+
+	// Create the knight's tour model.
+	knight := store.New()
+
+	// Track the sequence of moves.
+	tour := store.NewSlice(knight, p)
+
+	// Define the output format.
+	knight = knight.Format(format(tour, n))
+
+	// Define the value to maximize: the number of jumps made.
+	knight = knight.Value(func(s store.Store) int { return tour.Len(s) - 1 })
+
+	// Define the generation of the tour.
+	knight = knight.Generate(
+		store.Scope(func(s store.Store) store.Generator {
+			// Gets the last move made and all the candidate positions from
+			// there.
+			lastMove := tour.Get(s, tour.Len(s)-1)
+			candidates := unintersected(
+				n,
+				lastMove.row,
+				lastMove.col,
+				tour.Slice(s),
+			)
+
+			// Create new stores by adding each candidate to the tour.
+			stores := make([]store.Store, len(candidates))
+			for i, candidate := range candidates {
+				stores[i] = s.Apply(tour.Append(candidate))
+			}
+
+			return store.
+				// Generate new stores as long as there are elements left.
+				If(func(s store.Store) bool { return len(stores) > 0 }).
+				Then(func(s store.Store) store.Store {
+					// Get the first element of the stores' queue and pop it.
+					generated := stores[0]
+					stores = stores[1:]
+					return generated
+				}) // The store is always operationally valid.
+		}),
+	)
+
+	// The solver type is a maximizer because the store is searching for the
+	// highest number of moves.
+	solver := knight.Maximizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	all := solver.All(context.Background())
+	solutions := make([]store.Store, len(all))
+	for solution := range all {
+		solutions = append(solutions, solution.Store)
+	}
+	last := solutions[len(solutions)-1]
+	b, err := json.MarshalIndent(last, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "0": "00 -- 02 -- -- ",
+	//   "1": "-- -- -- -- 03 ",
+	//   "2": "06 01 -- -- -- ",
+	//   "3": "-- -- 07 04 -- ",
+	//   "4": "-- 05 -- -- -- "
+	// }
+}
+
+// Set a custom value on the store using a valuer.
+func ExampleValuer() {
+	s := store.New()
+	x := store.NewVar(s, 1)
+	solver := s.
+		Value(func(s store.Store) int {
+			v := x.Get(s)
+			return v * v
+		}).
+		Generate(
+			store.
+				If(func(s store.Store) bool { return x.Get(s) < 10 }).
+				Then(func(s store.Store) store.Store {
+					return s.Apply(x.Set(x.Get(s) + 1))
+				}),
+		).
+		Maximizer(store.DefaultOptions())
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Statistics.Value, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 100
+}

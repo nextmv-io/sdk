@@ -52,7 +52,7 @@ Changes, like setting a new value on a Variable, can be applied to the Store.
 
 To broaden the search space, new Stores can be generated.
 
-  	s = s.Generate(
+	s = s.Generate(
 		// If x is odd, divide the value in half and modify y. Operationally
 		// valid.
 		store.Scope(
@@ -124,16 +124,22 @@ variable defines the type of runner used.
 
 The runner receives a handler that specifies the data type and expects a Solver.
 
-  func main() {
-  	handler := func(v int, opt store.Options) (store.Solver, error) {
-  		s := store.New()
-  		x := store.NewVar(s, v)      // Initialized from the runner.
-  		s = s.Value(...).Format(...) // Modify the Store.
+	package main
 
-  		return s.Maximizer(opt), nil // Options are passed by the runner.
-  	}
-  	run.Run(handler)
-  }
+	import (
+		"github.com/nextmv-io/sdk/run"
+		"github.com/nextmv-io/sdk/store"
+	)
+
+	func main() {
+		handler := func(v int, opt store.Options) (store.Solver, error) {
+			s := store.New()
+			x := store.NewVar(s, v)      // Initialized from the runner.
+			s = s.Value(...).Format(...) // Modify the Store.
+			return s.Maximizer(opt), nil // Options are passed by the runner.
+		}
+		run.Run(handler)
+	}
 
 Compile the binary and use the -h flag to see available options to configure a
 runner. You can use command-line flags or environment variables. When using
@@ -192,6 +198,5 @@ Writes this output to stdout:
         "value": 10
       }
     }
-
 */
 package store
