@@ -1,5 +1,9 @@
 package route
 
+import (
+	"github.com/nextmv-io/sdk/model"
+)
+
 // An Option configures a Router.
 type Option func(Router) error
 
@@ -232,6 +236,59 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 	return serviceGroupsFunc(serviceGroups)
 }
 
+// Selector TBD.
+func Selector(selector func(FleetPlan) model.Domain) Option {
+	connect()
+	return selectorFunc(selector)
+}
+
+// Updater TBD.
+type FleetVehicleUpdater interface {
+	Value(FleetVehicle) (int, bool)
+	Clone() FleetVehicleUpdater
+}
+
+// Updater TBD.
+type FleetUpdater interface {
+	Value(FleetPlan, []FleetVehicle) (int, bool)
+	Clone() FleetUpdater
+}
+
+// Update TBD.
+func Update(v FleetVehicleUpdater, f FleetUpdater) Option {
+	connect()
+	return updateFunc(v, f)
+}
+
+// FilterWithRoute TBD.
+func FilterWithRoute(
+	filter func(model.Domain, model.Domain, [][]int) model.Domain,
+) Option {
+	connect()
+	return filterWithRouteFunc(filter)
+}
+
+// Sorter TBD.
+func Sorter(sorter func(
+	FleetPlan,
+	model.Domain,
+	model.Domain,
+) []int) Option {
+	connect()
+	return sorterFunc(sorter)
+}
+
+// Constraint TBD.
+func Constraint(constraint VehicleConstraint, ids []string) Option {
+	connect()
+	return constraintFunc(constraint, ids)
+}
+
+// VehicleConstraint TBD.
+type VehicleConstraint interface {
+	Violated(FleetVehicle) (VehicleConstraint, bool)
+}
+
 var (
 	startsFunc                func([]Position) Option
 	endsFunc                  func([]Position) Option
@@ -256,4 +313,13 @@ var (
 	alternatesFunc            func([]Alternate) Option
 	velocitiesFunc            func([]float64) Option
 	serviceGroupsFunc         func([]ServiceGroup) Option
+	selectorFunc              func(func(FleetPlan) model.Domain) Option
+	updateFunc                func(FleetVehicleUpdater, FleetUpdater) Option
+	filterWithRouteFunc       func(
+		func(model.Domain, model.Domain, [][]int) model.Domain,
+	) Option
+	sorterFunc func(
+		func(FleetPlan, model.Domain, model.Domain) []int,
+	) Option
+	constraintFunc func(VehicleConstraint, []string) Option
 )

@@ -3,6 +3,7 @@ package route
 import (
 	"time"
 
+	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/store"
 )
 
@@ -37,6 +38,23 @@ type Router interface {
 			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
 	*/
 	Plan() store.Variable[Plan]
+}
+
+// FleetPlan is an (incomplete) Plan that operates on the internal
+// solver data structures. Certain router options that customize solver
+// internals have to work with this data structure.
+type FleetPlan struct {
+	Unplanned  model.Domain
+	Unassigned model.Domain
+	Vehicles   []FleetVehicle
+}
+
+// FleetVehicle represents a Vehicle that operations on the internal solver
+// data structures. Certain router options that customize solver
+// internals have to work with this data structure.
+type FleetVehicle struct {
+	Route []int
+	ID    string
 }
 
 // Plan describes a solution to a Vehicle Routing Problem.
