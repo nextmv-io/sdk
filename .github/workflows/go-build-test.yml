@@ -6,6 +6,8 @@ jobs:
     env:
       GOPRIVATE: github.com/nextmv-io/*
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      RESOURCES: resources
+      NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
     steps:
       - name: set up go
         uses: actions/setup-go@v3
@@ -20,14 +22,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: nextmv-io/plugins
-          path: ${{env.working-directory}}/plugins
+          path: ${{env.RESOURCES}}
           ref: develop
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
           ssh-known-hosts: ssh-keyscan github.com
-
-      - name: verify stuff
-        run: ls -lah
-        working-directory: ${{env.working-directory}}
 
       - name: setup SSH Keys and known_hosts
         run: |
@@ -41,29 +39,32 @@ jobs:
 
       - name: export sdk version
         run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-        working-directory: ${{env.working-directory}}
+
+      - name: export sdk path used in this action
+        run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: build plugins
         run: |
-          cd plugins/plugins/sdk
+
+          # To get testing working, the dependency that plugins uses for sdk is
+          # replaced for the local sdk repo checked out in this action.
+          go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
+
+          # Create the path where the shared object binaries are going to be
+          # saved.
+          GOVERSION=$(go env GOVERSION)
           GOOS=$(go env GOOS)
           GOARCH=$(go env GOARCH)
-          go build -buildmode plugin -o ${{env.working-directory}}/nextmv-sdk-$GOOS-$GOARCH-${{ env.VERSION }}.so
-        working-directory: ${{env.working-directory}}
+          OUT_PATH=${{env.NEXTMV_LIBRARY_PATH}}/nextmv-sdk-${{env.VERSION}}-$GOVERSION-$GOOS-$GOARCH.so
 
-      - name: export Nextmv lib path
-        run: echo "NEXTMV_LIBRARY_PATH=${{env.working-directory}}" >> $GITHUB_ENV
-        working-directory: ${{env.working-directory}}
-
-      - name: verify stuff
-        run: |
-          ls -lah $NEXTMV_LIBRARY_PATH
-        working-directory: ${{env.working-directory}}
+          # Build without -trimpath because the sdk dependency is being
+          # replaced for the local sdk repo used in the action.
+          cd plugins/sdk
+          go build -buildmode plugin -o $OUT_PATH
+        working-directory: ${{env.RESOURCES}}
 
       - name: go build
-        run: go build -race -v ./...
-        working-directory: ${{env.working-directory}}
+        run: go build -v ./...
 
       - name: go test
-        run: go test -v ./...
-        working-directory: ${{env.working-directory}}
+        run: NEXTMV_LIBRARY_PATH=${{env.NEXTMV_LIBRARY_PATH}} go test -v ./...
