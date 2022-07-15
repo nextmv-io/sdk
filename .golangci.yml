@@ -137,3 +137,14 @@ linters:
 issues:
   # Disable default exclude patterns to surface commonly-ignored linting errors.
   exclude-use-default: false
+  exclude-rules:
+    # Many individual router tests use the same base and this implies
+    # duplication. The code is not abstracted into a single function to keep the
+    # testable examples in a nice compact format with all information provided in
+    # a single snippet.
+    - path: route/example_option_test\.go
+      linters:
+        - dupl
+    - path: route/example_router_test\.go
+      linters:
+        - dupl
