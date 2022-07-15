@@ -236,55 +236,99 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 	return serviceGroupsFunc(serviceGroups)
 }
 
-// Selector TBD.
+// Selector sets the given custom location selector. The location selector lets
+// you define a function which selects the location that will be inserted next
+// into the solution. If no custom location selector is given, the location with
+// the lowest index will be inserted next.
 func Selector(selector func(FleetPlan) model.Domain) Option {
 	connect()
 	return selectorFunc(selector)
 }
 
-// Updater TBD.
+// FleetVehicleUpdater defines an interface that is used to override the
+// vehicle's default value function. It requires the implementation of two
+// functions, Value and Clone. The Clone function is used to make deep copies of
+// bookkeeping data which will be used to properly update the solution's value
+// in the Value function. The Value function takes a FleetVehicle as an input
+// and returns two values, a new solution value and a bool value to indicate
+// wether the vehicle's solution value received an update.
 type FleetVehicleUpdater interface {
 	Value(FleetVehicle) (int, bool)
 	Clone() FleetVehicleUpdater
 }
 
-// Updater TBD.
+// FleetUpdater defines an interface that is used to override the fleet's
+// default value function. It requires the implementation of two functions,
+// Value and Clone. The Clone function is used to make deep copies of
+// bookkeeping data which will be used to properly update the solution's value
+// in the Value function. The Value function takes a FleetPlan and a slice of
+// FleetVehicles as an input and returns two values, a new solution value and a
+// bool value to indicate wether the vehicle's solution value received an
+// update.
 type FleetUpdater interface {
 	Value(FleetPlan, []FleetVehicle) (int, bool)
 	Clone() FleetUpdater
 }
 
-// Update TBD.
+/*
+Update sets the collection of functions that are called when transitioning from
+one state to another in the router engine's Decision Diagram search for the best
+solution in the time alloted. Updating information is useful for two purposes:
+	- setting a custom value function (objective) that will be optimized.
+	- book-keeping of custom data.
+
+The option takes the following arguments:
+	- FleetVehicleUpdater: updates the vehicle.
+	- FleetUpdater: updates the fleet.
+
+User-defined custom types must implement the interfaces.
+*/
 func Update(v FleetVehicleUpdater, f FleetUpdater) Option {
 	connect()
 	return updateFunc(v, f)
 }
 
-// FilterWithRoute TBD.
+// FilterWithRoute adds a new VehicleFilter. Compared to the Filter option, the
+// FilterWithRoute option is more flexible. It defines a function that takes an
+// IntDomain of candidate vehicles, an IntDomain of locations that will be
+// assigned to a particular vehicle, and a slice of routes for all vehicles. It
+// returns an IntDomain representing vehicles that cannot service the domain of
+// locations.
 func FilterWithRoute(
-	filter func(model.Domain, model.Domain, [][]int) model.Domain,
+	filter func(
+		vehicleCandidates model.Domain,
+		locations model.Domain,
+		routes [][]int,
+	) model.Domain,
 ) Option {
 	connect()
 	return filterWithRouteFunc(filter)
 }
 
-// Sorter TBD.
+// Sorter sets the given custom vehicle sorter. The vehicle sorter lets you
+// define a function which returns the vehicle indices in a specific order. The
+// underlying engine will try to assign the locations to each vehicle in that
+// returned order.
 func Sorter(sorter func(
-	FleetPlan,
-	model.Domain,
-	model.Domain,
-) []int) Option {
+	p FleetPlan,
+	locations model.Domain,
+	vehicles model.Domain,
+) []int,
+) Option {
 	connect()
 	return sorterFunc(sorter)
 }
 
-// Constraint TBD.
+// Constraint sets a custom constraint for specified vehicles. It takes two
+// arguments, the constraint to be applied and a list of vehicles, indexed by
+// ID, to which the constraint shall be applied.
 func Constraint(constraint VehicleConstraint, ids []string) Option {
 	connect()
 	return constraintFunc(constraint, ids)
 }
 
-// VehicleConstraint TBD.
+// VehicleConstraint defines an interface that needs to be implemented when
+// creating a custom vehicle constraint.
 type VehicleConstraint interface {
 	Violated(FleetVehicle) (VehicleConstraint, bool)
 }
