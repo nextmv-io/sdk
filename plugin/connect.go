@@ -1,4 +1,5 @@
-// Package plugin provides functions for loading Hop plugins.
+// Package plugin provides functions for connecting plugins built from a
+// private source.
 package plugin
 
 import (

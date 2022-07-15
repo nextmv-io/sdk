@@ -3,6 +3,11 @@ on: [push]
 jobs:
   sdk:
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/nextmv-io/*
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      RESOURCES: resources
+      NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
     steps:
       - name: set up go
         uses: actions/setup-go@v3
@@ -13,10 +18,53 @@ jobs:
       - name: git clone
         uses: actions/checkout@v3
 
+      - name: clone plugins repository
+        uses: actions/checkout@v3
+        with:
+          repository: nextmv-io/plugins
+          path: ${{env.RESOURCES}}
+          ref: develop
+          ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
+          ssh-known-hosts: ssh-keyscan github.com
+
+      - name: setup SSH Keys and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
+
+      - name: use ssh instead of https for git
+        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      - name: export sdk version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+      - name: export sdk path used in this action
+        run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: build plugins
+        run: |
+
+          # To get testing working, the dependency that plugins uses for sdk is
+          # replaced for the local sdk repo checked out in this action.
+          go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
+
+          # Create the path where the shared object binaries are going to be
+          # saved.
+          GOVERSION=$(go env GOVERSION)
+          GOOS=$(go env GOOS)
+          GOARCH=$(go env GOARCH)
+          OUT_PATH=${{env.NEXTMV_LIBRARY_PATH}}/nextmv-sdk-${{env.VERSION}}-$GOVERSION-$GOOS-$GOARCH.so
+
+          # Build without -trimpath because the sdk dependency is being
+          # replaced for the local sdk repo used in the action.
+          cd plugins/sdk
+          go build -buildmode plugin -o $OUT_PATH
+        working-directory: ${{env.RESOURCES}}
+
       - name: go build
-        run: go build -race -v ./...
-        working-directory: ${{env.working-directory}}
+        run: go build -v ./...
 
       - name: go test
-        run: go test -cover -race -v ./...
-        working-directory: ${{env.working-directory}}
+        run: NEXTMV_LIBRARY_PATH=${{env.NEXTMV_LIBRARY_PATH}} go test -v ./...

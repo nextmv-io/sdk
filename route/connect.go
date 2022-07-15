@@ -59,4 +59,5 @@ func connect() {
 	plugin.Connect(slug, "RouteConstantByPoint", &constantByPointFunc)
 	plugin.Connect(slug, "RouteConstant", &constantFunc)
 	plugin.Connect(slug, "RouteOverride", &overrideFunc)
+	plugin.Connect(slug, "RouteScale", &scaleFunc)
 }
