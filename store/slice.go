@@ -11,8 +11,9 @@ type Slice[T any] interface {
 		Append one or more values to the end of a Slice.
 
 			s1 := store.New()
-			x := store.NewSlice(s, 1, 2, 3)   // [1, 2, 3]
-			s2 := s1.Apply(x.Append(4, 5)) // [1, 2, 3, 4, 5]
+			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Append(4, 5))
+			x.Slice(s2) // [1, 2, 3, 4, 5]
 	*/
 	Append(value T, values ...T) Change
 
@@ -29,8 +30,9 @@ type Slice[T any] interface {
 		Insert one or more values at an index in a Slice.
 
 			s1 := store.New()
-			x := store.NewSlice(s, "a", "b", "c")
-			s2 := s1.Apply(s.Insert(2, "d", "e")) // [a, b, d, e, c]
+			x := store.NewSlice(s1, "a", "b", "c")
+			s2 := s1.Apply(x.Insert(2, "d", "e"))
+			x.Slice(s2) // [a, b, d, e, c]
 	*/
 	Insert(index int, value T, values ...T) Change
 
@@ -47,8 +49,9 @@ type Slice[T any] interface {
 		Prepend one or more values at the beginning of a Slice.
 
 			s1 := store.New()
-			x := store.NewSlice(s, 1, 2, 3)    // [1, 2, 3]
-			s2 := s1.Apply(x.Prepend(4, 5)) // [4, 5, 1, 2, 3]
+			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Prepend(4, 5))
+			x.Slice(s2) // [4, 5, 1, 2, 3]
 	*/
 	Prepend(value T, values ...T) Change
 
@@ -56,17 +59,18 @@ type Slice[T any] interface {
 		Remove a sub-Slice from a starting to an ending index.
 
 			s1 := store.New()
-			x := store.NewSlice(s, 1, 2, 3) // [1, 2, 3]
-			s2 := s1.Apply(x.Remove(1))  // [1, 3]
+			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
+			s2 := s1.Apply(x.Remove(1, 1))
+			x.Slice(s2) // [1, 3]
 	*/
 	Remove(start, end int) Change
 
 	/*
 		Set a value by index.
-
 			s1 := store.New()
-			x := store.NewSlice(s, "a", "b", "c") // [a, b, c]
-			s2 := s1.Apply(x.Set(1, "d"))      // [a, d, c]
+			x := store.NewSlice(s1, "a", "b", "c") // [a, b, c]
+			s2 := s1.Apply(x.Set(1, "d"))
+			x.Slice(s2) // [a, d, c]
 	*/
 	Set(int, T) Change
 

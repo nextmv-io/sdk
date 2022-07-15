@@ -1,4 +1,5 @@
-// Package plugin provides functions for loading Hop plugins.
+// Package plugin provides functions for connecting plugins built from a
+// private source.
 package plugin
 
 import (
@@ -9,7 +10,6 @@ import (
 	"plugin"
 	"reflect"
 	"runtime"
-	"sync"
 
 	"github.com/nextmv-io/sdk"
 )
@@ -19,18 +19,28 @@ import (
 //    var fooFunc func()
 //    plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
-	path, err := pluginPath(slug)
+	// the two locations plugins can be found in are the current working
+	// directory and the nextmv library path
+	paths, err := potentialPluginPaths(slug)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "err getting plugin path: %v", err)
+		fmt.Fprintf(os.Stderr, "err getting plugin paths: %v", err)
 	}
-	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		fmt.Fprintf(os.Stderr, "plugin file %q does not exist\n\n", path)
+	pluginPath := ""
+	for _, path := range paths {
+		if _, err = os.Stat(path); !errors.Is(err, os.ErrNotExist) {
+			pluginPath = path
+			break
+		}
+	}
+	if pluginPath == "" {
+		fmt.Fprintf(os.Stderr,
+			"could not find plugin %q in any of the paths %q\n\n", slug, paths)
 		os.Exit(1)
 	}
 
-	p, err := loadPlugin(slug, path)
+	p, err := plugin.Open(pluginPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error loading plugin %q\n\n", path)
+		fmt.Fprintf(os.Stderr, "error loading plugin %q\n\n", pluginPath)
 		panic(err)
 	}
 
@@ -47,38 +57,12 @@ func Connect[T any](slug string, name string, target *T) {
 					Interface().(T) // any.(func(...))
 }
 
-var loaded = map[string]*plugin.Plugin{}
-
-var mtx sync.Mutex
-
-func loadPlugin(slug, path string) (*plugin.Plugin, error) {
-	// Only load the plugin once. Then reuse the plugin pointer.
-	if p, ok := loaded[slug]; ok {
-		return p, nil
-	}
-
-	mtx.Lock()
-	defer mtx.Unlock()
-
-	if p, ok := loaded[slug]; ok {
-		return p, nil
-	}
-
-	p, err := plugin.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	loaded[slug] = p
-
-	return p, nil
-}
-
-func pluginPath(slug string) (string, error) {
+func potentialPluginPaths(slug string) ([]string, error) {
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
 	if libraryPath == "" {
 		homeDir, err := os.UserHomeDir()
 		if err != nil {
-			return "", fmt.Errorf("could not fetch user home dir: %v", err)
+			return nil, fmt.Errorf("could not fetch user home dir: %v", err)
 		}
 		libraryPath = filepath.Join(homeDir, ".nextmv", "lib")
 	}
@@ -91,5 +75,13 @@ func pluginPath(slug string) (string, error) {
 		runtime.GOOS,
 		runtime.GOARCH,
 	)
-	return filepath.Join(libraryPath, filename), nil
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("could not fetch working dir: %v", err)
+	}
+	paths := []string{
+		filepath.Join(wd, filename),
+		filepath.Join(libraryPath, filename),
+	}
+	return paths, nil
 }

@@ -10,9 +10,57 @@ import (
 type Router interface {
 	// Options configures the router with the given options. An error is
 	// returned if validation issues exist.
-	Options(opts ...Option) error
+	Options(...Option) error
+
 	// Solver receives solve options and returns a Solver interface.
-	Solver(opt store.Options) (store.Solver, error)
+	Solver(store.Options) (store.Solver, error)
+
+	/*
+		Plan returns a variable which holds information about the current set of
+		vehicles with their respective routes and any unassigned stops. The Plan
+		variable can be used to retrieve the values from the Store of a
+		Solution.
+
+			router, err := route.NewRouter(
+				stops,
+				vehicles,
+				route.Capacity(quantities, capacities),
+			)
+			if err != nil {
+				panic(err)
+			}
+			solver, err := router.Solver(store.DefaultOptions())
+			if err != nil {
+				panic(err)
+			}
+			solution := solver.Last(context.Background())
+			s := solution.Store
+			p := router.Plan()
+			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
+	*/
+	Plan() store.Variable[Plan]
+}
+
+// Plan describes a solution to a Vehicle Routing Problem.
+type Plan struct {
+	Unassigned []Stop           `json:"unassigned"`
+	Vehicles   []PlannedVehicle `json:"vehicles"`
+}
+
+// PlannedVehicle holds information about the vehicle in a solution to a Vehicle
+// Routing Problem.
+type PlannedVehicle struct {
+	ID            string        `json:"id"`
+	Route         []PlannedStop `json:"route"`
+	RouteDuration int           `json:"route_duration"`
+}
+
+// PlannedStop describes a stop as part of a Vehicle's route of solution
+// to a Vehicle Routing Problem.
+type PlannedStop struct {
+	Stop
+	EstimatedArrival   *time.Time `json:"estimated_arrival,omitempty"`
+	EstimatedDeparture *time.Time `json:"estimated_departure,omitempty"`
 }
 
 // Stop to service in a Vehicle Routing Problem.

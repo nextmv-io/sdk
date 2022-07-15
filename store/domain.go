@@ -10,7 +10,7 @@ type Domain interface {
 		Add values to a Domain.
 
 			s1 := store.New()
-			d := store.Multiple(s, 1, 3, 5)
+			d := store.Multiple(s1, 1, 3, 5)
 			s2 := s1.Apply(d.Add(2, 4))
 
 			d.Domain(s1) // {1, 3, 5}}
@@ -22,7 +22,7 @@ type Domain interface {
 		AtLeast updates the Domain to the sub-Domain of at least some value.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
+			d := store.NewDomain(s1, model.NewRange(1, 10), model.NewRange(101, 110))
 			s2 := s1.Apply(d.AtLeast(50))
 
 			d.Domain(s1) // {[1, 10], [101, 110]}
@@ -34,7 +34,7 @@ type Domain interface {
 		AtMost updates the Domain to the sub-Domain of at most some value.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(101, 110))
+			d := store.NewDomain(s1, model.NewRange(1, 10), model.NewRange(101, 110))
 			s2 := s1.Apply(d.AtMost(50))
 
 			d.Domain(s1) // {[1, 10], [101, 110]}
@@ -79,8 +79,8 @@ type Domain interface {
 			s := store.New()
 			d1 := store.NewDomain(s)
 			d2 := store.Singleton(s, 42)
-			d1.Empty() // true
-			d2.Empty() // false
+			d1.Empty(s) // true
+			d2.Empty(s) // false
 	*/
 	Empty(Store) bool
 
@@ -99,8 +99,8 @@ type Domain interface {
 			s := store.New()
 			d1 := store.NewDomain(s)
 			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
-			d1.Max() // returns (_, false)
-			d2.Max() // returns (10, true)
+			d1.Max(s) // returns (_, false)
+			d2.Max(s) // returns (10, true)
 	*/
 	Max(Store) (int, bool)
 
@@ -110,8 +110,8 @@ type Domain interface {
 			s := store.New()
 			d1 := store.NewDomain(s)
 			d2 := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
-			d1.Min() // returns (_, false)
-			d2.Min() // returns (-5, true)
+			d1.Min(s) // returns (_, false)
+			d2.Min(s) // returns (-5, true)
 
 	*/
 	Min(Store) (int, bool)
@@ -120,7 +120,7 @@ type Domain interface {
 		Remove values from a Domain.
 
 			s1 := store.New()
-			d := store.NewDomain(s, model.NewRange(1, 5))
+			d := store.NewDomain(s1, model.NewRange(1, 5))
 			s2 := s1.Apply(d.Remove(2, 4))
 
 			d.Domain(s1) // [1, 5]
@@ -144,9 +144,9 @@ type Domain interface {
 			d1 := store.NewDomain(s)
 			d2 := store.Singleton(s, 42)
 			d3 := store.Multiple(s, 1, 3, 5)
-			d1.Value() // returns (_, false)
-			d2.Value() // returns (42, true)
-			d3.Value() // returns (_, false)
+			d1.Value(s) // returns (0, false)
+			d2.Value(s) // returns (42, true)
+			d3.Value(s) // returns (0, false)
 	*/
 	Value(Store) (int, bool)
 }
@@ -182,7 +182,7 @@ Multiple creates a Domain containing multiple integer values and stores it
 in a Store.
 
 	s := store.New()
-	even := store.Multiple(2, 4, 6, 8)
+	even := store.Multiple(s, 2, 4, 6, 8)
 */
 func Multiple(s Store, values ...int) Domain {
 	return domainProxy{domain: NewVar(s, model.Multiple(values...))}

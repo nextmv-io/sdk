@@ -43,8 +43,8 @@ func connect() {
 	plugin.Connect(slug, "StoreScope", &scopeFunc)
 
 	// Collections
-	plugin.Connect(slug, "StoreMapInt", &mapIntFunc)
-	plugin.Connect(slug, "StoreMapString", &mapStringFunc)
+	plugin.Connect(slug, "StoreNewMapInt", &newMapIntFunc)
+	plugin.Connect(slug, "StoreNewMapString", &newMapStringFunc)
 	plugin.Connect(slug, "StoreNewSlice", &newSliceFunc)
 
 	// Solver

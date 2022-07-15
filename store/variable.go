@@ -46,7 +46,13 @@ type variable[T any] struct {
 // Implements Variable.
 
 func (v variable[T]) Get(s Store) T {
-	return v.variable.Get(s).(T)
+	if value := v.variable.Get(s); value != nil {
+		return value.(T)
+	}
+
+	// zero-value of variable
+	var value T
+	return value
 }
 
 func (v variable[T]) Set(data T) Change {

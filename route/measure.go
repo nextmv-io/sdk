@@ -59,10 +59,17 @@ func Indexed(m ByPoint, points []Point) ByIndex {
 	return indexedFunc(m, points)
 }
 
+// Scale the cost of some other measure by a constant.
+func Scale(m ByIndex, constant float64) ByIndex {
+	connect()
+	return scaleFunc(m, constant)
+}
+
 var (
 	overrideFunc         func(ByIndex, ByIndex, func(int, int) bool) ByIndex
 	haversineByPointFunc func() ByPoint
 	constantByPointFunc  func(float64) ByPoint
 	constantFunc         func(float64) ByIndex
 	indexedFunc          func(ByPoint, []Point) ByIndex
+	scaleFunc            func(ByIndex, float64) ByIndex
 )

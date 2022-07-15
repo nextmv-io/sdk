@@ -118,10 +118,7 @@ func Maximize() Option {
 //
 // PLEASE NOTE: If you want to limit the route's duration or length please use
 // the options LimitDistance and LimitDuration, respectively.
-func Limits(
-	routeLimits []Limit,
-	ignoreTriangular bool,
-) Option {
+func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
 	connect()
 	return limitsFunc(routeLimits, ignoreTriangular)
 }
