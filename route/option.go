@@ -237,7 +237,7 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 }
 
 // Selector sets the given custom location selector. The location selector lets
-// you define a function which selects the location that will be inserted next
+// you define a function which selects the locations that will be inserted next
 // into the solution. If no custom location selector is given, the location with
 // the lowest index will be inserted next.
 func Selector(selector func(FleetPlan) model.Domain) Option {
