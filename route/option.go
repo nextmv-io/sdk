@@ -309,11 +309,8 @@ func FilterWithRoute(
 // define a function which returns the vehicle indices in a specific order. The
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
-func Sorter(sorter func(
-	p FleetPlan,
-	locations model.Domain,
-	vehicles model.Domain,
-) []int,
+func Sorter(
+	sorter func(p FleetPlan, locations model.Domain, vehicles model.Domain) []int,
 ) Option {
 	connect()
 	return sorterFunc(sorter)
