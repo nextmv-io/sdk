@@ -245,45 +245,157 @@ func Selector(selector func(PartialPlan) model.Domain) Option {
 	return selectorFunc(selector)
 }
 
-// FleetVehicleUpdater defines an interface that is used to override the
-// vehicle's default value function. It requires the implementation of two
-// functions, Value and Clone. The Clone function is used to make deep copies of
-// bookkeeping data which will be used to properly update the solution's value
-// in the Value function. The Value function takes a FleetVehicle as an input
-// and returns two values, a new solution value and a bool value to indicate
-// wether the vehicle's solution value received an update.
-type FleetVehicleUpdater interface {
-	Value(PartialVehicle) (int, bool)
-	Clone() FleetVehicleUpdater
+// VehicleUpdater defines an interface that is used to override the vehicle's
+// default value function. The Value function takes a PlannedVehicle as an input
+// and returns three values, a VehicleUpdater with potentially updated
+// bookkeeping data, a new solution value and a bool value to indicate wether
+// the vehicle's solution value received an update.
+type VehicleUpdater interface {
+	Update(PartialVehicle) (VehicleUpdater, int, bool)
 }
 
-// FleetUpdater defines an interface that is used to override the fleet's
-// default value function. It requires the implementation of two functions,
-// Value and Clone. The Clone function is used to make deep copies of
-// bookkeeping data which will be used to properly update the solution's value
-// in the Value function. The Value function takes a FleetPlan and a slice of
-// FleetVehicles as an input and returns two values, a new solution value and a
-// bool value to indicate wether the vehicle's solution value received an
-// update.
-type FleetUpdater interface {
-	Value(PartialPlan, []PartialVehicle) (int, bool)
-	Clone() FleetUpdater
+// PlanUpdater defines an interface that is used to override the fleet's default
+// value function. The Value function takes a Plan and a slice of
+// PlannedVehicles as an input and returns three values, a VehicleUpdater with
+// potentially updated bookkeeping data, a new solution value and a bool value
+// to indicate wether the vehicle's solution value received an update.
+type PlanUpdater interface {
+	Update(PartialPlan, []PartialVehicle) (PlanUpdater, int, bool)
 }
 
 /*
 Update sets the collection of functions that are called when transitioning from
-one state to another in the router engine's Decision Diagram search for the best
+one state to another in the router's Decision Diagram search for the best
 solution in the time alloted. Updating information is useful for two purposes:
 	- setting a custom value function (objective) that will be optimized.
 	- book-keeping of custom data.
 
 The option takes the following arguments:
-	- FleetVehicleUpdater: updates the vehicle.
-	- FleetUpdater: updates the fleet.
+	- VehicleUpdater: replaces the value function of each vehicle. Can be nil
+	if more than one vehicle is present.
+	- PlanUpdater: replaces the value function of the full plan. Can be nil if
+	only one vehicle is present.
 
-User-defined custom types must implement the interfaces.
+User-defined custom types must implement the interfaces. When routing multiple
+vehicles, the vehicleUpdater interface may be nil, if only information at the
+fleet level is updated.
+
+To customize the value function that will be optimized, the third parameter in
+either of the interfaces must be true. If the last parameter is false, the
+default value is used and it corresponds to the configured measure.
+
+To achieve efficient customizations, always try to update the components of the
+state that changed, as opposed to the complete state in both the vehicle and
+fleet engines.
+
+Example - VehicleUpdater Sample Implementation
+
+A custom type is defined called vehicleData. The vehicleData struct contains
+immutable data (the stops that are routed and a score for each of the vehicles)
+and mutable data (locations that maps the stop ID to its position in the route).
+
+	// Custom data to implement the VehicleUpdater interface.
+	type vehicleData struct {
+		stops     []sdkRoute.Stop
+		score     map[string]int
+		Locations map[string]int `json:"locations,omitempty"`
+	}
+
+The vehicleData struct can implement the VehicleUpdater interface so that when
+routing assigned stops to a vehicle, the index of each stop is updated. In
+addition to this, a custom value function for a vehicle's route is provided
+using that vehicle's score.
+
+	// Track the index in the route for each stop. Customize value function to
+	// incorporate the vehicle's score.
+	func (d vehicleData) Update(
+		v sdkRoute.PartialVehicle,
+	) (sdkRoute.VehicleUpdater, int, bool) {
+		// Create a fresh copy of Locations
+		d.Locations = map[string]int{}
+
+		// Update a stop's route index.
+		route := v.Route()
+		for i := 1; i < len(route)-1; i++ {
+			stop := d.stops[route[i]]
+			d.Locations[stop.ID] = i
+		}
+
+		// Apply correct vehicle score to the objective value.
+		vehicleID := v.ID()
+		value := v.Update() * d.score[vehicleID]
+		return d, value, true
+	}
+
+Example - PlanUpdater Sample Implementation
+
+Similarly to the above implementation at the vehicle level, a custom type is
+defined called fleetData to customize the fleet engine. The fleetData struct
+contains immutable data (the stops that are routed) and mutable data (global
+locations that maps the stop ID to its position in the route, custom values for
+each vehicle state and the value of the plan). Router leverages
+the updated vehicle information to update the global map of locations as well
+and only this Locations attribute is marshalled as part of the output.
+
+	// Custom data to implement the PlanUpdater interface.
+	type fleetData struct {
+		// immutable input data
+		stops []sdkRoute.Stop
+		// mutable data
+		Locations     map[string]int `json:"locations,omitempty"`
+		vehicleValues map[string]int
+		fleetValue    int
+	}
+
+The fleetData struct can implement the PlanUpdater interface so that when
+assigning stops to a vehicle, the index of each stop is updated using the
+updated locations of that vehicle's state. In addition to this, a custom value
+function for an assignment is provided by leveraging the custom value that was
+provided in the previous implementation.
+    // Track the index of the route for each stop in each vehicle route.
+	// Customize value function to incorporate the custom vehicle engine's
+	// value. Notice that the vehicle state is casted to an Updater interface.
+	// This makes it possible to call the Updater() method and obtain the custom
+	// updated information at the vehicle level, directly from the PlanUpdater.
+	func (d fleetData) Update(
+		plan sdkRoute.PartialPlan,
+		vehicles []sdkRoute.PartialVehicle,
+	) (sdkRoute.PlanUpdater, int, bool) {
+		// Deep copy locations stored on fleet state.
+		locations := make(map[string]int, len(d.Locations))
+		for stopdID, i := range d.Locations {
+			locations[stopdID] = i
+		}
+		d.Locations = locations
+		// Deep copy the data required for the value function.
+		values := make(map[string]int, len(d.vehicleValues))
+		for vehicleID, i := range d.vehicleValues {
+			values[vehicleID] = i
+		}
+		d.vehicleValues = values
+		for _, vehicle := range vehicles {
+			// Update locations based on the changes made on the vehicle state.
+			vehicleID := vehicle.ID()
+			updater := vehicle.Valuer().(vehicleData)
+			for stopdID, i := range updater.Locations {
+				d.Locations[stopdID] = i
+			}
+
+			// Update value function information.
+			value := vehicle.Update()
+			d.fleetValue -= d.vehicleValues[vehicleID]
+			d.vehicleValues[vehicleID] = value
+			d.fleetValue += d.vehicleValues[vehicleID]
+		}
+		// Remove unassigned locations.
+		for _, location := range plan.Unassigned().Slice() {
+			stop := d.stops[location]
+			delete(d.Locations, stop.ID)
+		}
+		return d, d.fleetValue, true
+	}
 */
-func Update(v FleetVehicleUpdater, f FleetUpdater) Option {
+func Update(v VehicleUpdater, f PlanUpdater) Option {
 	connect()
 	return updateFunc(v, f)
 }
@@ -333,6 +445,15 @@ type VehicleConstraint interface {
 	Violated(PartialVehicle) (VehicleConstraint, bool)
 }
 
+// Filter adds a custom vehicle filter to the list of filters. A filter checks
+// which location is in general compatible with a vehicle. If no filter is given
+// all locations are compatible with all vehicles and, thus, any location can be
+// inserted into any route.
+func Filter(compatible func(vehicle, location int) bool) Option {
+	connect()
+	return filterFunc(compatible)
+}
+
 var (
 	startsFunc                func([]Position) Option
 	endsFunc                  func([]Position) Option
@@ -358,7 +479,7 @@ var (
 	velocitiesFunc            func([]float64) Option
 	serviceGroupsFunc         func([]ServiceGroup) Option
 	selectorFunc              func(func(PartialPlan) model.Domain) Option
-	updateFunc                func(FleetVehicleUpdater, FleetUpdater) Option
+	updateFunc                func(VehicleUpdater, PlanUpdater) Option
 	filterWithRouteFunc       func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
@@ -366,4 +487,5 @@ var (
 		func(PartialPlan, model.Domain, model.Domain) []int,
 	) Option
 	constraintFunc func(VehicleConstraint, []string) Option
+	filterFunc     func(func(int, int) bool) Option
 )

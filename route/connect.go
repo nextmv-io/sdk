@@ -57,6 +57,7 @@ func connect() {
 	plugin.Connect(slug, "RouteFilterWithRoute", &filterWithRouteFunc)
 	plugin.Connect(slug, "RouteSorter", &sorterFunc)
 	plugin.Connect(slug, "RouteConstraint", &constraintFunc)
+	plugin.Connect(slug, "RouteFilter", &filterFunc)
 
 	// measures
 	plugin.Connect(slug, "RouteHaversineByPoint", &haversineByPointFunc)
