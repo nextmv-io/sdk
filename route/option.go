@@ -246,19 +246,21 @@ func Selector(selector func(PartialPlan) model.Domain) Option {
 }
 
 // VehicleUpdater defines an interface that is used to override the vehicle's
-// default value function. The Value function takes a PlannedVehicle as an input
-// and returns three values, a VehicleUpdater with potentially updated
+// default value function. The Update function takes a PartialVehicle as an
+// input and returns three values, a VehicleUpdater with potentially updated
 // bookkeeping data, a new solution value and a bool value to indicate wether
 // the vehicle's solution value received an update.
+// See the documentation of Update() for example usage.
 type VehicleUpdater interface {
 	Update(PartialVehicle) (VehicleUpdater, int, bool)
 }
 
-// PlanUpdater defines an interface that is used to override the fleet's default
-// value function. The Value function takes a Plan and a slice of
-// PlannedVehicles as an input and returns three values, a VehicleUpdater with
+// PlanUpdater defines an interface that is used to override router's default
+// value function. The Update function takes a Plan and a slice of
+// PartialVehicles as an input and returns three values, a PlanUpdater with
 // potentially updated bookkeeping data, a new solution value and a bool value
 // to indicate wether the vehicle's solution value received an update.
+// See the documentation of Update() for example usage.
 type PlanUpdater interface {
 	Update(PartialPlan, []PartialVehicle) (PlanUpdater, int, bool)
 }
@@ -285,8 +287,7 @@ either of the interfaces must be true. If the last parameter is false, the
 default value is used and it corresponds to the configured measure.
 
 To achieve efficient customizations, always try to update the components of the
-state that changed, as opposed to the complete state in both the vehicle and
-fleet engines.
+state that changed.
 
 Example - VehicleUpdater Sample Implementation
 
@@ -330,12 +331,12 @@ using that vehicle's score.
 Example - PlanUpdater Sample Implementation
 
 Similarly to the above implementation at the vehicle level, a custom type is
-defined called fleetData to customize the fleet engine. The fleetData struct
-contains immutable data (the stops that are routed) and mutable data (global
-locations that maps the stop ID to its position in the route, custom values for
-each vehicle state and the value of the plan). Router leverages
-the updated vehicle information to update the global map of locations as well
-and only this Locations attribute is marshalled as part of the output.
+defined called fleetData to customize the value function of a plan. The
+fleetData struct contains immutable data (the stops that are routed) and mutable
+data (global locations that maps the stop ID to its position in the route,
+custom values for each vehicle state and the value of the plan). Router
+leverages the updated vehicle information to update the global map of locations
+as well and only this Locations attribute is marshalled as part of the output.
 
 	// Custom data to implement the PlanUpdater interface.
 	type fleetData struct {
@@ -352,7 +353,8 @@ assigning stops to a vehicle, the index of each stop is updated using the
 updated locations of that vehicle's state. In addition to this, a custom value
 function for an assignment is provided by leveraging the custom value that was
 provided in the previous implementation.
-    // Track the index of the route for each stop in each vehicle route.
+
+	// Track the index of the route for each stop in each vehicle route.
 	// Customize value function to incorporate the custom vehicle engine's
 	// value. Notice that the vehicle state is casted to an Updater interface.
 	// This makes it possible to call the Updater() method and obtain the custom
@@ -361,7 +363,7 @@ provided in the previous implementation.
 		plan sdkRoute.PartialPlan,
 		vehicles []sdkRoute.PartialVehicle,
 	) (sdkRoute.PlanUpdater, int, bool) {
-		// Deep copy locations stored on fleet state.
+		// Deep copy locations stored.
 		locations := make(map[string]int, len(d.Locations))
 		for stopdID, i := range d.Locations {
 			locations[stopdID] = i
@@ -394,6 +396,7 @@ provided in the previous implementation.
 		}
 		return d, d.fleetValue, true
 	}
+
 */
 func Update(v VehicleUpdater, f PlanUpdater) Option {
 	connect()

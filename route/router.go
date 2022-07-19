@@ -44,11 +44,11 @@ type Router interface {
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
 // It gives access to the following information:
-// 	- Unplanned(): an Integer Domain with not yet assigned or unassigned
+//  - Unplanned(): an Integer Domain with not yet assigned or unassigned
 //	  stops indexes.
-//	- Unassigned(): an Integer Domain with unassigned stop indexes.
+//  - Unassigned(): an Integer Domain with unassigned stop indexes.
 //	  These are stops explicitly excluded from being served by a vehicle.
-//	- Vehicles(): a slice of vehicles part of this partial plan.
+//  - Vehicles(): a slice of vehicles part of this partial plan.
 //  - Value(): the value of this plan.
 type PartialPlan interface {
 	Unplanned() model.Domain
@@ -63,11 +63,11 @@ type PartialPlan interface {
 // information:
 //  - Route(): the route of the vehicle represented by a sequence of stop
 //	  indexes. The first and last index is always the start and stop of the
-//    vehicle.
+//	  vehicle.
 //  - ID(): the string vehicle ID.
 //  - Value(): the value of vehicle.
 //  - Updater(): in case a custom VehicleUpdater is used it can be accessed
-//    using this function. nil in case no VehicleUpdater was used.
+//	  using this function. nil in case no VehicleUpdater was used.
 type PartialVehicle interface {
 	Route() []int
 	ID() string
