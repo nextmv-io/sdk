@@ -237,7 +237,7 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 }
 
 // Selector sets the given custom location selector. The location selector lets
-// you define a function which selects the location that will be inserted next
+// you define a function which selects the locations that will be inserted next
 // into the solution. If no custom location selector is given, the location with
 // the lowest index will be inserted next.
 func Selector(selector func(PartialPlan) model.Domain) Option {
@@ -421,11 +421,8 @@ func FilterWithRoute(
 // define a function which returns the vehicle indices in a specific order. The
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
-func Sorter(sorter func(
-	p PartialPlan,
-	locations model.Domain,
-	vehicles model.Domain,
-) []int,
+func Sorter(
+	sorter func(p PartialPlan, locations model.Domain, vehicles model.Domain) []int,
 ) Option {
 	connect()
 	return sorterFunc(sorter)
