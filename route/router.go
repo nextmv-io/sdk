@@ -40,19 +40,19 @@ type Router interface {
 	Plan() store.Variable[Plan]
 }
 
-// FleetPlan is an (incomplete) Plan that operates on the internal
+// PartialPlan is an (incomplete) Plan that operates on the internal
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
-type FleetPlan struct {
+type PartialPlan struct {
 	Unplanned  model.Domain
 	Unassigned model.Domain
-	Vehicles   []FleetVehicle
+	Vehicles   []PartialVehicle
 }
 
-// FleetVehicle represents a Vehicle that operations on the internal solver
+// PartialVehicle represents a Vehicle that operations on the internal solver
 // data structures. Certain router options that customize solver
 // internals have to work with this data structure.
-type FleetVehicle struct {
+type PartialVehicle struct {
 	Route []int
 	ID    string
 }

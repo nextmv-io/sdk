@@ -240,7 +240,7 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 // you define a function which selects the location that will be inserted next
 // into the solution. If no custom location selector is given, the location with
 // the lowest index will be inserted next.
-func Selector(selector func(FleetPlan) model.Domain) Option {
+func Selector(selector func(PartialPlan) model.Domain) Option {
 	connect()
 	return selectorFunc(selector)
 }
@@ -253,7 +253,7 @@ func Selector(selector func(FleetPlan) model.Domain) Option {
 // and returns two values, a new solution value and a bool value to indicate
 // wether the vehicle's solution value received an update.
 type FleetVehicleUpdater interface {
-	Value(FleetVehicle) (int, bool)
+	Value(PartialVehicle) (int, bool)
 	Clone() FleetVehicleUpdater
 }
 
@@ -266,7 +266,7 @@ type FleetVehicleUpdater interface {
 // bool value to indicate wether the vehicle's solution value received an
 // update.
 type FleetUpdater interface {
-	Value(FleetPlan, []FleetVehicle) (int, bool)
+	Value(PartialPlan, []PartialVehicle) (int, bool)
 	Clone() FleetUpdater
 }
 
@@ -310,7 +310,7 @@ func FilterWithRoute(
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
 func Sorter(sorter func(
-	p FleetPlan,
+	p PartialPlan,
 	locations model.Domain,
 	vehicles model.Domain,
 ) []int,
@@ -330,7 +330,7 @@ func Constraint(constraint VehicleConstraint, ids []string) Option {
 // VehicleConstraint defines an interface that needs to be implemented when
 // creating a custom vehicle constraint.
 type VehicleConstraint interface {
-	Violated(FleetVehicle) (VehicleConstraint, bool)
+	Violated(PartialVehicle) (VehicleConstraint, bool)
 }
 
 var (
@@ -357,13 +357,13 @@ var (
 	alternatesFunc            func([]Alternate) Option
 	velocitiesFunc            func([]float64) Option
 	serviceGroupsFunc         func([]ServiceGroup) Option
-	selectorFunc              func(func(FleetPlan) model.Domain) Option
+	selectorFunc              func(func(PartialPlan) model.Domain) Option
 	updateFunc                func(FleetVehicleUpdater, FleetUpdater) Option
 	filterWithRouteFunc       func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
 	sorterFunc func(
-		func(FleetPlan, model.Domain, model.Domain) []int,
+		func(PartialPlan, model.Domain, model.Domain) []int,
 	) Option
 	constraintFunc func(VehicleConstraint, []string) Option
 )
