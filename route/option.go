@@ -422,7 +422,11 @@ func FilterWithRoute(
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
 func Sorter(
-	sorter func(p PartialPlan, locations model.Domain, vehicles model.Domain) []int,
+	sorter func(
+		p PartialPlan,
+		locations model.Domain,
+		vehicles model.Domain,
+	) []int,
 ) Option {
 	connect()
 	return sorterFunc(sorter)
