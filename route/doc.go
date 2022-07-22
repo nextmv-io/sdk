@@ -55,10 +55,10 @@
 //
 // Indexed Measures
 //
-// Models that do not require points operate on indices. These indices may or
+// Models that do not require points operate on indexes. These indexes may or
 // may not refer to points. An ByIndex implementation provides the same
 // functionality as a ByPoint implementation, except its cost method accepts two
-// indices instead of two points.
+// indexes instead of two points.
 //
 //     cost := m.Cost(fromIndex, toIndex)
 //

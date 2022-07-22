@@ -43,36 +43,34 @@ type Router interface {
 // PartialPlan is an (incomplete) Plan that operates on the internal
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
-// It gives access to the following information:
-//  - Unplanned(): an Integer Domain with not yet assigned or unassigned
-//	  stops indexes.
-//  - Unassigned(): an Integer Domain with unassigned stop indexes.
-//	  These are stops explicitly excluded from being served by a vehicle.
-//  - Vehicles(): a slice of vehicles part of this partial plan.
-//  - Value(): the value of this plan.
 type PartialPlan interface {
-	Unplanned() model.Domain
+	// Unassigned returns an Integer Domain with unassigned stop indexes.
+	// These are stops explicitly excluded from being served by a vehicle.
 	Unassigned() model.Domain
-	Vehicles() []PartialVehicle
+	// Unplanned returns an Integer Domain with not yet assigned or unassigned
+	// stops indexes.
+	Unplanned() model.Domain
+	// Value return the value of this plan.
 	Value() int
+	// Vehicles returns a slice of vehicles part of this partial plan.
+	Vehicles() []PartialVehicle
 }
 
 // PartialVehicle represents a Vehicle that operates on the internal solver
 // data structures. Certain router options that customize solver internals have
-// to work with this data structure. It gives access to the following
-// information:
-//  - Route(): the route of the vehicle represented by a sequence of stop
-//	  indexes. The first and last indexes are always the starting and ending locations of the
-//	  vehicle, respectively.
-//  - ID(): the string vehicle ID.
-//  - Value(): the value of vehicle.
-//  - Updater(): in case a custom VehicleUpdater is used it can be accessed
-//	  using this function. nil in case no VehicleUpdater was used.
+// to work with this data structure.
 type PartialVehicle interface {
-	Route() []int
+	// ID returns the vehicle ID.
 	ID() string
-	Value() int
+	// Updater returns either nil in case no custom VehicleUpdater was used or
+	// the custom VehicleUpdater that was used for this vehicle.
 	Updater() VehicleUpdater
+	// Route returns the route of the vehicle represented by a sequence of stop
+	// indexes. The first and last indexes are always the starting and ending
+	// locations of the vehicle, respectively.
+	Route() []int
+	// Value return the value of vehicle. Usually this is the cost of the route.
+	Value() int
 }
 
 // Plan describes a solution to a Vehicle Routing Problem.
