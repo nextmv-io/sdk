@@ -62,8 +62,8 @@ type PartialPlan interface {
 // to work with this data structure. It gives access to the following
 // information:
 //  - Route(): the route of the vehicle represented by a sequence of stop
-//	  indexes. The first and last index is always the start and stop of the
-//	  vehicle.
+//	  indexes. The first and last indexes are always the starting and ending locations of the
+//	  vehicle, respectively.
 //  - ID(): the string vehicle ID.
 //  - Value(): the value of vehicle.
 //  - Updater(): in case a custom VehicleUpdater is used it can be accessed
