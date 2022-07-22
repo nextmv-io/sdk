@@ -182,7 +182,8 @@ type Store interface {
 // requirements; e.g., all stops have been assigned to vehicles, all shifts are
 // covered with the necessary personnel, all assignment have been made,
 // quantity respects an alloted capacity, etc. Setting operational validity is
-// optional and the default is true.
+// optional and the default is true. A user is not encouraged to implement the
+// Generator interface.
 type Generator interface {
 	// Condition returns the generating Condition. The Generator may generate
 	// new Stores as long as this Condition holds.
@@ -197,7 +198,8 @@ type Generator interface {
 
 	/*
 		With establishes the Condition for operational validity that is used
-		with a generated Store.
+		with a generated Store. When not used, the default operational validity
+		is true.
 
 			s := store.New()
 			x := store.NewVar(s, 1)
@@ -215,24 +217,18 @@ type Generator interface {
 	With(Condition) Generator
 }
 
-// Action holds the actions for generating a new Store.
+// Action holds the actions for generating a new Store. They are meant to be
+// used with the store.Generate function.
 type Action interface {
 	/*
-		Then receives a function that takes in a Store and transforms it to
-		generate a new one.
+		Discard is a convenience function that discards the existing Store,
+		setting it as operationally invalid.
 
-			s := store.New()
-			x := store.NewVar(s, 1)
-			s = s.Generate(
-				store.If(store.True).
-					Then(func(s store.Store) store.Store {
-		                // Generate a new store in which the value of x
-						// increases by 1.
-						return s.Apply(x.Set(x.Get(s) + 1))
-					}),
-			)
+			// Discard an operationally invalid Store.
+			s := store.New().
+				Generate(store.If(store.True).Discard())
 	*/
-	Then(func(Store) Store) Generator
+	Discard() Generator
 
 	/*
 		Return is a convenience function that returns the existing Store,
@@ -245,32 +241,44 @@ type Action interface {
 	Return() Generator
 
 	/*
-		Discard is a convenience function that discards the existing Store,
-		setting it as operationally invalid.
+		Then receives a function that takes in a Store and transforms it to
+		generate a new one. The default operational validity of the new Store
+		is true and it can be modified by calling `With`.
 
-			// Discard an operationally invalid Store.
-			s := store.New().
-				Generate(store.If(store.True).Discard())
+			s := store.New()
+			x := store.NewVar(s, 1)
+			s = s.Generate(
+				store.If(store.True).
+					Then(func(s store.Store) store.Store {
+		                // Generate a new store in which the value of x
+						// increases by 1.
+						return s.Apply(x.Set(x.Get(s) + 1))
+					}), // Can use .With(...) to set operational validity
+			)
 	*/
-	Discard() Generator
+	Then(func(Store) Store) Generator
 }
 
-// Condition represents a logical condition on a context.
+// Condition represents a logical condition on a Store.
 type Condition func(Store) bool
 
 // Change a Store.
 type Change func(Store)
 
-// Formatter maps a Store to any type with a JSON representation.
+// Formatter maps a Store to any type with a JSON representation. It is meant
+// to be used with the store.Format function.
 type Formatter func(Store) any
 
-// Bounder maps a context to monotonically tightening bounds.
+// Bounder maps a Store to monotonically tightening bounds. It is meant to be
+// used with the store.Bound function.
 type Bounder func(Store) Bounds
 
-// Propagator propagates Changes to a Store.
+// Propagator propagates Changes to a Store. It is meant to be used with the
+// store.Propagate function.
 type Propagator func(Store) []Change
 
-// Valuer maps a Store to an integer value.
+// Valuer maps a Store to an integer value. It is meant to be used with the
+// store.Value function.
 type Valuer func(Store) int
 
 // Sense specifies whether one is maximizing, minimizing, or satisfying.
@@ -542,7 +550,8 @@ func Xor(c1, c2 Condition) Condition {
 }
 
 /*
-If specifies under what condition a Generator can be used.
+If specifies under what condition a Generator can be used. It is meant to be
+used with the store.Generate function.
 
 	s := store.New()
 	x := store.NewVar(s, 1)

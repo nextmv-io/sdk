@@ -12,8 +12,10 @@ type Router interface {
 	// Options configures the router with the given options. An error is
 	// returned if validation issues exist.
 	Options(...Option) error
+
 	// Solver receives solve options and returns a Solver interface.
 	Solver(store.Options) (store.Solver, error)
+
 	/*
 		Plan returns a variable which holds information about the current set of
 		vehicles with their respective routes and any unassigned stops. The Plan
