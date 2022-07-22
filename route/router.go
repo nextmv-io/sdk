@@ -57,7 +57,7 @@ type PartialPlan interface {
 	Value() int
 }
 
-// PartialVehicle represents a Vehicle that operations on the internal solver
+// PartialVehicle represents a Vehicle that operates on the internal solver
 // data structures. Certain router options that customize solver internals have
 // to work with this data structure. It gives access to the following
 // information:
