@@ -258,7 +258,7 @@ type VehicleUpdater interface {
 // potentially updated bookkeeping data, a new solution value and a bool value
 // to indicate wether the vehicle's solution value received an update. The
 // second parameter is a slice of PartialVehicles which may have been updated.
-// All vehicles not part of that slice have not definitely not changed. This
+// All vehicles not part of that slice have definitely not changed. This
 // knowledge can be used to more efficiently update the value of a plan. See the
 // documentation of route.Update() for example usage.
 type PlanUpdater interface {
