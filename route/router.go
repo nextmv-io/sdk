@@ -3,6 +3,7 @@ package route
 import (
 	"time"
 
+	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/store"
 )
 
@@ -39,6 +40,39 @@ type Router interface {
 			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
 	*/
 	Plan() store.Variable[Plan]
+}
+
+// PartialPlan is an (incomplete) Plan that operates on the internal
+// solver data structures. Certain router options that customize solver
+// internals have to work with this data structure.
+type PartialPlan interface {
+	// Unassigned returns an Integer Domain with unassigned stop indices.
+	// These are stops explicitly excluded from being served by a vehicle.
+	Unassigned() model.Domain
+	// Unplanned returns an Integer Domain with not yet assigned or unassigned
+	// stops indices.
+	Unplanned() model.Domain
+	// Value return the value of this plan.
+	Value() int
+	// Vehicles returns a slice of vehicles part of this partial plan.
+	Vehicles() []PartialVehicle
+}
+
+// PartialVehicle represents a Vehicle that operates on the internal solver
+// data structures. Certain router options that customize solver internals have
+// to work with this data structure.
+type PartialVehicle interface {
+	// ID returns the vehicle ID.
+	ID() string
+	// Updater returns either nil in case no custom VehicleUpdater was used or
+	// the custom VehicleUpdater that was used for this vehicle.
+	Updater() VehicleUpdater
+	// Route returns the route of the vehicle represented by a sequence of stop
+	// indices. The first and last indices are always the starting and ending
+	// locations of the vehicle, respectively.
+	Route() []int
+	// Value return the value of vehicle. Usually this is the cost of the route.
+	Value() int
 }
 
 // Plan describes a solution to a Vehicle Routing Problem.

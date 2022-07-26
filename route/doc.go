@@ -210,7 +210,7 @@ The following ByIndex implementations are available.
 
 In addition, the package provides Indexed, which adapts any ByPoint into a
 ByIndex. In addition to the ByPoint to be converted, Indexed accepts a fixed
-slice of points that it will use to look up the positions of indexes passed
+slice of points that it will use to look up the positions of indices passed
 to Cost.
 */
 package route

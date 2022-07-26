@@ -1,5 +1,9 @@
 package route
 
+import (
+	"github.com/nextmv-io/sdk/model"
+)
+
 // An Option configures a Router.
 type Option func(Router) error
 
@@ -229,6 +233,127 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 	return serviceGroupsFunc(serviceGroups)
 }
 
+// Selector sets the given custom location selector. The location selector lets
+// you define a function which selects the locations that will be inserted next
+// into the solution. If no custom location selector is given, the location with
+// the lowest index will be inserted next.
+func Selector(selector func(PartialPlan) model.Domain) Option {
+	connect()
+	return selectorFunc(selector)
+}
+
+// VehicleUpdater defines an interface that is used to override the vehicle's
+// default value function. The Update function takes a PartialVehicle as an
+// input and returns three values, a VehicleUpdater with potentially updated
+// bookkeeping data, a new solution value and a bool value to indicate wether
+// the vehicle's solution value received an update.
+// See the documentation of Update() for example usage.
+type VehicleUpdater interface {
+	Update(PartialVehicle) (VehicleUpdater, int, bool)
+}
+
+// PlanUpdater defines an interface that is used to override the router's
+// default value function. The Update function takes a Plan and a slice of
+// PartialVehicles as an input and returns three values, a PlanUpdater with
+// potentially updated bookkeeping data, a new solution value and a bool value
+// to indicate wether the vehicle's solution value received an update. The
+// second parameter is a slice of PartialVehicles which may have been updated.
+// All vehicles not part of that slice have definitely not changed. This
+// knowledge can be used to more efficiently update the value of a plan. See the
+// documentation of route.Update() for example usage.
+type PlanUpdater interface {
+	Update(PartialPlan, []PartialVehicle) (PlanUpdater, int, bool)
+}
+
+/*
+Update sets the collection of functions that are called when transitioning from
+one store to another in the router's Decision Diagram search for the best
+solution in the time alloted. Updating information is useful for two purposes:
+	- setting a custom value function (objective) that will be optimized.
+	- bookkeeping of custom data.
+
+The option takes the following arguments:
+	- VehicleUpdater: replaces the value function of each vehicle. Can be nil
+	if more than one vehicle is present.
+	- PlanUpdater: replaces the value function of the full plan. Can be nil if
+	only one vehicle is present.
+
+User-defined custom types must implement the interfaces. When routing multiple
+vehicles, the vehicleUpdater interface may be nil, if only information at the
+fleet level is updated.
+
+To customize the value function that will be optimized, the third parameter in
+either of the interfaces must be true. If the last parameter is false, the
+default value is used and it corresponds to the configured measure.
+
+To achieve efficient customizations, always try to update the components of the
+store that changed.
+*/
+func Update(v VehicleUpdater, f PlanUpdater) Option {
+	connect()
+	return updateFunc(v, f)
+}
+
+// FilterWithRoute adds a new VehicleFilter. Compared to the Filter option, the
+// FilterWithRoute option is more flexible. It defines a function that takes an
+// IntDomain of candidate vehicles, an IntDomain of locations that will be
+// assigned to a particular vehicle, and a slice of routes for all vehicles. It
+// returns an IntDomain representing vehicles that cannot service the domain of
+// locations.
+func FilterWithRoute(
+	filter func(
+		vehicleCandidates model.Domain,
+		locations model.Domain,
+		routes [][]int,
+	) model.Domain,
+) Option {
+	connect()
+	return filterWithRouteFunc(filter)
+}
+
+// Sorter sets the given custom vehicle sorter. The vehicle sorter lets you
+// define a function which returns the vehicle indices in a specific order. The
+// underlying engine will try to assign the locations to each vehicle in that
+// returned order.
+func Sorter(
+	sorter func(
+		p PartialPlan,
+		locations model.Domain,
+		vehicles model.Domain,
+	) []int,
+) Option {
+	connect()
+	return sorterFunc(sorter)
+}
+
+// VehicleConstraint defines an interface that needs to be implemented when
+// creating a custom vehicle constraint.
+type VehicleConstraint interface {
+	// Violated takes a PartialPlan and returns true if the vehicle with the
+	// current route is not operationally valid. Often custom constraint hold
+	// internal state. The first return value can be used to return a new
+	// VehicleConstraint with updated state or nil in case the solution is not
+	// operationally valid.
+	Violated(PartialVehicle) (VehicleConstraint, bool)
+}
+
+// Constraint sets a custom constraint for specified vehicles. It takes two
+// arguments, the constraint to be applied and a list of vehicles, indexed by
+// ID, to which the constraint shall be applied.
+func Constraint(constraint VehicleConstraint, ids []string) Option {
+	connect()
+	return constraintFunc(constraint, ids)
+}
+
+// Filter adds a custom vehicle filter to the list of filters. A filter checks
+// which location is in general compatible with a vehicle. If no filter is given
+// all locations are compatible with all vehicles and, thus, any location can be
+// inserted into any route.
+func Filter(compatible func(vehicle, location int) bool) Option {
+	connect()
+	return filterFunc(compatible)
+}
+
 var (
 	startsFunc                func([]Position) Option
 	endsFunc                  func([]Position) Option
@@ -253,4 +378,14 @@ var (
 	alternatesFunc            func([]Alternate) Option
 	velocitiesFunc            func([]float64) Option
 	serviceGroupsFunc         func([]ServiceGroup) Option
+	selectorFunc              func(func(PartialPlan) model.Domain) Option
+	updateFunc                func(VehicleUpdater, PlanUpdater) Option
+	filterWithRouteFunc       func(
+		func(model.Domain, model.Domain, [][]int) model.Domain,
+	) Option
+	sorterFunc func(
+		func(PartialPlan, model.Domain, model.Domain) []int,
+	) Option
+	constraintFunc func(VehicleConstraint, []string) Option
+	filterFunc     func(func(int, int) bool) Option
 )
