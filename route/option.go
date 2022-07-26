@@ -312,7 +312,7 @@ func FilterWithRoute(
 }
 
 // Sorter sets the given custom vehicle sorter. The vehicle sorter lets you
-// define a function which returns the vehicle indexes in a specific order. The
+// define a function which returns the vehicle indices in a specific order. The
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
 func Sorter(

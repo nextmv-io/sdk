@@ -46,11 +46,11 @@ type Router interface {
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
 type PartialPlan interface {
-	// Unassigned returns an Integer Domain with unassigned stop indexes.
+	// Unassigned returns an Integer Domain with unassigned stop indices.
 	// These are stops explicitly excluded from being served by a vehicle.
 	Unassigned() model.Domain
 	// Unplanned returns an Integer Domain with not yet assigned or unassigned
-	// stops indexes.
+	// stops indices.
 	Unplanned() model.Domain
 	// Value return the value of this plan.
 	Value() int
@@ -68,7 +68,7 @@ type PartialVehicle interface {
 	// the custom VehicleUpdater that was used for this vehicle.
 	Updater() VehicleUpdater
 	// Route returns the route of the vehicle represented by a sequence of stop
-	// indexes. The first and last indexes are always the starting and ending
+	// indices. The first and last indices are always the starting and ending
 	// locations of the vehicle, respectively.
 	Route() []int
 	// Value return the value of vehicle. Usually this is the cost of the route.
