@@ -38,9 +38,9 @@ func connect() {
 	plugin.Connect(slug, "StoreTrue", &trueFunc)
 	plugin.Connect(slug, "StoreXor", &xorFunc)
 
-	// State generation
-	plugin.Connect(slug, "StoreIf", &ifFunc)
-	plugin.Connect(slug, "StoreScope", &scopeFunc)
+	// Store generation
+	plugin.Connect(slug, "StoreEager", &eagerFunc)
+	plugin.Connect(slug, "StoreLazy", &lazyFunc)
 
 	// Collections
 	plugin.Connect(slug, "StoreNewMapInt", &newMapIntFunc)
