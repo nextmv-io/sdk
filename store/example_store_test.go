@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/nextmv-io/sdk/store"
@@ -97,193 +98,6 @@ func ExampleXor() {
 	// false
 }
 
-// Maximize a store's value by increasing an integer variable. Discard the
-// store as operationally invalid as soon as the value is 3. Although the
-// generation logic allows for up to 1000 increments of operationally invalid
-// stores, the store "stops on its tracks" when the value is 3 because the
-// Discard function is used.
-func ExampleAction_discard() {
-	s := store.New()
-	x := store.NewVar(s, 1)
-	s = s.
-		Generate(
-			store.
-				If(func(s store.Store) bool { return x.Get(s) == 3 }).
-				Discard(),
-			store.
-				If(func(s store.Store) bool { return x.Get(s) < 1000 }).
-				Then(func(s store.Store) store.Store {
-					return s.Apply(x.Set(x.Get(s) + 1))
-				}).
-				With(store.False),
-		).
-		Format(func(s store.Store) any { return map[string]int{"x": x.Get(s)} }).
-		Value(x.Get)
-
-	// The solver type is a maximizer because the store should increase the
-	// value of the number. Narrow down the search for performance.
-	opt := store.DefaultOptions()
-	opt.Diagram.Expansion.Limit = 1
-	opt.Diagram.Width = 1
-	opt.Search.Buffer = 1
-	opt.Limits.Nodes = 3
-	solver := s.Maximizer(opt)
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// null
-}
-
-// Return the store as operationally valid as soon as the value is 3, as in the
-// Discard example.
-func ExampleAction_return() {
-	s := store.New()
-	x := store.NewVar(s, 1)
-	s = s.
-		Generate(
-			store.
-				If(func(s store.Store) bool { return x.Get(s) == 3 }).
-				Return(),
-			store.
-				If(func(s store.Store) bool { return x.Get(s) < 1000 }).
-				Then(func(s store.Store) store.Store {
-					return s.Apply(x.Set(x.Get(s) + 1))
-				}),
-		).
-		Format(func(s store.Store) any { return map[string]int{"x": x.Get(s)} }).
-		Value(x.Get)
-
-	// The solver type is a maximizer because the store should increase the
-	// value of the number. Narrow down the search for performance.
-	opt := store.DefaultOptions()
-	opt.Diagram.Expansion.Limit = 1
-	opt.Diagram.Width = 1
-	opt.Search.Buffer = 1
-	opt.Limits.Nodes = 3
-	solver := s.Maximizer(opt)
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "x": 3
-	// }
-}
-
-// Create the Fibonacci sequence for the first 10 numbers. Using Then showcases
-// how the store is transformed to include a new number.
-func ExampleAction_then() {
-	s := store.New()
-	f := store.NewSlice(s, 1, 1)
-	s = s.
-		Generate(
-			store.
-				If(func(s store.Store) bool { return f.Len(s) < 10 }).
-				Then(func(s store.Store) store.Store {
-					last := f.Get(s, f.Len(s)-1)
-					preceding := f.Get(s, f.Len(s)-2)
-					return s.Apply(f.Append(last + preceding))
-				}),
-		).
-		Value(f.Len).
-		Format(func(s store.Store) any { return map[string]any{"f": f.Slice(s)} })
-
-	// The solver type is a maximizer because the store should incorporate more
-	// numbers into the sequence.
-	solver := s.Maximizer(store.DefaultOptions())
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "f": [
-	//     1,
-	//     1,
-	//     2,
-	//     3,
-	//     5,
-	//     8,
-	//     13,
-	//     21,
-	//     34,
-	//     55
-	//   ]
-	// }
-}
-
-// If the value of an integer value is smaller than 10, increase its value by
-// 1. The generating condition imposes a limit on the search.
-func ExampleIf() {
-	s := store.New()
-	x := store.NewVar(s, 0)
-	s = s.
-		Generate(
-			store.
-				If(func(s store.Store) bool { return x.Get(s) < 10 }).
-				Then(func(s store.Store) store.Store {
-					return s.Apply(x.Set(x.Get(s) + 1))
-				}),
-		).
-		Format(func(s store.Store) any { return map[string]int{"x": x.Get(s)} }).
-		Value(x.Get)
-
-	// The solver type is a maximizer because x should increase in value.
-	solver := s.Maximizer(store.DefaultOptions())
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "x": 10
-	// }
-}
-
-// Set custom bounds on the store to refine the search for the best value.
-func ExampleBounder() {
-	s := store.
-		New().
-		Bound(func(s store.Store) store.Bounds {
-			return store.Bounds{Lower: 15, Upper: 42}
-		})
-
-	// The solver type is a minimizer to use bounds.
-	solver := s.Minimizer(store.DefaultOptions())
-
-	// Get the bounds of the solution and print them.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Statistics.Bounds, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "lower": 15,
-	//   "upper": 42
-	// }
-}
-
 // Changes can be applied to a store.
 func ExampleChange() {
 	// Original value.
@@ -308,137 +122,6 @@ func ExampleCondition() {
 	fmt.Println(c)
 	// Output:
 	// false
-}
-
-func ExampleFormatter() {
-	s := store.New()
-	x := store.NewSlice(s, 1, 2, 3)
-
-	// Apply some custom formatting.
-	f1 := func(s store.Store) any { return x.Slice(s) }
-	s1 := s.Format(f1)
-	b, err := json.Marshal(s1)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-
-	// Apply another custom formatting.
-	f2 := func(s store.Store) any { return map[string][]int{"x": x.Slice(s)} }
-	s2 := s.Format(f2)
-	b, err = json.Marshal(s2)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// [1,2,3]
-	// {"x":[1,2,3]}
-}
-
-// If a Generator is not used, new Stores are not created and thus there is no
-// search.
-func ExampleGenerator() {
-	s := store.New().Generate()
-
-	// Define any solver.
-	solver := s.Satisfier(store.DefaultOptions())
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	fmt.Println(last.Store)
-	// Output:
-	// <nil>
-}
-
-// Define a custom operational validity.
-func ExampleGenerator_with() {
-	s := store.New()
-	x := store.NewVar(s, 0)
-	s = s.
-		Generate(
-			store.
-				If(store.True).
-				Then(func(s store.Store) store.Store {
-					return s.Apply(x.Set(x.Get(s) + 1))
-				}).
-				With(func(s store.Store) bool {
-					// The Store is operationally valid if x is even.
-					return x.Get(s)%2 == 0
-				}),
-		).
-		Value(x.Get)
-
-	// The solver type is a maximizer to increase the value of x.
-	opt := store.DefaultOptions()
-	opt.Limits.Solutions = 1
-	opt.Diagram.Expansion.Limit = 1
-	opt.Limits.Nodes = 10
-	solver := s.Maximizer(opt)
-
-	// Get the stats of the solution and print them.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Statistics.Search, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "generated": 2,
-	//   "filtered": 0,
-	//   "expanded": 2,
-	//   "reduced": 0,
-	//   "restricted": 2,
-	//   "deferred": 2,
-	//   "explored": 0,
-	//   "solutions": 1
-	// }
-}
-
-// Define a Generator using a lexical scope, where variable definitions may be
-// reused.
-func ExampleScope() {
-	s := store.New()
-	x := store.NewVar(s, 1)
-	s = s.
-		Generate(
-			store.Scope(func(s store.Store) store.Generator {
-				v := x.Get(s)
-				return store.If(func(s store.Store) bool {
-					// v is used here.
-					return v < 10
-				}).Then(func(s store.Store) store.Store {
-					// v is also used here.
-					v++
-					return s.Apply(x.Set(v))
-				})
-			}),
-		).
-		Value(x.Get)
-
-	// The solver type is a maximizer to increase the value of x.
-	opt := store.DefaultOptions()
-	solver := s.Maximizer(opt)
-
-	// Get the stats of the solution and print them.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Statistics.Search, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(b))
-	// Output:
-	// {
-	//   "generated": 9,
-	//   "filtered": 0,
-	//   "expanded": 9,
-	//   "reduced": 0,
-	//   "restricted": 9,
-	//   "deferred": 0,
-	//   "explored": 1,
-	//   "solutions": 9
-	// }
 }
 
 // DefaultOptions provide sensible defaults but they can (and should) be
@@ -497,66 +180,38 @@ func ExampleDefaultOptions() {
 	// }
 }
 
-// Run the longest uncrossed knight's path package example but visualize all
-// solutions.
+// Get all the solutions from the Generate example.
 func ExampleSolver_all() {
-	// Board size and initial position.
-	n := 5
-	p := position{row: 0, col: 0}
+	s := store.New()
+	x := store.NewVar(s, 0)
+	s = s.Generate(func(s store.Store) store.Generator {
+		value := x.Get(s)
+		return store.Lazy(
+			func(store.Store) bool {
+				return value <= 2
+			},
+			func(store.Store) store.Store {
+				value++
+				return s.Apply(x.Set(value))
+			},
+		)
+	})
 
-	// Create the knight's tour model.
-	knight := store.New()
+	solver := s.
+		Value(func(s store.Store) int { return x.Get(s) }).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Maximizer(store.DefaultOptions())
 
-	// Track the sequence of moves.
-	tour := store.NewSlice(knight, p)
-
-	// Define the output format.
-	knight = knight.Format(format(tour, n))
-
-	// Define the value to maximize: the number of jumps made.
-	knight = knight.Value(func(s store.Store) int { return tour.Len(s) - 1 })
-
-	// Define the generation of the tour.
-	knight = knight.Generate(
-		store.Scope(func(s store.Store) store.Generator {
-			// Gets the last move made and all the candidate positions from
-			// there.
-			lastMove := tour.Get(s, tour.Len(s)-1)
-			candidates := unintersected(
-				n,
-				lastMove.row,
-				lastMove.col,
-				tour.Slice(s),
-			)
-
-			// Create new stores by adding each candidate to the tour.
-			stores := make([]store.Store, len(candidates))
-			for i, candidate := range candidates {
-				stores[i] = s.Apply(tour.Append(candidate))
-			}
-
-			return store.
-				// Generate new stores as long as there are elements left.
-				If(func(s store.Store) bool { return len(stores) > 0 }).
-				Then(func(s store.Store) store.Store {
-					// Get the first element of the stores' queue and pop it.
-					generated := stores[0]
-					stores = stores[1:]
-					return generated
-				}) // The store is always operationally valid.
-		}),
-	)
-
-	// The solver type is a maximizer because the store is searching for the
-	// highest number of moves.
-	solver := knight.Maximizer(store.DefaultOptions())
-
-	// Print all solutions.
+	// Get all solutions.
 	all := solver.All(context.Background())
+
+	// Loop over the channel values to get the solutions.
 	solutions := make([]store.Store, len(all))
 	for solution := range all {
 		solutions = append(solutions, solution.Store)
 	}
+
+	// Print the solutions.
 	b, err := json.MarshalIndent(solutions, "", "  ")
 	if err != nil {
 		panic(err)
@@ -564,119 +219,169 @@ func ExampleSolver_all() {
 	fmt.Println(string(b))
 	// Output:
 	// [
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- -- -- ",
-	//     "2": "-- 01 -- -- -- ",
-	//     "3": "-- -- -- -- -- ",
-	//     "4": "-- -- -- -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- -- -- ",
-	//     "2": "-- 01 -- -- -- ",
-	//     "3": "-- -- -- -- -- ",
-	//     "4": "-- -- 02 -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- -- -- ",
-	//     "2": "-- 01 -- -- -- ",
-	//     "3": "03 -- -- -- -- ",
-	//     "4": "-- -- 02 -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- -- -- ",
-	//     "2": "04 01 -- -- -- ",
-	//     "3": "-- -- -- 02 -- ",
-	//     "4": "-- 03 -- -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- -- -- ",
-	//     "2": "04 01 -- -- -- ",
-	//     "3": "-- -- 05 02 -- ",
-	//     "4": "-- 03 -- -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- -- -- -- ",
-	//     "1": "-- -- -- 02 -- ",
-	//     "2": "-- 01 06 -- -- ",
-	//     "3": "05 -- -- -- 03 ",
-	//     "4": "-- -- 04 -- -- "
-	//   },
-	//   {
-	//     "0": "00 -- 02 -- -- ",
-	//     "1": "-- -- -- -- 03 ",
-	//     "2": "06 01 -- -- -- ",
-	//     "3": "-- -- 07 04 -- ",
-	//     "4": "-- 05 -- -- -- "
-	//   }
+	//   0,
+	//   1,
+	//   2
 	// ]
 }
 
-// Run the longest uncrossed knight's path package example and get all
-// solutions. Obtain the last solution from the last element of the slice.
+// Get the last (best) solutions from the Generate example.
 func ExampleSolver_last() {
-	// Board size and initial position.
-	n := 5
-	p := position{row: 0, col: 0}
+	s := store.New()
+	x := store.NewVar(s, 0)
+	s = s.Generate(func(s store.Store) store.Generator {
+		value := x.Get(s)
+		return store.Lazy(
+			func(store.Store) bool {
+				return value <= 2
+			},
+			func(store.Store) store.Store {
+				value++
+				return s.Apply(x.Set(value))
+			},
+		)
+	})
 
-	// Create the knight's tour model.
-	knight := store.New()
-
-	// Track the sequence of moves.
-	tour := store.NewSlice(knight, p)
-
-	// Define the output format.
-	knight = knight.Format(format(tour, n))
-
-	// Define the value to maximize: the number of jumps made.
-	knight = knight.Value(func(s store.Store) int { return tour.Len(s) - 1 })
-
-	// Define the generation of the tour.
-	knight = knight.Generate(
-		store.Scope(func(s store.Store) store.Generator {
-			// Gets the last move made and all the candidate positions from
-			// there.
-			lastMove := tour.Get(s, tour.Len(s)-1)
-			candidates := unintersected(
-				n,
-				lastMove.row,
-				lastMove.col,
-				tour.Slice(s),
-			)
-
-			// Create new stores by adding each candidate to the tour.
-			stores := make([]store.Store, len(candidates))
-			for i, candidate := range candidates {
-				stores[i] = s.Apply(tour.Append(candidate))
-			}
-
-			return store.
-				// Generate new stores as long as there are elements left.
-				If(func(s store.Store) bool { return len(stores) > 0 }).
-				Then(func(s store.Store) store.Store {
-					// Get the first element of the stores' queue and pop it.
-					generated := stores[0]
-					stores = stores[1:]
-					return generated
-				}) // The store is always operationally valid.
-		}),
-	)
-
-	// The solver type is a maximizer because the store is searching for the
-	// highest number of moves.
-	solver := knight.Maximizer(store.DefaultOptions())
+	solver := s.
+		Value(func(s store.Store) int { return x.Get(s) }).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Maximizer(store.DefaultOptions())
 
 	// Get the last solution of the problem and print it.
-	all := solver.All(context.Background())
-	solutions := make([]store.Store, len(all))
-	for solution := range all {
-		solutions = append(solutions, solution.Store)
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
 	}
-	last := solutions[len(solutions)-1]
+	fmt.Println(string(b))
+	// Output:
+	// 2
+}
+
+// Generate stores lazily: while an integer variable is less than or equal to
+// 5, increase its value by 1. Lazy implementation of the Eager example.
+func ExampleLazy() {
+	s := store.New()
+	x := store.NewVar(s, 0)
+	solver := s.
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			return store.Lazy(
+				func(s store.Store) bool {
+					return value <= 5
+				},
+				func(s store.Store) store.Store {
+					value++
+					return s.Apply(x.Set(value))
+				},
+			)
+		}).
+		Value(func(s store.Store) int { return x.Get(s) }).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Maximizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 5
+}
+
+// Generate stores eagerly: create all stores from an integer variable by
+// increasing its value in 1 each time. The value should never be greater than
+// 5. Eager implementation of the Lazy example.
+func ExampleEager() {
+	s := store.New()
+	x := store.NewVar(s, 0)
+	solver := s.
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			var stores []store.Store
+			for value <= 5 {
+				value++
+				if value > 5 {
+					break
+				}
+				stores = append(stores, s.Apply(x.Set(value)))
+			}
+			return store.Eager(stores...)
+		}).
+		Value(func(s store.Store) int { return x.Get(s) }).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Maximizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 5
+}
+
+// Applying changes to a store updates it, e.g.: setting the value of a
+// variable.
+func ExampleStore_apply() {
+	s := store.New()
+	x := store.NewVar(s, 3.1416)
+	s1 := s.Apply(
+		x.Set(x.Get(s) * 2),
+	)
+
+	fmt.Println(x.Get(s))
+	fmt.Println(x.Get(s1))
+	// Output:
+	// 3.1416
+	// 6.2832
+}
+
+// Make an initial value approach a target by minimizing the absolute
+// difference between them. The store is bounded near zero to help the solver
+// look for the best solution. The resulting bounds are tightened.
+func ExampleStore_bound() {
+	s := store.New()
+	initial := 10
+	target := 16
+	x := store.NewVar(s, initial)
+	s = s.Bound(func(s store.Store) store.Bounds {
+		return store.Bounds{
+			Lower: -1,
+			Upper: 1,
+		}
+	})
+
+	solver := s.
+		Value(func(s store.Store) int {
+			diff := float64(target - x.Get(s))
+			return int(math.Abs(diff))
+		}).
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			return store.Lazy(
+				func(s store.Store) bool {
+					return value <= 2*target
+				},
+				func(s store.Store) store.Store {
+					value++
+					return s.Apply(x.Set(value))
+				},
+			)
+		}).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Minimizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+
+	// Override this variable to have a consistent testable example.
+	last.Statistics.Time = store.Time{}
+
 	b, err := json.MarshalIndent(last, "", "  ")
 	if err != nil {
 		panic(err)
@@ -684,31 +389,120 @@ func ExampleSolver_last() {
 	fmt.Println(string(b))
 	// Output:
 	// {
-	//   "0": "00 -- 02 -- -- ",
-	//   "1": "-- -- -- -- 03 ",
-	//   "2": "06 01 -- -- -- ",
-	//   "3": "-- -- 07 04 -- ",
-	//   "4": "-- 05 -- -- -- "
+	//   "store": 16,
+	//   "statistics": {
+	//     "bounds": {
+	//       "lower": -1,
+	//       "upper": 0
+	//     },
+	//     "search": {
+	//       "generated": 22,
+	//       "filtered": 0,
+	//       "expanded": 22,
+	//       "reduced": 0,
+	//       "restricted": 10,
+	//       "deferred": 12,
+	//       "explored": 1,
+	//       "solutions": 2
+	//     },
+	//     "time": {
+	//       "elapsed": "0s",
+	//       "elapsed_seconds": 0,
+	//       "start": "0001-01-01T00:00:00Z"
+	//     },
+	//     "value": 0
+	//   }
 	// }
 }
 
-// Set a custom value on the store using a valuer.
-func ExampleValuer() {
+// A store can be formatted to any JSON representation.
+func ExampleStore_format() {
+	s := store.New()
+	x := store.NewVar(s, 10)
+	s = s.Format(func(s store.Store) any {
+		return map[string]int{"x": x.Get(s)}
+	})
+
+	b, err := json.Marshal(s)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {"x":10}
+}
+
+// Given a parent, which is simply an integer variable, children are generated
+// by adding 1. This is done until the value reaches a certain limit.
+func ExampleStore_generate() {
+	s := store.New()
+	x := store.NewVar(s, 0)
+	s = s.Generate(func(s store.Store) store.Generator {
+		value := x.Get(s)
+		return store.Lazy(
+			func(store.Store) bool {
+				return value <= 2
+			},
+			func(store.Store) store.Store {
+				value++
+				return s.Apply(x.Set(value))
+			},
+		)
+	})
+
+	solver := s.
+		Value(func(s store.Store) int { return x.Get(s) }).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Maximizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 2
+}
+
+// Validating that 1 is divisible by 2 results in an operational invalid store,
+// represented as null.
+func ExampleStore_validate() {
 	s := store.New()
 	x := store.NewVar(s, 1)
+	s = s.Validate(func(s store.Store) bool {
+		return x.Get(s)%2 == 0
+	})
+
 	solver := s.
-		Value(func(s store.Store) int {
-			v := x.Get(s)
-			return v * v
-		}).
-		Generate(
-			store.
-				If(func(s store.Store) bool { return x.Get(s) < 10 }).
-				Then(func(s store.Store) store.Store {
-					return s.Apply(x.Set(x.Get(s) + 1))
-				}),
-		).
-		Maximizer(store.DefaultOptions())
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Satisfier(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// null
+}
+
+// A custom value can be set on a store. Using any solver, the store has the
+// given value.
+func ExampleStore_value() {
+	s := store.New()
+	x := store.NewVar(s, 6)
+	s = s.Value(func(s store.Store) int {
+		v := x.Get(s)
+		return v * v
+	})
+
+	solver := s.Minimizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
 	last := solver.Last(context.Background())
 	b, err := json.MarshalIndent(last.Statistics.Value, "", "  ")
 	if err != nil {
@@ -716,5 +510,101 @@ func ExampleValuer() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 100
+	// 36
+}
+
+// Increase the value of a variable as much as possible.
+func ExampleStore_maximizer() {
+	s := store.New()
+	x := store.NewVar(s, 10)
+	maximizer := s.
+		Value(x.Get).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			return store.Lazy(
+				func(s store.Store) bool { return value <= 20 },
+				func(s store.Store) store.Store {
+					value += 5
+					return s.Apply(x.Set(value))
+				},
+			)
+		}).
+		Maximizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := maximizer.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 20
+}
+
+// Decrease the value of a variable as much as possible.
+func ExampleStore_minimizer() {
+	s := store.New()
+	x := store.NewVar(s, 10)
+	minimizer := s.
+		Value(x.Get).
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			return store.Lazy(
+				func(s store.Store) bool { return value >= 0 },
+				func(s store.Store) store.Store {
+					value -= 5
+					return s.Apply(x.Set(value))
+				},
+			)
+		}).
+		Minimizer(store.DefaultOptions())
+
+	// Get the last solution of the problem and print it.
+	last := minimizer.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 0
+}
+
+// Find the first number divisible by 6, starting from 100.
+func ExampleStore_satisfier() {
+	s := store.New()
+	x := store.NewVar(s, 100)
+	opt := store.DefaultOptions()
+	opt.Limits.Solutions = 1
+	satisfier := s.
+		Format(func(s store.Store) any { return x.Get(s) }).
+		Validate(func(s store.Store) bool {
+			return x.Get(s)%6 == 0
+		}).
+		Generate(func(s store.Store) store.Generator {
+			value := x.Get(s)
+			return store.Lazy(
+				func(s store.Store) bool {
+					return value > 0
+				},
+				func(s store.Store) store.Store {
+					value--
+					return s.Apply(x.Set(value))
+				},
+			)
+		}).
+		Satisfier(opt)
+
+	// Get the last solution of the problem and print it.
+	last := satisfier.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// 36
 }

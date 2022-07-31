@@ -107,36 +107,27 @@ func Example_longestUncrossedKnightsPath() {
 	// Define the value to maximize: the number of jumps made.
 	knight = knight.Value(func(s store.Store) int { return tour.Len(s) - 1 })
 
-	// Define the generation of the tour.
-	knight = knight.Generate(
-		store.Scope(func(s store.Store) store.Generator {
-			// Gets the last move made and all the candidate positions from
-			// there.
-			lastMove := tour.Get(s, tour.Len(s)-1)
-			candidates := unintersected(
-				n,
-				lastMove.row,
-				lastMove.col,
-				tour.Slice(s),
-			)
+	// Define the generation of the tour. The store is always operationally
+	// valid.
+	knight = knight.Generate(func(s store.Store) store.Generator {
+		// Gets the last move made and all the candidate positions from
+		// there.
+		lastMove := tour.Get(s, tour.Len(s)-1)
+		candidates := unintersected(
+			n,
+			lastMove.row,
+			lastMove.col,
+			tour.Slice(s),
+		)
 
-			// Create new stores by adding each candidate to the tour.
-			stores := make([]store.Store, len(candidates))
-			for i, candidate := range candidates {
-				stores[i] = s.Apply(tour.Append(candidate))
-			}
+		// Create new stores by adding each candidate to the tour.
+		stores := make([]store.Store, len(candidates))
+		for i, candidate := range candidates {
+			stores[i] = s.Apply(tour.Append(candidate))
+		}
 
-			return store.
-				// Generate new stores as long as there are elements left.
-				If(func(s store.Store) bool { return len(stores) > 0 }).
-				Then(func(s store.Store) store.Store {
-					// Get the first element of the stores' queue and pop it.
-					generated := stores[0]
-					stores = stores[1:]
-					return generated
-				}) // The store is always operationally valid.
-		}),
-	)
+		return store.Eager(stores...)
+	})
 
 	// The solver type is a maximizer because the store is searching for the
 	// highest number of moves.
