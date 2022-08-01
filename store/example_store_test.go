@@ -187,10 +187,10 @@ func ExampleSolver_all() {
 	s = s.Generate(func(s store.Store) store.Generator {
 		value := x.Get(s)
 		return store.Lazy(
-			func(store.Store) bool {
+			func() bool {
 				return value <= 2
 			},
-			func(store.Store) store.Store {
+			func() store.Store {
 				value++
 				return s.Apply(x.Set(value))
 			},
@@ -221,7 +221,8 @@ func ExampleSolver_all() {
 	// [
 	//   0,
 	//   1,
-	//   2
+	//   2,
+	//   3
 	// ]
 }
 
@@ -232,10 +233,10 @@ func ExampleSolver_last() {
 	s = s.Generate(func(s store.Store) store.Generator {
 		value := x.Get(s)
 		return store.Lazy(
-			func(store.Store) bool {
+			func() bool {
 				return value <= 2
 			},
-			func(store.Store) store.Store {
+			func() store.Store {
 				value++
 				return s.Apply(x.Set(value))
 			},
@@ -255,7 +256,7 @@ func ExampleSolver_last() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 2
+	// 3
 }
 
 // Generate stores lazily: while an integer variable is less than or equal to
@@ -267,10 +268,10 @@ func ExampleLazy() {
 		Generate(func(s store.Store) store.Generator {
 			value := x.Get(s)
 			return store.Lazy(
-				func(s store.Store) bool {
+				func() bool {
 					return value <= 5
 				},
-				func(s store.Store) store.Store {
+				func() store.Store {
 					value++
 					return s.Apply(x.Set(value))
 				},
@@ -288,7 +289,7 @@ func ExampleLazy() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 5
+	// 6
 }
 
 // Generate stores eagerly: create all stores from an integer variable by
@@ -364,10 +365,10 @@ func ExampleStore_bound() {
 		Generate(func(s store.Store) store.Generator {
 			value := x.Get(s)
 			return store.Lazy(
-				func(s store.Store) bool {
+				func() bool {
 					return value <= 2*target
 				},
-				func(s store.Store) store.Store {
+				func() store.Store {
 					value++
 					return s.Apply(x.Set(value))
 				},
@@ -396,12 +397,12 @@ func ExampleStore_bound() {
 	//       "upper": 0
 	//     },
 	//     "search": {
-	//       "generated": 22,
+	//       "generated": 23,
 	//       "filtered": 0,
-	//       "expanded": 22,
+	//       "expanded": 23,
 	//       "reduced": 0,
 	//       "restricted": 10,
-	//       "deferred": 12,
+	//       "deferred": 13,
 	//       "explored": 1,
 	//       "solutions": 2
 	//     },
@@ -440,10 +441,10 @@ func ExampleStore_generate() {
 	s = s.Generate(func(s store.Store) store.Generator {
 		value := x.Get(s)
 		return store.Lazy(
-			func(store.Store) bool {
+			func() bool {
 				return value <= 2
 			},
-			func(store.Store) store.Store {
+			func() store.Store {
 				value++
 				return s.Apply(x.Set(value))
 			},
@@ -463,7 +464,7 @@ func ExampleStore_generate() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 2
+	// 3
 }
 
 // Validating that 1 is divisible by 2 results in an operational invalid store,
@@ -523,8 +524,8 @@ func ExampleStore_maximizer() {
 		Generate(func(s store.Store) store.Generator {
 			value := x.Get(s)
 			return store.Lazy(
-				func(s store.Store) bool { return value <= 20 },
-				func(s store.Store) store.Store {
+				func() bool { return value <= 20 },
+				func() store.Store {
 					value += 5
 					return s.Apply(x.Set(value))
 				},
@@ -540,7 +541,7 @@ func ExampleStore_maximizer() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 20
+	// 25
 }
 
 // Decrease the value of a variable as much as possible.
@@ -553,8 +554,8 @@ func ExampleStore_minimizer() {
 		Generate(func(s store.Store) store.Generator {
 			value := x.Get(s)
 			return store.Lazy(
-				func(s store.Store) bool { return value >= 0 },
-				func(s store.Store) store.Store {
+				func() bool { return value >= 0 },
+				func() store.Store {
 					value -= 5
 					return s.Apply(x.Set(value))
 				},
@@ -570,7 +571,7 @@ func ExampleStore_minimizer() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 0
+	// -5
 }
 
 // Find the first number divisible by 6, starting from 100.
@@ -587,10 +588,10 @@ func ExampleStore_satisfier() {
 		Generate(func(s store.Store) store.Generator {
 			value := x.Get(s)
 			return store.Lazy(
-				func(s store.Store) bool {
+				func() bool {
 					return value > 0
 				},
-				func(s store.Store) store.Store {
+				func() store.Store {
 					value--
 					return s.Apply(x.Set(value))
 				},
@@ -606,5 +607,5 @@ func ExampleStore_satisfier() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 36
+	// 90
 }
