@@ -439,7 +439,7 @@ func Eager(s ...Store) Generator {
 // is called to generate new Stores. If the condition is no longer true or a
 // nil Store is returned, the generator is not used anymore by the current
 // parent.
-func Lazy(c Condition, f func(Store) Store) Generator {
+func Lazy(c func() bool, f func() Store) Generator {
 	connect()
 	return lazyFunc(c, f)
 }
@@ -454,5 +454,5 @@ var (
 	xorFunc            func(Condition, Condition) Condition
 	defaultOptionsFunc func() Options
 	eagerFunc          func(...Store) Generator
-	lazyFunc           func(Condition, func(Store) Store) Generator
+	lazyFunc           func(func() bool, func() Store) Generator
 )
