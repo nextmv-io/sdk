@@ -326,6 +326,28 @@ func Sorter(
 	return sorterFunc(sorter)
 }
 
+// PlanMarshaller defines an interface that is used to override router's default
+// output when using multiple vehicles.
+type PlanMarshaller interface {
+	Marshal(PartialPlan) ([]byte, error)
+}
+
+// VehicleMarshaller defines an interface that is used to override router's
+// default output when using exactly one vehicle.
+type VehicleMarshaller interface {
+	Marshal(PartialVehicle) ([]byte, error)
+}
+
+/*
+Output sets the collection of custom output functions when using a single
+vehicle (VehicleMarshaller) and multiple vehicles (PlanMarshaller). The user
+must specify a custom type that implements either interface.
+*/
+func Output(v VehicleMarshaller, p PlanMarshaller) Option {
+	connect()
+	return outputMarshaller(v, p)
+}
+
 // VehicleConstraint defines an interface that needs to be implemented when
 // creating a custom vehicle constraint.
 type VehicleConstraint interface {
@@ -380,6 +402,7 @@ var (
 	serviceGroupsFunc         func([]ServiceGroup) Option
 	selectorFunc              func(func(PartialPlan) model.Domain) Option
 	updateFunc                func(VehicleUpdater, PlanUpdater) Option
+	outputMarshaller          func(VehicleMarshaller, PlanMarshaller) Option
 	filterWithRouteFunc       func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
