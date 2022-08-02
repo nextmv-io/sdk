@@ -134,44 +134,37 @@ func Example_knightsTour() {
 	// Define the output format.
 	knight = knight.Format(format(tour, n))
 
+	// The store is operationally valid if the tour is complete.
+	knight = knight.Validate(func(s store.Store) bool {
+		return tour.Len(s) == n*n
+	})
+
 	// Define the generation of the tour.
-	knight = knight.Generate(
-		store.Scope(func(s store.Store) store.Generator {
-			// Gets the last move made and all the candidate positions from
-			// there.
-			lastMove := tour.Get(s, tour.Len(s)-1)
-			candidates := positions(n, lastMove.row, lastMove.col, tour.Slice(s))
+	knight = knight.Generate(func(s store.Store) store.Generator {
+		// Gets the last move made and all the candidate positions from
+		// there.
+		lastMove := tour.Get(s, tour.Len(s)-1)
+		candidates := positions(n, lastMove.row, lastMove.col, tour.Slice(s))
 
-			// Obtain the number of onward moves per candidate, excluding
-			// visited squares. Sort candidates increasingly by the number
-			// of onward moves.
-			moves := make([]int, len(candidates))
-			for i, candidate := range candidates {
-				moves[i] = len(positions(n, candidate.row, candidate.col, tour.Slice(s)))
-			}
-			onward := onward{moves: moves, candidates: candidates}
-			sort.Sort(onward)
+		// Obtain the number of onward moves per candidate, excluding
+		// visited squares. Sort candidates increasingly by the number
+		// of onward moves.
+		moves := make([]int, len(candidates))
+		for i, candidate := range candidates {
+			moves[i] = len(positions(n, candidate.row, candidate.col, tour.Slice(s)))
+		}
+		onward := onward{moves: moves, candidates: candidates}
+		sort.Sort(onward)
 
-			// Starting from the most constrained candidate, create a store
-			// queue by adding each candidate to the tour.
-			stores := make([]store.Store, len(onward.candidates))
-			for i, candidate := range onward.candidates {
-				stores[i] = s.Apply(tour.Append(candidate))
-			}
+		// Starting from the most constrained candidate, create a store
+		// queue by adding each candidate to the tour.
+		stores := make([]store.Store, len(onward.candidates))
+		for i, candidate := range onward.candidates {
+			stores[i] = s.Apply(tour.Append(candidate))
+		}
 
-			return store.
-				// Generate new stores as long as there are elements left.
-				If(func(s store.Store) bool { return len(stores) > 0 }).
-				Then(func(s store.Store) store.Store {
-					// Get the first element of the stores' queue and pop it.
-					next := stores[0]
-					stores = stores[1:]
-					return next
-				}).
-				// The store is operationally valid if the tour is complete.
-				With(func(s store.Store) bool { return tour.Len(s) == n*n })
-		}),
-	)
+		return store.Eager(stores...)
+	})
 
 	// The solver type is a satisfier because only operationally valid tours
 	// are needed, there is no value associated.
