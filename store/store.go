@@ -82,10 +82,10 @@ type Store interface {
 			s = s.Generate(func(s store.Store) store.Generator {
 				value := x.Get(s)
 				return store.Lazy(
-					func(store.Store) bool {
+					func() bool {
 						return value <= 2
 					},
-					func(store.Store) store.Store {
+					func() store.Store {
 						value++
 						return s.Apply(x.Set(value))
 					},

@@ -52,44 +52,25 @@ Changes, like setting a new value on a Variable, can be applied to the Store.
 
 To broaden the search space, new Stores can be generated.
 
-	s = s.Generate(
-		// If x is odd, divide the value in half and modify y. Operationally
-		// valid.
-		store.Scope(
-			func(s store.Store) store.Generator {
-				v := x.Get(s)
-				f := func(s store.Store) bool { return v%2 != 0 }
-				return store.If(f).
-					Then(func(s store.Store) store.Store {
-						v /= 2
-						return s.Apply(
-							x.Set(v),
-							y.Prepend(v, v*2, v*v),
-							y.Append(v/2, v/4, v/8),
-						)
-					})
+	s = s.Generate(func(s store.Store) store.Generator {
+		value := x.Get(s)
+		return store.Lazy(
+			func() bool {
+				return value <= 10
 			},
-		),
-		// If x is even, increase the value by 1. Operationally valid.
-		store.Scope(
-			func(s store.Store) store.Generator {
-				v := x.Get(s)
-				f := func(s store.Store) bool { return v%2 == 0 }
-				return store.If(f).
-					Then(func(s store.Store) store.Store {
-						return s.Apply(x.Set(v + 1))
-					})
+			func() store.Store {
+				value++
+				return s.Apply(x.Set(value))
 			},
-		),
-		// If x is greater than 75, then generate the same store with
-		// operational validity based on x being divisible by 5.
-		store.If(func(s store.Store) bool { return x.Get(s) > 75 }).
-			Then(func(s store.Store) store.Store { return s }).
-			With(func(s store.Store) bool { return y.Len(s)%5 == 0 }),
-		// If x is greater than or equal to 100, return the same Store and it
-		// is operationally valid.
-		store.If(func(s store.Store) bool { return x.Get(s) >= 100 }).Return(),
-	)
+		)
+	})
+
+To check the operational validity of the Store (all decisions have been made
+and they are valid), use the provided function.
+
+	s = s.Validate(func(s store.Store) bool {
+		return x.Get(s)%2 == 0
+	})
 
 When setting a Value, it can be maximized or minimized. Alternatively,
 operational validity on the Store can be satisfied, in which case setting a
