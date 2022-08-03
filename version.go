@@ -5,6 +5,7 @@ package sdk
 
 import (
 	"runtime/debug"
+	"strings"
 )
 
 // VERSION of Nextmv SDK.
@@ -13,7 +14,7 @@ var VERSION string = getVersion()
 func getVersion() string {
 	bi, _ := debug.ReadBuildInfo()
 	for _, dep := range bi.Deps {
-		if dep.Path == "github.com/nextmv-io/sdk" {
+		if strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
 			return dep.Version
 		}
 	}

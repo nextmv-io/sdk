@@ -7,6 +7,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/store"
 )
@@ -14,6 +15,7 @@ import (
 // Create routes to visit seven landmarks in Kyoto using two vehicles. The
 // vehicles have starting locations.
 func ExampleStarts() {
+	sdk.VERSION = "v0.16.0-dev.0-5"
 	// Define stops and vehicles.
 	stops := []route.Stop{
 		{
@@ -161,6 +163,7 @@ func ExampleStarts() {
 // with no ending being set. Vehicle v2 starts and ends at the same geographical
 // position. Endings could also be set as a standalone option.
 func ExampleEnds() {
+	sdk.VERSION = "v0.16.0-dev.0-5"
 	// Define stops and vehicles.
 	stops := []route.Stop{
 		{
