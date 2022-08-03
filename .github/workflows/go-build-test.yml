@@ -38,9 +38,7 @@ jobs:
         run: git config --global url."git@github.com:".insteadOf "https://github.com/"
 
       - name: export sdk version
-        run: 
-          go run cmd/version/main.go
-          echo "VERSION=$(go run cmd/version/main.go)" >> $GITHUB_ENV
+        run: echo "VERSION=$(go run cmd/version/main.go)" >> $GITHUB_ENV
         working-directory: ${{env.RESOURCES}}
 
       - name: export sdk path used in this action
