@@ -39,7 +39,6 @@ jobs:
 
       - name: export sdk version
         run: 
-          go run plugins/sdk/cmd/version/main.go
           go run cmd/version/main.go
           echo "VERSION=$(go run plugins/sdk/cmd/version/main.go)" >> $GITHUB_ENV
 
