@@ -39,8 +39,8 @@ jobs:
 
       - name: export sdk version
         run: 
-          go run $RESOURCES/cmd/version/main.go
-          echo "VERSION=$(go run $RESOURCES/cmd/version/main.go)" >> $GITHUB_ENV
+          echo "$(go run $RESOURCES/cmd/version/main.go)"
+          # echo "VERSION=$(go run $RESOURCES/cmd/version/main.go)" >> $GITHUB_ENV
 
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
