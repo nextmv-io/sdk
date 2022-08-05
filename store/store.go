@@ -3,8 +3,9 @@ package store
 import (
 	"context"
 	"encoding/json"
-	"math"
 	"time"
+
+	"github.com/nextmv-io/sdk/model"
 )
 
 const (
@@ -282,10 +283,10 @@ type Limits struct {
 func (l Limits) MarshalJSON() ([]byte, error) {
 	m := map[string]any{}
 	m["duration"] = l.Duration.String()
-	if l.Nodes != math.MaxInt {
+	if l.Nodes != model.MaxInt {
 		m["nodes"] = l.Nodes
 	}
-	if l.Solutions != math.MaxInt {
+	if l.Solutions != model.MaxInt {
 		m["solutions"] = l.Solutions
 	}
 

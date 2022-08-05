@@ -3,8 +3,25 @@
 // documentation.
 package sdk
 
-import _ "embed"
+import (
+	_ "embed"
+	"runtime/debug"
+	"strings"
+)
+
+// This will be needed for examples and tests within this repo only.
+//go:embed VERSION
+var versionFallback string
 
 // VERSION of Nextmv SDK.
-//go:embed VERSION
-var VERSION string
+var VERSION string = getVersion()
+
+func getVersion() string {
+	bi, _ := debug.ReadBuildInfo()
+	for _, dep := range bi.Deps {
+		if strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
+			return dep.Version
+		}
+	}
+	return versionFallback
+}

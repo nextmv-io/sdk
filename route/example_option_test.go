@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/store"
 )
@@ -1816,7 +1816,7 @@ func ExampleLimits() {
 		},
 		{
 			Measure: route.Constant(42.0),
-			Value:   float64(math.MaxInt),
+			Value:   float64(model.MaxInt),
 		},
 	}
 	ignoreTriangularity := true
