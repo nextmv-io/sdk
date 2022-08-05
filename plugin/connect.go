@@ -16,11 +16,11 @@ import (
 
 // Connect a symbol in a plugin to a func target.
 //
-//    var fooFunc func()
-//    plugin.Connect("sdk", "Foo", &func)
+//   var fooFunc func()
+//   plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
-	// the two locations plugins can be found in are the current working
-	// directory and the nextmv library path
+	// The two locations plugins can be found in are the current working
+	// directory and the nextmv library path.
 	paths, err := potentialPluginPaths(slug)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "err getting plugin paths: %v", err)
@@ -51,7 +51,7 @@ func Connect[T any](slug string, name string, target *T) {
 	}
 
 	// Names in the plugin are associated with pointers to functions.
-	// Thus we cannot: *target = sym(T)
+	// Thus we cannot: *target = sym(T).
 	*target = reflect.ValueOf(sym). // *func(...) as reflect.Value
 					Elem().         // dereferences to func(...)
 					Interface().(T) // any.(func(...))
