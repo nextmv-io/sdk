@@ -13,5 +13,6 @@ Create sequences of domains.
 
     domains1 := model.NewDomains(d1, d2, d3, d4, d5)
     domains2 := model.Repeat(5, d1) // 5 empty domains
+
 */
 package model

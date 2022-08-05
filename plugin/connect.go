@@ -18,6 +18,7 @@ import (
 //
 //    var fooFunc func()
 //    plugin.Connect("sdk", "Foo", &func)
+//
 func Connect[T any](slug string, name string, target *T) {
 	// the two locations plugins can be found in are the current working
 	// directory and the nextmv library path

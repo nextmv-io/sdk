@@ -14,7 +14,7 @@ import (
 var versionFallback string
 
 // VERSION of Nextmv SDK.
-var VERSION string = getVersion()
+var VERSION = getVersion()
 
 func getVersion() string {
 	bi, _ := debug.ReadBuildInfo()
