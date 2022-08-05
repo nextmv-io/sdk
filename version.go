@@ -10,11 +10,12 @@ import (
 )
 
 // This will be needed for examples and tests within this repo only.
+//
 //go:embed VERSION
 var versionFallback string
 
 // VERSION of Nextmv SDK.
-var VERSION string = getVersion()
+var VERSION = getVersion()
 
 func getVersion() string {
 	bi, _ := debug.ReadBuildInfo()
