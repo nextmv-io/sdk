@@ -5,32 +5,32 @@ along the way. These locations often represent customer requests, though they
 may logically correspond to any number of things. Such models attempt to
 service all locations optimizing a value, such as minimizing cost.
 
-Router
+# Router
 
 The Router API provides a convenient interface for solving vehicle routing
 problems. It employs a hybrid solver that relies on decision diagrams and
 ALNS. To use it, invoke the Router by passing stops and vehicles.
 
-    router, err := route.NewRouter(stops, vehicles)
+	router, err := route.NewRouter(stops, vehicles)
 
 The Router can be configured through options. It is composable, meaning that
 several options (or none at all) could be used. Every option, unless
 otherwise noted, can be used independently of others. An example of this is
 setting vehicle start locations.
 
-    router, err := route.NewRouter(stops, vehicles, route.Starts(starts))
+	router, err := route.NewRouter(stops, vehicles, route.Starts(starts))
 
 For convenience, options can also be configured after the Router is declared
 through the Options function. An example of this is setting vehicle end
 locations.
 
-    err := router.Options(route.Ends(ends))
+	err := router.Options(route.Ends(ends))
 
 The Router is built on top of the `store` package for solving decision
 automation problems. As such, the Solver function is used to obtain the Solver
 that searches for a Solution.
 
-    solver, err := router.Solver(store.DefaultOptions())
+	solver, err := router.Solver(store.DefaultOptions())
 
 Retrieve the routing plan -made up of the vehicle routes and any unassigned
 stops- directly by calling the Last Solution on the Solver, for example.
@@ -155,7 +155,7 @@ The problem is operationally valid if all stops are assigned.
 		run.Run(handler)
 	}
 
-Measures
+# Measures
 
 Routing models frequently need to determine the cost of connecting two things
 together. This may mean assigning one item to another, clustering two points
@@ -163,50 +163,50 @@ together, or routing a vehicle from one location to another. These cost
 computations are generically referred to as "measures". The package provides
 a number of common patterns for constructing and using them inside models.
 
-Point-to-Point Measures
+# Point-to-Point Measures
 
 When cost must be computed based on distance between two points, a model can
 use a ByPoint implementation. These is the case for models where points are
 determined dynamically within the model logic, such as in k-means clustering.
 Such measures map two points to a cost.
 
-    cost := m.Cost(fromPoint, toPoint)
+	cost := m.Cost(fromPoint, toPoint)
 
 The following ByPoint implementations are available.
 
-    EuclideanByPoint: Euclidean distance between two points
-    HaversineByPoint: Haversine distance between two points
-    TaxicabByPoint:   Taxicab distance between two points
+	EuclideanByPoint: Euclidean distance between two points
+	HaversineByPoint: Haversine distance between two points
+	TaxicabByPoint:   Taxicab distance between two points
 
 Points may be of any dimension. If the points passed in to any of these
 measures have differing dimensionality, they will project the lower dimension
 point into the higher dimension by appending 0s.
 
-Indexed Measures
+# Indexed Measures
 
 Models that do not require points operate on indices. These indices may or
 may not refer to points. An ByIndex implementation provides the same
 functionality as a ByPoint implementation, except its cost method accepts two
 indices instead of two points.
 
-    cost := m.Cost(fromIndex, toIndex)
+	cost := m.Cost(fromIndex, toIndex)
 
 Index measures are more common, and a number of them embed and operate on
 results from other index measures.
 
 The following ByIndex implementations are available.
 
-    Bin:      select from a slice of measure by some function
-    Location: adds fixed location costs to another measure
-    Constant: always returns the same cost
-    Matrix:   looks up cost from a row to a column index
-    Override: overrides some other measure given a condition
-    Power:    takes some other measure to a power
-    Scale:    scales some other measure by a constant
-    Sparse:   sparse matrix measure with a backup
-    Sum:      adds the costs of other measures together
-    Truncate: truncates cost values provided by another measure
-    Location: adds cost of visiting a location to another measure
+	Bin:      select from a slice of measure by some function
+	Location: adds fixed location costs to another measure
+	Constant: always returns the same cost
+	Matrix:   looks up cost from a row to a column index
+	Override: overrides some other measure given a condition
+	Power:    takes some other measure to a power
+	Scale:    scales some other measure by a constant
+	Sparse:   sparse matrix measure with a backup
+	Sum:      adds the costs of other measures together
+	Truncate: truncates cost values provided by another measure
+	Location: adds cost of visiting a location to another measure
 
 In addition, the package provides Indexed, which adapts any ByPoint into a
 ByIndex. In addition to the ByPoint to be converted, Indexed accepts a fixed

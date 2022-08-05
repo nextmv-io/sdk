@@ -25,11 +25,11 @@ Store represents a store of Variables and logic to solve decision automation
 problems. Adding logic to the Store updates it (functions may be called
 directly and chained):
 
-    s := store.New()    // s := store.New().
-    s = s.Apply(...)    // 	   Apply(...).
-    s = s.Bound(...)    // 	   Generate(...).
-    s = s.Format(...)   // 	   Bound(...).
-    s = s.Generate(...) // 	   Format(...)
+	s := store.New()    // s := store.New().
+	s = s.Apply(...)    // 	   Apply(...).
+	s = s.Bound(...)    // 	   Generate(...).
+	s = s.Format(...)   // 	   Bound(...).
+	s = s.Generate(...) // 	   Format(...)
 
 The Variables and logic stored define a solution space. This space is searched
 to make decisions.
