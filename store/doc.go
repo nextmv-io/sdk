@@ -10,13 +10,13 @@ impact its parent.
 
 A new Store is defined.
 
-  s := store.New()
+	s := store.New()
 
 Variables are stored in the Store.
 
-  x := store.NewVar(s, 1)
-  y := store.NewSlice(s, 2, 3, 4)
-  z := store.NewMap[string, int](s)
+	x := store.NewVar(s, 1)
+	y := store.NewSlice(s, 2, 3, 4)
+	z := store.NewMap[string, int](s)
 
 The Format of the Store can be set and one can get the value of a Variable.
 
@@ -52,44 +52,25 @@ Changes, like setting a new value on a Variable, can be applied to the Store.
 
 To broaden the search space, new Stores can be generated.
 
-	s = s.Generate(
-		// If x is odd, divide the value in half and modify y. Operationally
-		// valid.
-		store.Scope(
-			func(s store.Store) store.Generator {
-				v := x.Get(s)
-				f := func(s store.Store) bool { return v%2 != 0 }
-				return store.If(f).
-					Then(func(s store.Store) store.Store {
-						v /= 2
-						return s.Apply(
-							x.Set(v),
-							y.Prepend(v, v*2, v*v),
-							y.Append(v/2, v/4, v/8),
-						)
-					})
+	s = s.Generate(func(s store.Store) store.Generator {
+		value := x.Get(s)
+		return store.Lazy(
+			func() bool {
+				return value <= 10
 			},
-		),
-		// If x is even, increase the value by 1. Operationally valid.
-		store.Scope(
-			func(s store.Store) store.Generator {
-				v := x.Get(s)
-				f := func(s store.Store) bool { return v%2 == 0 }
-				return store.If(f).
-					Then(func(s store.Store) store.Store {
-						return s.Apply(x.Set(v + 1))
-					})
+			func() store.Store {
+				value++
+				return s.Apply(x.Set(value))
 			},
-		),
-		// If x is greater than 75, then generate the same store with
-		// operational validity based on x being divisible by 5.
-		store.If(func(s store.Store) bool { return x.Get(s) > 75 }).
-			Then(func(s store.Store) store.Store { return s }).
-			With(func(s store.Store) bool { return y.Len(s)%5 == 0 }),
-		// If x is greater than or equal to 100, return the same Store and it
-		// is operationally valid.
-		store.If(func(s store.Store) bool { return x.Get(s) >= 100 }).Return(),
-	)
+		)
+	})
+
+To check the operational validity of the Store (all decisions have been made
+and they are valid), use the provided function.
+
+	s = s.Validate(func(s store.Store) bool {
+		return x.Get(s)%2 == 0
+	})
 
 When setting a Value, it can be maximized or minimized. Alternatively,
 operational validity on the Store can be satisfied, in which case setting a
@@ -117,10 +98,10 @@ Runners are provided for convenience when running the Store. They read data and
 options and manage the call to the Solver. The `NEXTMV_RUNNER` environment
 variable defines the type of runner used.
 
-	- "cli": (Default) Command Line Interface runner. Useful for running from a
-	terminal. Can read from a file or stdin and write to a file or stdout.
-	- "http": HTTP runner. Useful for sending requests and receiving responses
-	on the specified port.
+  - "cli": (Default) Command Line Interface runner. Useful for running from a
+    terminal. Can read from a file or stdin and write to a file or stdout.
+  - "http": HTTP runner. Useful for sending requests and receiving responses
+    on the specified port.
 
 The runner receives a handler that specifies the data type and expects a Solver.
 
@@ -149,54 +130,54 @@ environment variable `HOP_SOLVER_LIMITS_DURATION`.
 
 Using the cli runner for example:
 
-    echo 0 | go run main.go -hop.solver.limits.duration 2s
+	echo 0 | go run main.go -hop.solver.limits.duration 2s
 
 Writes this output to stdout:
 
-    {
-      "hop": {
-        "version": "..."
-      },
-      "options": {
-        "diagram": {
-          "expansion": {
-            "limit": 0
-          },
-          "width": 10
-        },
-        "limits": {
-          "duration": "2s"
-        },
-        "search": {
-          "buffer": 100
-        },
-        "sense": "maximizer"
-      },
-      "store": {
-        "x": 10
-      },
-      "statistics": {
-        "bounds": {
-          "lower": 10,
-          "upper": 9223372036854776000
-        },
-        "search": {
-          "generated": 10,
-          "filtered": 0,
-          "expanded": 10,
-          "reduced": 0,
-          "restricted": 10,
-          "deferred": 0,
-          "explored": 1,
-          "solutions": 5
-        },
-        "time": {
-          "elapsed": "93.417µs",
-          "elapsed_seconds": 9.3417e-05,
-          "start": "..."
-        },
-        "value": 10
-      }
-    }
+	{
+	  "hop": {
+	    "version": "..."
+	  },
+	  "options": {
+	    "diagram": {
+	      "expansion": {
+	        "limit": 0
+	      },
+	      "width": 10
+	    },
+	    "limits": {
+	      "duration": "2s"
+	    },
+	    "search": {
+	      "buffer": 100
+	    },
+	    "sense": "maximizer"
+	  },
+	  "store": {
+	    "x": 10
+	  },
+	  "statistics": {
+	    "bounds": {
+	      "lower": 10,
+	      "upper": 9223372036854776000
+	    },
+	    "search": {
+	      "generated": 10,
+	      "filtered": 0,
+	      "expanded": 10,
+	      "reduced": 0,
+	      "restricted": 10,
+	      "deferred": 0,
+	      "explored": 1,
+	      "solutions": 5
+	    },
+	    "time": {
+	      "elapsed": "93.417µs",
+	      "elapsed_seconds": 9.3417e-05,
+	      "start": "..."
+	    },
+	    "value": 10
+	  }
+	}
 */
 package store

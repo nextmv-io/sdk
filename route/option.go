@@ -59,9 +59,10 @@ func Services(serviceTimes []Service) Option {
 Shifts adds shifts to the vehicles. Shifts are indexed by vehicle and represent
 a time window on its shift's start and end time. When using the Windows option,
 using the Shifts option is required. Shifts are additionally used to:
-	- enable the calculation of the estimated arrival and departure at stops
-	- set the start time of the route when using the Windows option, given that
-	time tracking is needed for the Window constraint.
+  - enable the calculation of the estimated arrival and departure at stops
+  - set the start time of the route when using the Windows option, given that
+    time tracking is needed for the Window constraint.
+
 If the Measures option is not used, a default Haversine measure will be used. If
 the TimeMeasures option is not used, the measures will be scaled with a constant
 velocity of 10 m/s.
@@ -115,9 +116,10 @@ func Maximize() Option {
 // constraint can be used to limit the routes. The option takes two arguments:
 // Firstly, the routeLimits struct which is indexed by vehicle and has two
 // fields:
-//  - The value in the unit of the given measure.
-//  - The value to which the route is limited in the unit of the given measure.
-//    To not limit the route to any value, use model.MaxInt
+//   - The value in the unit of the given measure.
+//   - The value to which the route is limited in the unit of the given measure.
+//     To not limit the route to any value, use model.MaxInt
+//
 // Secondly, a flag to ignore the triangular inequality.
 //
 // PLEASE NOTE: If you want to limit the route's duration or length please use
@@ -173,10 +175,10 @@ TravelTimeMeasures sets custom time measures for every vehicle, and should be
 indexed as such. If no custom time measures are provided, a default time measure
 will be used, based on haversine using a velocity of 10 m/s if no custom
 velocities are given using the Velocities option. Time measures are used to:
-	- calculate travel time in the Window option and check if time windows are
-	met.
-	- calculated route duration, the estimated time of arrival and departure at
-	stops.
+  - calculate travel time in the Window option and check if time windows are
+    met.
+  - calculated route duration, the estimated time of arrival and departure at
+    stops.
 
 PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
@@ -269,14 +271,14 @@ type PlanUpdater interface {
 Update sets the collection of functions that are called when transitioning from
 one store to another in the router's Decision Diagram search for the best
 solution in the time alloted. Updating information is useful for two purposes:
-	- setting a custom value function (objective) that will be optimized.
-	- bookkeeping of custom data.
+  - setting a custom value function (objective) that will be optimized.
+  - bookkeeping of custom data.
 
 The option takes the following arguments:
-	- VehicleUpdater: replaces the value function of each vehicle. Can be nil
-	if more than one vehicle is present.
-	- PlanUpdater: replaces the value function of the full plan. Can be nil if
-	only one vehicle is present.
+  - VehicleUpdater: replaces the value function of each vehicle. Can be nil
+    if more than one vehicle is present.
+  - PlanUpdater: replaces the value function of the full plan. Can be nil if
+    only one vehicle is present.
 
 User-defined custom types must implement the interfaces. When routing multiple
 vehicles, the vehicleUpdater interface may be nil, if only information at the
