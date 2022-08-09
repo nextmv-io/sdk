@@ -347,7 +347,7 @@ must specify a custom type that implements either interface.
 */
 func Output(v VehicleMarshaller, p PlanMarshaller) Option {
 	connect()
-	return outputMarshaller(v, p)
+	return outputFunc(v, p)
 }
 
 // VehicleConstraint defines an interface that needs to be implemented when
@@ -404,7 +404,7 @@ var (
 	serviceGroupsFunc         func([]ServiceGroup) Option
 	selectorFunc              func(func(PartialPlan) model.Domain) Option
 	updateFunc                func(VehicleUpdater, PlanUpdater) Option
-	outputMarshaller          func(VehicleMarshaller, PlanMarshaller) Option
+	outputFunc                func(VehicleMarshaller, PlanMarshaller) Option
 	filterWithRouteFunc       func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
