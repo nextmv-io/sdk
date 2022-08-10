@@ -1,6 +1,8 @@
 package route
 
 import (
+	"math/rand"
+
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -322,32 +324,11 @@ func Sorter(
 		p PartialPlan,
 		locations model.Domain,
 		vehicles model.Domain,
+		random *rand.Rand,
 	) []int,
 ) Option {
 	connect()
 	return sorterFunc(sorter)
-}
-
-// PlanMarshaller defines an interface that is used to override router's default
-// output when using multiple vehicles.
-type PlanMarshaller interface {
-	Marshal(PartialPlan) ([]byte, error)
-}
-
-// VehicleMarshaller defines an interface that is used to override router's
-// default output when using exactly one vehicle.
-type VehicleMarshaller interface {
-	Marshal(PartialVehicle) ([]byte, error)
-}
-
-/*
-Output sets the collection of custom output functions when using a single
-vehicle (VehicleMarshaller) and multiple vehicles (PlanMarshaller). The user
-must specify a custom type that implements either interface.
-*/
-func Output(v VehicleMarshaller, p PlanMarshaller) Option {
-	connect()
-	return outputFunc(v, p)
 }
 
 // VehicleConstraint defines an interface that needs to be implemented when
@@ -404,12 +385,11 @@ var (
 	serviceGroupsFunc         func([]ServiceGroup) Option
 	selectorFunc              func(func(PartialPlan) model.Domain) Option
 	updateFunc                func(VehicleUpdater, PlanUpdater) Option
-	outputFunc                func(VehicleMarshaller, PlanMarshaller) Option
 	filterWithRouteFunc       func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
 	sorterFunc func(
-		func(PartialPlan, model.Domain, model.Domain) []int,
+		func(PartialPlan, model.Domain, model.Domain, *rand.Rand) []int,
 	) Option
 	constraintFunc func(VehicleConstraint, []string) Option
 	filterFunc     func(func(int, int) bool) Option
