@@ -42,7 +42,7 @@ type Router interface {
 	Plan() store.Variable[Plan]
 
 	// Format configures a custom output format for a solution.
-	Format(func(Plan) any)
+	Format(func(*Plan) any)
 }
 
 // PartialPlan is an (incomplete) Plan that operates on the internal
