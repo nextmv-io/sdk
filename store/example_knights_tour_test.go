@@ -82,6 +82,7 @@ func visited(opt position, tour []position) bool {
 
 /*
 format defines the JSON formatting of the store as a board, e.g.
+
 	{
 		"0": "00 -- 02 -- -- ",
 		"1": "-- -- -- -- 03 ",

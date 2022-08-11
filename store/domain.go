@@ -170,8 +170,8 @@ func NewDomain(s Store, ranges ...model.Range) Domain {
 Singleton creates a Domain containing one integer value and stores it in a
 Store.
 
-    s := store.New()
-    fortyTwo := store.Singleton(s, 42)
+	s := store.New()
+	fortyTwo := store.Singleton(s, 42)
 */
 func Singleton(s Store, value int) Domain {
 	return domainProxy{domain: NewVar(s, model.Singleton(value))}

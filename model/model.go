@@ -1,5 +1,15 @@
 package model
 
+import "math/bits"
+
+// Constants for integer bounds.
+const (
+	// MaxInt is the maximum value for an integer.
+	MaxInt int = (1<<bits.UintSize)/2 - 1
+	// MinInt is the minimum value for an integer.
+	MinInt = (1 << bits.UintSize) / -2
+)
+
 // A Domain of integers.
 type Domain interface {
 	// Add values to a domain.

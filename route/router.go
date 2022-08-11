@@ -40,6 +40,9 @@ type Router interface {
 			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
 	*/
 	Plan() store.Variable[Plan]
+
+	// Format configures a custom output format for a solution.
+	Format(func(*Plan) any)
 }
 
 // PartialPlan is an (incomplete) Plan that operates on the internal

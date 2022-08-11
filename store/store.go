@@ -3,8 +3,9 @@ package store
 import (
 	"context"
 	"encoding/json"
-	"math"
 	"time"
+
+	"github.com/nextmv-io/sdk/model"
 )
 
 const (
@@ -24,11 +25,11 @@ Store represents a store of Variables and logic to solve decision automation
 problems. Adding logic to the Store updates it (functions may be called
 directly and chained):
 
-    s := store.New()    // s := store.New().
-    s = s.Apply(...)    // 	   Apply(...).
-    s = s.Bound(...)    // 	   Generate(...).
-    s = s.Format(...)   // 	   Bound(...).
-    s = s.Generate(...) // 	   Format(...)
+	s := store.New()    // s := store.New().
+	s = s.Apply(...)    // 	   Apply(...).
+	s = s.Bound(...)    // 	   Bound(...).
+	s = s.Format(...)   // 	   Format(...).
+	s = s.Generate(...) // 	   Generate(...)
 
 The Variables and logic stored define a solution space. This space is searched
 to make decisions.
@@ -282,10 +283,10 @@ type Limits struct {
 func (l Limits) MarshalJSON() ([]byte, error) {
 	m := map[string]any{}
 	m["duration"] = l.Duration.String()
-	if l.Nodes != math.MaxInt {
+	if l.Nodes != model.MaxInt {
 		m["nodes"] = l.Nodes
 	}
-	if l.Solutions != math.MaxInt {
+	if l.Solutions != model.MaxInt {
 		m["solutions"] = l.Solutions
 	}
 
