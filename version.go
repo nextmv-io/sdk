@@ -18,11 +18,24 @@ var versionFallback string
 var VERSION = getVersion()
 
 func getVersion() string {
-	bi, _ := debug.ReadBuildInfo()
-	for _, dep := range bi.Deps {
-		if strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
-			return dep.Version
-		}
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return versionFallback
 	}
+
+	for _, dep := range bi.Deps {
+		// Get only care about this repo being used as a dependency.
+		if !strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
+			continue
+		}
+
+		// If reference to this module was replaced, use fallback.
+		if dep.Replace != nil {
+			return versionFallback
+		}
+
+		return dep.Version
+	}
+
 	return versionFallback
 }
