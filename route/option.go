@@ -1,6 +1,8 @@
 package route
 
 import (
+	"math/rand"
+
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -322,6 +324,7 @@ func Sorter(
 		p PartialPlan,
 		locations model.Domain,
 		vehicles model.Domain,
+		random *rand.Rand,
 	) []int,
 ) Option {
 	connect()
@@ -386,7 +389,7 @@ var (
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
 	sorterFunc func(
-		func(PartialPlan, model.Domain, model.Domain) []int,
+		func(PartialPlan, model.Domain, model.Domain, *rand.Rand) []int,
 	) Option
 	constraintFunc func(VehicleConstraint, []string) Option
 	filterFunc     func(func(int, int) bool) Option
