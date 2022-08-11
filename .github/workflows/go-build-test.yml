@@ -37,10 +37,6 @@ jobs:
       - name: use ssh instead of https for git
         run: git config --global url."git@github.com:".insteadOf "https://github.com/"
 
-      - name: export sdk version
-        run: echo "VERSION=$(go run cmd/version/main.go)" >> $GITHUB_ENV
-        working-directory: ${{env.RESOURCES}}
-
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
 
@@ -53,10 +49,11 @@ jobs:
 
           # Create the path where the shared object binaries are going to be
           # saved.
+          VERSION=$(go run cmd/version/main.go)
           GOVERSION=$(go env GOVERSION)
           GOOS=$(go env GOOS)
           GOARCH=$(go env GOARCH)
-          OUT_PATH=${{env.NEXTMV_LIBRARY_PATH}}/nextmv-sdk-${{env.VERSION}}-$GOVERSION-$GOOS-$GOARCH.so
+          OUT_PATH=${{env.NEXTMV_LIBRARY_PATH}}/nextmv-sdk-$VERSION-$GOVERSION-$GOOS-$GOARCH.so
 
           # Build without -trimpath because the sdk dependency is being
           # replaced for the local sdk repo used in the action.

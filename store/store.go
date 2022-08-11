@@ -27,9 +27,9 @@ directly and chained):
 
 	s := store.New()    // s := store.New().
 	s = s.Apply(...)    // 	   Apply(...).
-	s = s.Bound(...)    // 	   Generate(...).
-	s = s.Format(...)   // 	   Bound(...).
-	s = s.Generate(...) // 	   Format(...)
+	s = s.Bound(...)    // 	   Bound(...).
+	s = s.Format(...)   // 	   Format(...).
+	s = s.Generate(...) // 	   Generate(...)
 
 The Variables and logic stored define a solution space. This space is searched
 to make decisions.
