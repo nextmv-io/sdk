@@ -5,7 +5,7 @@ import (
 )
 
 // A Key for a Map.
-type Key interface{ int | string }
+type Key comparable
 
 // A Map stores key-value pairs in a Store.
 type Map[K Key, V any] interface {
