@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleSolverOptions_default() {
-	solverOptions := mip.DefaultSolverOptions()
+	solverOptions := mip.NewSolverOptions()
 
 	fmt.Println(solverOptions.SolverVerboseLevel())
 	fmt.Println(solverOptions.MIPGapAbsolute())
@@ -23,7 +23,7 @@ func ExampleSolverOptions_default() {
 }
 
 func ExampleSolverOptions_change() {
-	solverOptions := mip.DefaultSolverOptions()
+	solverOptions := mip.NewSolverOptions()
 	solverOptions.SetVerboseLevel(mip.HIGH)
 	solverOptions.SetMIPGapAbsolute(1.23)
 	solverOptions.SetMIPGapRelative(0.5)

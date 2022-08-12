@@ -1,9 +1,9 @@
 package mip
 
-// DefaultSolverOptions returns default solver options.
-func DefaultSolverOptions() SolverOptions {
+// NewSolverOptions returns default solver options.
+func NewSolverOptions() SolverOptions {
 	connect()
-	return defaultSolverOptions()
+	return newSolverOptions()
 }
 
 // NewDefinition creates an empty MIP definition.
@@ -20,7 +20,7 @@ func NewSolver(provider SolverProvider, definition Definition) (Solver, error) {
 }
 
 var (
-	defaultSolverOptions func() SolverOptions
-	newSolver            func(SolverProvider, Definition) (Solver, error)
-	newDefinition        func() Definition
+	newSolverOptions func() SolverOptions
+	newSolver        func(SolverProvider, Definition) (Solver, error)
+	newDefinition    func() Definition
 )
