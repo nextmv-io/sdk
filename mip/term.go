@@ -1,7 +1,7 @@
 package mip
 
-// Term is the building block of a constraint and an objective. A term consist of
-// a coefficient and a variable and should be interpreted as the product
+// Term is the building block of a constraint and an objective. A term consist
+// of a coefficient and a variable and should be interpreted as the product
 // of coefficient and the variable in the context of the constraint or
 // objective.
 type Term interface {

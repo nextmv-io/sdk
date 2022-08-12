@@ -20,7 +20,8 @@ type Objective interface {
 	// 		d.Objective().AddTerm(1.0, x)		// results in: maximize 1.0 * x
 	// 		d.Objective().AddTerm(2.0, x)		// results in: maximize 3.0 * x
 	AddTerm(coefficient float64, variable Variable) Term
-	// IsMaximize return true if the invoking objective is a maximization objective.
+	// IsMaximize return true if the invoking objective is a maximization
+	// objective.
 	IsMaximize() bool
 	// SetMaximize sets the invoking objective to be a maximization objective.
 	SetMaximize()
