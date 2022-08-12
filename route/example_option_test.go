@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/store"
 )
@@ -1437,43 +1437,16 @@ func ExampleMinimize() {
 	fmt.Println(string(b))
 	// Output:
 	// {
+	//   "unassigned": [],
 	//   "vehicles": [
 	//     {
 	//       "id": "v1",
 	//       "route": [
 	//         {
-	//           "id": "Arashiyama Bamboo Forest",
+	//           "id": "Fushimi Inari Taisha",
 	//           "position": {
-	//             "lon": 135.672009,
-	//             "lat": 35.017209
-	//           }
-	//         },
-	//         {
-	//           "id": "Kinkaku-ji",
-	//           "position": {
-	//             "lon": 135.728898,
-	//             "lat": 35.039705
-	//           }
-	//         },
-	//         {
-	//           "id": "Nijō Castle",
-	//           "position": {
-	//             "lon": 135.748134,
-	//             "lat": 35.014239
-	//           }
-	//         },
-	//         {
-	//           "id": "Kyoto Imperial Palace",
-	//           "position": {
-	//             "lon": 135.762057,
-	//             "lat": 35.025431
-	//           }
-	//         },
-	//         {
-	//           "id": "Gionmachi",
-	//           "position": {
-	//             "lon": 135.775682,
-	//             "lat": 35.002457
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
 	//           }
 	//         },
 	//         {
@@ -1484,10 +1457,38 @@ func ExampleMinimize() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Fushimi Inari Taisha",
+	//           "id": "Gionmachi",
 	//           "position": {
-	//             "lon": 135.772695,
-	//             "lat": 34.967146
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
 	//           }
 	//         }
 	//       ],
@@ -1554,6 +1555,7 @@ func ExampleMaximize() {
 	fmt.Println(string(b))
 	// Output:
 	// {
+	//   "unassigned": [],
 	//   "vehicles": [
 	//     {
 	//       "id": "v1",
@@ -1816,7 +1818,7 @@ func ExampleLimits() {
 		},
 		{
 			Measure: route.Constant(42.0),
-			Value:   float64(math.MaxInt),
+			Value:   float64(model.MaxInt),
 		},
 	}
 	ignoreTriangularity := true

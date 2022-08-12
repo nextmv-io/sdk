@@ -16,8 +16,8 @@ import (
 
 // Connect a symbol in a plugin to a func target.
 //
-//    var fooFunc func()
-//    plugin.Connect("sdk", "Foo", &func)
+//	var fooFunc func()
+//	plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
 	// the two locations plugins can be found in are the current working
 	// directory and the nextmv library path
