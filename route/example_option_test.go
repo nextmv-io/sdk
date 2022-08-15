@@ -4199,7 +4199,8 @@ func (d planData) Update(
 		d.planValue += d.vehicleValues[vehicleID]
 	}
 	// Remove unassigned locations.
-	for _, location := range pp.Unassigned().Slice() {
+	for it := pp.Unassigned().Iterator(); it.Next(); {
+		location := it.Value()
 		stop := d.stops[location]
 		delete(d.Locations, stop.ID)
 	}
