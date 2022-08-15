@@ -26,6 +26,8 @@ type Domain interface {
 	Contains(int) bool
 	// Empty is true if a domain is empty.
 	Empty() bool
+	// Iterator over a domain.
+	Iterator() Iterator
 	// Len of a domain, counting all values within ranges.
 	Len() int
 	// Max of a domain and a boolean indicating it is nonempty.
@@ -91,6 +93,17 @@ type Domains interface {
 type Range interface {
 	Min() int
 	Max() int
+}
+
+// An Iterator allows one to iterate over a range or a domain.
+//
+//     it := model.Domain(model.Range(1, 10)).Iterator()
+//     for it.Next() {
+//         fmt.Println(it.Value()) // 1, ..., 10
+//     }
+type Iterator interface {
+	Next() bool
+	Value() int
 }
 
 // NewDomain creates a domain of integers.

@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"sort"
 	"time"
 
 	"github.com/nextmv-io/sdk/model"
@@ -3379,5 +3381,1042 @@ func ExampleInitializationCosts() {
 	//       "route_duration": 1818
 	//     }
 	//   ]
+	// }
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles.
+// A vehicle sorter is configured.
+func ExampleSorter() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Threads(1),
+		route.Sorter(
+			func(_ route.PartialPlan,
+				_, vehicles model.Domain,
+				_ *rand.Rand,
+			) []int {
+				orderedVehicles := vehicles.Slice()
+				// try to assign to the given vehicles in the reverse order
+				sort.SliceStable(orderedVehicles, func(i, j int) bool {
+					return orderedVehicles[i] > orderedVehicles[j]
+				})
+				return orderedVehicles
+			}),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 0
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 1243
+	//     }
+	//   ]
+	// }
+}
+
+// A custom type that implements Violated to fulfill the VehicleConstraint
+// interface.
+type CustomConstraint struct {
+	count int
+}
+
+// Violated the method that must be implemented to be a used as a
+// VehicleConstraint.
+func (c CustomConstraint) Violated(
+	vehicle route.PartialVehicle,
+) (route.VehicleConstraint, bool) {
+	violated := len(vehicle.Route()) > c.count
+	if violated {
+		return nil, true
+	}
+	return c, false
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles.
+// A custom constraint is configured.
+func ExampleCustomConstraint() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Create a custom constraint.
+	constraint := CustomConstraint{count: 6}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Threads(1),
+		route.Constraint(constraint, []string{"v1", "v2"}),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         },
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 1086
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 448
+	//     }
+	//   ]
+	// }
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles.
+// A filter with route information is configured.
+func ExampleFilterWithRoute() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Define unassignment penalties to allow for unassigning stops
+	penalties := []int{100000, 100000, 100000, 100000, 100000, 100000, 100000}
+
+	// Define a filter. In this example a vehicle may not have more than 3 stops
+	maxStops := 3
+	filter := func(
+		vehicles,
+		locations model.Domain,
+		routes [][]int,
+	) model.Domain {
+		vehiclesToRemove := model.NewDomain()
+		locationCount := locations.Len()
+		// Determine vehicles which can get the set of locations assigned
+		iter := vehicles.Iterator()
+		for iter.Next() {
+			index := iter.Value()
+			// Remove vehicle from options, if assigning the locations would
+			// overflow the maximum number of stops (start&end do not count
+			// towards maximum number of stops; negative maximum indicates
+			// unlimited number of stops)
+			if len(routes[index])-2+locationCount > maxStops {
+				vehiclesToRemove = vehiclesToRemove.Add(index)
+			}
+		}
+		return vehiclesToRemove
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Unassigned(penalties),
+		route.FilterWithRoute(filter),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "unassigned": [
+	//     {
+	//       "id": "Arashiyama Bamboo Forest",
+	//       "position": {
+	//         "lon": 135.672009,
+	//         "lat": 35.017209
+	//       }
+	//     }
+	//   ],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 511
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 448
+	//     }
+	//   ]
+	// }
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles.
+// A custom selector is configured.
+func ExampleSelector() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Stop score indexed by stop
+	score := []int{5, 4, 6, 7, 3, 2, 1}
+
+	// Define a location selector. This location selector looks for the highest
+	// score of a stop among the not yet assigned stops and returns it, wrapped
+	// in a model.Domain
+	selector := func(p route.PartialPlan) model.Domain {
+		index := -1
+		highestScore := 0
+		for _, l := range p.Unplanned().Slice() {
+			if score[l] > highestScore {
+				index = l
+				highestScore = score[l]
+			}
+		}
+		if index != -1 {
+			return model.NewDomain(model.NewRange(index, index))
+		}
+		return model.NewDomain()
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Threads(1),
+		route.Selector(selector),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 1243
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 0
+	//     }
+	//   ]
+	// }
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles. A
+// filter is configured.
+func ExampleFilter() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Define a filter. In this example v2 is not compatible with the location 5
+	// and 6
+	filter := func(v, l int) bool {
+		if v == 1 { // v2
+			if l == 6 || l == 5 { // "Arashiyama Bamboo Forest" and "Kinkaku-ji"
+				return false
+			}
+		}
+		return true
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Threads(1),
+		route.Filter(filter))
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get last solution and print JSON out.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 575
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 909
+	//     }
+	//   ]
+	// }
+}
+
+// Custom data to implement the VehicleUpdater interface.
+type vehicleData struct {
+	// immutable input data
+	stops []route.Stop
+	score map[string]int
+	// mutable data
+	Locations map[string]int `json:"locations,omitempty"`
+}
+
+// Track the index in the route for each stop. Customize value function to
+// incorporate the vehicle's score.
+func (d vehicleData) Update(
+	p route.PartialVehicle,
+) (route.VehicleUpdater, int, bool) {
+	// Create a fresh copy of Locations
+	d.Locations = map[string]int{}
+
+	// Update a stop's route index.
+	route := p.Route()
+	for i := 1; i < len(route)-1; i++ {
+		stop := d.stops[route[i]]
+		d.Locations[stop.ID] = i
+	}
+
+	// Apply correct vehicle score to the objective value.
+	vehicleID := p.ID()
+	value := p.Value() * d.score[vehicleID]
+	return d, value, true
+}
+
+// Custom data to implement the PlanUpdater interface.
+type planData struct {
+	// immutable input data
+	stops []route.Stop
+	// mutable data
+	Locations     map[string]int `json:"locations,omitempty"`
+	vehicleValues map[string]int
+	planValue     int
+}
+
+// Track the index of the route for each stop in each vehicle route. Customize
+// value function to incorporate the custom vehicle engine's value.
+func (d planData) Update(
+	pp route.PartialPlan,
+	vehicles []route.PartialVehicle,
+) (route.PlanUpdater, int, bool) {
+	// Deep copy locations stored on fleet state.
+	locations := make(map[string]int, len(d.Locations))
+	for stopdID, i := range d.Locations {
+		locations[stopdID] = i
+	}
+	d.Locations = locations
+	// Deep copy the data required for the value function.
+	values := make(map[string]int, len(d.vehicleValues))
+	for vehicleID, i := range d.vehicleValues {
+		values[vehicleID] = i
+	}
+	d.vehicleValues = values
+	for _, vehicle := range vehicles {
+		// Update locations based on the changes made on the vehicle state.
+		vehicleID := vehicle.ID()
+		updater := vehicle.Updater().(vehicleData)
+		for stopdID, i := range updater.Locations {
+			d.Locations[stopdID] = i
+		}
+
+		// Update value function information.
+		value := vehicle.Value()
+		d.planValue -= d.vehicleValues[vehicleID]
+		d.vehicleValues[vehicleID] = value
+		d.planValue += d.vehicleValues[vehicleID]
+	}
+	// Remove unassigned locations.
+	for _, location := range pp.Unassigned().Slice() {
+		stop := d.stops[location]
+		delete(d.Locations, stop.ID)
+	}
+	return d, d.planValue, true
+}
+
+// Create routes to visit seven landmarks in Kyoto using two vehicles. A custom
+// transition update is provided to keep track of locations: a type that maps a
+// stop's ID to its route position. The value function for routing stops that
+// are assigned to the vehicle is modified. To achieve this, the sample
+// implementations of the VehicleUpdater and PlanUpdater interfaces are used.
+func ExampleUpdate() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	// Declare custom score and data types that implement the interfaces.
+	score := map[string]int{
+		"v1": 10,
+		"v2": 1,
+	}
+	v := vehicleData{
+		stops: stops,
+		score: score,
+	}
+	f := planData{
+		stops: stops,
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.Update(v, f),
+		route.Threads(1),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get last solution and print JSON out.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 0
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 1243
+	//     }
+	//   ]
+	// }
+}
+
+// Create routes to visit seven landmarks in Kyoto using one vehicle. A custom
+// output is provided. To achieve this, the router internal Format function is
+// used.
+func ExampleFormat() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{"v1", "v2"}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(stops, vehicles)
+	if err != nil {
+		panic(err)
+	}
+	router.Format(func(p *route.Plan) any {
+		m := make(map[string]int)
+		m["num_routes"] = len(p.Vehicles)
+		m["num_unassigned"] = len(p.Unassigned)
+		return m
+	})
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get last solution and print JSON out.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+
+	// Output:
+	// {
+	//   "num_routes": 2,
+	//   "num_unassigned": 0
 	// }
 }
