@@ -4357,7 +4357,7 @@ func ExampleUpdate() {
 // Create routes to visit seven landmarks in Kyoto using one vehicle. A custom
 // output is provided. To achieve this, the router internal Format function is
 // used.
-func ExampleFormat() {
+func ExampleRouter_format() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
 		{
