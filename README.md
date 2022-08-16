@@ -13,6 +13,10 @@ problems. Please find the following packages:
 Please visit the official [Go Package Docs][pkgsite] for documentation and
 testable examples.
 
+## Usage
+
+To run a decision automation problem with SDK you need the [Nextmv CLI][cli].
+
 ## Get started
 
 Please visit the [tour of SDK][tour] to get started with data store modeling.
@@ -25,16 +29,10 @@ Nextmv's SDK is meant to be used in Go projects. To download please run:
 go get github.com/nextmv-io/sdk
 ```
 
-## Usage
-
-To run a decision automation problem Nextmv's SDK requires specific plugins.
-Please contact [support][support] for details on installing plugins. They are
-not required to `build`.
-
 [pkgsite]: https://pkg.go.dev/github.com/nextmv-io/sdk
 [store]: ./store/
 [route]: ./route/
 [run]: ./run/
 [model]: ./model/
 [tour]: https://github.com/nextmv-io/tour
-[support]: https://www.nextmv.io/contact
+[cli]: https://docs.nextmv.io/development/cli
