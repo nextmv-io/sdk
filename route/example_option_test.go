@@ -3545,7 +3545,7 @@ func (c CustomConstraint) Violated(
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles.
 // A custom constraint is configured.
-func ExampleCustomConstraint() {
+func ExampleConstraint() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
 		{
