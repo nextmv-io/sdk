@@ -97,10 +97,10 @@ type Range interface {
 
 // An Iterator allows one to iterate over a range or a domain.
 //
-//   it := model.Domain(model.Range(1, 10)).Iterator()
-//     for it.Next() {
-//       fmt.Println(it.Value()) // 1, ..., 10
-//   }
+//	it := model.Domain(model.Range(1, 10)).Iterator()
+//	for it.Next() {
+//	    fmt.Println(it.Value()) // 1, ..., 10
+//	}
 type Iterator interface {
 	Next() bool
 	Value() int
