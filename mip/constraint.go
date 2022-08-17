@@ -47,7 +47,7 @@ type Constraint interface {
 	// 		c.AddTerm(1.0, x)  	 // results in 1.0 * x <= 123.4 in solver
 	// 		c.AddTerm(2.0, x)    // results in 3.0 * x <= 123.4 in solver
 	AddTerm(coefficient float64, variable Variable) Term
-	// RightHandSide returns the right hand side of the invoking constraint.
+	// RightHandSide returns the right-hand side of the invoking constraint.
 	RightHandSide() float64
 	// Sense returns the sense of the invoking constraint.
 	Sense() Sense

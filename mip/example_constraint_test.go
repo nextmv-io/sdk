@@ -2,6 +2,7 @@ package mip_test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/nextmv-io/sdk/mip"
 )
@@ -62,4 +63,44 @@ func ExampleConstraint_terms() {
 	// 2
 	// 1
 	// 3
+}
+
+func benchmarkAddConstraintAddTerms(nrTerms int, b *testing.B) {
+	definition := mip.NewDefinition()
+	v, _ := definition.AddContinuousVariable(1.0, 2.0)
+
+	for i := 0; i < b.N; i++ {
+		c, _ := definition.AddConstraint(mip.Equal, 1.0)
+		for i := 0; i < nrTerms; i++ {
+			c.AddTerm(1.0, v)
+		}
+	}
+}
+
+func BenchmarkAddConstraintAddTerms0(b *testing.B) {
+	benchmarkAddConstraintAddTerms(0, b)
+}
+
+func BenchmarkAddConstraintAddTerms1(b *testing.B) {
+	benchmarkAddConstraintAddTerms(1, b)
+}
+
+func BenchmarkAddConstraintAddTerms2(b *testing.B) {
+	benchmarkAddConstraintAddTerms(2, b)
+}
+
+func BenchmarkAddConstraintAddTerms4(b *testing.B) {
+	benchmarkAddConstraintAddTerms(4, b)
+}
+
+func BenchmarkAddConstraintAddTerms8(b *testing.B) {
+	benchmarkAddConstraintAddTerms(8, b)
+}
+
+func BenchmarkAddConstraintAddTerms16(b *testing.B) {
+	benchmarkAddConstraintAddTerms(16, b)
+}
+
+func BenchmarkAddConstraintAddTerms32(b *testing.B) {
+	benchmarkAddConstraintAddTerms(32, b)
 }

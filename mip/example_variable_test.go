@@ -2,6 +2,7 @@ package mip_test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/nextmv-io/sdk/mip"
 )
@@ -58,4 +59,25 @@ func ExampleVariable_variables() {
 	// 1
 	// 2
 	// 3
+}
+
+func BenchmarkAddBinaryVariable(b *testing.B) {
+	definition := mip.NewDefinition()
+	for i := 0; i < b.N; i++ {
+		definition.AddBinaryVariable()
+	}
+}
+
+func BenchmarkAddContinuousVariable(b *testing.B) {
+	definition := mip.NewDefinition()
+	for i := 0; i < b.N; i++ {
+		definition.AddContinuousVariable(-1.0, 1.0)
+	}
+}
+
+func BenchmarkAddIntegerVariable(b *testing.B) {
+	definition := mip.NewDefinition()
+	for i := 0; i < b.N; i++ {
+		definition.AddIntegerVariable(-1, 1)
+	}
 }
