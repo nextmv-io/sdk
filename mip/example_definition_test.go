@@ -23,11 +23,11 @@ func ExampleDefinition_empty() {
 func ExampleDefinition_queries() {
 	definition := mip.NewDefinition()
 
-	definition.AddBinaryVariable()
-	definition.AddContinuousVariable(1.0, 2.0)
-	definition.AddBinaryVariable()
+	definition.NewBinaryVariable()
+	definition.NewContinuousVariable(1.0, 2.0)
+	definition.NewBinaryVariable()
 
-	definition.AddConstraint(mip.Equal, 0.0)
+	definition.NewConstraint(mip.Equal, 0.0)
 
 	fmt.Println(len(definition.Variables()))
 	fmt.Println(len(definition.Constraints()))

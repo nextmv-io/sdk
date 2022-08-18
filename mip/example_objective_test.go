@@ -25,14 +25,14 @@ func ExampleObjective_sense() {
 func ExampleObjective_terms() {
 	definition := mip.NewDefinition()
 
-	v1, _ := definition.AddBinaryVariable()
-	v2, _ := definition.AddBinaryVariable()
+	v1, _ := definition.NewBinaryVariable()
+	v2, _ := definition.NewBinaryVariable()
 
 	fmt.Println(len(definition.Objective().Terms()))
 
-	t1 := definition.Objective().AddTerm(2.0, v1)
-	t2 := definition.Objective().AddTerm(1.0, v1)
-	t3 := definition.Objective().AddTerm(3.0, v2)
+	t1 := definition.Objective().NewTerm(2.0, v1)
+	t2 := definition.Objective().NewTerm(1.0, v1)
+	t3 := definition.Objective().NewTerm(3.0, v2)
 
 	fmt.Println(t1.Variable().Index())
 	fmt.Println(t1.Coefficient())
@@ -57,37 +57,37 @@ func ExampleObjective_terms() {
 	// 3
 }
 
-func benchmarkObjectiveAddTerms(nrTerms int, b *testing.B) {
+func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {
 	definition := mip.NewDefinition()
-	v, _ := definition.AddContinuousVariable(1.0, 2.0)
+	v, _ := definition.NewContinuousVariable(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < nrTerms; i++ {
-			definition.Objective().AddTerm(1.0, v)
+			definition.Objective().NewTerm(1.0, v)
 		}
 	}
 }
 
-func BenchmarkObjectiveAddTerms1(b *testing.B) {
-	benchmarkObjectiveAddTerms(1, b)
+func BenchmarkObjectiveNewTerms1(b *testing.B) {
+	benchmarkObjectiveNewTerms(1, b)
 }
 
-func BenchmarkObjectiveAddTerms2(b *testing.B) {
-	benchmarkObjectiveAddTerms(2, b)
+func BenchmarkObjectiveNewTerms2(b *testing.B) {
+	benchmarkObjectiveNewTerms(2, b)
 }
 
-func BenchmarkObjectiveAddTerms4(b *testing.B) {
-	benchmarkObjectiveAddTerms(4, b)
+func BenchmarkObjectiveNewTerms4(b *testing.B) {
+	benchmarkObjectiveNewTerms(4, b)
 }
 
-func BenchmarkObjectiveAddTerms8(b *testing.B) {
-	benchmarkObjectiveAddTerms(8, b)
+func BenchmarkObjectiveNewTerms8(b *testing.B) {
+	benchmarkObjectiveNewTerms(8, b)
 }
 
-func BenchmarkObjectiveAddTerms16(b *testing.B) {
-	benchmarkObjectiveAddTerms(16, b)
+func BenchmarkObjectiveNewTerms16(b *testing.B) {
+	benchmarkObjectiveNewTerms(16, b)
 }
 
-func BenchmarkObjectiveAddTerms32(b *testing.B) {
-	benchmarkObjectiveAddTerms(32, b)
+func BenchmarkObjectiveNewTerms32(b *testing.B) {
+	benchmarkObjectiveNewTerms(32, b)
 }

@@ -9,20 +9,20 @@ package mip
 //
 // 2.5 * x and 3.5 * y are 2 terms in this example.
 type Objective interface {
-	// AddTerm adds a term to the invoking objective, invoking this API
+	// IsMaximize return true if the invoking objective is a maximization
+	// objective.
+	IsMaximize() bool
+	// NewTerm adds a term to the invoking objective, invoking this API
 	// multiple times for the same variable will take the sum of coefficients
 	// of earlier added terms for that variable
 	//
 	// 		d := mip.NewDefinition()
-	// 		x, _ := d.AddContinuousVariable(10.0, 100.0)
+	// 		x, _ := d.NewContinuousVariable(10.0, 100.0)
 	//
 	// 		d.Objective().SetMaximize()			 // results in: maximize -
-	// 		d.Objective().AddTerm(1.0, x)		// results in: maximize 1.0 * x
-	// 		d.Objective().AddTerm(2.0, x)		// results in: maximize 3.0 * x
-	AddTerm(coefficient float64, variable Variable) Term
-	// IsMaximize return true if the invoking objective is a maximization
-	// objective.
-	IsMaximize() bool
+	// 		d.Objective().NewTerm(1.0, x)		// results in: maximize 1.0 * x
+	// 		d.Objective().NewTerm(2.0, x)		// results in: maximize 3.0 * x
+	NewTerm(coefficient float64, variable Variable) Term
 	// SetMaximize sets the invoking objective to be a maximization objective.
 	SetMaximize()
 	// SetMinimize sets the invoking objective to be a minimization objective.

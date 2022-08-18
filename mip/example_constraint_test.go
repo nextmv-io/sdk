@@ -10,7 +10,7 @@ import (
 func ExampleConstraint_greaterThanEqual() {
 	definition := mip.NewDefinition()
 
-	c, _ := definition.AddConstraint(mip.GreaterThanOrEqual, 1.0)
+	c, _ := definition.NewConstraint(mip.GreaterThanOrEqual, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -22,7 +22,7 @@ func ExampleConstraint_greaterThanEqual() {
 func ExampleConstraint_equal() {
 	definition := mip.NewDefinition()
 
-	c, _ := definition.AddConstraint(mip.Equal, 1.0)
+	c, _ := definition.NewConstraint(mip.Equal, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -34,7 +34,7 @@ func ExampleConstraint_equal() {
 func ExampleConstraint_lessThanOrEqual() {
 	definition := mip.NewDefinition()
 
-	c, _ := definition.AddConstraint(mip.LessThanOrEqual, 1.0)
+	c, _ := definition.NewConstraint(mip.LessThanOrEqual, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -46,11 +46,11 @@ func ExampleConstraint_lessThanOrEqual() {
 func ExampleConstraint_terms() {
 	definition := mip.NewDefinition()
 
-	v, _ := definition.AddBinaryVariable()
-	c, _ := definition.AddConstraint(mip.Equal, 1.0)
+	v, _ := definition.NewBinaryVariable()
+	c, _ := definition.NewConstraint(mip.Equal, 1.0)
 
-	t1 := c.AddTerm(1.0, v)
-	t2 := c.AddTerm(2.0, v)
+	t1 := c.NewTerm(1.0, v)
+	t2 := c.NewTerm(2.0, v)
 
 	fmt.Println(t1.Variable().Index())
 	fmt.Println(t1.Coefficient())
@@ -65,42 +65,42 @@ func ExampleConstraint_terms() {
 	// 3
 }
 
-func benchmarkAddConstraintAddTerms(nrTerms int, b *testing.B) {
+func benchmarkNewConstraintNewTerms(nrTerms int, b *testing.B) {
 	definition := mip.NewDefinition()
-	v, _ := definition.AddContinuousVariable(1.0, 2.0)
+	v, _ := definition.NewContinuousVariable(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
-		c, _ := definition.AddConstraint(mip.Equal, 1.0)
+		c, _ := definition.NewConstraint(mip.Equal, 1.0)
 		for i := 0; i < nrTerms; i++ {
-			c.AddTerm(1.0, v)
+			c.NewTerm(1.0, v)
 		}
 	}
 }
 
-func BenchmarkAddConstraintAddTerms0(b *testing.B) {
-	benchmarkAddConstraintAddTerms(0, b)
+func BenchmarkNewConstraintNewTerms0(b *testing.B) {
+	benchmarkNewConstraintNewTerms(0, b)
 }
 
-func BenchmarkAddConstraintAddTerms1(b *testing.B) {
-	benchmarkAddConstraintAddTerms(1, b)
+func BenchmarkNewConstraintNewTerms1(b *testing.B) {
+	benchmarkNewConstraintNewTerms(1, b)
 }
 
-func BenchmarkAddConstraintAddTerms2(b *testing.B) {
-	benchmarkAddConstraintAddTerms(2, b)
+func BenchmarkNewConstraintNewTerms2(b *testing.B) {
+	benchmarkNewConstraintNewTerms(2, b)
 }
 
-func BenchmarkAddConstraintAddTerms4(b *testing.B) {
-	benchmarkAddConstraintAddTerms(4, b)
+func BenchmarkNewConstraintNewTerms4(b *testing.B) {
+	benchmarkNewConstraintNewTerms(4, b)
 }
 
-func BenchmarkAddConstraintAddTerms8(b *testing.B) {
-	benchmarkAddConstraintAddTerms(8, b)
+func BenchmarkNewConstraintNewTerms8(b *testing.B) {
+	benchmarkNewConstraintNewTerms(8, b)
 }
 
-func BenchmarkAddConstraintAddTerms16(b *testing.B) {
-	benchmarkAddConstraintAddTerms(16, b)
+func BenchmarkNewConstraintNewTerms16(b *testing.B) {
+	benchmarkNewConstraintNewTerms(16, b)
 }
 
-func BenchmarkAddConstraintAddTerms32(b *testing.B) {
-	benchmarkAddConstraintAddTerms(32, b)
+func BenchmarkNewConstraintNewTerms32(b *testing.B) {
+	benchmarkNewConstraintNewTerms(32, b)
 }

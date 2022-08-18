@@ -11,24 +11,24 @@ A new Definition is created:
 
 Variable instances are created and added to the definition:
 
-    x, _ := d.AddContinuousVariable(0.0, 100.0)
-    y, _ := d.AddIntegerVariable(0, 100)
+    x, _ := d.NewContinuousVariable(0.0, 100.0)
+    y, _ := d.NewIntegerVariable(0, 100)
 
 Constraint instances are created and added to the definition:
 
-    c1, _ := d.AddConstraint(mip.GreaterThanOrEqual, 1.0)
-    c1.AddTerm(-2.0, x)
-    c1.AddTerm(2.0, y)
+    c1, _ := d.NewConstraint(mip.GreaterThanOrEqual, 1.0)
+    c1.NewTerm(-2.0, x)
+    c1.NewTerm(2.0, y)
 
-    c2, _ := d.AddConstraint(mip.LessThanOrEqual, 13.0)
-    c2.AddTerm(-8.0, x)
-    c2.AddTerm(10.0, y)
+    c2, _ := d.NewConstraint(mip.LessThanOrEqual, 13.0)
+    c2.NewTerm(-8.0, x)
+    c2.NewTerm(10.0, y)
 
 The Objective is specified:
 
     d.Objective().SetMaximize()
-    d.Objective().AddTerm(1.0, x)
-    d.Objective().AddTerm(1.0, y)
+    d.Objective().NewTerm(1.0, x)
+    d.Objective().NewTerm(1.0, y)
 
 A Solver is created and invoked to produce a Solution:
 

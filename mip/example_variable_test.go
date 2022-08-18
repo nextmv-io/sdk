@@ -10,7 +10,7 @@ import (
 func ExampleVariable_continuous() {
 	definition := mip.NewDefinition()
 
-	v, _ := definition.AddContinuousVariable(-1.0, 1.0)
+	v, _ := definition.NewContinuousVariable(-1.0, 1.0)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -22,7 +22,7 @@ func ExampleVariable_continuous() {
 func ExampleVariable_integer() {
 	definition := mip.NewDefinition()
 
-	v, _ := definition.AddIntegerVariable(-1, 1)
+	v, _ := definition.NewIntegerVariable(-1, 1)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -34,7 +34,7 @@ func ExampleVariable_integer() {
 func ExampleVariable_binary() {
 	definition := mip.NewDefinition()
 
-	v, _ := definition.AddBinaryVariable()
+	v, _ := definition.NewBinaryVariable()
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -46,9 +46,9 @@ func ExampleVariable_binary() {
 func ExampleVariable_variables() {
 	definition := mip.NewDefinition()
 
-	v0, _ := definition.AddBinaryVariable()
-	v1, _ := definition.AddIntegerVariable(-1, 1)
-	v2, _ := definition.AddContinuousVariable(-1.0, 1.0)
+	v0, _ := definition.NewBinaryVariable()
+	v1, _ := definition.NewIntegerVariable(-1, 1)
+	v2, _ := definition.NewContinuousVariable(-1.0, 1.0)
 
 	fmt.Println(v0.Index())
 	fmt.Println(v1.Index())
@@ -61,23 +61,23 @@ func ExampleVariable_variables() {
 	// 3
 }
 
-func BenchmarkAddBinaryVariable(b *testing.B) {
+func BenchmarkNewBinaryVariable(b *testing.B) {
 	definition := mip.NewDefinition()
 	for i := 0; i < b.N; i++ {
-		definition.AddBinaryVariable()
+		definition.NewBinaryVariable()
 	}
 }
 
-func BenchmarkAddContinuousVariable(b *testing.B) {
+func BenchmarkNewContinuousVariable(b *testing.B) {
 	definition := mip.NewDefinition()
 	for i := 0; i < b.N; i++ {
-		definition.AddContinuousVariable(-1.0, 1.0)
+		definition.NewContinuousVariable(-1.0, 1.0)
 	}
 }
 
-func BenchmarkAddIntegerVariable(b *testing.B) {
+func BenchmarkNewIntegerVariable(b *testing.B) {
 	definition := mip.NewDefinition()
 	for i := 0; i < b.N; i++ {
-		definition.AddIntegerVariable(-1, 1)
+		definition.NewIntegerVariable(-1, 1)
 	}
 }
