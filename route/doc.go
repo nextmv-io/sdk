@@ -102,55 +102,69 @@ The problem is operationally valid if all stops are assigned.
 	// Rough pseudo-code that shouldn't be run.
 	func main() {
 		handler := func(i input, opt store.Options) (store.Solver, error) {
-			// Outer decision: number of vehicles.
+			// Declare a new store of variables.
 			s := store.New()
+
+			// Outer decision: number of vehicles represented by an integer
+			// variable.
 			x := store.NewVar(s, 0)
-			solver := s.
-				Generate(
-					store.Scope(func(s store.Store) store.Generator {
-						// Current number of vehicles.
-						vehicles := make([]string, x.Get(s))
-						for i := 0; i < x.Get(s); i++ {
-							vehicles[i] = strconv.Itoa(i)
-						}
 
-						// Embedded decision: summon the router and its solver.
-						router, err := route.NewRouter(
-							i.Stops, vehicles,
-						)
-						if err != nil {
-							return nil
-						}
-						solver, err := router.Solver(opt)
-						if err != nil {
-							return nil
-						}
+			// Modify the main store.
+			s = s.
+				Value(func(s store.Store) int {
+					// Each vehicle has a cost => the value of the store is the
+					// total cost.
+					return x.Get(s) * 99
+				}).
+				Generate(func(s store.Store) store.Generator {
+					// Current number of vehicles.
+					vehicles := make([]string, x.Get(s))
+					for i := 0; i < x.Get(s); i++ {
+						vehicles[i] = strconv.Itoa(i)
+					}
 
-						// Get the solution to the routing problem. Estimate the
-						// cost and obtain the unassigned stops.
-						solution := solver.Last(context.Background())
-						plan := router.Plan()
-						unassigned := plan.Get(solution.Store).Unassigned
-						cost := solution.Statistics.Value
+					// Embedded decision: summon the router and its solver.
+					router, err := route.NewRouter(
+						i.Stops, vehicles,
+					)
+					if err != nil {
+						return nil
+					}
+					solver, err := router.Solver(opt)
+					if err != nil {
+						return nil
+					}
 
-						return store.
-							// Use some generating condition.
-							If(...).
-							Then(func(s store.Store) store.Store {
-								return s.
-									// Add another vehicle.
-									Apply(x.Set(x.Get(s) + 1)).
-									// Modify the value of the Store.
-									Value(func(s store.Store) int { return *cost })
-							}).
-							// Operationally valid if all stops are assigned.
-							With(func(s store.Store) bool { return len(unassigned) == 0 })
-					}),
-				).
-				Value(x.Get).
-				Maximizer(opt)
+					// Get the solution to the routing problem. Estimate the
+					// cost and obtain the unassigned stops.
+					solution := solver.Last(context.Background())
+					plan := router.Plan()
+					unassigned := plan.Get(solution.Store).Unassigned
+					routingCost := solution.Statistics.Value
 
-			return solver, nil
+					return store.Lazy(
+						func() bool {
+							// Use some generating condition, such as generating
+							// children stores as long as there are unassigned
+							// stops.
+							return len(unassigned) > 0
+						},
+						func() store.Store {
+							return s.
+								// Add another vehicle.
+								Apply(x.Set(x.Get(s) + 1)).
+								// Modify the value of the Store.
+								Value(func(s store.Store) int { return *routingCost }).
+								// Operationally valid if all stops are assigned.
+								Validate(func(s store.Store) bool {
+									return len(unassigned) == 0
+								})
+						},
+					)
+				})
+
+			// Minimize the total cost.
+			return s.Minimizer(opt), nil
 		}
 		run.Run(handler)
 	}
