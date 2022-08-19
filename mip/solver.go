@@ -17,11 +17,11 @@ type Solver interface {
 	// Solve is the entrypoint to solve the definition associated with
 	// the invoking solver. Returns a solution when the invoking solver
 	// reaches a conclusion.
-	Solve(options SolverOptions) (Solution, error)
+	Solve(options SolveOptions) (Solution, error)
 }
 
-// SolverOptions interface to options for back-end solver.
-type SolverOptions interface {
+// SolveOptions interface to options for back-end solver.
+type SolveOptions interface {
 	// FloatParameters returns all float parameter settings.
 	FloatParameters() FloatSolverParameterSettings
 	// GetFloatParameter returns value set for parameter, returns error if no
