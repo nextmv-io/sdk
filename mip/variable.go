@@ -10,7 +10,7 @@ package mip
 // Binary variables can take two values, zero or one.
 type Variable interface {
 	// Index is a unique number assigned to the variable. The index corresponds
-	// to the location in the slice returned by Definition.Variables().
+	// to the location in the slice returned by Model.Variables().
 	Index() int
 	// IsBinary returns true if the invoking variable is a binary variable.
 	// otherwise false

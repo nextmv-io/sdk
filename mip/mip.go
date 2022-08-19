@@ -6,21 +6,21 @@ func NewSolveOptions() SolveOptions {
 	return newSolveOptions()
 }
 
-// NewDefinition creates an empty MIP definition.
-func NewDefinition() Definition {
+// NewModel creates an empty MIP model.
+func NewModel() Model {
 	connect()
-	return newDefinition()
+	return newModel()
 }
 
 // NewSolver returns a new Solver which will use a solver
 // implemented by provider.
-func NewSolver(provider SolverProvider, definition Definition) (Solver, error) {
+func NewSolver(provider SolverProvider, model Model) (Solver, error) {
 	connect()
-	return newSolver(provider, definition)
+	return newSolver(provider, model)
 }
 
 var (
 	newSolveOptions func() SolveOptions
-	newSolver       func(SolverProvider, Definition) (Solver, error)
-	newDefinition   func() Definition
+	newSolver       func(SolverProvider, Model) (Solver, error)
+	newModel        func() Model
 )

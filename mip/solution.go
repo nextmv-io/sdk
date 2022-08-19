@@ -7,7 +7,7 @@ type Solution interface {
 	// HasValues returns true if the solver was able to associate values with
 	// variables.
 	HasValues() bool
-	// IsInfeasible returns true if the solver has proven that the definition
+	// IsInfeasible returns true if the solver has proven that the model
 	// defines an infeasible solution, otherwise returns false.
 	IsInfeasible() bool
 	// IsNumericalFailure returns true if the solver encountered a numerical
@@ -18,7 +18,7 @@ type Solution interface {
 	// is one of the optimal solutions, otherwise returns false.
 	IsOptimal() bool
 	// IsSubOptimal returns true if the solver sub-optimal conform the
-	// definition of the underlying solver, otherwise false.
+	// model of the underlying solver, otherwise false.
 	IsSubOptimal() bool
 	// IsTimeOut returns true if the solver returned due to a time limit
 	// before reaching a conclusion, otherwise returns true.

@@ -1,20 +1,20 @@
 /*
 Package mip provides a general interface for solving mixed integer linear
 optimization problems using a variety of back-end solvers. The base interface
-is the Definition which is a collection of variables, constraints and an
+is the Model which is a collection of variables, constraints and an
 objective. The interface Solver is constructed mip.NewSolver. The solver can be
 invoked using Solver.Solve and returns a Solution.
 
-A new Definition is created:
+A new Model is created:
 
-    d := mip.NewDefinition()
+    d := mip.NewModel()
 
-Variable instances are created and added to the definition:
+Variable instances are created and added to the model:
 
     x, _ := d.NewContinuousVariable(0.0, 100.0)
     y, _ := d.NewIntegerVariable(0, 100)
 
-Constraint instances are created and added to the definition:
+Constraint instances are created and added to the model:
 
     c1, _ := d.NewConstraint(mip.GreaterThanOrEqual, 1.0)
     c1.NewTerm(-2.0, x)
@@ -32,7 +32,7 @@ The Objective is specified:
 
 A Solver is created and invoked to produce a Solution:
 
-    solver, _ := mip.NewSolver("backend_solver_identifier", mipDefinition)
+    solver, _ := mip.NewSolver("backend_solver_identifier", mipModel)
     solution, _ := solver.Solve(mip.DefaultSolverOptions())
 
 */

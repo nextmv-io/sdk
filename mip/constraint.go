@@ -38,7 +38,7 @@ type Constraint interface {
 	// multiple times for the same variable will take the sum of coefficients
 	// of earlier added terms for that variable
 	//
-	// 		d := mip.NewDefinition()
+	// 		d := mip.NewModel()
 	//
 	// 		x, _ := d.NewContinuousVariable(10.0, 100.0)
 	//

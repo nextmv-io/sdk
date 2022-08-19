@@ -8,9 +8,9 @@ import (
 )
 
 func ExampleConstraint_greaterThanEqual() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	c, _ := definition.NewConstraint(mip.GreaterThanOrEqual, 1.0)
+	c, _ := model.NewConstraint(mip.GreaterThanOrEqual, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -20,9 +20,9 @@ func ExampleConstraint_greaterThanEqual() {
 }
 
 func ExampleConstraint_equal() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	c, _ := definition.NewConstraint(mip.Equal, 1.0)
+	c, _ := model.NewConstraint(mip.Equal, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -32,9 +32,9 @@ func ExampleConstraint_equal() {
 }
 
 func ExampleConstraint_lessThanOrEqual() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	c, _ := definition.NewConstraint(mip.LessThanOrEqual, 1.0)
+	c, _ := model.NewConstraint(mip.LessThanOrEqual, 1.0)
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
@@ -44,10 +44,10 @@ func ExampleConstraint_lessThanOrEqual() {
 }
 
 func ExampleConstraint_terms() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v, _ := definition.NewBinaryVariable()
-	c, _ := definition.NewConstraint(mip.Equal, 1.0)
+	v, _ := model.NewBinaryVariable()
+	c, _ := model.NewConstraint(mip.Equal, 1.0)
 
 	t1 := c.NewTerm(1.0, v)
 	t2 := c.NewTerm(2.0, v)
@@ -66,11 +66,11 @@ func ExampleConstraint_terms() {
 }
 
 func benchmarkNewConstraintNewTerms(nrTerms int, b *testing.B) {
-	definition := mip.NewDefinition()
-	v, _ := definition.NewContinuousVariable(1.0, 2.0)
+	model := mip.NewModel()
+	v, _ := model.NewContinuousVariable(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
-		c, _ := definition.NewConstraint(mip.Equal, 1.0)
+		c, _ := model.NewConstraint(mip.Equal, 1.0)
 		for i := 0; i < nrTerms; i++ {
 			c.NewTerm(1.0, v)
 		}

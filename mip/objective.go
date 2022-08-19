@@ -1,6 +1,6 @@
 package mip
 
-// Objective specifies the objective of the definition. An objective
+// Objective specifies the objective of the model. An objective
 // consists out of terms and a specification if it should be maximized or
 // minimized.
 //
@@ -16,7 +16,7 @@ type Objective interface {
 	// multiple times for the same variable will take the sum of coefficients
 	// of earlier added terms for that variable
 	//
-	// 		d := mip.NewDefinition()
+	// 		d := mip.NewModel()
 	// 		x, _ := d.NewContinuousVariable(10.0, 100.0)
 	//
 	// 		d.Objective().SetMaximize()			 // results in: maximize -

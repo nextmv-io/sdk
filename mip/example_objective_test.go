@@ -8,31 +8,31 @@ import (
 )
 
 func ExampleObjective_sense() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	definition.Objective().SetMaximize()
+	model.Objective().SetMaximize()
 
-	fmt.Println(definition.Objective().IsMaximize())
+	fmt.Println(model.Objective().IsMaximize())
 
-	definition.Objective().SetMinimize()
+	model.Objective().SetMinimize()
 
-	fmt.Println(definition.Objective().IsMaximize())
+	fmt.Println(model.Objective().IsMaximize())
 	// Output:
 	// true
 	// false
 }
 
 func ExampleObjective_terms() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v1, _ := definition.NewBinaryVariable()
-	v2, _ := definition.NewBinaryVariable()
+	v1, _ := model.NewBinaryVariable()
+	v2, _ := model.NewBinaryVariable()
 
-	fmt.Println(len(definition.Objective().Terms()))
+	fmt.Println(len(model.Objective().Terms()))
 
-	t1 := definition.Objective().NewTerm(2.0, v1)
-	t2 := definition.Objective().NewTerm(1.0, v1)
-	t3 := definition.Objective().NewTerm(3.0, v2)
+	t1 := model.Objective().NewTerm(2.0, v1)
+	t2 := model.Objective().NewTerm(1.0, v1)
+	t3 := model.Objective().NewTerm(3.0, v2)
 
 	fmt.Println(t1.Variable().Index())
 	fmt.Println(t1.Coefficient())
@@ -43,8 +43,8 @@ func ExampleObjective_terms() {
 	fmt.Println(t3.Variable().Index())
 	fmt.Println(t3.Coefficient())
 
-	fmt.Println(len(definition.Objective().Terms()))
-	fmt.Println(definition.Objective().Terms()[0].Coefficient())
+	fmt.Println(len(model.Objective().Terms()))
+	fmt.Println(model.Objective().Terms()[0].Coefficient())
 	// Output:
 	// 0
 	// 0
@@ -58,12 +58,12 @@ func ExampleObjective_terms() {
 }
 
 func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {
-	definition := mip.NewDefinition()
-	v, _ := definition.NewContinuousVariable(1.0, 2.0)
+	model := mip.NewModel()
+	v, _ := model.NewContinuousVariable(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < nrTerms; i++ {
-			definition.Objective().NewTerm(1.0, v)
+			model.Objective().NewTerm(1.0, v)
 		}
 	}
 }

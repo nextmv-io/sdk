@@ -26,6 +26,6 @@ func connect() {
 	connected = true
 
 	plugin.Connect(slug, "MIPNewSolveOptions", &newSolveOptions)
-	plugin.Connect(slug, "MIPNewDefinition", &newDefinition)
+	plugin.Connect(slug, "MIPNewModel", &newModel)
 	plugin.Connect(slug, "MIPNewSolver", &newSolver)
 }

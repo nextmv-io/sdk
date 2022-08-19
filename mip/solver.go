@@ -4,17 +4,17 @@ import "time"
 
 // Solver exposes an API to run a MIP solver
 //
-// 		definition := mip.NewDefinition()
+// 		model := mip.NewModel()
 //
-//  	// build the definition
+//  	// build the model
 //
 // 		provider := "my_favorite_solver"
 //
-// 		solver, err := NewSolver(provider, definition)
+// 		solver, err := NewSolver(provider, model)
 //
 // 		solution, err := solver.Solve(mip.DefaultSolverOptions())
 type Solver interface {
-	// Solve is the entrypoint to solve the definition associated with
+	// Solve is the entrypoint to solve the model associated with
 	// the invoking solver. Returns a solution when the invoking solver
 	// reaches a conclusion.
 	Solve(options SolveOptions) (Solution, error)

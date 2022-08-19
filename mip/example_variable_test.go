@@ -8,9 +8,9 @@ import (
 )
 
 func ExampleVariable_continuous() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v, _ := definition.NewContinuousVariable(-1.0, 1.0)
+	v, _ := model.NewContinuousVariable(-1.0, 1.0)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -20,9 +20,9 @@ func ExampleVariable_continuous() {
 }
 
 func ExampleVariable_integer() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v, _ := definition.NewIntegerVariable(-1, 1)
+	v, _ := model.NewIntegerVariable(-1, 1)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -32,9 +32,9 @@ func ExampleVariable_integer() {
 }
 
 func ExampleVariable_binary() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v, _ := definition.NewBinaryVariable()
+	v, _ := model.NewBinaryVariable()
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -44,16 +44,16 @@ func ExampleVariable_binary() {
 }
 
 func ExampleVariable_variables() {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 
-	v0, _ := definition.NewBinaryVariable()
-	v1, _ := definition.NewIntegerVariable(-1, 1)
-	v2, _ := definition.NewContinuousVariable(-1.0, 1.0)
+	v0, _ := model.NewBinaryVariable()
+	v1, _ := model.NewIntegerVariable(-1, 1)
+	v2, _ := model.NewContinuousVariable(-1.0, 1.0)
 
 	fmt.Println(v0.Index())
 	fmt.Println(v1.Index())
 	fmt.Println(v2.Index())
-	fmt.Println(len(definition.Variables()))
+	fmt.Println(len(model.Variables()))
 	// Output:
 	// 0
 	// 1
@@ -62,22 +62,22 @@ func ExampleVariable_variables() {
 }
 
 func BenchmarkNewBinaryVariable(b *testing.B) {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		definition.NewBinaryVariable()
+		model.NewBinaryVariable()
 	}
 }
 
 func BenchmarkNewContinuousVariable(b *testing.B) {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		definition.NewContinuousVariable(-1.0, 1.0)
+		model.NewContinuousVariable(-1.0, 1.0)
 	}
 }
 
 func BenchmarkNewIntegerVariable(b *testing.B) {
-	definition := mip.NewDefinition()
+	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		definition.NewIntegerVariable(-1, 1)
+		model.NewIntegerVariable(-1, 1)
 	}
 }
