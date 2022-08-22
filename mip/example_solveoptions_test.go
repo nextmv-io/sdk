@@ -19,15 +19,23 @@ func ExampleSolveOptions_default() {
 	// 1e-11
 	// 0.05
 	// 10m0s
-
 }
 
 func ExampleSolveOptions_change() {
 	solveOptions := mip.NewSolveOptions()
 	solveOptions.SetVerboseLevel(mip.HIGH)
-	solveOptions.SetMIPGapAbsolute(1.23)
-	solveOptions.SetMIPGapRelative(0.5)
-	solveOptions.SetMaximumDuration(time.Minute)
+	err := solveOptions.SetMIPGapAbsolute(1.23)
+	if err != nil {
+		panic(err)
+	}
+	err = solveOptions.SetMIPGapRelative(0.5)
+	if err != nil {
+		panic(err)
+	}
+	err = solveOptions.SetMaximumDuration(time.Minute)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println(solveOptions.SolverVerboseLevel())
 	fmt.Println(solveOptions.MIPGapAbsolute())

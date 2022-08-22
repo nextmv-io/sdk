@@ -1,6 +1,6 @@
 package mip
 
-// NewSolverOptions returns default solver options.
+// NewSolveOptions returns default solver options.
 func NewSolveOptions() SolveOptions {
 	connect()
 	return newSolveOptions()
