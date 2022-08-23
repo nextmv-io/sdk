@@ -58,6 +58,7 @@ func Connect[T any](slug string, name string, target *T) {
 }
 
 func potentialPluginPaths(slug string) ([]string, error) {
+	// Get Nextmv library path
 	libraryPath := os.Getenv("NEXTMV_LIBRARY_PATH")
 	if libraryPath == "" {
 		homeDir, err := os.UserHomeDir()
@@ -67,6 +68,20 @@ func potentialPluginPaths(slug string) ([]string, error) {
 		libraryPath = filepath.Join(homeDir, ".nextmv", "lib")
 	}
 
+	// Get current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("could not fetch current working directory: %v", err)
+	}
+
+	// Get binary directory
+	binaryPath, err := os.Executable()
+	if err != nil {
+		return nil, fmt.Errorf("could not fetch binary path: %v", err)
+	}
+	binaryDir := filepath.Dir(binaryPath)
+
+	// Assemble potential plugin paths
 	filename := fmt.Sprintf(
 		"nextmv-%s-%s-%s-%s-%s.so",
 		slug,
@@ -75,12 +90,9 @@ func potentialPluginPaths(slug string) ([]string, error) {
 		runtime.GOOS,
 		runtime.GOARCH,
 	)
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("could not fetch working dir: %v", err)
-	}
 	paths := []string{
-		filepath.Join(wd, filename),
+		filepath.Join(cwd, filename),
+		filepath.Join(binaryDir, filename),
 		filepath.Join(libraryPath, filename),
 	}
 	return paths, nil
