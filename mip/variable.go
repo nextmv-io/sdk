@@ -40,17 +40,22 @@ type Variable interface {
 // Variables slice of Variable instances.
 type Variables []Variable
 
-// BinaryVariable a Variable which can take two values, zero or one.
-type BinaryVariable interface {
-	Variable
-}
-
 // ContinuousVariable a Variable which can take any value in an interval.
 type ContinuousVariable interface {
 	Variable
+	ensureContinuous() bool
 }
 
 // IntegerVariable a Variable which can take any integer value in an interval.
 type IntegerVariable interface {
 	Variable
+	ensureInteger() bool
+}
+
+// BinaryVariable a Variable which can take two values, zero or one. A binary
+// variable is also an integer variable which can have two values zero and
+// one.
+type BinaryVariable interface {
+	IntegerVariable
+	ensureBinary() bool
 }
