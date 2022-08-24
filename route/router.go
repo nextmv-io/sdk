@@ -76,6 +76,19 @@ type PartialVehicle interface {
 	Route() []int
 	// Value return the value of vehicle. Usually this is the cost of the route.
 	Value() int
+	// Times returns a the estimated time of arrival (ETA), estimated time of
+	// service (ETS) and estimated time of departure (ETD) for each stop in the
+	// route. Usually ETA is the same as ETS, unless there is a waiting time
+	// before a time window opens, which is when the service actually starts
+	// (ETS).
+	Times() Times
+}
+
+// Times holds the ETA, ETS and ETD information.
+type Times struct {
+	ETA []int `json:"eta"`
+	ETS []int `json:"ets"`
+	ETD []int `json:"etd"`
 }
 
 // Plan describes a solution to a Vehicle Routing Problem.
