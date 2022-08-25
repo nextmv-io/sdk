@@ -102,7 +102,7 @@ type Store interface {
 			s := store.New()
 			x := store.NewVar(s, 1)
 			s = s.Propagate(func(s store.Store) []store.Change {
-				if condition {
+				if x.Get(s) <= 1 {
 					return []store.Change{
 						x.Set(2),
 						x.Set(42),
