@@ -96,15 +96,19 @@ type Store interface {
 	Generate(func(Store) Generator) Store
 
 	/*
-		Propagate changes into a Store until it reaches a fixed point.
+		Propagate changes into a Store and is re-invoked until no further
+		changes need to be made and an empty slice of changes is returned.
 
 			s := store.New()
 			x := store.NewVar(s, 1)
 			s = s.Propagate(func(s store.Store) []store.Change {
-				return []store.Change{
-					x.Set(2),
-					x.Set(42),
+				if x.Get(s) <= 1 {
+					return []store.Change{
+						x.Set(2),
+						x.Set(42),
+					}
 				}
+				return []store.Change{}
 			})
 	*/
 	Propagate(...Propagator) Store
