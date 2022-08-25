@@ -298,7 +298,7 @@ func ExampleRouter_options() {
 	// }
 }
 
-// Use the Plan func to get direct access to the underlying Store and Variables.
+// Use the Plan func to get direct access to the underlying Store and variables.
 func ExampleRouter_plan() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
