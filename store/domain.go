@@ -189,7 +189,7 @@ func Multiple(s Store, values ...int) Domain {
 }
 
 type domainProxy struct {
-	domain Variable[model.Domain]
+	domain Var[model.Domain]
 }
 
 // Implements store.Domain.

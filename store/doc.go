@@ -1,11 +1,11 @@
 /*
 Package store provides a modeling kit for decision automation problems. It is
 based on the paradigm of "decisions as code". The base interface is the Store:
-a space defined by Variables and logic. Hop is an engine provided to search
+a space defined by variables and logic. Hop is an engine provided to search
 that space and find the best solution possible, this is, the best collection of
-Variable assignments. The Store is the root node of a search tree. Child Stores
-(nodes) inherit both logic and Variables from the parent and may also add new
-Variables and logic, or overwrite existing ones. Changes to a child do not
+variable assignments. The Store is the root node of a search tree. Child Stores
+(nodes) inherit both logic and variables from the parent and may also add new
+variables and logic, or overwrite existing ones. Changes to a child do not
 impact its parent.
 
 A new Store is defined.
@@ -18,7 +18,7 @@ Variables are stored in the Store.
 	y := store.NewSlice(s, 2, 3, 4)
 	z := store.NewMap[string, int](s)
 
-The Format of the Store can be set and one can get the value of a Variable.
+The Format of the Store can be set and one can get the value of a variable.
 
 	s = s.Format(
 		func(s store.Store) any {
@@ -30,7 +30,7 @@ The Format of the Store can be set and one can get the value of a Variable.
 		},
 	)
 
-The Value of the Store can be set. When maximizing or minimizing, Variable
+The Value of the Store can be set. When maximizing or minimizing, variable
 assignments are chosen so that this value increases or decreases, respectively.
 
 	s = s.Value(
@@ -43,7 +43,7 @@ assignments are chosen so that this value increases or decreases, respectively.
 		},
 	)
 
-Changes, like setting a new value on a Variable, can be applied to the Store.
+Changes, like setting a new value on a variable, can be applied to the Store.
 
 	s = s.Apply(
 		x.Set(10),
@@ -84,7 +84,7 @@ Value is not needed. Options are required to specify the search mechanics.
 	// solver := s.Value(...).Minimizer(opt)
 	// solver := s.Satisfier(opt)
 
-To find the best collection of Variable assignments in the Store, the last
+To find the best collection of variable assignments in the Store, the last
 Solution can be obtained from the given Solver. Alternatively, all Solutions
 can be retrieved to debug the search mechanics of the Solver.
 

@@ -125,7 +125,7 @@ func (m mapProxy[K, V]) Get(s Store, key K) (V, bool) {
 	}
 
 ret:
-	// zero-value of variable
+	// zero-value of V
 	var value V
 	return value, false
 }

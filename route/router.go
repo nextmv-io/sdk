@@ -39,7 +39,7 @@ type Router interface {
 			p := router.Plan()
 			vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
 	*/
-	Plan() store.Variable[Plan]
+	Plan() store.Var[Plan]
 
 	// Format configures a custom output format for a solution.
 	Format(func(*Plan) any)

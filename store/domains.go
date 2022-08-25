@@ -270,7 +270,7 @@ func Repeat(s Store, n int, domain model.Domain) Domains {
 }
 
 type domainsProxy struct {
-	domains Variable[model.Domains]
+	domains Var[model.Domains]
 }
 
 // Implements store.Domains.

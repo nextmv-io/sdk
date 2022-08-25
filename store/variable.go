@@ -5,10 +5,10 @@ import (
 	"reflect"
 )
 
-// Variable stored in a Store.
-type Variable[T any] interface {
+// Var is a variable stored in a Store.
+type Var[T any] interface {
 	/*
-		Get the current value of the Variable in the Store.
+		Get the current value of the variable in the Store.
 
 			s := store.New()
 			x := store.NewVar(s, 10)
@@ -20,7 +20,7 @@ type Variable[T any] interface {
 	Get(Store) T
 
 	/*
-		Set a new value on the Variable.
+		Set a new value on the variable.
 
 			s := store.New()
 			x := store.NewVar(s, 10)
@@ -30,27 +30,27 @@ type Variable[T any] interface {
 }
 
 /*
-NewVar stores a new Variable in a Store.
+NewVar stores a new variable in a Store.
 
 	s := store.New()
 	x := store.NewVar(s, 10) // x is stored in s.
 */
-func NewVar[T any](s Store, data T) Variable[T] {
+func NewVar[T any](s Store, data T) Var[T] {
 	return variable[T]{variable: newVarFunc(s, data)}
 }
 
 type variable[T any] struct {
-	variable Variable[any]
+	variable Var[any]
 }
 
-// Implements Variable.
+// Implements Var.
 
 func (v variable[T]) Get(s Store) T {
 	if value := v.variable.Get(s); value != nil {
 		return value.(T)
 	}
 
-	// zero-value of variable
+	// zero-value of T
 	var value T
 	return value
 }
@@ -72,4 +72,4 @@ func (v variable[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.String())
 }
 
-var newVarFunc func(Store, any) Variable[any]
+var newVarFunc func(Store, any) Var[any]
