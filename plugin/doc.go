@@ -1,3 +1,0 @@
-/* Package plugin...*/
-
-package plugin
