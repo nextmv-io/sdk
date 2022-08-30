@@ -136,7 +136,6 @@ func ExampleNewDomain_multipleRange_first() {
 	// 0 true
 	// 0 true
 	// 0 true
-
 }
 
 func ExampleNewDomain_multipleRange_second() {
@@ -244,8 +243,8 @@ func ExampleNewDomain_multipleRange_sixth() {
 	// Output:
 	// 0 true
 	// 3 true
-
 }
+
 func ExampleNewDomain_multipleRange_seventh() {
 	domain := model.NewDomain(
 		model.NewRange(0, 1),
@@ -262,9 +261,9 @@ func ExampleNewDomain_multipleRange_seventh() {
 	// 0 true
 	// 4 true
 	// false
-
 }
-func ExampleNewDomain_multipleRange_eigth() {
+
+func ExampleNewDomain_multipleRange_eighth() {
 	domain := model.NewDomain(
 		model.NewRange(1, 1),
 		model.NewRange(0, 2),
