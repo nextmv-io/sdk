@@ -35,7 +35,7 @@ type Domain interface {
 	// Min of a domain and a boolean indicating it is nonempty.
 	Min() (int, bool)
 	// Remove values from a domain.
-	Remove(...int) Domain
+	Remove([]int) Domain
 	// Slice representation of a domain.
 	Slice() []int
 	// Value returns an int and true if a domain is singleton.
@@ -61,7 +61,7 @@ type Domains interface {
 	// Len returns the number of domains.
 	Len() int
 	// Remove values from a domain by index.
-	Remove(int, ...int) Domains
+	Remove(int, []int) Domains
 	// Singleton is true if all domains are Singleton.
 	Singleton() bool
 	// Slices convert domains to a slice of int slices.

@@ -108,10 +108,10 @@ type Domains interface {
 
 			s1 := store.New()
 			d := store.NewDomains(s1, model.Multiple(42, 13)) // {13, 42}
-			s2 := s1.Apply(d.Remove(0, 13))
+			s2 := s1.Apply(d.Remove(0, []int{13}))
 			d.Domains(s2) // {42}
 	*/
-	Remove(int, ...int) Change
+	Remove(int, []int) Change
 
 	/*
 		Singleton is true if all Domains are Singleton.
@@ -319,9 +319,9 @@ func (d domainsProxy) Len(s Store) int {
 	return d.Domains(s).Len()
 }
 
-func (d domainsProxy) Remove(i int, v ...int) Change {
+func (d domainsProxy) Remove(i int, v []int) Change {
 	return func(s Store) {
-		d.domains.Set(d.domains.Get(s).Remove(i, v...))(s)
+		d.domains.Set(d.domains.Get(s).Remove(i, v))(s)
 	}
 }
 

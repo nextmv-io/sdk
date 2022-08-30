@@ -126,7 +126,7 @@ type Domain interface {
 			d.Domain(s1) // [1, 5]
 			d.Domain(s2) // {1, 3, 5}
 	*/
-	Remove(...int) Change
+	Remove([]int) Change
 
 	/*
 		Slice representation of a Domain.
@@ -240,9 +240,9 @@ func (d domainProxy) Min(s Store) (int, bool) {
 	return d.Domain(s).Min()
 }
 
-func (d domainProxy) Remove(values ...int) Change {
+func (d domainProxy) Remove(values []int) Change {
 	return func(s Store) {
-		d.domain.Set(d.Domain(s).Remove(values...))(s)
+		d.domain.Set(d.Domain(s).Remove(values))(s)
 	}
 }
 
