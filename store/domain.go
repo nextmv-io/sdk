@@ -121,7 +121,7 @@ type Domain interface {
 
 			s1 := store.New()
 			d := store.NewDomain(s1, model.NewRange(1, 5))
-			s2 := s1.Apply(d.Remove(2, 4))
+			s2 := s1.Apply(d.Remove([]int{2, 4}))
 
 			d.Domain(s1) // [1, 5]
 			d.Domain(s2) // {1, 3, 5}
