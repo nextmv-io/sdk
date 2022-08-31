@@ -8,4 +8,4 @@ service all locations optimizing a value, such as minimizing cost.
 
 See [godocs][godocs] for package docs.
 
-[godocs]: ./doc.go
+[godocs]: https://pkg.go.dev/github.com/nextmv-io/sdk/route

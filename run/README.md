@@ -6,4 +6,4 @@ will be used. Valid values are `cli` (default) and `http`.
 
 See [godocs][godocs] for package docs.
 
-[godocs]: ./doc.go
+[godocs]:  https://pkg.go.dev/github.com/nextmv-io/sdk/run

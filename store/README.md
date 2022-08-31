@@ -9,4 +9,7 @@ tree. Child Stores (nodes) inherit both logic and variables from the parent and
 may also add new variables and logic, or overwrite existing ones. Changes to a
 child do not impact its parent.
 
+See [godocs][godocs] for package docs.
+
+[godocs]:  https://pkg.go.dev/github.com/nextmv-io/sdk/store
 [Store]: ./store.go
