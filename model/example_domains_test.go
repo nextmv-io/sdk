@@ -6,487 +6,191 @@ import (
 	"github.com/nextmv-io/sdk/model"
 )
 
-func ExampleNewDomains_first() {
-	domains := model.NewDomains()
-
-	fmt.Println(domains.Len())
-	fmt.Println(domains.Empty())
-
+func ExampleDomains_add() {
+	d1 := model.Repeat(3, model.Singleton(42))
+	d2 := d1.Add(1, 41, 43)
+	fmt.Println(d2)
 	// Output:
-	// 0
-	// true
+	// [{[{42 42}]} {[{41 43}]} {[{42 42}]}]
 }
 
-func ExampleNewDomains_second() {
-	domains := model.NewDomains(
-		model.Singleton(0),
-		model.Singleton(1),
-	)
-
-	fmt.Println(domains.Len())
-	fmt.Println(domains.Domain(0).Value())
-	fmt.Println(domains.Domain(1).Value())
-
+func ExampleDomains_assign() {
+	d1 := model.Repeat(3, model.Singleton(42))
+	d2 := d1.Assign(0, 10)
+	fmt.Println(d2)
 	// Output:
-	// 2
-	// 0 true
-	// 1 true
+	// [{[{10 10}]} {[{42 42}]} {[{42 42}]}]
 }
 
-func ExampleRepeat_first() {
-	domains := model.Repeat(0, model.NewDomain())
-
-	fmt.Println(domains.Len())
-	fmt.Println(domains.Empty())
-
+func ExampleDomains_atLeast() {
+	d1 := model.Repeat(2, model.NewDomain(model.NewRange(1, 100)))
+	d2 := d1.AtLeast(1, 50)
+	fmt.Println(d2)
 	// Output:
-	// 0
-	// true
+	// [{[{1 100}]} {[{50 100}]}]
 }
 
-func ExampleRepeat_second() {
-	domains := model.Repeat(1, model.NewDomain())
-
-	fmt.Println(domains.Len())
-	fmt.Println(domains.Empty())
-
+func ExampleDomains_atMost() {
+	d1 := model.Repeat(2, model.NewDomain(model.NewRange(1, 100)))
+	d2 := d1.AtMost(1, 50)
+	fmt.Println(d2)
 	// Output:
-	// 1
-	// true
+	// [{[{1 100}]} {[{1 50}]}]
 }
 
-func ExampleRepeat_third() {
-	domains := model.Repeat(2, model.Singleton(1))
-
-	fmt.Println(domains.Len())
-	fmt.Println(domains.Domain(0).Value())
-	fmt.Println(domains.Domain(1).Value())
-
+func ExampleDomains_cmp() {
+	d1 := model.Repeat(2, model.Singleton(42))
+	d2 := model.Repeat(3, model.Singleton(43))
+	fmt.Println(d1.Cmp(d2))
 	// Output:
-	// 2
-	// 1 true
-	// 1 true
+	// -1
 }
 
-func ExampleDomains_Add_first() {
-	domains := model.NewDomains(
-		model.Singleton(0),
-		model.Singleton(1),
-	)
-
-	domains = domains.Add(0, 1, 2)
-
-	fmt.Println(domains.Domain(0).Len())
-
+func ExampleDomains_domain() {
+	d := model.NewDomains(model.NewDomain(), model.Singleton(42))
+	fmt.Println(d.Domain(0))
+	fmt.Println(d.Domain(1))
 	// Output:
-	// 3
+	// {[]}
+	// {[{42 42}]}
 }
 
-func ExampleDomains_Add_second() {
-	domains := model.NewDomains(
-		model.Singleton(0),
-		model.Singleton(1),
-	)
-
-	domains = domains.Add(1, 1, 2)
-
-	fmt.Println(domains.Domain(1).Len())
-
+func ExampleDomains_domains() {
+	d := model.NewDomains(model.NewDomain(), model.Singleton(42))
+	fmt.Println(d)
 	// Output:
-	// 2
+	// [{[]} {[{42 42}]}]
 }
 
-func ExampleDomains_Assign_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.Assign(0, 1)
-
-	fmt.Println(domains.Domain(0).Value())
-
-	// Output:
-	// 1 true
-}
-
-func ExampleDomains_Assign_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.Assign(0, 3)
-
-	fmt.Println(domains.Domain(0).Value())
-
-	// Output:
-	// 3 true
-}
-
-func ExampleDomains_AtLeast_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.AtLeast(0, 1)
-
-	fmt.Println(domains.Domain(0).Min())
-	fmt.Println(domains.Domain(0).Max())
-
-	// Output:
-	// 1 true
-	// 2 true
-}
-
-func ExampleDomains_AtLeast_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.AtLeast(0, 3)
-
-	fmt.Println(domains.Domain(0).Empty())
-
+func ExampleDomains_empty() {
+	d := model.NewDomains(model.NewDomain())
+	fmt.Println(d.Empty())
 	// Output:
 	// true
 }
 
-func ExampleDomains_AtMost_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.AtMost(0, 1)
-
-	fmt.Println(domains.Domain(0).Min())
-	fmt.Println(domains.Domain(0).Max())
-
+func ExampleDomains_len() {
+	d := model.Repeat(5, model.NewDomain())
+	fmt.Println(d.Len())
 	// Output:
-	// 0 true
-	// 1 true
-}
-
-func ExampleDomains_AtMost_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.AtMost(0, -1)
-
-	fmt.Println(domains.Domain(0).Empty())
-
-	// Output:
-	// true
-}
-
-func ExampleDomains_Remove_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(0, 2)),
-	)
-
-	domains = domains.Remove(0, 1)
-
-	fmt.Println(domains.Domain(0).Min())
-	fmt.Println(domains.Domain(0).Max())
-	fmt.Println(domains.Domain(0).Contains(1))
-
-	// Output:
-	// 0 true
-	// 2 true
-	// false
-}
-
-func ExampleDomains_Slices_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 4)),
-	)
-
-	slices := domains.Slices()
-
-	fmt.Println(len(slices))
-	fmt.Println(len(slices[0]))
-	fmt.Println(slices[0][0])
-	fmt.Println(slices[0][1])
-	fmt.Println(slices[0][2])
-	fmt.Println(len(slices[1]))
-	fmt.Println(slices[1][0])
-	fmt.Println(slices[1][1])
-
-	// Output:
-	// 2
-	// 3
 	// 5
-	// 6
-	// 7
-	// 2
-	// 3
-	// 4
 }
 
-func ExampleDomains_Values_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	values, singleton := domains.Values()
-
-	fmt.Println(len(values))
-	fmt.Println(singleton)
-
+func ExampleDomains_remove() {
+	d1 := model.NewDomains(model.Multiple(42, 13))
+	d2 := d1.Remove(0, 13)
+	fmt.Println(d2)
 	// Output:
-	// 0
-	// false
+	// [{[{42 42}]}]
 }
 
-func ExampleDomains_Values_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	values, singleton := domains.Values()
-
-	fmt.Println(len(values))
-	fmt.Println(singleton)
-	fmt.Println(values[0])
-	fmt.Println(values[1])
-
+func ExampleDomains_singleton() {
+	d := model.Repeat(5, model.Singleton(42))
+	fmt.Println(d.Singleton())
 	// Output:
-	// 2
 	// true
-	// 5
-	// 3
 }
 
-func ExampleDomains_First_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	fmt.Println(domains.First())
-
+func ExampleDomains_slices() {
+	d := model.NewDomains(model.NewDomain(), model.Multiple(1, 3))
+	fmt.Println(d.Slices())
 	// Output:
-	// 0 true
+	// [[] [1 3]]
 }
 
-func ExampleDomains_First_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 4)),
-	)
-
-	fmt.Println(domains.First())
-
+func ExampleDomains_values() {
+	d1 := model.Repeat(3, model.Singleton(42))
+	d2 := d1.Add(0, 41)
+	fmt.Println(d1.Values())
+	fmt.Println(d2.Values())
 	// Output:
-	// 1 true
+	// [42 42 42] true
+	// [] false
 }
 
-func ExampleDomains_First_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_first() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(1, 3),
+		model.Multiple(4, 76),
 	)
-
-	_, found := domains.First()
-
-	fmt.Println(found)
-
-	// Output:
-	// false
-}
-
-func ExampleDomains_Largest_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	fmt.Println(domains.Largest())
-
-	// Output:
-	// 0 true
-}
-
-func ExampleDomains_Largest_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 4)),
-	)
-
-	fmt.Println(domains.Largest())
-
+	fmt.Println(d.First())
 	// Output:
 	// 1 true
 }
 
-func ExampleDomains_Largest_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_largest() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(1, 3),
+		model.Multiple(4, 76, 97),
 	)
-
-	_, found := domains.Largest()
-
-	fmt.Println(found)
-
-	// Output:
-	// false
-}
-
-func ExampleDomains_Last_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	fmt.Println(domains.Last())
-
-	// Output:
-	// 0 true
-}
-
-func ExampleDomains_Last_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 4)),
-		model.NewDomain(model.NewRange(3, 4)),
-	)
-
-	fmt.Println(domains.Last())
-
+	fmt.Println(d.Largest())
 	// Output:
 	// 2 true
 }
 
-func ExampleDomains_Last_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_last() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(1, 3),
+		model.Multiple(4, 76, 97),
+		model.Singleton(45),
 	)
-
-	_, found := domains.Last()
-
-	fmt.Println(found)
-
+	fmt.Println(d.Last())
 	// Output:
-	// false
+	// 2 true
 }
 
-func ExampleDomains_Maximum_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_maximum() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(4, 76, 97),
+		model.Multiple(1, 3),
+		model.Singleton(45),
 	)
-
-	fmt.Println(domains.Maximum())
-
-	// Output:
-	// 0 true
-}
-
-func ExampleDomains_Maximum_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 7)),
-		model.NewDomain(model.NewRange(3, 4)),
-	)
-
-	fmt.Println(domains.Maximum())
-
+	fmt.Println(d.Maximum())
 	// Output:
 	// 1 true
 }
 
-func ExampleDomains_Maximum_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_minimum() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(4, 76, 97),
+		model.Multiple(1, 3),
+		model.Singleton(45),
 	)
-
-	_, found := domains.Maximum()
-
-	fmt.Println(found)
-
-	// Output:
-	// false
-}
-
-func ExampleDomains_Minimum_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	fmt.Println(domains.Minimum())
-
-	// Output:
-	// 0 true
-}
-
-func ExampleDomains_Minimum_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 7)),
-		model.NewDomain(model.NewRange(2, 4)),
-	)
-
-	fmt.Println(domains.Minimum())
-
+	fmt.Println(d.Minimum())
 	// Output:
 	// 2 true
 }
 
-func ExampleDomains_Minimum_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleDomains_smallest() {
+	d := model.NewDomains(
+		model.Singleton(88),
+		model.Multiple(1, 3),
+		model.Multiple(4, 76, 97),
 	)
-
-	_, found := domains.Minimum()
-
-	fmt.Println(found)
-
+	fmt.Println(d.Smallest())
 	// Output:
-	// false
+	// 1 true
 }
 
-func ExampleDomains_Smallest_first() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 7)),
-		model.NewDomain(model.NewRange(3, 3)),
+func ExampleNewDomains() {
+	d := model.NewDomains( // [1 to 10, 42, odds]
+		model.NewDomain(model.NewRange(1, 10)),
+		model.Singleton(42),
+		model.Multiple(1, 3, 5, 7),
 	)
-
-	fmt.Println(domains.Smallest())
-
+	fmt.Println(d)
 	// Output:
-	// 0 true
+	// [{[{1 10}]} {[{42 42}]} {[{1 1} {3 3} {5 5} {7 7}]}]
 }
 
-func ExampleDomains_Smallest_second() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 7)),
-		model.NewDomain(model.NewRange(2, 4)),
-	)
-
-	fmt.Println(domains.Smallest())
-
+func ExampleRepeat() {
+	d := model.Repeat(3, model.NewDomain(model.NewRange(1, 10)))
+	fmt.Println(d)
 	// Output:
-	// 2 true
-}
-
-func ExampleDomains_Smallest_third() {
-	domains := model.NewDomains(
-		model.NewDomain(model.NewRange(5, 5)),
-		model.NewDomain(model.NewRange(3, 3)),
-	)
-
-	_, found := domains.Smallest()
-
-	fmt.Println(found)
-
-	// Output:
-	// false
+	// [{[{1 10}]} {[{1 10}]} {[{1 10}]}]
 }
