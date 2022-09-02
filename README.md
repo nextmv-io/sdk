@@ -30,9 +30,9 @@ go get github.com/nextmv-io/sdk
 ```
 
 [pkgsite]: https://pkg.go.dev/github.com/nextmv-io/sdk
-[store]: ./store/
-[route]: ./route/
-[run]: ./run/
-[model]: ./model/
+[store]: ./store/README.md
+[route]: ./route/README.md
+[run]: ./run/README.md
+[model]: ./model/README.md
 [tour]: https://github.com/nextmv-io/tour
 [cli]: https://docs.nextmv.io/development/cli
