@@ -72,6 +72,18 @@ func ExampleDomain_empty() {
 	// false
 }
 
+func ExampleDomain_iterator() {
+	d := model.NewDomain(model.NewRange(1, 3))
+	iter := d.Iterator()
+	for iter.Next() {
+		fmt.Println(iter.Value())
+	}
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
 func ExampleDomain_len() {
 	d := model.NewDomain(
 		model.NewRange(1, 10),

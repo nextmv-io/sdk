@@ -39,15 +39,21 @@ func ExampleOverride() {
 
 func ExampleHaversineByPoint() {
 	byPoint := route.HaversineByPoint()
-	measure := byPoint.Cost(route.Point{1, 2}, route.Point{4, 5})
+	measure := byPoint.Cost(
+		route.Point{135.772695, 34.967146},
+		route.Point{135.78506, 34.994857},
+	)
 	fmt.Println(int(measure))
 	// Output:
-	// 471293
+	// 3280
 }
 
 func ExampleConstantByPoint() {
 	byPoint := route.ConstantByPoint(1.234)
-	measure := byPoint.Cost(route.Point{1, 2}, route.Point{4, 5})
+	measure := byPoint.Cost(
+		route.Point{135.772695, 34.967146},
+		route.Point{135.78506, 34.994857},
+	)
 	fmt.Println(measure)
 	// Output:
 	// 1.234
@@ -56,13 +62,13 @@ func ExampleConstantByPoint() {
 func ExampleIndexed() {
 	haversineByPoint := route.HaversineByPoint()
 	points := []route.Point{
-		{1, 2},
-		{4, 5},
+		{135.772695, 34.967146},
+		{135.78506, 34.994857},
 	}
 	indexed := route.Indexed(haversineByPoint, points)
 	fmt.Println(int(indexed.Cost(0, 1)))
 	// Output:
-	// 471293
+	// 3280
 }
 
 func ExampleScale() {

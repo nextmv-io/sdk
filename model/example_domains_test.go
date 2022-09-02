@@ -55,13 +55,6 @@ func ExampleDomains_domain() {
 	// {[{42 42}]}
 }
 
-func ExampleDomains_domains() {
-	d := model.NewDomains(model.NewDomain(), model.Singleton(42))
-	fmt.Println(d)
-	// Output:
-	// [{[]} {[{42 42}]}]
-}
-
 func ExampleDomains_empty() {
 	d := model.NewDomains(model.NewDomain())
 	fmt.Println(d.Empty())
