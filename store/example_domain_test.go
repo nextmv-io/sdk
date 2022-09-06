@@ -111,7 +111,7 @@ func ExampleDomain_min() {
 func ExampleDomain_remove() {
 	s1 := store.New()
 	d := store.NewDomain(s1, model.NewRange(1, 5))
-	s2 := s1.Apply(d.Remove(2, 4))
+	s2 := s1.Apply(d.Remove([]int{2, 4}))
 	fmt.Println(d.Domain(s1))
 	fmt.Println(d.Domain(s2))
 	// Output:
