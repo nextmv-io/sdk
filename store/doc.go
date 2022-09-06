@@ -1,8 +1,8 @@
 /*
 Package store provides a modeling kit for decision automation problems. It is
-based on the paradigm of "decisions as code". The base interface is the Store:
-a space defined by variables and logic. Hop is an engine provided to search
-that space and find the best solution possible, this is, the best collection of
+based on the paradigm of "decisions as code". The base interface is the Store: a
+space defined by variables and logic. The underlying algorithms search that
+space and find the best solution possible, this is, the best collection of
 variable assignments. The Store is the root node of a search tree. Child Stores
 (nodes) inherit both logic and variables from the parent and may also add new
 variables and logic, or overwrite existing ones. Changes to a child do not
@@ -21,55 +21,55 @@ Variables are stored in the Store.
 The Format of the Store can be set and one can get the value of a variable.
 
 	s = s.Format(
-		func(s store.Store) any {
-			return map[string]any{
-				"x": x.Get(s),
-				"y": y.Slice(s),
-				"z": z.Map(s),
-			}
-		},
+	    func(s store.Store) any {
+	        return map[string]any{
+	            "x": x.Get(s),
+	            "y": y.Slice(s),
+	            "z": z.Map(s),
+	        }
+	    },
 	)
 
 The Value of the Store can be set. When maximizing or minimizing, variable
 assignments are chosen so that this value increases or decreases, respectively.
 
 	s = s.Value(
-		func(s store.Store) int {
-			sum := 0
-			for i := 0; i < y.Len(s); i++ {
-				sum += y.Get(s, i)
-			}
-			return x.Get(s) + sum
-		},
+	    func(s store.Store) int {
+	        sum := 0
+	        for i := 0; i < y.Len(s); i++ {
+	            sum += y.Get(s, i)
+	        }
+	        return x.Get(s) + sum
+	    },
 	)
 
 Changes, like setting a new value on a variable, can be applied to the Store.
 
 	s = s.Apply(
-		x.Set(10),
-		y.Append(5, 6),
+	    x.Set(10),
+	    y.Append(5, 6),
 	)
 
 To broaden the search space, new Stores can be generated.
 
 	s = s.Generate(func(s store.Store) store.Generator {
-		value := x.Get(s)
-		return store.Lazy(
-			func() bool {
-				return value <= 10
-			},
-			func() store.Store {
-				value++
-				return s.Apply(x.Set(value))
-			},
-		)
+	    value := x.Get(s)
+	    return store.Lazy(
+	        func() bool {
+	            return value <= 10
+	        },
+	        func() store.Store {
+	            value++
+	            return s.Apply(x.Set(value))
+	        },
+	    )
 	})
 
-To check the operational validity of the Store (all decisions have been made
-and they are valid), use the provided function.
+To check the operational validity of the Store (all decisions have been made and
+they are valid), use the provided function.
 
 	s = s.Validate(func(s store.Store) bool {
-		return x.Get(s)%2 == 0
+	    return x.Get(s)%2 == 0
 	})
 
 When setting a Value, it can be maximized or minimized. Alternatively,
@@ -85,8 +85,8 @@ Value is not needed. Options are required to specify the search mechanics.
 	// solver := s.Satisfier(opt)
 
 To find the best collection of variable assignments in the Store, the last
-Solution can be obtained from the given Solver. Alternatively, all Solutions
-can be retrieved to debug the search mechanics of the Solver.
+Solution can be obtained from the given Solver. Alternatively, all Solutions can
+be retrieved to debug the search mechanics of the Solver.
 
 	solver := s.Maximizer(opt)
 	last := solver.Last(context.Background())
@@ -100,26 +100,26 @@ variable defines the type of runner used.
 
   - "cli": (Default) Command Line Interface runner. Useful for running from a
     terminal. Can read from a file or stdin and write to a file or stdout.
-  - "http": HTTP runner. Useful for sending requests and receiving responses
-    on the specified port.
+  - "http": HTTP runner. Useful for sending requests and receiving responses on
+    the specified port.
 
 The runner receives a handler that specifies the data type and expects a Solver.
 
 	package main
 
 	import (
-		"github.com/nextmv-io/sdk/run"
-		"github.com/nextmv-io/sdk/store"
+	    "github.com/nextmv-io/sdk/run"
+	    "github.com/nextmv-io/sdk/store"
 	)
 
 	func main() {
-		handler := func(v int, opt store.Options) (store.Solver, error) {
-			s := store.New()
-			x := store.NewVar(s, v)      // Initialized from the runner.
-			s = s.Value(...).Format(...) // Modify the Store.
-			return s.Maximizer(opt), nil // Options are passed by the runner.
-		}
-		run.Run(handler)
+	    handler := func(v int, opt store.Options) (store.Solver, error) {
+	        s := store.New()
+	        x := store.NewVar(s, v)      // Initialized from the runner.
+	        s = s.Value(...).Format(...) // Modify the Store.
+	        return s.Maximizer(opt), nil // Options are passed by the runner.
+	    }
+	    run.Run(handler)
 	}
 
 Compile the binary and use the -h flag to see available options to configure a
