@@ -71,7 +71,7 @@ func ExampleDomains_len() {
 
 func ExampleDomains_remove() {
 	d1 := model.NewDomains(model.Multiple(42, 13))
-	d2 := d1.Remove(0, 13)
+	d2 := d1.Remove(0, []int{13})
 	fmt.Println(d2)
 	// Output:
 	// [{[{42 42}]}]

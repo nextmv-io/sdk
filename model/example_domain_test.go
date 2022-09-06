@@ -122,7 +122,7 @@ func ExampleDomain_min() {
 
 func ExampleDomain_remove() {
 	domain := model.NewDomain(model.NewRange(0, 3))
-	domain = domain.Remove(2)
+	domain = domain.Remove([]int{2})
 	fmt.Println(domain.Min())
 	fmt.Println(domain.Contains(2))
 	fmt.Println(domain.Max())
