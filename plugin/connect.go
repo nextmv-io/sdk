@@ -83,12 +83,13 @@ func potentialPluginPaths(slug string) ([]string, error) {
 
 	// Assemble potential plugin paths
 	filename := fmt.Sprintf(
-		"nextmv-%s-%s-%s-%s-%s.so",
+		"nextmv-%s-%s-%s-%s-%s%s.so",
 		slug,
 		sdk.VERSION,
 		runtime.Version(),
 		runtime.GOOS,
 		runtime.GOARCH,
+		debug,
 	)
 	paths := []string{
 		filepath.Join(cwd, filename),
