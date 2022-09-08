@@ -1,5 +1,7 @@
 package route
 
+import "github.com/nextmv-io/sdk/model"
+
 // Point represents a point in space. It may have any dimension.
 type Point []float64
 
@@ -19,6 +21,18 @@ type ByPoint interface {
 // measure that implements it.
 type Triangular interface {
 	Triangular() bool
+}
+
+// DurationGroups represents a slice of duration groups. Each duration group is
+// used to account for additional service costs whenever a stop of a group is
+// approached first.
+type DurationGroups []DurationGroup
+
+// DurationGroup groups stops by index which have additional service costs
+// attached to them.
+type DurationGroup struct {
+	Group    model.Domain
+	Duration int
 }
 
 // Override measure uses a default measure for all arcs that are not true for a
@@ -65,6 +79,18 @@ func Scale(m ByIndex, constant float64) ByIndex {
 	return scaleFunc(m, constant)
 }
 
+// Location measure returns the sum of the cost computed by the passed in
+// measure and the specified cost of the 'to' location. This cost is read from
+// the passed in costs slice.
+func Location(
+	m ByIndex,
+	costs []float64,
+	durationGroups DurationGroups,
+) (ByIndex, error) {
+	connect()
+	return locationFunc(m, costs, durationGroups)
+}
+
 var (
 	overrideFunc         func(ByIndex, ByIndex, func(int, int) bool) ByIndex
 	haversineByPointFunc func() ByPoint
@@ -72,4 +98,5 @@ var (
 	constantFunc         func(float64) ByIndex
 	indexedFunc          func(ByPoint, []Point) ByIndex
 	scaleFunc            func(ByIndex, float64) ByIndex
+	locationFunc         func(ByIndex, []float64, DurationGroups) (ByIndex, error)
 )
