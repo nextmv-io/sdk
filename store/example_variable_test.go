@@ -7,7 +7,7 @@ import (
 	"github.com/nextmv-io/sdk/store"
 )
 
-func ExampleVariable_get() {
+func ExampleVar_get() {
 	s := store.New()
 	x := store.NewVar(s, 10)
 	fmt.Println(x.Get(s))
@@ -15,7 +15,7 @@ func ExampleVariable_get() {
 	// 10
 }
 
-func ExampleVariable_set() {
+func ExampleVar_set() {
 	s := store.New()
 	x := store.NewVar(s, 10)
 	fmt.Println(x.Get(s))

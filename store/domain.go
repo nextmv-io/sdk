@@ -121,12 +121,12 @@ type Domain interface {
 
 			s1 := store.New()
 			d := store.NewDomain(s1, model.NewRange(1, 5))
-			s2 := s1.Apply(d.Remove(2, 4))
+			s2 := s1.Apply(d.Remove([]int{2, 4}))
 
 			d.Domain(s1) // [1, 5]
 			d.Domain(s2) // {1, 3, 5}
 	*/
-	Remove(...int) Change
+	Remove([]int) Change
 
 	/*
 		Slice representation of a Domain.
@@ -189,7 +189,7 @@ func Multiple(s Store, values ...int) Domain {
 }
 
 type domainProxy struct {
-	domain Variable[model.Domain]
+	domain Var[model.Domain]
 }
 
 // Implements store.Domain.
@@ -240,9 +240,9 @@ func (d domainProxy) Min(s Store) (int, bool) {
 	return d.Domain(s).Min()
 }
 
-func (d domainProxy) Remove(values ...int) Change {
+func (d domainProxy) Remove(values []int) Change {
 	return func(s Store) {
-		d.domain.Set(d.Domain(s).Remove(values...))(s)
+		d.domain.Set(d.Domain(s).Remove(values))(s)
 	}
 }
 

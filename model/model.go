@@ -26,6 +26,8 @@ type Domain interface {
 	Contains(int) bool
 	// Empty is true if a domain is empty.
 	Empty() bool
+	// Iterator over a domain.
+	Iterator() Iterator
 	// Len of a domain, counting all values within ranges.
 	Len() int
 	// Max of a domain and a boolean indicating it is nonempty.
@@ -33,7 +35,7 @@ type Domain interface {
 	// Min of a domain and a boolean indicating it is nonempty.
 	Min() (int, bool)
 	// Remove values from a domain.
-	Remove(...int) Domain
+	Remove([]int) Domain
 	// Slice representation of a domain.
 	Slice() []int
 	// Value returns an int and true if a domain is singleton.
@@ -59,7 +61,7 @@ type Domains interface {
 	// Len returns the number of domains.
 	Len() int
 	// Remove values from a domain by index.
-	Remove(int, ...int) Domains
+	Remove(int, []int) Domains
 	// Singleton is true if all domains are Singleton.
 	Singleton() bool
 	// Slices convert domains to a slice of int slices.
@@ -91,6 +93,17 @@ type Domains interface {
 type Range interface {
 	Min() int
 	Max() int
+}
+
+// An Iterator allows one to iterate over a range or a domain.
+//
+//	it := model.Domain(model.Range(1, 10)).Iterator()
+//	for it.Next() {
+//	    fmt.Println(it.Value()) // 1, ..., 10
+//	}
+type Iterator interface {
+	Next() bool
+	Value() int
 }
 
 // NewDomain creates a domain of integers.

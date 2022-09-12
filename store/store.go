@@ -21,7 +21,7 @@ const (
 )
 
 /*
-Store represents a store of Variables and logic to solve decision automation
+Store represents a store of variables and logic to solve decision automation
 problems. Adding logic to the Store updates it (functions may be called
 directly and chained):
 
@@ -31,12 +31,12 @@ directly and chained):
 	s = s.Format(...)   // 	   Format(...).
 	s = s.Generate(...) // 	   Generate(...)
 
-The Variables and logic stored define a solution space. This space is searched
+The variables and logic stored define a solution space. This space is searched
 to make decisions.
 */
 type Store interface {
 	/*
-		Apply changes to a Store. A change happens when a stored Variable is
+		Apply changes to a Store. A change happens when a stored variable is
 		updated:
 
 			s := store.New()
@@ -96,15 +96,19 @@ type Store interface {
 	Generate(func(Store) Generator) Store
 
 	/*
-		Propagate changes into a Store until it reaches a fixed point.
+		Propagate changes into a Store and is re-invoked until no further
+		changes need to be made and an empty slice of changes is returned.
 
 			s := store.New()
 			x := store.NewVar(s, 1)
 			s = s.Propagate(func(s store.Store) []store.Change {
-				return []store.Change{
-					x.Set(2),
-					x.Set(42),
+				if x.Get(s) <= 1 {
+					return []store.Change{
+						x.Set(2),
+						x.Set(42),
+					}
 				}
+				return []store.Change{}
 			})
 	*/
 	Propagate(...Propagator) Store
@@ -294,7 +298,7 @@ func (l Limits) MarshalJSON() ([]byte, error) {
 }
 
 // A Solver searches a space and finds the best Solution possible, this is, the
-// best collection of Variable assignments in an operationally valid Store.
+// best collection of variable assignments in an operationally valid Store.
 type Solver interface {
 	// All Solutions found by the Solver. Loop over the channel values to get
 	// the solutions.
