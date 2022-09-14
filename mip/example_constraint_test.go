@@ -14,9 +14,11 @@ func ExampleConstraint_greaterThanEqual() {
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
+	fmt.Println(c)
 	// Output:
 	// 2
 	// 1
+	// >=  1
 }
 
 func ExampleConstraint_equal() {
@@ -26,9 +28,11 @@ func ExampleConstraint_equal() {
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
+	fmt.Println(c)
 	// Output:
 	// 1
 	// 1
+	// =  1
 }
 
 func ExampleConstraint_lessThanOrEqual() {
@@ -38,9 +42,11 @@ func ExampleConstraint_lessThanOrEqual() {
 
 	fmt.Println(c.Sense())
 	fmt.Println(c.RightHandSide())
+	fmt.Println(c)
 	// Output:
 	// 0
 	// 1
+	// <=  1
 }
 
 func ExampleConstraint_terms() {
@@ -57,12 +63,14 @@ func ExampleConstraint_terms() {
 	fmt.Println(t2.Coefficient())
 	fmt.Println(len(c.Terms()))
 	fmt.Println(c.Terms()[0].Coefficient())
+	fmt.Println(c)
 	// Output:
 	// 0
 	// 1
 	// 2
 	// 1
 	// 3
+	// 3 B0 = 1
 }
 
 func benchmarkNewConstraintNewTerms(nrTerms int, b *testing.B) {

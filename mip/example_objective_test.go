@@ -13,13 +13,17 @@ func ExampleObjective_sense() {
 	model.Objective().SetMaximize()
 
 	fmt.Println(model.Objective().IsMaximize())
+	fmt.Println(model.Objective())
 
 	model.Objective().SetMinimize()
 
 	fmt.Println(model.Objective().IsMaximize())
+	fmt.Println(model.Objective())
 	// Output:
 	// true
+	// maximize
 	// false
+	// minimize
 }
 
 func ExampleObjective_terms() {
@@ -31,8 +35,11 @@ func ExampleObjective_terms() {
 	fmt.Println(len(model.Objective().Terms()))
 
 	t1 := model.Objective().NewTerm(2.0, v1)
+	fmt.Println(t1)
 	t2 := model.Objective().NewTerm(1.0, v1)
+	fmt.Println(t2)
 	t3 := model.Objective().NewTerm(3.0, v2)
+	fmt.Println(t3)
 
 	fmt.Println(t1.Var().Index())
 	fmt.Println(t1.Coefficient())
@@ -45,8 +52,12 @@ func ExampleObjective_terms() {
 
 	fmt.Println(len(model.Objective().Terms()))
 	fmt.Println(model.Objective().Terms()[0].Coefficient())
+	fmt.Println(model.Objective())
 	// Output:
 	// 0
+	// 2 B0
+	// 1 B0
+	// 3 B1
 	// 0
 	// 2
 	// 0
@@ -55,6 +66,7 @@ func ExampleObjective_terms() {
 	// 3
 	// 2
 	// 3
+	// minimize   3 B0 + 3 B1
 }
 
 func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {
