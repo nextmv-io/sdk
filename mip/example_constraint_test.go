@@ -18,7 +18,7 @@ func ExampleConstraint_greaterThanEqual() {
 	// Output:
 	// 2
 	// 1
-	// >=  1
+	// >= 1
 }
 
 func ExampleConstraint_equal() {
@@ -32,7 +32,7 @@ func ExampleConstraint_equal() {
 	// Output:
 	// 1
 	// 1
-	// =  1
+	// = 1
 }
 
 func ExampleConstraint_lessThanOrEqual() {
@@ -46,7 +46,7 @@ func ExampleConstraint_lessThanOrEqual() {
 	// Output:
 	// 0
 	// 1
-	// <=  1
+	// <= 1
 }
 
 func ExampleConstraint_terms() {
