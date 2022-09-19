@@ -37,6 +37,16 @@ jobs:
       - name: use ssh instead of https for git
         run: git config --global url."git@github.com:".insteadOf "https://github.com/"
 
+      # Installs Nextmv CLI dependency regardless of the distribution.
+      - name: install Nextmv CLI dependency
+        run: |
+          NEXTMV_API_KEY=${{ secrets.API_KEY_PROD }} NEXTMV_BASE_URL=https://api.cloud.nextmv.io bash <(curl -s "https://cloud.nextmv.io/install-cli.txt")
+          mv ~/.nextmv/nextmv /usr/local/bin/nextmv
+          chmod a+x /usr/local/bin/nextmv
+
+      - name: configure Nextmv CLI
+        run: nextmv configure -a ${{ secrets.API_KEY_PROD }}
+
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
 
@@ -65,4 +75,4 @@ jobs:
         run: go build -v ./...
 
       - name: go test
-        run: NEXTMV_LIBRARY_PATH=${{env.NEXTMV_LIBRARY_PATH}} go test -v ./...
+        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=$(nextmv token) go test -v ./...
