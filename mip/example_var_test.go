@@ -20,12 +20,14 @@ func ExampleVar_continuous() {
 	fmt.Println(v.IsContinuous())
 	fmt.Println(v.IsInteger())
 	fmt.Println(v.IsBinary())
+	fmt.Println(v)
 	// Output:
 	// -1
 	// 1
 	// true
 	// false
 	// false
+	// C0
 }
 
 func ExampleVar_integer() {
@@ -41,12 +43,14 @@ func ExampleVar_integer() {
 	fmt.Println(v.IsContinuous())
 	fmt.Println(v.IsInteger())
 	fmt.Println(v.IsBinary())
+	fmt.Println(v)
 	// Output:
 	// -1
 	// 1
 	// false
 	// true
 	// false
+	// I0
 }
 
 func ExampleVar_binary() {
@@ -62,12 +66,14 @@ func ExampleVar_binary() {
 	fmt.Println(v.IsContinuous())
 	fmt.Println(v.IsInteger())
 	fmt.Println(v.IsBinary())
+	fmt.Println(v)
 	// Output:
 	// 0
 	// 1
 	// false
 	// true
 	// true
+	// B0
 }
 
 func ExampleVar_vars() {
