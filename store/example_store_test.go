@@ -580,6 +580,7 @@ func ExampleStore_satisfier() {
 	x := store.NewVar(s, 100)
 	opt := store.DefaultOptions()
 	opt.Limits.Solutions = 1
+	opt.Diagram.Expansion.Limit = 1
 	satisfier := s.
 		Format(func(s store.Store) any { return x.Get(s) }).
 		Validate(func(s store.Store) bool {
@@ -607,5 +608,5 @@ func ExampleStore_satisfier() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 90
+	// 96
 }
