@@ -171,6 +171,7 @@ func Example_knightsTour() {
 	// are needed, there is no value associated.
 	opt := store.DefaultOptions()
 	opt.Limits.Solutions = 1
+	opt.Diagram.Expansion.Limit = 1
 	solver := knight.Satisfier(opt)
 
 	// Get the last solution of the problem and print it.
