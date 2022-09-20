@@ -608,5 +608,5 @@ func ExampleStore_satisfier() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	// 96
+	// 90
 }
