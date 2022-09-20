@@ -45,7 +45,9 @@ jobs:
           chmod a+x /usr/local/bin/nextmv
 
       - name: configure Nextmv CLI
-        run: nextmv configure -a ${{ secrets.API_KEY_PROD }}
+        run: |
+          nextmv configure -a ${{ secrets.API_KEY_PROD }}
+          nextmv activate -t local -r 123
 
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
