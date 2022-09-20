@@ -152,7 +152,7 @@ func ExampleDefaultOptions() {
 	//     "width": 10
 	//   },
 	//   "limits": {
-	//     "duration": "10s"
+	//     "duration": "168h0m0s"
 	//   },
 	//   "search": {
 	//     "buffer": 100

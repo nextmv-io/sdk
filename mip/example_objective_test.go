@@ -52,7 +52,9 @@ func ExampleObjective_terms() {
 
 	fmt.Println(len(model.Objective().Terms()))
 	fmt.Println(model.Objective().Terms()[0].Coefficient())
-	fmt.Println(model.Objective())
+	fmt.Println(model.Objective().IsMaximize())
+	fmt.Println(model.Objective().Terms()[0])
+	fmt.Println(model.Objective().Terms()[1])
 	// Output:
 	// 0
 	// 2 B0
@@ -66,7 +68,9 @@ func ExampleObjective_terms() {
 	// 3
 	// 2
 	// 3
-	// minimize   3 B0 + 3 B1
+	// false
+	// 3 B0
+	// 3 B1
 }
 
 func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {
