@@ -3,6 +3,7 @@ package route
 import (
 	"time"
 
+	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/store"
 )
@@ -197,7 +198,7 @@ func NewRouter(
 	vehicles []string,
 	opts ...Option,
 ) (Router, error) {
-	connect()
+	connect.Connect(con, &newRouterFunc)
 	return newRouterFunc(stops, vehicles, opts...)
 }
 
