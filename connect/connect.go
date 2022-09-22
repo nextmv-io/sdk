@@ -21,8 +21,9 @@ type Connector struct {
 // NewConnector creates a new Connector.
 func NewConnector(slug, prefix string) *Connector {
 	return &Connector{
-		slug:   slug,
-		prefix: prefix,
+		connected: make(map[any]struct{}),
+		slug:      slug,
+		prefix:    prefix,
 	}
 }
 
