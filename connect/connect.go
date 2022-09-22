@@ -11,30 +11,26 @@ import (
 	"github.com/nextmv-io/sdk/plugin"
 )
 
-// Connector connects method definitions with plugins.
-type Connector interface {
-	Connect(any)
-}
-
-type connector struct {
+// Connector connects methods with their implementations in plugins.
+type Connector struct {
 	connected    map[any]struct{}
-	mtx          *sync.Mutex
+	mtx          sync.Mutex
 	slug, prefix string
 }
 
 // NewConnector creates a new Connector.
-func NewConnector(slug, prefix string) Connector {
-	return connector{
+func NewConnector(slug, prefix string) *Connector {
+	return &Connector{
 		connected: make(map[any]struct{}),
-		mtx:       &sync.Mutex{},
+		mtx:       sync.Mutex{},
 		slug:      slug,
 		prefix:    prefix,
 	}
 }
 
 // Connect connects a method with its implementation.
-func (c connector) Connect(target any) {
-	if _, ok := c.connected[&target]; ok {
+func Connect[T any](c *Connector, target *T) {
+	if _, ok := c.connected[target]; ok {
 		return
 	}
 
@@ -50,6 +46,6 @@ func (c connector) Connect(target any) {
 	fullName := runtime.FuncForPC(pc).Name()
 	split := strings.Split(fullName, ".")
 	name := split[len(split)-1]
-	plugin.Connect(c.slug, fmt.Sprintf("%s%s", c.prefix, name), &target)
+	plugin.Connect(c.slug, fmt.Sprintf("%s%s", c.prefix, name), target)
 	c.connected[target] = struct{}{}
 }

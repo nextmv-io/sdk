@@ -46,39 +46,39 @@ func Override(
 	overrideByIndex ByIndex,
 	condition func(from, to int) bool,
 ) ByIndex {
-	con.Connect(&overrideFunc)
+	connect.Connect(con, &overrideFunc)
 	return overrideFunc(defaultByIndex, overrideByIndex, condition)
 }
 
 // HaversineByPoint estimates meters connecting two points along the surface
 // of the earth.
 func HaversineByPoint() ByPoint {
-	con.Connect(&haversineByPointFunc)
+	connect.Connect(con, &haversineByPointFunc)
 	return haversineByPointFunc()
 }
 
 // ConstantByPoint measure always estimates the same cost.
 func ConstantByPoint(c float64) ByPoint {
-	con.Connect(&constantByPointFunc)
+	connect.Connect(con, &constantByPointFunc)
 	return constantByPointFunc(c)
 }
 
 // Constant measure always estimates the same cost.
 func Constant(c float64) ByIndex {
-	con.Connect(&constantFunc)
+	connect.Connect(con, &constantFunc)
 	return constantFunc(c)
 }
 
 // Indexed creates a ByIndex measure from the given ByPoint measure
 // and wrapping the provided points.
 func Indexed(m ByPoint, points []Point) ByIndex {
-	con.Connect(&indexedFunc)
+	connect.Connect(con, &indexedFunc)
 	return indexedFunc(m, points)
 }
 
 // Scale the cost of some other measure by a constant.
 func Scale(m ByIndex, constant float64) ByIndex {
-	con.Connect(&scaleFunc)
+	connect.Connect(con, &scaleFunc)
 	return scaleFunc(m, constant)
 }
 
@@ -90,7 +90,7 @@ func Location(
 	costs []float64,
 	durationGroups DurationGroups,
 ) (ByIndex, error) {
-	con.Connect(&locationFunc)
+	connect.Connect(con, &locationFunc)
 	return locationFunc(m, costs, durationGroups)
 }
 
