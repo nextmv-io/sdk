@@ -50,11 +50,12 @@ func ExampleObjective_terms() {
 	fmt.Println(t3.Var().Index())
 	fmt.Println(t3.Coefficient())
 
-	fmt.Println(len(model.Objective().Terms()))
-	fmt.Println(model.Objective().Terms()[0].Coefficient())
+	terms := model.Objective().Terms()
+	fmt.Println(len(terms))
+	fmt.Println(terms[0].Coefficient())
 	fmt.Println(model.Objective().IsMaximize())
-	fmt.Println(model.Objective().Terms()[0])
-	fmt.Println(model.Objective().Terms()[1])
+	fmt.Println(terms[0])
+	fmt.Println(terms[1])
 	// Output:
 	// 0
 	// 2 B0

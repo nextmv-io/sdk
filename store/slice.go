@@ -3,6 +3,8 @@ package store
 import (
 	"encoding/json"
 	"reflect"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // Slice manages an immutable slice container of some type in a Store.
@@ -92,7 +94,7 @@ NewSlice returns a new NewSlice and stores it in a Store.
 	y := store.NewSlice(s, 3.14, 2.72) // []float64{3.14, 2.72}
 */
 func NewSlice[T any](s Store, values ...T) Slice[T] {
-	connect()
+	connect.Connect(con, &newSliceFunc)
 	return sliceProxy[T]{slice: newSliceFunc(s, anySlice(values)...)}
 }
 

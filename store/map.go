@@ -2,6 +2,8 @@ package store
 
 import (
 	"reflect"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // A Key for a Map.
@@ -80,13 +82,14 @@ NewMap returns a new NewMap and stores it in a Store.
 	m2 := store.NewMap[string, int](s)     // map of {string -> int}
 */
 func NewMap[K Key, V any](s Store) Map[K, V] {
-	connect()
 	p := mapProxy[K, V]{}
 
 	var k K
 	if isInt(k) {
+		connect.Connect(con, &newMapIntFunc, "Int")
 		p.mapInt = newMapIntFunc(s)
 	} else {
+		connect.Connect(con, &newMapStringFunc, "String")
 		p.mapString = newMapStringFunc(s)
 	}
 

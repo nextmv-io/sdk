@@ -1,6 +1,10 @@
 package model
 
-import "math/bits"
+import (
+	"math/bits"
+
+	"github.com/nextmv-io/sdk/connect"
+)
 
 // Constants for integer bounds.
 const (
@@ -108,41 +112,42 @@ type Iterator interface {
 
 // NewDomain creates a domain of integers.
 func NewDomain(ranges ...Range) Domain {
-	connect()
+	connect.Connect(con, &newDomainFunc)
 	return newDomainFunc(ranges...)
 }
 
 // Singleton creates a domain containing one integer value.
 func Singleton(value int) Domain {
-	connect()
+	connect.Connect(con, &singletonFunc)
 	return singletonFunc(value)
 }
 
 // Multiple creates a domain containing multiple integer values.
 func Multiple(values ...int) Domain {
-	connect()
+	connect.Connect(con, &multipleFunc)
 	return multipleFunc(values...)
 }
 
 // NewDomains creates a sequence of domains.
 func NewDomains(domains ...Domain) Domains {
-	connect()
+	connect.Connect(con, &newDomainsFunc)
 	return newDomainsFunc(domains...)
 }
 
 // Repeat a domain n times.
 func Repeat(n int, d Domain) Domains {
-	connect()
+	connect.Connect(con, &repeatFunc)
 	return repeatFunc(n, d)
 }
 
 // NewRange create a new integer range.
 func NewRange(min, max int) Range {
-	connect()
+	connect.Connect(con, &newRangeFunc)
 	return newRangeFunc(min, max)
 }
 
 var (
+	con            = connect.NewConnector("sdk", "Model")
 	newDomainFunc  func(...Range) Domain
 	singletonFunc  func(int) Domain
 	multipleFunc   func(...int) Domain

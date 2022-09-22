@@ -1,6 +1,9 @@
 package route
 
-import "github.com/nextmv-io/sdk/model"
+import (
+	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/model"
+)
 
 // Point represents a point in space. It may have any dimension.
 type Point []float64
@@ -43,39 +46,39 @@ func Override(
 	overrideByIndex ByIndex,
 	condition func(from, to int) bool,
 ) ByIndex {
-	connect()
+	connect.Connect(con, &overrideFunc)
 	return overrideFunc(defaultByIndex, overrideByIndex, condition)
 }
 
 // HaversineByPoint estimates meters connecting two points along the surface
 // of the earth.
 func HaversineByPoint() ByPoint {
-	connect()
+	connect.Connect(con, &haversineByPointFunc)
 	return haversineByPointFunc()
 }
 
 // ConstantByPoint measure always estimates the same cost.
 func ConstantByPoint(c float64) ByPoint {
-	connect()
+	connect.Connect(con, &constantByPointFunc)
 	return constantByPointFunc(c)
 }
 
 // Constant measure always estimates the same cost.
 func Constant(c float64) ByIndex {
-	connect()
+	connect.Connect(con, &constantFunc)
 	return constantFunc(c)
 }
 
 // Indexed creates a ByIndex measure from the given ByPoint measure
 // and wrapping the provided points.
 func Indexed(m ByPoint, points []Point) ByIndex {
-	connect()
+	connect.Connect(con, &indexedFunc)
 	return indexedFunc(m, points)
 }
 
 // Scale the cost of some other measure by a constant.
 func Scale(m ByIndex, constant float64) ByIndex {
-	connect()
+	connect.Connect(con, &scaleFunc)
 	return scaleFunc(m, constant)
 }
 
@@ -87,11 +90,12 @@ func Location(
 	costs []float64,
 	durationGroups DurationGroups,
 ) (ByIndex, error) {
-	connect()
+	connect.Connect(con, &locationFunc)
 	return locationFunc(m, costs, durationGroups)
 }
 
 var (
+	con                  = connect.NewConnector("sdk", "Route")
 	overrideFunc         func(ByIndex, ByIndex, func(int, int) bool) ByIndex
 	haversineByPointFunc func() ByPoint
 	constantByPointFunc  func(float64) ByPoint
