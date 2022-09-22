@@ -21,10 +21,8 @@ type Connector struct {
 // NewConnector creates a new Connector.
 func NewConnector(slug, prefix string) *Connector {
 	return &Connector{
-		connected: make(map[any]struct{}),
-		mtx:       sync.Mutex{},
-		slug:      slug,
-		prefix:    prefix,
+		slug:   slug,
+		prefix: prefix,
 	}
 }
 
@@ -34,10 +32,10 @@ func Connect[T any](c *Connector, target *T) {
 		return
 	}
 
-	mtx.Lock()
-	defer mtx.Unlock()
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
 
-	if _, ok := connected[target]; ok {
+	if _, ok := c.connected[target]; ok {
 		return
 	}
 
