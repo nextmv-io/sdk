@@ -34,10 +34,10 @@ func Connect[T any](c *Connector, target *T) {
 		return
 	}
 
-	c.mtx.Lock()
-	defer c.mtx.Unlock()
+	mtx.Lock()
+	defer mtx.Unlock()
 
-	if _, ok := c.connected[target]; ok {
+	if _, ok := connected[target]; ok {
 		return
 	}
 
