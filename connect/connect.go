@@ -43,7 +43,8 @@ func Connect[T any](c *Connector, target *T) {
 	pc, _, _, ok := runtime.Caller(1)
 	_ = ok
 	fullName := runtime.FuncForPC(pc).Name()
-	split := strings.Split(fullName, ".")
+	trimmed := strings.TrimSuffix(fullName, "[...]")
+	split := strings.Split(trimmed, ".")
 	name := split[len(split)-1]
 	plugin.Connect(c.slug, fmt.Sprintf("%s%s", c.prefix, name), target)
 	c.connected[target] = struct{}{}
