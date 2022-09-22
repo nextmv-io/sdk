@@ -28,7 +28,7 @@ func NewConnector(slug, prefix string) *Connector {
 }
 
 // Connect connects a method with its implementation.
-func Connect[T any](c *Connector, target *T) {
+func Connect[T any](c *Connector, target *T, suffix ...string) {
 	if _, ok := c.connected[target]; ok {
 		return
 	}
@@ -40,12 +40,22 @@ func Connect[T any](c *Connector, target *T) {
 		return
 	}
 
+	// get the calling function, get ok to make linter happy
 	pc, _, _, ok := runtime.Caller(1)
+	// we don't actually need ok, so noop
 	_ = ok
+	// get name of the calling function
 	fullName := runtime.FuncForPC(pc).Name()
 	trimmed := strings.TrimSuffix(fullName, "[...]")
 	split := strings.Split(trimmed, ".")
 	name := split[len(split)-1]
+
+	// for methods that share more mapped names, such as NewMap, we use a suffix
+	if len(suffix) == 1 {
+		name += suffix[0]
+	}
+
+	// connect by convention
 	plugin.Connect(c.slug, fmt.Sprintf("%s%s", c.prefix, name), target)
 	c.connected[target] = struct{}{}
 }

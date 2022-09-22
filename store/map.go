@@ -86,10 +86,10 @@ func NewMap[K Key, V any](s Store) Map[K, V] {
 
 	var k K
 	if isInt(k) {
-		connect.Connect(con, &newMapIntFunc)
+		connect.Connect(con, &newMapIntFunc, "Int")
 		p.mapInt = newMapIntFunc(s)
 	} else {
-		connect.Connect(con, &newMapStringFunc)
+		connect.Connect(con, &newMapStringFunc, "String")
 		p.mapString = newMapStringFunc(s)
 	}
 
