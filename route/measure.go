@@ -95,7 +95,7 @@ func Location(
 }
 
 var (
-	con                  = connect.NewConnector("sdk", "Router")
+	con                  = connect.NewConnector("sdk", "Route")
 	overrideFunc         func(ByIndex, ByIndex, func(int, int) bool) ByIndex
 	haversineByPointFunc func() ByPoint
 	constantByPointFunc  func(float64) ByPoint
