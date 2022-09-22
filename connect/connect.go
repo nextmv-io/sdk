@@ -1,3 +1,5 @@
+// Package connect provides a Connector which allows to connect method
+// definition with their implementations in plugins
 package connect
 
 import (
