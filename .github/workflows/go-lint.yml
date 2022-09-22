@@ -1,7 +1,7 @@
 name: go lint
 on: [push]
 jobs:
-  sdk:
+  sdk-go-lint:
     runs-on: ubuntu-latest
     steps:
       - name: set up go
