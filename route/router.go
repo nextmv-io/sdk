@@ -197,7 +197,7 @@ func NewRouter(
 	vehicles []string,
 	opts ...Option,
 ) (Router, error) {
-	connect()
+	connect(&newRouterFunc)
 	return newRouterFunc(stops, vehicles, opts...)
 }
 

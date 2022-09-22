@@ -12,21 +12,21 @@ type Option func(Router) error
 // Starts sets the starting locations indexed by vehicle. The length must match
 // the vehicles' length.
 func Starts(starts []Position) Option {
-	connect()
+	connect(&startsFunc)
 	return startsFunc(starts)
 }
 
 // Ends sets the ending locations indexed by vehicle. The length must match the
 // vehicles' length.
 func Ends(ends []Position) Option {
-	connect()
+	connect(&endsFunc)
 	return endsFunc(ends)
 }
 
 // InitializationCosts set the vehicle initialization costs indexed by vehicle.
 // The length must match the vehicles' length.
 func InitializationCosts(initializationCosts []float64) Option {
-	connect()
+	connect(&initializationCostsFunc)
 	return initializationCostsFunc(initializationCosts)
 }
 
@@ -38,7 +38,7 @@ func InitializationCosts(initializationCosts []float64) Option {
 // this option may be used several times with the corresponding quantities and
 // capacities.
 func Capacity(quantities []int, capacities []int) Option {
-	connect()
+	connect(&capacityFunc)
 	return capacityFunc(quantities, capacities)
 }
 
@@ -46,14 +46,14 @@ func Capacity(quantities []int, capacities []int) Option {
 // one argument as a slice of jobs. Each job defines a pick-up and drop-off by
 // ID. The pick-up must precede the drop-off in the route.
 func Precedence(precedences []Job) Option {
-	connect()
+	connect(&precedenceFunc)
 	return precedenceFunc(precedences)
 }
 
 // Services adds a service time to the given stops. For stops not in the slice,
 // a service time of zero seconds is applied.
 func Services(serviceTimes []Service) Option {
-	connect()
+	connect(&servicesFunc)
 	return servicesFunc(serviceTimes)
 }
 
@@ -70,7 +70,7 @@ the TimeMeasures option is not used, the measures will be scaled with a constant
 velocity of 10 m/s.
 */
 func Shifts(shifts []TimeWindow) Option {
-	connect()
+	connect(&shiftsFunc)
 	return shiftsFunc(shifts)
 }
 
@@ -81,21 +81,21 @@ func Shifts(shifts []TimeWindow) Option {
 //
 // PLEASE NOTE: this option requires using the Shift option.
 func Windows(windows []Window) Option {
-	connect()
+	connect(&windowsFunc)
 	return windowsFunc(windows)
 }
 
 // Unassigned sets the unassigned penalties indexed by stop. The length must
 // match the stops' length.
 func Unassigned(penalties []int) Option {
-	connect()
+	connect(&unassignedFunc)
 	return unassignedFunc(penalties)
 }
 
 // Backlogs sets the backlog for the specified vehicles. A backlog is an
 // unordered list of stops that a vehicle has to serve.
 func Backlogs(backlogs []Backlog) Option {
-	connect()
+	connect(&backlogsFunc)
 	return backlogsFunc(backlogs)
 }
 
@@ -103,14 +103,14 @@ func Backlogs(backlogs []Backlog) Option {
 // hybrid solver that uses decision diagrams and ALNS. This is the default
 // solver that the router engine uses.
 func Minimize() Option {
-	connect()
+	connect(&minimizeFunc)
 	return minimizeFunc()
 }
 
 // Maximize sets the solver type of the router to maximize the value with a
 // hybrid solver that uses decision diagrams and ALNS.
 func Maximize() Option {
-	connect()
+	connect(&maximizeFunc)
 	return maximizeFunc()
 }
 
@@ -127,7 +127,7 @@ func Maximize() Option {
 // PLEASE NOTE: If you want to limit the route's duration or length please use
 // the options LimitDistance and LimitDuration, respectively.
 func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
-	connect()
+	connect(&limitsFunc)
 	return limitsFunc(routeLimits, ignoreTriangular)
 }
 
@@ -135,7 +135,7 @@ func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
 // values are indexed by vehicle and must be given in meters. To not limit a
 // route to any value, use model.MaxInt.
 func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
-	connect()
+	connect(&limitDistancesFunc)
 	return limitDistancesFunc(maxDistances, ignoreTriangular)
 }
 
@@ -143,7 +143,7 @@ func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
 // The values are indexed by vehicle and must be given in seconds. To not limit
 // a route to any value, use model.MaxInt.
 func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
-	connect()
+	connect(&limitDurationsFunc)
 	return limitDurationsFunc(maxDurations, ignoreTriangular)
 }
 
@@ -153,7 +153,7 @@ func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
 // given, locations can be assigned together in the same routes without the need
 // to assign any other locations to that route.
 func Grouper(groups [][]string) Option {
-	connect()
+	connect(&grouperFunc)
 	return grouperFunc(groups)
 }
 
@@ -168,7 +168,7 @@ func Grouper(groups [][]string) Option {
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 func ValueFunctionMeasures(valueFunctionMeasures []ByIndex) Option {
-	connect()
+	connect(&valueFunctionMeasuresFunc)
 	return valueFunctionMeasuresFunc(valueFunctionMeasures)
 }
 
@@ -187,7 +187,7 @@ account for any service times. To account for services times please use the
 Services option.
 */
 func TravelTimeMeasures(timeMeasures []ByIndex) Option {
-	connect()
+	connect(&travelTimeMeasuresFunc)
 	return travelTimeMeasuresFunc(timeMeasures)
 }
 
@@ -197,7 +197,7 @@ func TravelTimeMeasures(timeMeasures []ByIndex) Option {
 // with any vehicle. Vehicles that are not provided are only compatible with
 // stops without attributes.
 func Attribute(vehicles []Attributes, stops []Attributes) Option {
-	connect()
+	connect(&attributeFunc)
 	return attributeFunc(vehicles, stops)
 }
 
@@ -208,7 +208,7 @@ func Attribute(vehicles []Attributes, stops []Attributes) Option {
 // threads are calculated based on the number of machine processors, using
 // the following expression: runtime.GOMAXPROCS(0) / 2.
 func Threads(threads int) Option {
-	connect()
+	connect(&threadsFunc)
 	return threadsFunc(threads)
 }
 
@@ -217,7 +217,7 @@ func Threads(threads int) Option {
 // into this option, and any other stops from the list of stops that solve the
 // TSP/VRP cost optimally.
 func Alternates(alternates []Alternate) Option {
-	connect()
+	connect(&alternatesFunc)
 	return alternatesFunc(alternates)
 }
 
@@ -225,7 +225,7 @@ func Alternates(alternates []Alternate) Option {
 // TravelTimeMeasure based on haversine distance and is indexed by vehicle. The
 // length must match the vehicles' length.
 func Velocities(velocities []float64) Option {
-	connect()
+	connect(&velocitiesFunc)
 	return velocitiesFunc(velocities)
 }
 
@@ -233,7 +233,7 @@ func Velocities(velocities []float64) Option {
 // Whenever a stop in the group is visited from another stop that is not part
 // of it, the specified duration is added.
 func ServiceGroups(serviceGroups []ServiceGroup) Option {
-	connect()
+	connect(&serviceGroupsFunc)
 	return serviceGroupsFunc(serviceGroups)
 }
 
@@ -242,7 +242,7 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 // into the solution. If no custom location selector is given, the location with
 // the lowest index will be inserted next.
 func Selector(selector func(PartialPlan) model.Domain) Option {
-	connect()
+	connect(&selectorFunc)
 	return selectorFunc(selector)
 }
 
@@ -294,7 +294,7 @@ To achieve efficient customizations, always try to update the components of the
 store that changed.
 */
 func Update(v VehicleUpdater, f PlanUpdater) Option {
-	connect()
+	connect(&updateFunc)
 	return updateFunc(v, f)
 }
 
@@ -311,7 +311,7 @@ func FilterWithRoute(
 		routes [][]int,
 	) model.Domain,
 ) Option {
-	connect()
+	connect(&filterWithRouteFunc)
 	return filterWithRouteFunc(filter)
 }
 
@@ -327,7 +327,7 @@ func Sorter(
 		random *rand.Rand,
 	) []int,
 ) Option {
-	connect()
+	connect(&sorterFunc)
 	return sorterFunc(sorter)
 }
 
@@ -346,7 +346,7 @@ type VehicleConstraint interface {
 // arguments, the constraint to be applied and a list of vehicles, indexed by
 // ID, to which the constraint shall be applied.
 func Constraint(constraint VehicleConstraint, ids []string) Option {
-	connect()
+	connect(&constraintFunc)
 	return constraintFunc(constraint, ids)
 }
 
@@ -355,7 +355,7 @@ func Constraint(constraint VehicleConstraint, ids []string) Option {
 // all locations are compatible with all vehicles and, thus, any location can be
 // inserted into any route.
 func Filter(compatible func(vehicle, location int) bool) Option {
-	connect()
+	connect(&filterFunc)
 	return filterFunc(compatible)
 }
 
