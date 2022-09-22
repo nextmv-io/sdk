@@ -34,7 +34,7 @@ func NewConnector(slug, prefix string) Connector {
 
 // Connect connects a method with its implementation.
 func (c connector) Connect(target any) {
-	if _, ok := c.connected[target]; ok {
+	if _, ok := c.connected[&target]; ok {
 		return
 	}
 
