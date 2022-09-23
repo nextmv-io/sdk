@@ -171,6 +171,7 @@ func Example_knightsTour() {
 	// are needed, there is no value associated.
 	opt := store.DefaultOptions()
 	opt.Limits.Solutions = 1
+	opt.Diagram.Expansion.Limit = 1
 	solver := knight.Satisfier(opt)
 
 	// Get the last solution of the problem and print it.
@@ -182,10 +183,10 @@ func Example_knightsTour() {
 	fmt.Println(string(b))
 	// Output:
 	// {
-	//   "0": "00 17 06 11 20 ",
-	//   "1": "07 12 19 16 05 ",
-	//   "2": "18 01 04 21 10 ",
-	//   "3": "13 08 23 02 15 ",
-	//   "4": "24 03 14 09 22 "
+	//   "0": "00 21 10 15 06 ",
+	//   "1": "11 16 07 20 09 ",
+	//   "2": "24 01 22 05 14 ",
+	//   "3": "17 12 03 08 19 ",
+	//   "4": "02 23 18 13 04 "
 	// }
 }

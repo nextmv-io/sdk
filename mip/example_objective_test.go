@@ -50,12 +50,13 @@ func ExampleObjective_terms() {
 	fmt.Println(t3.Var().Index())
 	fmt.Println(t3.Coefficient())
 
-	fmt.Println(len(model.Objective().Terms()))
-	fmt.Println(model.Objective().Terms()[0].Coefficient())
-	fmt.Println(model.Objective().IsMaximize())
-	fmt.Println(model.Objective().Terms()[0])
-	fmt.Println(model.Objective().Terms()[1])
-	// Output:
+	terms := model.Objective().Terms()
+	fmt.Println(len(terms))
+	for _, term := range terms {
+		fmt.Println(term.Var(), term.Coefficient())
+	}
+	fmt.Println("isMaximize: ", model.Objective().IsMaximize())
+	// Unordered output:
 	// 0
 	// 2 B0
 	// 1 B0
@@ -67,10 +68,9 @@ func ExampleObjective_terms() {
 	// 1
 	// 3
 	// 2
-	// 3
-	// false
-	// 3 B0
-	// 3 B1
+	// B0 3
+	// B1 3
+	// isMaximize:  false
 }
 
 func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {

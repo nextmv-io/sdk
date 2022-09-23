@@ -3,6 +3,8 @@ package store
 import (
 	"encoding/json"
 	"reflect"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // Var is a variable stored in a Store.
@@ -36,6 +38,7 @@ NewVar stores a new variable in a Store.
 	x := store.NewVar(s, 10) // x is stored in s.
 */
 func NewVar[T any](s Store, data T) Var[T] {
+	connect.Connect(con, &newVarFunc)
 	return variable[T]{variable: newVarFunc(s, data)}
 }
 

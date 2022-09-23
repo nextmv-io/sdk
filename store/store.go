@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -378,46 +379,46 @@ type Bounds struct {
 
 // New returns a new Store.
 func New() Store {
-	connect()
+	connect.Connect(con, &newFunc)
 	return newFunc()
 }
 
 // And uses the conditional "AND" logical operator on all given conditions. It
 // returns true if all conditions are true.
 func And(c1 Condition, c2 Condition, conditions ...Condition) Condition {
-	connect()
+	connect.Connect(con, &andFunc)
 	return andFunc(c1, c2, conditions...)
 }
 
 // False is a convenience function that is always false.
 func False(s Store) bool {
-	connect()
+	connect.Connect(con, &falseFunc)
 	return falseFunc(s)
 }
 
 // Not negates the given condition.
 func Not(c Condition) Condition {
-	connect()
+	connect.Connect(con, &notFunc)
 	return notFunc(c)
 }
 
 // Or uses the conditional "OR" logical operator on all given conditions. It
 // returns true if at least one condition is true.
 func Or(c1 Condition, c2 Condition, conditions ...Condition) Condition {
-	connect()
+	connect.Connect(con, &orFunc)
 	return orFunc(c1, c2, conditions...)
 }
 
 // True is a convenience function that is always true.
 func True(s Store) bool {
-	connect()
+	connect.Connect(con, &trueFunc)
 	return trueFunc(s)
 }
 
 // Xor uses the conditional "Exclusive OR" logical operator on all given
 // conditions. It returns true if, and only if, the conditions are different.
 func Xor(c1, c2 Condition) Condition {
-	connect()
+	connect.Connect(con, &xorFunc)
 	return xorFunc(c1, c2)
 }
 
@@ -429,14 +430,14 @@ these sensitive defaults.
 	opt.Limits.Duration = time.Duration(5) * time.Second
 */
 func DefaultOptions() Options {
-	connect()
+	connect.Connect(con, &defaultOptionsFunc)
 	return defaultOptionsFunc()
 }
 
 // Eager way of generating new Stores. The Generator uses the list of Stores
 // upfront in the order they are provided.
 func Eager(s ...Store) Generator {
-	connect()
+	connect.Connect(con, &eagerFunc)
 	return eagerFunc(s...)
 }
 
@@ -445,11 +446,12 @@ func Eager(s ...Store) Generator {
 // nil Store is returned, the generator is not used anymore by the current
 // parent.
 func Lazy(c func() bool, f func() Store) Generator {
-	connect()
+	connect.Connect(con, &lazyFunc)
 	return lazyFunc(c, f)
 }
 
 var (
+	con                = connect.NewConnector("sdk", "Store")
 	newFunc            func() Store
 	andFunc            func(Condition, Condition, ...Condition) Condition
 	falseFunc          func(Store) bool

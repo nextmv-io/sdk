@@ -10,16 +10,7 @@ problems. Please find the following packages:
       output.
 - [model][model]: modeling components such as integer domains and ranges.
 
-Please visit the official [Go Package Docs][pkgsite] for documentation and
-testable examples.
-
-## Usage
-
-To run a decision automation problem with SDK you need the [Nextmv CLI][cli].
-
-## Get started
-
-Please visit the [tour of SDK][tour] to get started with data store modeling.
+Please visit the official [Nextmv docs][docs] for comprehensive information.
 
 ## Installation
 
@@ -29,10 +20,8 @@ Nextmv's SDK is meant to be used in Go projects. To download please run:
 go get github.com/nextmv-io/sdk
 ```
 
-[pkgsite]: https://pkg.go.dev/github.com/nextmv-io/sdk
 [store]: ./store
 [route]: ./route
 [run]: ./run
 [model]: ./model
-[tour]: https://github.com/nextmv-io/tour
-[cli]: https://docs.nextmv.io/development/cli
+[docs]: https://docs.nextmv.io
