@@ -78,3 +78,23 @@ func ExampleScale() {
 	// Output:
 	// 2.468
 }
+
+func ExampleBin() {
+	constant1 := route.Constant(1.234)
+	constant2 := route.Constant(4.321)
+
+	bin := route.Bin(
+		[]route.ByIndex{constant1, constant2},
+		func(from, to int) int {
+			if from == 0 && to == 1 {
+				return 0
+			}
+			return 1
+		},
+	)
+	fmt.Println(bin.Cost(0, 1))
+	fmt.Println(bin.Cost(1, 0))
+	// Output:
+	// 1.234
+	// 4.321
+}
