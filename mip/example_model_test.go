@@ -25,23 +25,10 @@ func ExampleModel_empty() {
 func ExampleModel_queries() {
 	model := mip.NewModel()
 
-	_, err := model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
-	_, err = model.NewContinuousVar(1.0, 2.0)
-	if err != nil {
-		panic(err)
-	}
-	_, err = model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = model.NewConstraint(mip.Equal, 0.0)
-	if err != nil {
-		panic(err)
-	}
+	model.NewBinaryVar()
+	model.NewContinuousVar(1.0, 2.0)
+	model.NewBinaryVar()
+	model.NewConstraint(mip.Equal, 0.0)
 
 	fmt.Println(len(model.Vars()))
 	fmt.Println(len(model.Constraints()))

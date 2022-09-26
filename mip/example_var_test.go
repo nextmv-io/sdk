@@ -10,10 +10,7 @@ import (
 func ExampleVar_continuous() {
 	model := mip.NewModel()
 
-	v, err := model.NewContinuousVar(-1.0, 1.0)
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewContinuousVar(-1.0, 1.0)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -33,16 +30,15 @@ func ExampleVar_continuous() {
 func ExampleVar_integer() {
 	model := mip.NewModel()
 
-	v, err := model.NewIntegerVar(-1, 1)
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewIntegerVar(-1, 1)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
 	fmt.Println(v.IsContinuous())
 	fmt.Println(v.IsInteger())
 	fmt.Println(v.IsBinary())
+	fmt.Println(v)
+	v.SetName("v")
 	fmt.Println(v)
 	// Output:
 	// -1
@@ -51,15 +47,13 @@ func ExampleVar_integer() {
 	// true
 	// false
 	// I0
+	// v
 }
 
 func ExampleVar_binary() {
 	model := mip.NewModel()
 
-	v, err := model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewBinaryVar()
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
@@ -79,18 +73,9 @@ func ExampleVar_binary() {
 func ExampleVar_vars() {
 	model := mip.NewModel()
 
-	v0, err := model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
-	v1, err := model.NewIntegerVar(-1, 1)
-	if err != nil {
-		panic(err)
-	}
-	v2, err := model.NewContinuousVar(-1.0, 1.0)
-	if err != nil {
-		panic(err)
-	}
+	v0 := model.NewBinaryVar()
+	v1 := model.NewIntegerVar(-1, 1)
+	v2 := model.NewContinuousVar(-1.0, 1.0)
 
 	fmt.Println(v0.Index())
 	fmt.Println(v1.Index())
@@ -106,29 +91,20 @@ func ExampleVar_vars() {
 func BenchmarkNewBinaryVar(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewBinaryVar()
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewBinaryVar()
 	}
 }
 
 func BenchmarkNewContinuousVar(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewContinuousVar(-1.0, 1.0)
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewContinuousVar(-1.0, 1.0)
 	}
 }
 
 func BenchmarkNewIntegerVar(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewIntegerVar(-1, 1)
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewIntegerVar(-1, 1)
 	}
 }

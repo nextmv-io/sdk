@@ -35,6 +35,9 @@ const (
 //
 //	2.5 * x and 3.5 * y are 2 terms in this example
 type Constraint interface {
+	// Name returns assigned name. If no name has been set it will return
+	// a unique auto-generated name.
+	Name() string
 	// NewTerm adds a term to the invoking constraint, invoking this API
 	// multiple times for the same variable will take the sum of coefficients
 	// of earlier added terms for that variable
@@ -52,6 +55,12 @@ type Constraint interface {
 	RightHandSide() float64
 	// Sense returns the sense of the invoking constraint.
 	Sense() Sense
+	// SetName assigns name to invoking constraint
+	SetName(name string)
+	// Term returns a term for variable with the sum of all coefficients of
+	// defined terms for variable. The second return argument defines how many
+	// terms have been defined on the objective for variable.
+	Term(variable Var) (Term, int)
 	// Terms returns a copy slice of terms of the invoking constraint,
 	// each variable is reported once. If the same variable has been
 	// added multiple times the sum of coefficients is reported for that

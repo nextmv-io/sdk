@@ -28,6 +28,11 @@ type Var interface {
 	// underlying solver technology. The lower bound used will be the maximum
 	// of the specification and the lower bound of the solver used.
 	LowerBound() float64
+	// Name returns assigned name. If no name has been set it will return
+	// a unique auto-generated name.
+	Name() string
+	// SetName assigns name to invoking var
+	SetName(name string)
 	// UpperBound returns the upperBound of the invoking variable. By definition
 	// this is 1.0 for a binary variable
 	//
