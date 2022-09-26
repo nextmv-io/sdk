@@ -23,7 +23,7 @@ jobs:
         with:
           repository: nextmv-io/plugins
           path: ${{env.RESOURCES}}
-          ref: develop
+          ref: ${{ github.head_ref || github.ref_name }}
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
           ssh-known-hosts: ssh-keyscan github.com
 
