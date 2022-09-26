@@ -15,6 +15,16 @@ jobs:
           go-version: 1.18
         id: go
 
+      - name: setup SSH Keys and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
+
+      - name: use ssh instead of https for git
+        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
       - name: initialize local branch name
         run: echo "LOCAL_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
 
@@ -37,16 +47,6 @@ jobs:
           ref: ${{ env.LOCAL_BRANCH }}
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
           ssh-known-hosts: ssh-keyscan github.com
-
-      - name: setup SSH Keys and known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
-
-      - name: use ssh instead of https for git
-        run: git config --global url."git@github.com:".insteadOf "https://github.com/"
 
       # Installs Nextmv CLI dependency regardless of the distribution.
       - name: install Nextmv CLI dependency
