@@ -1,7 +1,7 @@
 name: go build & test
 on: [push]
 jobs:
-  sdk:
+  sdk-go-build-test:
     runs-on: ubuntu-latest
     env:
       GOPRIVATE: github.com/nextmv-io/*
@@ -59,22 +59,12 @@ jobs:
           # replaced for the local sdk repo checked out in this action.
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
-          # Create the path where the shared object binaries are going to be
-          # saved.
-          VERSION=$(go run cmd/version/main.go)
-          GOVERSION=$(go env GOVERSION)
-          GOOS=$(go env GOOS)
-          GOARCH=$(go env GOARCH)
-          OUT_PATH=${{env.NEXTMV_LIBRARY_PATH}}/nextmv-sdk-$VERSION-$GOVERSION-$GOOS-$GOARCH.so
-
-          # Build without -trimpath because the sdk dependency is being
-          # replaced for the local sdk repo used in the action.
-          cd plugins/sdk
-          go build -buildmode plugin -o $OUT_PATH
+          # Build the plugins.
+          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
         run: go build -v ./...
 
       - name: go test
-        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=$(nextmv token) go test -v ./...
+        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=$(nextmv token) go test ./...
