@@ -20,7 +20,7 @@ jobs:
 
       # Gets the token and stores it in a variable.
       - name: export local branch
-        run: echo "BRANCH_CHECK=$(git ls-remote --heads origin ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
+        run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
 
       - name: override with develop if empty
         if: ${{env.BRANCH_CHECK}}==''
