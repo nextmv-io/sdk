@@ -15,6 +15,17 @@ jobs:
           go-version: 1.18
         id: go
 
+      - name: initialize local branch name
+        run: echo "LOCAL_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+
+      # Gets the token and stores it in a variable.
+      - name: export local branch
+        run: echo "BRANCH_CHECK=$(git ls-remote --heads origin ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
+
+      - name: override with develop if empty
+        if: ${{env.BRANCH_CHECK}}==''
+        run: echo "LOCAL_BRANCH=develop" >> $GITHUB_ENV
+
       - name: git clone
         uses: actions/checkout@v3
 
@@ -23,7 +34,7 @@ jobs:
         with:
           repository: nextmv-io/plugins
           path: ${{env.RESOURCES}}
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: ${{ env.LOCAL_BRANCH }}
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
           ssh-known-hosts: ssh-keyscan github.com
 
