@@ -35,7 +35,7 @@ jobs:
           echo ${{ env.BRANCH_CHECK }}
 
       - name: override with develop if empty
-        if: ${{ env.BRANCH_CHECK }} == ''
+        if: "${{ env.BRANCH_CHECK == '' }}"
         run: echo "LOCAL_BRANCH=develop" >> $GITHUB_ENV
 
       - name: git clone
