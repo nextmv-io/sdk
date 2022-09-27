@@ -32,7 +32,6 @@ jobs:
       - name: export local branch
         run:
           echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
-          echo ${{ env.BRANCH_CHECK }}
 
       - name: override with develop if empty
         if: "${{ env.BRANCH_CHECK == '' }}"
