@@ -4,23 +4,23 @@ package mip
 type Model interface {
 	// Constraints returns a copy slice of all constraints.
 	Constraints() Constraints
-	// NewBinaryVar adds a binary variable to the invoking model,
+	// NewBool adds a bool variable to the invoking model,
 	// returns the newly constructed variable.
-	NewBinaryVar() BinaryVar
-	// NewContinuousVar adds a continuous var with bounds [loweBound,
+	NewBool() Bool
+	// NewFloat adds a float var with bounds [lowerBound,
 	// upperBound] to the invoking model, returns the newly constructed
 	// var.
-	NewContinuousVar(
+	NewFloat(
 		lowerBound float64,
 		upperBound float64,
-	) ContinuousVar
-	// NewIntegerVar adds an integer var with bounds [loweBound,
+	) Float
+	// NewInt adds an integer var with bounds [loweBound,
 	// upperBound] to the invoking model, returns the newly constructed
 	// var.
-	NewIntegerVar(
+	NewInt(
 		lowerBound int64,
 		upperBound int64,
-	) IntegerVar
+	) Int
 	// NewConstraint adds a constraint with sense and right-hand-side value rhs
 	// to the invoking model. All terms for existing and future variables
 	// are initially zero. Returns the newly constructed constraint.

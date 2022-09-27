@@ -54,7 +54,7 @@ func ExampleConstraint_lessThanOrEqual() {
 func ExampleConstraint_terms() {
 	model := mip.NewModel()
 
-	v := model.NewBinaryVar()
+	v := model.NewBool()
 	c := model.NewConstraint(mip.Equal, 1.0)
 
 	t1 := c.NewTerm(1.0, v)
@@ -79,7 +79,7 @@ func ExampleConstraint_terms() {
 
 func benchmarkNewConstraintNewTerms(nrTerms int, b *testing.B) {
 	model := mip.NewModel()
-	v := model.NewContinuousVar(1.0, 2.0)
+	v := model.NewFloat(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
 		c := model.NewConstraint(mip.Equal, 1.0)

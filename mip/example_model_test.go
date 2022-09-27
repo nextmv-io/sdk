@@ -25,9 +25,9 @@ func ExampleModel_empty() {
 func ExampleModel_queries() {
 	model := mip.NewModel()
 
-	model.NewBinaryVar()
-	model.NewContinuousVar(1.0, 2.0)
-	model.NewBinaryVar()
+	model.NewBool()
+	model.NewFloat(1.0, 2.0)
+	model.NewBool()
 	model.NewConstraint(mip.Equal, 0.0)
 
 	fmt.Println(len(model.Vars()))

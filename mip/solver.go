@@ -27,9 +27,9 @@ type SolveOptions interface {
 	// GetFloatParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
 	GetFloatParameter(parameter SolverParameter) (float64, error)
-	// GetIntegerParameter returns value set for parameter, returns error if no
+	// GetIntParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
-	GetIntegerParameter(parameter SolverParameter) (int64, error)
+	GetIntParameter(parameter SolverParameter) (int64, error)
 	// GetStringParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
 	GetStringParameter(parameter SolverParameter) (string, error)
@@ -49,9 +49,9 @@ type SolveOptions interface {
 	// SetFloatParameter specifies the value to use for parameter, this is
 	// back-end-solver specific.
 	SetFloatParameter(parameter SolverParameter, value float64)
-	// SetIntegerParameter specifies the value to use for parameter, this is
+	// SetIntParameter specifies the value to use for parameter, this is
 	// back-end-solver specific.
-	SetIntegerParameter(parameter SolverParameter, value int64)
+	SetIntParameter(parameter SolverParameter, value int64)
 	// SetMaximumDuration specifies the maximum duration of a Solver.Solve
 	// invocation.
 	SetMaximumDuration(duration time.Duration) error

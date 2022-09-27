@@ -2,27 +2,26 @@ package mip
 
 // Var represents the entities on which the solver has to make a decision
 // without violating constraints and while optimizing the objective.
-// Vars can be of a certain type, binary, continuous or integer.
+// Vars can be of a certain type, bool, float or int.
 //
-// Continuous vars can take a value of a continuous quantity
-// Integer vars are vars that must take an integer value
+// Float vars can take a value of a float quantity
+// Int vars are vars that must take an integer value
 // (0, 1, 2, ...)
-// Binary vars can take two values, zero or one.
+// Bool vars can take two values, zero or one.
 type Var interface {
 	// Index is a unique number assigned to the var. The index corresponds
 	// to the location in the slice returned by Model.Variables().
 	Index() int
-	// IsBinary returns true if the invoking variable is a binary variable,
+	// IsBool returns true if the invoking variable is a bool variable,
 	// otherwise it returns false.
-	IsBinary() bool
-	// IsContinuous returns true if the invoking variable is a continuous
+	IsBool() bool
+	// IsFloat returns true if the invoking variable is a float
 	// variable otherwise false.
-	IsContinuous() bool
-	// IsInteger returns true if the invoking variable is an integer variable
+	IsFloat() bool
+	// IsInt returns true if the invoking variable is an int variable
 	// otherwise false.
-	IsInteger() bool
-	// LowerBound returns the lowerBound of the invoking variable. By definition
-	// this is 0.0 for a binary variable
+	IsInt() bool
+	// LowerBound returns the lowerBound of the invoking variable.
 	//
 	// Lower bounds of variables are limited by the lower bounds of the
 	// underlying solver technology. The lower bound used will be the maximum
@@ -33,8 +32,7 @@ type Var interface {
 	Name() string
 	// SetName assigns name to invoking var
 	SetName(name string)
-	// UpperBound returns the upperBound of the invoking variable. By definition
-	// this is 1.0 for a binary variable
+	// UpperBound returns the upperBound of the invoking variable.
 	//
 	// Upper bounds of variables are limited by the upper bounds of the
 	// underlying solver technology. The upper bound used will be the minimum
@@ -45,22 +43,22 @@ type Var interface {
 // Vars is a slice of Var instances.
 type Vars []Var
 
-// ContinuousVar a Var which can take any value in an interval.
-type ContinuousVar interface {
+// Float a Var which can take any value in an interval.
+type Float interface {
 	Var
-	ensureContinuous() bool
+	ensureFloat() bool
 }
 
-// IntegerVar a Var which can take any integer value in an interval.
-type IntegerVar interface {
+// Int a Var which can take any integer value in an interval.
+type Int interface {
 	Var
-	ensureInteger() bool
+	ensureInt() bool
 }
 
-// BinaryVar a Var which can take two values, zero or one. A binary
-// variable is also an integer variable which can have two values zero and
+// Bool a Var which can take two values, zero or one. A bool
+// variable is also an int variable which can have two values zero and
 // one.
-type BinaryVar interface {
-	IntegerVar
-	ensureBinary() bool
+type Bool interface {
+	Int
+	ensureBool() bool
 }

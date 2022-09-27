@@ -42,12 +42,11 @@ type Constraint interface {
 	// multiple times for the same variable will take the sum of coefficients
 	// of earlier added terms for that variable
 	//
-	// 		d := mip.NewModel()
+	// 		m := mip.NewModel()
 	//
-	// 		x, _ := d.NewContinuousVar(10.0, 100.0)
+	// 		x := m.NewFloat(10.0, 100.0)
 	//
-	// 		c, _ := d.NewConstraint(mip.LessThanOrEqual, 123.4)
-	//
+	// 		c := m.NewConstraint(mip.LessThanOrEqual, 123.4)
 	// 		c.NewTerm(1.0, x)  	 // results in 1.0 * x <= 123.4 in solver
 	// 		c.NewTerm(2.0, x)    // results in 3.0 * x <= 123.4 in solver
 	NewTerm(coefficient float64, variable Var) Term
