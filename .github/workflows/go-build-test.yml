@@ -15,18 +15,6 @@ jobs:
           go-version: 1.18
         id: go
 
-      - name: git clone
-        uses: actions/checkout@v3
-
-      - name: clone plugins repository
-        uses: actions/checkout@v3
-        with:
-          repository: nextmv-io/plugins
-          path: ${{env.RESOURCES}}
-          ref: develop
-          ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
-          ssh-known-hosts: ssh-keyscan github.com
-
       - name: setup SSH Keys and known_hosts
         run: |
           mkdir -p ~/.ssh
@@ -36,6 +24,30 @@ jobs:
 
       - name: use ssh instead of https for git
         run: git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      - name: initialize local branch name
+        run: echo "LOCAL_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+
+      # Gets the token and stores it in a variable.
+      - name: export local branch
+        run:
+          echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
+
+      - name: override with develop if empty
+        if: "${{ env.BRANCH_CHECK == '' }}"
+        run: echo "LOCAL_BRANCH=develop" >> $GITHUB_ENV
+
+      - name: git clone
+        uses: actions/checkout@v3
+
+      - name: clone plugins repository
+        uses: actions/checkout@v3
+        with:
+          repository: nextmv-io/plugins
+          path: ${{ env.RESOURCES }}
+          ref: ${{ env.LOCAL_BRANCH }}
+          ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
+          ssh-known-hosts: ssh-keyscan github.com
 
       # Installs Nextmv CLI dependency regardless of the distribution.
       - name: install Nextmv CLI dependency
