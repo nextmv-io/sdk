@@ -16,7 +16,7 @@ func NewModel() Model {
 
 // NewSolver returns a new Solver implemented by the given provider.
 func NewSolver(provider SolverProvider, model Model) (Solver, error) {
-	connect.Connect(con, &model)
+	connect.Connect(con, &newSolver)
 	return newSolver(provider, model)
 }
 
