@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"hash/maphash"
 )
 
@@ -45,7 +46,7 @@ func NewMultiMap[T any](
 func (m multiMap[T]) Get(identifiers ...Identifier) T {
 	m.hash.Reset()
 	for _, id := range identifiers {
-		_, err := m.hash.WriteString(string(id.ID()))
+		_, err := m.hash.WriteString(fmt.Sprint(id.ID()))
 		if err != nil {
 			panic(err)
 		}
