@@ -45,14 +45,17 @@ func NewMultiMap[T any](
 func (m multiMap[T]) Get(identifiers ...Identifier) T {
 	m.hash.Reset()
 	for _, id := range identifiers {
-		m.hash.WriteString(string(id.ID()))
+		_, err := m.hash.WriteString(string(id.ID()))
+		if err != nil {
+			panic(err)
+		}
 	}
 	index := m.hash.Sum64()
 	v, ok := m.m[index]
 	if !ok {
 		variable, err := m.create(identifiers...)
 		if err != nil {
-			panic(err) // or return the error?
+			panic(err)
 		}
 		m.m[index] = variable
 		v = variable
