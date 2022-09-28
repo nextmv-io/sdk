@@ -24,7 +24,7 @@ func ExampleVar_float() {
 	// true
 	// false
 	// false
-	// C0
+	// F0
 }
 
 func ExampleVar_int() {

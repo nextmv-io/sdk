@@ -39,6 +39,6 @@ func ExampleModel_queries() {
 	// minimize
 	//       0: = 0
 	//       0: B0 [0, 1]
-	//       1: C1 [1, 2]
+	//       1: F1 [1, 2]
 	//       2: B2 [0, 1]
 }
