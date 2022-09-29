@@ -21,7 +21,7 @@ type MultiMap[T any, T2 Identifier] interface {
 type multiMap[T any, T2 Identifier] struct {
 	hash   maphash.Hash
 	m      map[uint64]T
-	create func(...T2) (T, error)
+	create func(...T2) T
 	sets   [][]T2
 }
 
@@ -30,7 +30,7 @@ type multiMap[T any, T2 Identifier] struct {
 // The second argument is a variable number of sets, one set per dimension of
 // the index.
 func NewMultiMap[T any, T2 Identifier](
-	create func(...T2) (T, error),
+	create func(...T2) T,
 	sets ...[]T2,
 ) MultiMap[T, T2] {
 	return &multiMap[T, T2]{
@@ -57,10 +57,7 @@ func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	if v, ok := m.m[index]; ok {
 		return v
 	}
-	variable, err := m.create(identifiers...)
-	if err != nil {
-		panic(err)
-	}
+	variable := m.create(identifiers...)
 	m.m[index] = variable
 	return variable
 }
