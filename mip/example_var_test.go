@@ -7,19 +7,16 @@ import (
 	"github.com/nextmv-io/sdk/mip"
 )
 
-func ExampleVar_continuous() {
+func ExampleVar_float() {
 	model := mip.NewModel()
 
-	v, err := model.NewContinuousVar(-1.0, 1.0)
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewFloat(-1.0, 1.0)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
-	fmt.Println(v.IsContinuous())
-	fmt.Println(v.IsInteger())
-	fmt.Println(v.IsBinary())
+	fmt.Println(v.IsFloat())
+	fmt.Println(v.IsInt())
+	fmt.Println(v.IsBool())
 	fmt.Println(v)
 	// Output:
 	// -1
@@ -27,22 +24,21 @@ func ExampleVar_continuous() {
 	// true
 	// false
 	// false
-	// C0
+	// F0
 }
 
-func ExampleVar_integer() {
+func ExampleVar_int() {
 	model := mip.NewModel()
 
-	v, err := model.NewIntegerVar(-1, 1)
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewInt(-1, 1)
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
-	fmt.Println(v.IsContinuous())
-	fmt.Println(v.IsInteger())
-	fmt.Println(v.IsBinary())
+	fmt.Println(v.IsFloat())
+	fmt.Println(v.IsInt())
+	fmt.Println(v.IsBool())
+	fmt.Println(v)
+	v.SetName("v")
 	fmt.Println(v)
 	// Output:
 	// -1
@@ -51,21 +47,19 @@ func ExampleVar_integer() {
 	// true
 	// false
 	// I0
+	// v
 }
 
-func ExampleVar_binary() {
+func ExampleVar_bool() {
 	model := mip.NewModel()
 
-	v, err := model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
+	v := model.NewBool()
 
 	fmt.Println(v.LowerBound())
 	fmt.Println(v.UpperBound())
-	fmt.Println(v.IsContinuous())
-	fmt.Println(v.IsInteger())
-	fmt.Println(v.IsBinary())
+	fmt.Println(v.IsFloat())
+	fmt.Println(v.IsInt())
+	fmt.Println(v.IsBool())
 	fmt.Println(v)
 	// Output:
 	// 0
@@ -79,18 +73,9 @@ func ExampleVar_binary() {
 func ExampleVar_vars() {
 	model := mip.NewModel()
 
-	v0, err := model.NewBinaryVar()
-	if err != nil {
-		panic(err)
-	}
-	v1, err := model.NewIntegerVar(-1, 1)
-	if err != nil {
-		panic(err)
-	}
-	v2, err := model.NewContinuousVar(-1.0, 1.0)
-	if err != nil {
-		panic(err)
-	}
+	v0 := model.NewBool()
+	v1 := model.NewInt(-1, 1)
+	v2 := model.NewFloat(-1.0, 1.0)
 
 	fmt.Println(v0.Index())
 	fmt.Println(v1.Index())
@@ -103,32 +88,23 @@ func ExampleVar_vars() {
 	// 3
 }
 
-func BenchmarkNewBinaryVar(b *testing.B) {
+func BenchmarkNewBool(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewBinaryVar()
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewBool()
 	}
 }
 
-func BenchmarkNewContinuousVar(b *testing.B) {
+func BenchmarkNewFloat(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewContinuousVar(-1.0, 1.0)
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewFloat(-1.0, 1.0)
 	}
 }
 
-func BenchmarkNewIntegerVar(b *testing.B) {
+func BenchmarkNewInt(b *testing.B) {
 	model := mip.NewModel()
 	for i := 0; i < b.N; i++ {
-		_, err := model.NewIntegerVar(-1, 1)
-		if err != nil {
-			b.Errorf(err.Error())
-		}
+		model.NewInt(-1, 1)
 	}
 }

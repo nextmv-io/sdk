@@ -27,9 +27,9 @@ type SolveOptions interface {
 	// GetFloatParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
 	GetFloatParameter(parameter SolverParameter) (float64, error)
-	// GetIntegerParameter returns value set for parameter, returns error if no
+	// GetIntParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
-	GetIntegerParameter(parameter SolverParameter) (int64, error)
+	GetIntParameter(parameter SolverParameter) (int64, error)
 	// GetStringParameter returns value set for parameter, returns error if no
 	// such parameter has been set.
 	GetStringParameter(parameter SolverParameter) (string, error)
@@ -49,9 +49,9 @@ type SolveOptions interface {
 	// SetFloatParameter specifies the value to use for parameter, this is
 	// back-end-solver specific.
 	SetFloatParameter(parameter SolverParameter, value float64)
-	// SetIntegerParameter specifies the value to use for parameter, this is
+	// SetIntParameter specifies the value to use for parameter, this is
 	// back-end-solver specific.
-	SetIntegerParameter(parameter SolverParameter, value int64)
+	SetIntParameter(parameter SolverParameter, value int64)
 	// SetMaximumDuration specifies the maximum duration of a Solver.Solve
 	// invocation.
 	SetMaximumDuration(duration time.Duration) error
@@ -66,22 +66,22 @@ type SolveOptions interface {
 	// SetStringParameter specifies the value to use for parameter, this is
 	// back-end-solver specific.
 	SetStringParameter(parameter SolverParameter, value string)
-	// SetVerboseLevel specifies the verbosity level of the underlying
+	// SetVerbosity specifies the verbosity level of the underlying
 	// back-end solver. Forwards output to std out.
-	SetVerboseLevel(solverVerboseLevel SolverVerboseLevel)
+	SetVerbosity(verbosity Verbosity)
 	// StringParameters returns all string parameter settings
 	StringParameters() StringSolverParameterSettings
-	// SolverVerboseLevel returns the configured verbosity level of the
+	// Verbosity returns the configured verbosity level of the
 	// underlying back-end solver.
-	SolverVerboseLevel() SolverVerboseLevel
+	Verbosity() Verbosity
 }
 
-// SolverVerboseLevel specifies the level of verbosity of the back-end solver.
-type SolverVerboseLevel int
+// Verbosity specifies the level of verbosity of the back-end solver.
+type Verbosity int
 
 const (
 	// OFF logs nothing.
-	OFF SolverVerboseLevel = iota
+	OFF Verbosity = iota
 	// LOW logs essentials, depends on the back-end solver.
 	LOW
 	// MEDIUM logs essentials plus high level events,

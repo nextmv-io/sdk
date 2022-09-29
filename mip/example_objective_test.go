@@ -29,8 +29,8 @@ func ExampleObjective_sense() {
 func ExampleObjective_terms() {
 	model := mip.NewModel()
 
-	v1, _ := model.NewBinaryVar()
-	v2, _ := model.NewBinaryVar()
+	v1 := model.NewBool()
+	v2 := model.NewBool()
 
 	fmt.Println(len(model.Objective().Terms()))
 
@@ -73,9 +73,31 @@ func ExampleObjective_terms() {
 	// isMaximize:  false
 }
 
+func ExampleObjective_termsToString() {
+	m := mip.NewModel()
+	x0 := m.NewBool()
+	x1 := m.NewBool()
+	x2 := m.NewBool()
+	x3 := m.NewBool()
+	z := m.Objective()
+	z.NewTerm(3, x2)
+	z.NewTerm(2, x1)
+	z.NewTerm(1, x0)
+	fmt.Println(z)
+	fmt.Println(z.Term(x0))
+	z.NewTerm(1, x0)
+	fmt.Println(z.Term(x0))
+	fmt.Println(z.Term(x3))
+	// Output:
+	// minimize   1 B0 + 2 B1 + 3 B2
+	// 1 B0 1
+	// 2 B0 2
+	// 0 B3 0
+}
+
 func benchmarkObjectiveNewTerms(nrTerms int, b *testing.B) {
 	model := mip.NewModel()
-	v, _ := model.NewContinuousVar(1.0, 2.0)
+	v := model.NewFloat(1.0, 2.0)
 
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < nrTerms; i++ {
