@@ -1,12 +1,14 @@
 package model
 
-// BinaryHelper is an int with an ID method to implement the Identifier
+import "strconv"
+
+// BinaryHelper is an int with an ID method to implement the Identifier[int]
 // interface.
-type BinaryHelper int
+type BinaryHelper string
 
 // ID returns the id of a BinaryHelper.
-func (b BinaryHelper) ID() int {
-	return int(b)
+func (b BinaryHelper) ID() string {
+	return string(b)
 }
 
 // Binarized is a helper type returned by the Binarize function. It can be
@@ -22,7 +24,7 @@ func (b Binarized) GetIdentifier(number int) Identifier {
 func Binarize(number int) Binarized {
 	returnList := make([]Identifier, number)
 	for i := 0; i < number; i++ {
-		returnList[i] = BinaryHelper(i)
+		returnList[i] = BinaryHelper(strconv.Itoa(i))
 	}
 	return returnList
 }

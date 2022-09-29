@@ -1,20 +1,18 @@
 package model
 
 import (
-	"fmt"
 	"hash/maphash"
 )
 
 // Identifier needs to be implemented by any type to be used with MultiMap. The
 // value returned by ID() needs to be unique for every instance of Identifier.
 type Identifier interface {
-	ID() int
+	ID() string
 }
 
 // MultiMap is a map with an n-dimensional index.
 type MultiMap[T any, T2 Identifier] interface {
 	Get(identifiers ...T2) T
-	Slice(identifiers ...T2) []T
 	Length() int
 }
 
@@ -46,7 +44,7 @@ func NewMultiMap[T any, T2 Identifier](
 func (m multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
 	for _, id := range identifiers {
-		_, err := m.hash.WriteString(fmt.Sprint(id.ID()))
+		_, err := m.hash.WriteString(id.ID())
 		if err != nil {
 			panic(err)
 		}
@@ -67,58 +65,4 @@ func (m multiMap[T, T2]) Get(identifiers ...T2) T {
 // Length returns the number of elements in the MultiMap.
 func (m multiMap[T, T2]) Length() int {
 	return len(m.m)
-}
-
-// Slice works as follows:
-// Assume your index is based on (vehicles,stops) and you want all elements
-// dealing with stop[0], then call Slice(nil,stop[0]).
-func (m multiMap[T, T2]) Slice(identifiers ...T2) []T {
-	sets := make([][]T2, len(m.sets))
-	for i, identifier := range identifiers {
-		// nil is sentinal for "get all identifiers in the set"
-		if Identifier(identifier) == nil {
-			sets[i] = m.sets[i]
-		} else {
-			sets[i] = []T2{identifier}
-		}
-	}
-	indices := cartN(sets...)
-
-	returnList := []T{}
-	for _, index := range indices {
-		returnList = append(returnList, m.Get(index...))
-	}
-	return returnList
-}
-
-// cartN computes the cartesian product of the given sets.
-func cartN[T any](a ...[]T) [][]T {
-	c := 1
-	for _, a := range a {
-		c *= len(a)
-	}
-	if c == 0 {
-		return nil
-	}
-	p := make([][]T, c)
-	b := make([]T, c*len(a))
-	n := make([]int, len(a))
-	s := 0
-	for i := range p {
-		e := s + len(a)
-		pi := b[s:e]
-		p[i] = pi
-		s = e
-		for j, n := range n {
-			pi[j] = a[j][n]
-		}
-		for j := len(n) - 1; j >= 0; j-- {
-			n[j]++
-			if n[j] < len(a[j]) {
-				break
-			}
-			n[j] = 0
-		}
-	}
-	return p
 }
