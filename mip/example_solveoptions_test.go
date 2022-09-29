@@ -10,7 +10,7 @@ import (
 func ExampleSolveOptions_default() {
 	solveOptions := mip.NewSolveOptions()
 
-	fmt.Println(solveOptions.SolverVerboseLevel())
+	fmt.Println(solveOptions.Verbosity())
 	fmt.Println(solveOptions.MIPGapAbsolute())
 	fmt.Println(solveOptions.MIPGapRelative())
 	fmt.Println(solveOptions.MaximumDuration())
@@ -23,7 +23,7 @@ func ExampleSolveOptions_default() {
 
 func ExampleSolveOptions_change() {
 	solveOptions := mip.NewSolveOptions()
-	solveOptions.SetVerboseLevel(mip.HIGH)
+	solveOptions.SetVerbosity(mip.HIGH)
 	err := solveOptions.SetMIPGapAbsolute(1.23)
 	if err != nil {
 		panic(err)
@@ -37,7 +37,7 @@ func ExampleSolveOptions_change() {
 		panic(err)
 	}
 
-	fmt.Println(solveOptions.SolverVerboseLevel())
+	fmt.Println(solveOptions.Verbosity())
 	fmt.Println(solveOptions.MIPGapAbsolute())
 	fmt.Println(solveOptions.MIPGapRelative())
 	fmt.Println(solveOptions.MaximumDuration())
