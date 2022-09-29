@@ -12,29 +12,29 @@ type Identifier interface {
 }
 
 // MultiMap is a map with an n-dimensional index.
-type MultiMap[T any] interface {
-	Get(identifiers ...Identifier) T
-	Slice(identifiers ...Identifier) []T
+type MultiMap[T any, T2 Identifier] interface {
+	Get(identifiers ...T2) T
+	Slice(identifiers ...T2) []T
 	Length() int
 }
 
 // multiMap is a map with an n-dimensional index.
-type multiMap[T any] struct {
+type multiMap[T any, T2 Identifier] struct {
 	hash   *maphash.Hash
 	m      map[uint64]T
-	create func(...Identifier) (T, error)
-	sets   [][]Identifier
+	create func(...T2) (T, error)
+	sets   [][]T2
 }
 
 // NewMultiMap creates a new MultiMap. It takes a create function that is
 // responsible to create a new entity of T based on a given n-dimensional index.
 // The second argument is a variable number of sets, one set per dimension of
 // the index.
-func NewMultiMap[T any](
-	create func(...Identifier) (T, error),
-	sets ...[]Identifier,
-) MultiMap[T] {
-	return multiMap[T]{
+func NewMultiMap[T any, T2 Identifier](
+	create func(...T2) (T, error),
+	sets ...[]T2,
+) MultiMap[T, T2] {
+	return multiMap[T, T2]{
 		m:      map[uint64]T{},
 		hash:   &maphash.Hash{},
 		sets:   sets,
@@ -43,7 +43,7 @@ func NewMultiMap[T any](
 }
 
 // Get retrieves an element from the MultiMap, given an n-dimensional index.
-func (m multiMap[T]) Get(identifiers ...Identifier) T {
+func (m multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
 	for _, id := range identifiers {
 		_, err := m.hash.WriteString(fmt.Sprint(id.ID()))
@@ -65,21 +65,21 @@ func (m multiMap[T]) Get(identifiers ...Identifier) T {
 }
 
 // Length returns the number of elements in the MultiMap.
-func (m multiMap[T]) Length() int {
+func (m multiMap[T, T2]) Length() int {
 	return len(m.m)
 }
 
 // Slice works as follows:
 // Assume your index is based on (vehicles,stops) and you want all elements
 // dealing with stop[0], then call Slice(nil,stop[0]).
-func (m multiMap[T]) Slice(identifiers ...Identifier) []T {
-	sets := make([][]Identifier, len(m.sets))
+func (m multiMap[T, T2]) Slice(identifiers ...T2) []T {
+	sets := make([][]T2, len(m.sets))
 	for i, identifier := range identifiers {
 		// nil is sentinal for "get all identifiers in the set"
-		if identifier == nil {
+		if Identifier(identifier) == nil {
 			sets[i] = m.sets[i]
 		} else {
-			sets[i] = []Identifier{identifier}
+			sets[i] = []T2{identifier}
 		}
 	}
 	indices := cartN(sets...)
