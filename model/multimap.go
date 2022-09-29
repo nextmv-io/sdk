@@ -2,6 +2,7 @@ package model
 
 import (
 	"hash/maphash"
+	"strconv"
 )
 
 // Identifier needs to be implemented by any type to be used with MultiMap. The
@@ -18,7 +19,7 @@ type MultiMap[T any, T2 Identifier] interface {
 
 // multiMap is a map with an n-dimensional index.
 type multiMap[T any, T2 Identifier] struct {
-	hash   *maphash.Hash
+	hash   maphash.Hash
 	m      map[uint64]T
 	create func(...T2) (T, error)
 	sets   [][]T2
@@ -32,37 +33,39 @@ func NewMultiMap[T any, T2 Identifier](
 	create func(...T2) (T, error),
 	sets ...[]T2,
 ) MultiMap[T, T2] {
-	return multiMap[T, T2]{
+	return &multiMap[T, T2]{
 		m:      map[uint64]T{},
-		hash:   &maphash.Hash{},
 		sets:   sets,
 		create: create,
 	}
 }
 
 // Get retrieves an element from the MultiMap, given an n-dimensional index.
-func (m multiMap[T, T2]) Get(identifiers ...T2) T {
+func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
-	for _, id := range identifiers {
+	for i, id := range identifiers {
 		_, err := m.hash.WriteString(id.ID())
+		if err != nil {
+			panic(err)
+		}
+		_, err = m.hash.WriteString(strconv.Itoa(i))
 		if err != nil {
 			panic(err)
 		}
 	}
 	index := m.hash.Sum64()
-	v, ok := m.m[index]
-	if !ok {
-		variable, err := m.create(identifiers...)
-		if err != nil {
-			panic(err)
-		}
-		m.m[index] = variable
-		v = variable
+	if v, ok := m.m[index]; ok {
+		return v
 	}
-	return v
+	variable, err := m.create(identifiers...)
+	if err != nil {
+		panic(err)
+	}
+	m.m[index] = variable
+	return variable
 }
 
 // Length returns the number of elements in the MultiMap.
-func (m multiMap[T, T2]) Length() int {
+func (m *multiMap[T, T2]) Length() int {
 	return len(m.m)
 }
