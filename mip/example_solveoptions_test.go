@@ -23,7 +23,7 @@ func ExampleSolveOptions_default() {
 
 func ExampleSolveOptions_change() {
 	solveOptions := mip.NewSolveOptions()
-	solveOptions.SetVerbosity(mip.HIGH)
+	solveOptions.SetVerbosity(mip.High)
 	err := solveOptions.SetMIPGapAbsolute(1.23)
 	if err != nil {
 		panic(err)
