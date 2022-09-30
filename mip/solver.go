@@ -80,16 +80,16 @@ type SolveOptions interface {
 type Verbosity int
 
 const (
-	// OFF logs nothing.
-	OFF Verbosity = iota
-	// LOW logs essentials, depends on the back-end solver.
-	LOW
-	// MEDIUM logs essentials plus high level events,
+	// Off logs nothing.
+	Off Verbosity = iota
+	// Low logs essentials, depends on the back-end solver.
+	Low
+	// Medium logs essentials plus high level events,
 	// depends on the back-end solver.
-	MEDIUM
-	// HIGH logs everything the underlying logs,
+	Medium
+	// High logs everything the underlying logs,
 	// depends on the back-end solver.
-	HIGH
+	High
 )
 
 // SolverParameter identifier for parameters in the back-end solver.
