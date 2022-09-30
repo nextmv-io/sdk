@@ -16,8 +16,8 @@ func ExampleSolveOptions_default() {
 	fmt.Println(solveOptions.MaximumDuration())
 	// Output:
 	// 0
-	// 1e-11
-	// 0.05
+	// 0
+	// 0
 	// 10m0s
 }
 
