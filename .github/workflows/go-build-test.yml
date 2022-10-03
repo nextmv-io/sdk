@@ -30,8 +30,7 @@ jobs:
 
       # Gets the token and stores it in a variable.
       - name: export local branch
-        run:
-          echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
+        run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
 
       - name: override with develop if empty
         if: "${{ env.BRANCH_CHECK == '' }}"
@@ -72,7 +71,7 @@ jobs:
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh
+          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
