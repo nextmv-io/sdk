@@ -40,7 +40,8 @@ func NewMultiMap[T any, T2 Identifier](
 	}
 }
 
-// Get retrieves an element from the MultiMap, given an n-dimensional index.
+// Get retrieves an element from the MultiMap, given an n-dimensional index or
+// adds it by using the create function if it hasn't been created previously.
 func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
 	for i, id := range identifiers {
