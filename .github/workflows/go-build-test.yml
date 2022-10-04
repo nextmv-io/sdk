@@ -58,7 +58,7 @@ jobs:
       - name: configure Nextmv CLI
         run: |
           mkdir ~/.nextmv/tokens
-          echo ${{ secrets.NEXTMV_TOKEN }} >> ~/.nextmv/tokens/${{ secrets.API_KEY_PROD }}
+          echo ${{ secrets.NEXTMV_TOKEN }} >> ~/.nextmv/tokens/${{ secrets.NEXTMV_TOKEN_FILE_NAME }}
           nextmv configure -a ${{ secrets.API_KEY_PROD }}
 
       - name: export sdk path used in this action
