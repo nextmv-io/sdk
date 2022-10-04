@@ -57,6 +57,7 @@ jobs:
 
       - name: configure Nextmv CLI
         run: |
+          echo ${{ secrets.NEXTMV_TOKEN }} >> ~/.nextmv/tokens/${{ secrets.API_KEY_PROD }}
           nextmv configure -a ${{ secrets.API_KEY_PROD }}
 
       - name: export sdk path used in this action
@@ -70,11 +71,11 @@ jobs:
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          NEXTMV_TOKEN=${{ secrets.NEXTMV_TOKEN }} REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
+          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
         run: go build -v ./...
 
       - name: go test
-        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=${{ secrets.NEXTMV_TOKEN }} go test ./...
+        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} go test ./...
