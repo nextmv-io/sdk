@@ -13,11 +13,14 @@ type Identifier interface {
 
 // MultiMap is a map with an n-dimensional index.
 type MultiMap[T any, T2 Identifier] interface {
+	// Get an element from the MultiMap, given an n-dimensional index or
+	// adds it by using the create function if it hasn't been created previously.
 	Get(identifiers ...T2) T
+	// Length of the elements in the MultiMap.
 	Length() int
 }
 
-// multiMap is a map with an n-dimensional index.
+// multiMap implements MultiMap.
 type multiMap[T any, T2 Identifier] struct {
 	hash   maphash.Hash
 	m      map[uint64]T
@@ -26,7 +29,7 @@ type multiMap[T any, T2 Identifier] struct {
 }
 
 // NewMultiMap creates a new MultiMap. It takes a create function that is
-// responsible to create a new entity of T based on a given n-dimensional index.
+// responsible for creating a new entity of T based on a given n-dimensional index.
 // The second argument is a variable number of sets, one set per dimension of
 // the index.
 func NewMultiMap[T any, T2 Identifier](
@@ -39,9 +42,6 @@ func NewMultiMap[T any, T2 Identifier](
 		create: create,
 	}
 }
-
-// Get retrieves an element from the MultiMap, given an n-dimensional index or
-// adds it by using the create function if it hasn't been created previously.
 func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
 	for i, id := range identifiers {
@@ -62,8 +62,6 @@ func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.m[index] = variable
 	return variable
 }
-
-// Length returns the number of elements in the MultiMap.
 func (m *multiMap[T, T2]) Length() int {
 	return len(m.m)
 }
