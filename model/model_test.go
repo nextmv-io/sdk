@@ -8,18 +8,27 @@ import (
 	"github.com/nextmv-io/sdk/model"
 )
 
-type TestInt float64
+type testInt float64
 
-func (t TestInt) ID() string {
+func (t testInt) ID() string {
 	return strconv.Itoa(int(t))
 }
 
+// TestMultiMapOneSet tests a few things - all of which happen on a
+// one-dimensional index:
+// - The MultiMap should be empty after initialization
+// - The MultiMap should return elements when it is given an index
+// - These elements should match what the test expects them to be
+// - After querying for a number of indices, the MultiMap should hold as many
+// elements as the test queried for.
+// - Querying for the same indices again should result in the same elements
+// being returned, but it should not add new elements to the MultiMap.
 func TestMultiMapOneSet(t *testing.T) {
-	ints := []TestInt{1, 2, 3, 4, 5}
+	ints := []testInt{1, 2, 3, 4, 5}
 
 	// Creates an element to be stored in the multimap based on the index passed
 	// in.
-	create := func(index ...TestInt) float64 {
+	create := func(index ...testInt) float64 {
 		returnValue := 0.0
 		for i, v := range index {
 			returnValue += math.Pow(2, float64(i)) * float64(v)
@@ -63,12 +72,21 @@ func TestMultiMapOneSet(t *testing.T) {
 	}
 }
 
+// TestMultiMapOneSet tests a few things - all of which happen on a
+// two-dimensional index:
+// - The MultiMap should be empty after initialization
+// - The MultiMap should return elements when it is given an index
+// - These elements should match what the test expects them to be
+// - After querying for a number of indices, the MultiMap should hold as many
+// elements as the test queried for.
+// - Querying for the same indices again should result in the same elements
+// being returned, but it should not add new elements to the MultiMap.
 func TestMultiMapTwoSets(t *testing.T) {
-	ints := []TestInt{1, 2, 3, 4, 5}
+	ints := []testInt{1, 2, 3, 4, 5}
 
 	// Creates an element to be stored in the multimap based on the index passed
 	// in.
-	create := func(index ...TestInt) float64 {
+	create := func(index ...testInt) float64 {
 		returnValue := 0.0
 		for i, v := range index {
 			returnValue += math.Pow(2, float64(i)) * float64(v)
