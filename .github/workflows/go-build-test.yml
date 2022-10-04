@@ -58,7 +58,6 @@ jobs:
       - name: configure Nextmv CLI
         run: |
           nextmv configure -a ${{ secrets.API_KEY_PROD }}
-          nextmv activate -t local -r 123
 
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
@@ -71,11 +70,11 @@ jobs:
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
+          NEXTMV_TOKEN=${{ secrets.NEXTMV_TOKEN }} REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
         run: go build -v ./...
 
       - name: go test
-        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=$(nextmv token) go test ./...
+        run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=${{ secrets.NEXTMV_TOKEN }} go test ./...
