@@ -29,9 +29,9 @@ type multiMap[T any, T2 Identifier] struct {
 }
 
 // NewMultiMap creates a new MultiMap. It takes a create function that is
-// responsible for creating a new entity of T based on a given n-dimensional index.
-// The second argument is a variable number of sets, one set per dimension of
-// the index.
+// responsible for creating a new entity of T based on a given n-dimensional
+// index. The second argument is a variable number of sets, one set per
+// dimension of the index.
 func NewMultiMap[T any, T2 Identifier](
 	create func(...T2) T,
 	sets ...[]T2,
@@ -42,6 +42,7 @@ func NewMultiMap[T any, T2 Identifier](
 		create: create,
 	}
 }
+
 func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.hash.Reset()
 	for i, id := range identifiers {
@@ -62,6 +63,7 @@ func (m *multiMap[T, T2]) Get(identifiers ...T2) T {
 	m.m[index] = variable
 	return variable
 }
+
 func (m *multiMap[T, T2]) Length() int {
 	return len(m.m)
 }
