@@ -11,16 +11,16 @@ A new Model is created:
 
 Var instances are created and added to the model:
 
-	x, _ := d.NewContinuousVar(0.0, 100.0)
-	y, _ := d.NewIntegerVar(0, 100)
+	x := d.NewFloat(0.0, 100.0)
+	y := d.NewInt(0, 100)
 
 Constraint instances are created and added to the model:
 
-	c1, _ := d.NewConstraint(mip.GreaterThanOrEqual, 1.0)
+	c1 := d.NewConstraint(mip.GreaterThanOrEqual, 1.0)
 	c1.NewTerm(-2.0, x)
 	c1.NewTerm(2.0, y)
 
-	c2, _ := d.NewConstraint(mip.LessThanOrEqual, 13.0)
+	c2 := d.NewConstraint(mip.LessThanOrEqual, 13.0)
 	c2.NewTerm(-8.0, x)
 	c2.NewTerm(10.0, y)
 
