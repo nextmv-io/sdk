@@ -15,6 +15,8 @@ import (
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. The
 // vehicles have starting locations.
+//
+//nolint:dupl
 func ExampleStarts() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -490,6 +492,8 @@ func ExampleCapacity() {
 // Create routes to visit seven landmarks in Kyoto using two vehicles. In
 // addition precedences for stops are defined. The vehicles have no starting
 // locations and no maximum capacity that they can service.
+//
+//nolint:dupl
 func ExamplePrecedence() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1252,6 +1256,8 @@ func ExampleWindows() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. One
 // vehicle has a backlog.
+//
+//nolint:dupl
 func ExampleBacklogs() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1384,6 +1390,8 @@ func ExampleBacklogs() {
 
 // Create routes to visit seven landmarks in Kyoto using one vehicle. The route
 // distance is minimized.
+//
+//nolint:dupl
 func ExampleMinimize() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1502,6 +1510,8 @@ func ExampleMinimize() {
 
 // Create routes to visit seven landmarks in Kyoto using one vehicle. The route
 // distance is maximized.
+//
+//nolint:dupl
 func ExampleMaximize() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1917,6 +1927,8 @@ func ExampleLimits() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. A
 // durations limit constraint is configured.
+//
+//nolint:dupl
 func ExampleLimitDurations() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2051,6 +2063,8 @@ func ExampleLimitDurations() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. A
 // distance limit constraint is configured.
+//
+//nolint:dupl
 func ExampleLimitDistances() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2316,6 +2330,8 @@ func ExampleGrouper() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
 // shifts. Each vehicle has a value function measure.
+//
+//nolint:dupl
 func ExampleValueFunctionMeasures() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2520,6 +2536,8 @@ func ExampleValueFunctionMeasures() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
 // shifts. Each vehicle has a travel time measure.
+//
+//nolint:dupl
 func ExampleTravelTimeMeasures() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2879,6 +2897,8 @@ func ExampleAttribute() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. Use a
 // single thread.
+//
+//nolint:dupl
 func ExampleThreads() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -3004,6 +3024,8 @@ func ExampleThreads() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. Alternate
 // stops are configured.
+//
+//nolint:dupl
 func ExampleAlternates() {
 	// Define stops and vehicles.
 	stops := []route.Stop{

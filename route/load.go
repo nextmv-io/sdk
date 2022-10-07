@@ -31,9 +31,10 @@ const (
 	typeConstant  pointType = "constant"
 )
 
+//nolint:tagliatelle
 type byPointJSON struct {
-	Type     pointType      `json:"type"`
 	ByPoint  *ByPointLoader `json:"measure"`
+	Type     pointType      `json:"type"`
 	Scale    float64        `json:"scale"`
 	Constant float64        `json:"constant"`
 }
@@ -85,16 +86,18 @@ type ByIndexLoader struct {
 // JSON object (like a C oneof). We unmarshal onto this data structure instead
 // of onto a map[string]any for type safety and because this will allow
 // recursive measures to be automatically unmarshalled.
+//
+//nolint:tagliatelle
 type byIndexJSON struct {
-	Type     string                  `json:"type"`
-	Constant float64                 `json:"constant"`
-	Scale    float64                 `json:"scale"`
-	Measures []ByIndexLoader         `json:"measures"`
 	ByIndex  *ByIndexLoader          `json:"measure"`
+	Arcs     map[int]map[int]float64 `json:"arcs"`
+	Type     string                  `json:"type"`
+	Measures []ByIndexLoader         `json:"measures"`
 	Costs    []float64               `json:"costs"`
 	Matrix   [][]float64             `json:"matrix"`
+	Constant float64                 `json:"constant"`
+	Scale    float64                 `json:"scale"`
 	Exponent float64                 `json:"exponent"`
-	Arcs     map[int]map[int]float64 `json:"arcs"`
 	Lower    float64                 `json:"lower"`
 	Upper    float64                 `json:"upper"`
 }
@@ -106,6 +109,8 @@ func (l ByIndexLoader) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON converts the bytes into the appropriate implementation of
 // ByIndex.
+//
+//nolint:gocyclo
 func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 	var j byIndexJSON
 	if err := json.Unmarshal(b, &j); err != nil {
