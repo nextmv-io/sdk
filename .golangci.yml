@@ -148,3 +148,13 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
+    # Complexity in UnmarshalJSON is high due to multiple cases, fine for now
+    - path: route/load\.go
+      linters:
+        - gocyclo
+      text: ByIndexLoader
+    # Tag should be 'measure' in both cases ByPoint and ByIndex
+    - path: route/load\.go
+      linters:
+        - tagliatelle
+      text: measure
