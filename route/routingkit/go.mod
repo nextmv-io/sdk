@@ -2,7 +2,7 @@ module github.com/nextmv-io/sdk/route/routingkit
 
 go 1.19
 
-replace github.com/nextmv-io/sdk => ../../../sdk
+replace github.com/nextmv-io/sdk => ../../.
 
 require (
 	github.com/dgraph-io/ristretto v0.1.0

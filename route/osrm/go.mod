@@ -2,7 +2,7 @@ module github.com/nextmv-io/sdk/route/osrm
 
 go 1.19
 
-replace github.com/nextmv-io/sdk => ../../../sdk
+replace github.com/nextmv-io/sdk => ../../.
 
 require (
 	github.com/golang/mock v1.6.0

@@ -2,7 +2,7 @@ module github.com/nextmv-io/sdk/route/google
 
 go 1.19
 
-replace github.com/nextmv-io/sdk => ../../../sdk
+replace github.com/nextmv-io/sdk => ../../.
 
 require (
 	github.com/nextmv-io/sdk v0.20.0
