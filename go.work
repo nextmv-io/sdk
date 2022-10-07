@@ -1,9 +1,0 @@
-go 1.18
-
-use (
-	./
-    ./route/google
-    ./route/here
-    ./route/osrm
-    ./route/routingkit
-)
