@@ -393,7 +393,7 @@ func Polylines(
 					if err != nil {
 						return "", []string{}, err
 					}
-					decodedLegs[index] = append(decodedLegs[i], dec...) //nolint:gocritic
+					decodedLegs[index] = append(decodedLegs[i], dec...)
 				}
 			}
 		}
