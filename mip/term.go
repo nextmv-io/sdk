@@ -7,9 +7,24 @@ package mip
 type Term interface {
 	// Coefficient returns the coefficient value of the invoking term.
 	Coefficient() float64
-	// Var returns the var of the invoking term.
+	// Var returns the variable of the term.
 	Var() Var
 }
 
 // Terms is a slice of Term instances.
 type Terms []Term
+
+// QuadraticTerm consists of a coefficient and two vars. It should be
+// interpreted as the product of coefficient and the two vars in the
+// context of the objective.
+type QuadraticTerm interface {
+	// Coefficient returns the coefficient value of the invoking term.
+	Coefficient() float64
+	// Var1 returns the first variable.
+	Var1() Var
+	// Var2 returns the second variable.
+	Var2() Var
+}
+
+// Terms is a slice of Term instances.
+type QuadraticTerms []QuadraticTerm
