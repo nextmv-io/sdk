@@ -11,11 +11,10 @@ package mip
 // 2.5 * x and 3.5 * y are 2 terms in this example.
 type Objective interface {
 	IsLinear() bool
-	// IsMaximize return true if the invoking objective is a maximization
+	// IsMaximize returns true if the invoking objective is a maximization
 	// objective.
 	IsMaximize() bool
-	// IsQuadratic return true if the invoking objective is a quadratic function
-	// of the form c^tx * x^tQx.
+	// IsQuadratic returns true if the invoking objective is a quadratic function.
 	IsQuadratic() bool
 	// NewTerm adds a term to the invoking objective, invoking this API
 	// multiple times for the same variable will take the sum of coefficients
@@ -36,10 +35,14 @@ type Objective interface {
 	//      x1 := m.NewFloat(10.0, 100.0)
 	//      x2 := m.NewFloat(10.0, 100.0)
 	//
-	//      m.Objective().SetMaximize()						// results in: maximize -
-	//      m.Objective().NewQuadraticTerm(1.0, x1, x1)     // results in: maximize 1.0 * x1^2
-	//      m.Objective().NewQuadraticTerm(1.0, x1, x2)     // results in: maximize 1.0 * x1^2 + x1x2
-	//      m.Objective().NewQuadraticTerm(1.0, x2, x1)     // results in: maximize 1.0 * x1^2 + 2.0 * x1x2
+	//      m.Objective().SetMaximize()
+	//      // results in: maximize -
+	//      m.Objective().NewQuadraticTerm(1.0, x1, x1)
+	//      // results in: maximize 1.0 * x1^2
+	//      m.Objective().NewQuadraticTerm(1.0, x1, x2)
+	//      // results in: maximize 1.0 * x1^2 + x1x2
+	//      m.Objective().NewQuadraticTerm(1.0, x2, x1)
+	//      // results in: maximize 1.0 * x1^2 + 2.0 * x1x2
 	NewQuadraticTerm(coefficient float64, variable1, variabl2 Var) QuadraticTerm
 	// SetMaximize sets the invoking objective to be a maximization objective.
 	SetMaximize()
