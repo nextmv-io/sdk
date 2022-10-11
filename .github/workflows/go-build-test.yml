@@ -8,6 +8,12 @@ jobs:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       RESOURCES: resources
       NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
+    # Use a matrix strategy to test all the modules simultaneously.
+    strategy:
+      fail-fast: false
+      matrix:
+        MOD_PATH:
+          [./, ./route/google, ./route/here, ./route/osrm, ./route/routingkit]
     steps:
       # Installs dependencies.
       - name: install dependencies linux
@@ -77,6 +83,8 @@ jobs:
 
       - name: go build
         run: go build -v ./...
+        working-directory: ${{ matrix.MOD_PATH }}
 
       - name: go test
         run: NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} NEXTMV_TOKEN=${{ secrets.NEXTMV_TOKEN }} go test ./...
+        working-directory: ${{ matrix.MOD_PATH }}
