@@ -15,7 +15,7 @@ authentication.
 Matrix API: At a minimum, the request requires the origins and destinations
 to estimate.
 Distance API: At minimum, the request requires the origin and destination. But
-it is recommended to pass in waypoints as an encoded as a polyline with "enc:"
+it is recommended to pass in waypoints encoded as a polyline with "enc:"
 as a prefix to get a more precise polyline for each leg of the route.
 
 Here is a minimal example of how to create a client and matrix request,
