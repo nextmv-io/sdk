@@ -10,6 +10,7 @@ package mip
 //
 // 2.5 * x and 3.5 * y are 2 terms in this example.
 type Objective interface {
+	// IsLinear returns true if the invoking objective is a linear function.
 	IsLinear() bool
 	// IsMaximize returns true if the invoking objective is a maximization
 	// objective.
