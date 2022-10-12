@@ -45,8 +45,10 @@ jobs:
       - name: export local branch
         run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
 
+      # We always want to fall back to develop, even when the branch is stable,
+      # which means we are syncing a hotfix back on to develop.
       - name: override with develop if empty
-        if: "${{ env.BRANCH_CHECK == '' }}"
+        if: ${{ env.BRANCH_CHECK == '' || github.head_ref == 'stable' }}
         run: echo "LOCAL_BRANCH=develop" >> $GITHUB_ENV
 
       - name: git clone
