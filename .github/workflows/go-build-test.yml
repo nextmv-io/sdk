@@ -9,6 +9,19 @@ jobs:
       RESOURCES: resources
       NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
     steps:
+      # Installs dependencies.
+      - name: install dependencies linux
+        run: |
+          # jq
+          sudo apt-get install jq
+
+          # yq
+          wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.27.2/yq_linux_amd64
+          chmod a+x /usr/local/bin/yq
+
+          # cmake for act locally
+          # sudo apt-get update && apt-get -y install cmake protobuf-compiler
+
       - name: set up go
         uses: actions/setup-go@v3
         with:
@@ -32,8 +45,10 @@ jobs:
       - name: export local branch
         run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
 
+      # We always want to fall back to develop, even when the branch is stable,
+      # which means we are syncing a hotfix back on to develop.
       - name: override with develop if empty
-        if: "${{ env.BRANCH_CHECK == '' }}"
+        if: ${{ env.BRANCH_CHECK == '' || github.ref_name == 'stable' }}
         run: echo "LOCAL_BRANCH=develop" >> $GITHUB_ENV
 
       - name: git clone
@@ -59,7 +74,7 @@ jobs:
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
+          REMOVE_TRIMPATH=1 NO_HIGHS_TODAY=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
