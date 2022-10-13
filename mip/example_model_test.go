@@ -42,3 +42,27 @@ func ExampleModel_queries() {
 	//       1: F1 [1, 2]
 	//       2: B2 [0, 1]
 }
+
+func ExampleModel_copy() {
+	model := mip.NewModel()
+
+	model.Objective().SetMaximize()
+	model.NewBool()
+	model.NewFloat(1.0, 2.0)
+	model.NewBool()
+	model.NewConstraint(mip.Equal, 0.0)
+
+	copyModel := model.Copy()
+
+	fmt.Println(len(copyModel.Vars()))
+	fmt.Println(len(copyModel.Constraints()))
+	fmt.Println(copyModel)
+	// Output:
+	// 3
+	// 1
+	// maximize
+	//       0: = 0
+	//       0: B0 [0, 1]
+	//       1: F1 [1, 2]
+	//       2: B2 [0, 1]
+}

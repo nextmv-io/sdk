@@ -4,6 +4,8 @@ package mip
 type Model interface {
 	// Constraints returns a copy slice of all constraints.
 	Constraints() Constraints
+	// Copy returns a copy of the model.
+	Copy() Model
 	// NewBool adds a bool variable to the invoking model,
 	// returns the newly constructed variable.
 	NewBool() Bool
