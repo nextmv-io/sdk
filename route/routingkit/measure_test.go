@@ -209,12 +209,10 @@ func TestByPointLoader(t *testing.T) {
 		if err != nil {
 			t.Errorf("error marshalling loader: %v", err)
 		}
-		if string(marshalled) != removeSpace(test.input) {
-			t.Errorf(
-				"[%d] expected marshalled loader to = input, but got %s",
-				i,
-				string(marshalled),
-			)
+		got := string(marshalled)
+		want := removeSpace(test.input)
+		if got != want {
+			t.Errorf("[%d] got %s, want %s", i, got, want)
 		}
 	}
 }
@@ -297,12 +295,10 @@ func TestByIndexLoader(t *testing.T) {
 		if err != nil {
 			t.Errorf("error marshalling loader: %v", err)
 		}
-		if string(marshalled) != removeSpace(test.input) {
-			t.Errorf(
-				"[%d] expected marshalled loader to = input, but got %s",
-				i,
-				string(marshalled),
-			)
+		got := string(marshalled)
+		want := removeSpace(test.input)
+		if got != want {
+			t.Errorf("[%d] got %s, want %s", i, got, want)
 		}
 	}
 }

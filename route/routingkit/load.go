@@ -17,10 +17,10 @@ type ByPointLoader struct {
 type byPointJSON struct {
 	ByPoint       *ByPointLoader `json:"measure"` //nolint:tagliatelle
 	Type          string         `json:"type"`
-	OSMFile       string         `json:"osm_file"`
+	OSMFile       string         `json:"osm"` //nolint:tagliatelle
 	Radius        float64        `json:"radius"`
 	CacheSize     int64          `json:"cache_size"`
-	ProfileLoader *ProfileLoader `json:"profile_loader"`
+	ProfileLoader *ProfileLoader `json:"profile"` //nolint:tagliatelle
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByPoint.
@@ -87,12 +87,12 @@ type ByIndexLoader struct {
 
 type byIndexJSON struct {
 	Measure       *ByPointLoader `json:"measure"`
-	OSMFile       string         `json:"osm_file"`
+	OSMFile       string         `json:"osm"` //nolint:tagliatelle
 	Type          string         `json:"type"`
 	Sources       []route.Point  `json:"sources"`
 	Destinations  []route.Point  `json:"destinations"`
 	Radius        float64        `json:"radius"`
-	ProfileLoader *ProfileLoader `json:"profile_loader,omitempty"`
+	ProfileLoader *ProfileLoader `json:"profile,omitempty"` //nolint:tagliatelle
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByIndex.
