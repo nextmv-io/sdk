@@ -24,8 +24,7 @@ type MatrixOption func(req *matrixRequest)
 // WithDepartureTime sets departure time to be used in the request. This will
 // take traffic data into account for the given time. If no departure time is
 // given, "any" will be used in the request and no traffic data is included,
-// see:
-// https://developer.here.com/documentation/matrix-routing-api/dev_guide/topics/concepts/traffic.html
+// see official documentation for HERE matrix routing, concepts traffic.
 func WithDepartureTime(t time.Time) MatrixOption {
 	return func(req *matrixRequest) {
 		depTime := "any"

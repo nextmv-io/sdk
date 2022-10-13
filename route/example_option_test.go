@@ -490,7 +490,6 @@ func ExampleCapacity() {
 // Create routes to visit seven landmarks in Kyoto using two vehicles. In
 // addition precedences for stops are defined. The vehicles have no starting
 // locations and no maximum capacity that they can service.
-
 func ExamplePrecedence() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1253,7 +1252,6 @@ func ExampleWindows() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. One
 // vehicle has a backlog.
-
 func ExampleBacklogs() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1386,7 +1384,6 @@ func ExampleBacklogs() {
 
 // Create routes to visit seven landmarks in Kyoto using one vehicle. The route
 // distance is minimized.
-
 func ExampleMinimize() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1505,7 +1502,6 @@ func ExampleMinimize() {
 
 // Create routes to visit seven landmarks in Kyoto using one vehicle. The route
 // distance is maximized.
-
 func ExampleMaximize() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -1921,7 +1917,6 @@ func ExampleLimits() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. A
 // durations limit constraint is configured.
-
 func ExampleLimitDurations() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2056,7 +2051,6 @@ func ExampleLimitDurations() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. A
 // distance limit constraint is configured.
-
 func ExampleLimitDistances() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2322,7 +2316,6 @@ func ExampleGrouper() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
 // shifts. Each vehicle has a value function measure.
-
 func ExampleValueFunctionMeasures() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2527,7 +2520,6 @@ func ExampleValueFunctionMeasures() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
 // shifts. Each vehicle has a travel time measure.
-
 func ExampleTravelTimeMeasures() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -2887,7 +2879,6 @@ func ExampleAttribute() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. Use a
 // single thread.
-
 func ExampleThreads() {
 	// Define stops and vehicles.
 	stops := []route.Stop{
@@ -3013,7 +3004,6 @@ func ExampleThreads() {
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. Alternate
 // stops are configured.
-
 func ExampleAlternates() {
 	// Define stops and vehicles.
 	stops := []route.Stop{

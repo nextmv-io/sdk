@@ -49,16 +49,16 @@ type matrixResponse struct {
 	destinations reference
 }
 
-// DistanceDurationMatrices makes requests to the Google Distance Matrix API and
-// returns route.ByIndex types to estimate distances (in meters) and durations
-// (in seconds). It receives a Google Maps Client and Request. The coordinates
-// passed to the request must be in the form latitude, longitude. The resulting
-// distance and duration matrices are saved in memory. To find out how to create
-// a client and request, please refer to the go package docs. This function
-// takes into consideration the usage limits of the Distance Matrix API and thus
-// may transform the request into multiple ones and handle them accordingly. You
-// can find more about usage limits here:
-// https://developers.google.com/maps/documentation/distance-matrix/usage-and-billing#other-usage-limits.
+// DistanceDurationMatrices makes requests to the Google Distance Matrix API
+// and returns route.ByIndex types to estimate distances (in meters) and
+// durations (in seconds). It receives a Google Maps Client and Request. The
+// coordinates passed to the request must be in the form latitude, longitude.
+// The resulting distance and duration matrices are saved in memory. To find
+// out how to create a client and request, please refer to the go package docs.
+// This function takes into consideration the usage limits of the Distance
+// Matrix API and thus may transform the request into multiple ones and handle
+// them accordingly. You can find more about usage limits here in the official
+// google maps documentation for the distance matrix, usage and billing.
 func DistanceDurationMatrices(c *maps.Client, r *maps.DistanceMatrixRequest) (
 	route.ByIndex,
 	route.ByIndex,
@@ -280,64 +280,9 @@ type directionsResult struct {
 // makeDistanceRequest performs concurrent requests to the provided client.
 func makeDirectionsRequest(
 	c *maps.Client,
-	requests []directionRequest,
+	points []string,
+	orgRequest *maps.DirectionsRequest,
 ) ([]directionResponse, error) {
-	// Define channels to gather results and quit other goroutines in case of an
-	// error.
-	out := make(chan directionsResult, len(requests))
-	// Perform concurrent requests.
-	for _, req := range requests {
-		go func(req directionRequest) {
-			// Actually make the request.
-			r, _, err := c.Directions(context.Background(), req.r)
-			if err != nil {
-				// If the request errors, push the error to the chan and signal
-				// closure.
-				out <- directionsResult{res: nil, err: err}
-			} else {
-				response := directionResponse{
-					r:     r,
-					index: req.index,
-				}
-				// If the request does not error, push the request to the chan.
-				out <- directionsResult{res: &response, err: nil}
-			}
-		}(req)
-	}
-
-	// Empty out the chan to gather responses. If there is an error found,
-	// immediately return it.
-	var responses []directionResponse
-	for i := 0; i < len(requests); i++ {
-		result := <-out
-		if result.err != nil {
-			return nil, result.err
-		}
-		responses = append(responses, *result.res)
-	}
-
-	// Sort the responses by index, that orders the row packs correctly.
-	sort.Slice(responses, func(i, j int) bool {
-		return responses[i].index < responses[j].index
-	})
-
-	return responses, nil
-}
-
-// Polylines requests polylines for the given points. The first parameter
-// returns a polyline from start to end and the second parameter returns a list
-// of polylines, one per leg.
-func Polylines(
-	c *maps.Client, orgRequest *maps.DirectionsRequest,
-) (string, []string, error) {
-	// Extract all points from the given request
-	points := make([]string, len(orgRequest.Waypoints)+2)
-	points[0] = orgRequest.Origin
-	points[len(points)-1] = orgRequest.Destination
-	for i, w := range orgRequest.Waypoints {
-		points[i+1] = w
-	}
-
 	// Loop over points to make directions requests taking into account Google's
 	// waypoint limitation per request.
 	remaining := len(points) - 1
@@ -373,8 +318,65 @@ func Polylines(
 		}
 	}
 
+	// Define channels to gather results and quit other goroutines in case of an
+	// error.
+	out := make(chan directionsResult, len(directionRequests))
+	// Perform concurrent requests.
+	for _, req := range directionRequests {
+		go func(req directionRequest) {
+			// Actually make the request.
+			r, _, err := c.Directions(context.Background(), req.r)
+			if err != nil {
+				// If the request errors, push the error to the chan and signal
+				// closure.
+				out <- directionsResult{res: nil, err: err}
+			} else {
+				response := directionResponse{
+					r:     r,
+					index: req.index,
+				}
+				// If the request does not error, push the request to the chan.
+				out <- directionsResult{res: &response, err: nil}
+			}
+		}(req)
+	}
+
+	// Empty out the chan to gather responses. If there is an error found,
+	// immediately return it.
+	var responses []directionResponse
+	for i := 0; i < len(directionRequests); i++ {
+		result := <-out
+		if result.err != nil {
+			return nil, result.err
+		}
+		responses = append(responses, *result.res)
+	}
+
+	// Sort the responses by index, that orders the row packs correctly.
+	sort.Slice(responses, func(i, j int) bool {
+		return responses[i].index < responses[j].index
+	})
+
+	return responses, nil
+}
+
+// Polylines requests polylines for the given points. The first parameter
+// returns a polyline from start to end and the second parameter returns a list
+// of polylines, one per leg.
+func Polylines(
+	c *maps.Client,
+	orgRequest *maps.DirectionsRequest,
+) (string, []string, error) {
+	// Extract all points from the given request
+	points := make([]string, len(orgRequest.Waypoints)+2)
+	points[0] = orgRequest.Origin
+	points[len(points)-1] = orgRequest.Destination
+	for i, w := range orgRequest.Waypoints {
+		points[i+1] = w
+	}
+
 	// Make requests to Google and retrieve results
-	responses, err := makeDirectionsRequest(c, directionRequests)
+	responses, err := makeDirectionsRequest(c, points, orgRequest)
 	if err != nil {
 		return "", []string{}, err
 	}
@@ -393,7 +395,7 @@ func Polylines(
 					if err != nil {
 						return "", []string{}, err
 					}
-					decodedLegs[index] = append(decodedLegs[i], dec...)
+					decodedLegs[index] = append(decodedLegs[i], dec...) //nolint:gocritic
 				}
 			}
 		}

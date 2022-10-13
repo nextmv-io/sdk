@@ -24,9 +24,8 @@ import (
 	"github.com/nextmv-io/sdk/route"
 )
 
-// Client represents a HERE maps client.
-// HERE API docs:
-// https://developer.here.com/documentation/matrix-routing-api/dev_guide/topics/get-started/send-request.html
+// Client represents a HERE maps client. See official documentation for HERE
+// topics, getting started.
 type Client interface {
 	// DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 	// if there are more than 500 points given.
@@ -187,7 +186,7 @@ func (c *client) fetchMatricesSync(
 }
 
 // fetchMatricesAsync makes a call to the async HERE API endpoint.
-func (c *client) fetchMatricesAsync(
+func (c *client) fetchMatricesAsync( //nolint:gocyclo
 	ctx context.Context,
 	points []route.Point,
 	includeDistance,
@@ -258,7 +257,12 @@ func (c *client) fetchMatricesAsync(
 		if err != nil && !shouldRetry() || errors.Is(err, context.Canceled) {
 			return nil, nil, fmt.Errorf("getting result: %v", err)
 		}
-		defer resp.Body.Close()
+		defer func() {
+			err = resp.Body.Close()
+		}()
+		if err != nil {
+			return nil, nil, fmt.Errorf("closing response body: %w", err)
+		}
 		if resp.StatusCode == http.StatusOK {
 			break
 		}
@@ -362,7 +366,12 @@ func (c *client) poll(
 	if err != nil {
 		return "", false, true, fmt.Errorf("getting status: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		err = resp.Body.Close()
+	}()
+	if err != nil {
+		return "", false, true, fmt.Errorf("closing response body: %w", err)
+	}
 
 	if resp.StatusCode > http.StatusBadRequest &&
 		resp.StatusCode < http.StatusInternalServerError {

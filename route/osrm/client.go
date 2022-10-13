@@ -260,7 +260,7 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 
 var unroutablePoint = route.Point{-143.292892, 37.683603}
 
-func (c *client) tableRequests(
+func (c *client) tableRequests( //nolint:gocyclo
 	config *tableConfig,
 	points []route.Point,
 ) ([]request, error) {

@@ -10,7 +10,6 @@ import (
 )
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles.
-
 func Example() {
 	// Define stops and vehicles.
 	stops := []route.Stop{

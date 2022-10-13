@@ -24,12 +24,12 @@ type ByPointLoader struct {
 }
 
 type byPointJSON struct {
-	ByPoint       *ByPointLoader `json:"measure"`
+	ByPoint       *ByPointLoader `json:"measure"` //nolint:tagliatelle
 	Type          string         `json:"type"`
-	OSMFile       string         `json:"osm"`
+	OSMFile       string         `json:"osm_file"`
 	Radius        float64        `json:"radius"`
 	CacheSize     int64          `json:"cache_size"`
-	ProfileLoader *ProfileLoader `json:"profile"`
+	ProfileLoader *ProfileLoader `json:"profile_loader"`
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByPoint.
@@ -96,12 +96,12 @@ type ByIndexLoader struct {
 
 type byIndexJSON struct {
 	Measure       *ByPointLoader `json:"measure"`
-	OSMFile       string         `json:"osm"`
+	OSMFile       string         `json:"osm_file"`
 	Type          string         `json:"type"`
 	Sources       []route.Point  `json:"sources"`
 	Destinations  []route.Point  `json:"destinations"`
 	Radius        float64        `json:"radius"`
-	ProfileLoader *ProfileLoader `json:"profile,omitempty"`
+	ProfileLoader *ProfileLoader `json:"profile_loader,omitempty"`
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByIndex.
@@ -119,7 +119,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 
 	var m route.ByPoint
 	if j.Measure != nil {
-		m = j.route.To()
+		m = j.Measure.To()
 	}
 
 	switch j.Type {

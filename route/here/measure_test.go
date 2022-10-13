@@ -1263,7 +1263,7 @@ func resultSuccess(response matrixResponse) buildResponse {
 	}
 }
 
-func newMockServer(
+func newMockServer( //nolint:gocyclo
 	ctx context.Context,
 	apiKey string,
 	requests []requestSpec,

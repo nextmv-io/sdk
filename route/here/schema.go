@@ -36,22 +36,22 @@ func isKnownStatusResponse(status responseStatus) bool {
 }
 
 type statusResponse struct {
-	MatrixID  string          `json:"matrixId"`
+	MatrixID  string          `json:"matrix_id"`
 	Status    responseStatus  `json:"status"`
-	StatusURL string          `json:"statusUrl"`
-	ResultURL string          `json:"resultUrl"`
+	StatusURL string          `json:"status_url"`
+	ResultURL string          `json:"result_url"`
 	Error     json.RawMessage `json:"error"`
 }
 
 type matrixResponse struct {
 	Matrix           matrix           `json:"matrix"`
-	RegionDefinition regionDefinition `json:"regionDefinition"`
+	RegionDefinition regionDefinition `json:"region_definition"`
 }
 
 type matrix struct {
-	NumOrigins      int   `json:"numOrigins"`
-	NumDestinations int   `json:"numDestinations"`
-	TravelTimes     []int `json:"travelTimes"`
+	NumOrigins      int   `json:"num_origins"`
+	NumDestinations int   `json:"num_destinations"`
+	TravelTimes     []int `json:"travel_times"`
 	Distances       []int `json:"distances"`
 }
 
@@ -61,16 +61,16 @@ type regionDefinition struct {
 
 type point struct {
 	Lat float64 `json:"lat"`
-	Lon float64 `json:"lng"`
+	Lon float64 `json:"lon"`
 }
 
 type matrixRequest struct {
 	Origins          []point          `json:"origins"`
-	RegionDefinition regionDefinition `json:"regionDefinition,omitempty"`
+	RegionDefinition regionDefinition `json:"region_definition,omitempty"`
 	// This is either an RFC 3339 timestamp or the string "any"
-	DepartureTime    string        `json:"departureTime,omitempty"`
-	MatrixAttributes []string      `json:"matrixAttributes"`
-	TransportMode    TransportMode `json:"transportMode,omitempty"`
+	DepartureTime    string        `json:"departure_time,omitempty"`
+	MatrixAttributes []string      `json:"matrix_attributes"`
+	TransportMode    TransportMode `json:"transport_mode,omitempty"`
 	Avoid            *avoid        `json:"avoid,omitempty"`
 	Truck            *Truck        `json:"truck,omitempty"`
 	Scooter          *Scooter      `json:"scooter,omitempty"`
@@ -154,22 +154,22 @@ const UTurns Feature = "uTurns"
 
 // Truck captures truck-specific routing parameters.
 type Truck struct {
-	ShippedHazardousGoods []HazardousGood `json:"shippedHazardousGoods,omitempty"`
+	ShippedHazardousGoods []HazardousGood `json:"shipped_hazardous_goods"`
 	// in kilograms
-	GrossWeight int32 `json:"grossWeight,omitempty"`
+	GrossWeight int32 `json:"gross_weight,omitempty"`
 	// in kilograms
-	WeightPerAxle int32 `json:"weightPerAxle,omitempty"`
+	WeightPerAxle int32 `json:"weight_per_axle,omitempty"`
 	// in centimeters
 	Height int32 `json:"height,omitempty"`
 	// in centimeters
 	Width int32 `json:"width,omitempty"`
 	// in centimeters
 	Length             int32               `json:"length,omitempty"`
-	TunnelCategory     TunnelCategory      `json:"tunnelCategory,omitempty"`
-	AxleCount          int32               `json:"axleCount,omitempty"`
+	TunnelCategory     TunnelCategory      `json:"tunnel_category,omitempty"`
+	AxleCount          int32               `json:"axle_count,omitempty"`
 	Type               TruckType           `json:"type,omitempty"`
-	TrailerCount       int32               `json:"trailerCount,omitempty"`
-	WeightPerAxleGroup *WeightPerAxleGroup `json:"weightPerAxleGroup,omitempty"`
+	TrailerCount       int32               `json:"trailer_count,omitempty"`
+	WeightPerAxleGroup *WeightPerAxleGroup `json:"weight_per_axle_group,omitempty"`
 }
 
 // WeightPerAxleGroup captures the weights of different axle groups.
@@ -245,10 +245,10 @@ const OtherHazardousGood HazardousGood = "other"
 
 // Scooter captures routing parameters that can be set on scooters.
 type Scooter struct {
-	AllowHighway bool `json:"allowHighway"`
+	AllowHighway bool `json:"allow_highway"`
 }
 
 // Taxi captures routing parameters that can be set on taxis.
 type Taxi struct {
-	AllowDriveThroughTaxiRoads bool `json:"allowDriveThroughTaxiRoads"`
+	AllowDriveThroughTaxiRoads bool `json:"allow_drive_through_taxi_roads"`
 }
