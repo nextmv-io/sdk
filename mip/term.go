@@ -15,8 +15,7 @@ type Term interface {
 type Terms []Term
 
 // QuadraticTerm consists of a coefficient and two vars. It should be
-// interpreted as the product of a coefficient and the two vars in the context
-// of the objective.
+// interpreted as the product of a coefficient and the two vars.
 type QuadraticTerm interface {
 	// Coefficient returns the coefficient value of the invoking term.
 	Coefficient() float64

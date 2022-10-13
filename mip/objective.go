@@ -44,7 +44,7 @@ type Objective interface {
 	//      // results in: maximize 1.0 * x1^2 + x1x2
 	//      m.Objective().NewQuadraticTerm(1.0, x2, x1)
 	//      // results in: maximize 1.0 * x1^2 + 2.0 * x1x2
-	NewQuadraticTerm(coefficient float64, variable1, variabl2 Var) QuadraticTerm
+	NewQuadraticTerm(coefficient float64, variable1, variable2 Var) QuadraticTerm
 	// SetMaximize sets the invoking objective to be a maximization objective.
 	SetMaximize()
 	// SetMinimize sets the invoking objective to be a minimization objective.
