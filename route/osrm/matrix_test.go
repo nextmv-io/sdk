@@ -1,12 +1,3 @@
-// © 2019-2022 nextmv.io inc. All rights reserved.
-// nextmv.io, inc. CONFIDENTIAL
-//
-// This file includes unpublished proprietary source code of nextmv.io, inc.
-// The copyright notice above does not evidence any actual or intended
-// publication of such source code. Disclosure of this source code or any
-// related proprietary information is strictly prohibited without the express
-// written permission of nextmv.io, inc.
-
 package osrm_test
 
 import (
