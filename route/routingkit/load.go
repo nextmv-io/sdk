@@ -12,6 +12,7 @@ import (
 // object into the appropriate implementation, including a routingkit.ByPoint.
 type ByPointLoader struct {
 	byPoint route.ByPoint
+	Type    string `json:"type"`
 }
 
 type byPointJSON struct {
@@ -83,6 +84,7 @@ func (l *ByPointLoader) To() route.ByPoint {
 // object into the appropriate implementation, including a routingkit.ByIndex.
 type ByIndexLoader struct {
 	byIndex route.ByIndex
+	Type    string `json:"type"`
 }
 
 type byIndexJSON struct {
