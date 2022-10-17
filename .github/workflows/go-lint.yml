@@ -3,6 +3,12 @@ on: [push]
 jobs:
   sdk-go-lint:
     runs-on: ubuntu-latest
+    # Use a matrix strategy to test all the modules simultaneously.
+    strategy:
+      fail-fast: false
+      matrix:
+        MOD_PATH:
+          [./, ./route/google, ./route/here, ./route/osrm, ./route/routingkit]
     steps:
       - name: set up go
         uses: actions/setup-go@v3
@@ -17,3 +23,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.49.0
+          working-directory: ${{ matrix.MOD_PATH }}
