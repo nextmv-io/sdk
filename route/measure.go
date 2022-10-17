@@ -119,6 +119,12 @@ func Scale(m ByIndex, constant float64) ByIndex {
 	return scaleFunc(m, constant)
 }
 
+// ScaleByPoint scales the cost of some other measure by a constant.
+func ScaleByPoint(m ByPoint, constant float64) ByPoint {
+	connect.Connect(con, &scaleFunc)
+	return scaleByPointFunc(m, constant)
+}
+
 // ByClockwise implements sort.Interface for sorting points clockwise around a
 // central point.
 func ByClockwise(center Point, points []Point) sort.Interface {
@@ -192,6 +198,7 @@ var (
 	debugOverrideFunc    func(ByIndex, ByIndex, func(int, int) bool) ByIndex
 	powerFunc            func(ByIndex, float64) ByIndex
 	scaleFunc            func(ByIndex, float64) ByIndex
+	scaleByPointFunc     func(ByPoint, float64) ByPoint
 	byClockwiseFunc      func(Point, []Point) sort.Interface
 	lessClockwiseFunc    func(Point, Point, Point) bool
 	sparseFunc           func(ByIndex, map[int]map[int]float64) ByIndex
