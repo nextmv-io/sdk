@@ -27,22 +27,22 @@ func isKnownStatusResponse(status responseStatus) bool {
 }
 
 type statusResponse struct {
-	MatrixID  string          `json:"matrix_id"`
+	MatrixID  string          `json:"matrixId"` //nolint:tagliatelle
 	Status    responseStatus  `json:"status"`
-	StatusURL string          `json:"status_url"`
-	ResultURL string          `json:"result_url"`
+	StatusURL string          `json:"statusUrl"` //nolint:tagliatelle
+	ResultURL string          `json:"resultUrl"` //nolint:tagliatelle
 	Error     json.RawMessage `json:"error"`
 }
 
 type matrixResponse struct {
 	Matrix           matrix           `json:"matrix"`
-	RegionDefinition regionDefinition `json:"region_definition"`
+	RegionDefinition regionDefinition `json:"regionDefinition"` //nolint:tagliatelle,lll
 }
 
 type matrix struct {
-	NumOrigins      int   `json:"num_origins"`
-	NumDestinations int   `json:"num_destinations"`
-	TravelTimes     []int `json:"travel_times"`
+	NumOrigins      int   `json:"numOrigins"`      //nolint:tagliatelle
+	NumDestinations int   `json:"numDestinations"` //nolint:tagliatelle
+	TravelTimes     []int `json:"travelTimes"`     //nolint:tagliatelle
 	Distances       []int `json:"distances"`
 }
 
@@ -52,16 +52,16 @@ type regionDefinition struct {
 
 type point struct {
 	Lat float64 `json:"lat"`
-	Lon float64 `json:"lon"`
+	Lon float64 `json:"lng"` //nolint:tagliatelle
 }
 
 type matrixRequest struct {
 	Origins          []point          `json:"origins"`
-	RegionDefinition regionDefinition `json:"region_definition,omitempty"`
+	RegionDefinition regionDefinition `json:"regionDefinition,omitempty"` //nolint:tagliatelle,lll
 	// This is either an RFC 3339 timestamp or the string "any"
-	DepartureTime    string        `json:"departure_time,omitempty"`
-	MatrixAttributes []string      `json:"matrix_attributes"`
-	TransportMode    TransportMode `json:"transport_mode,omitempty"`
+	DepartureTime    string        `json:"departureTime,omitempty"` //nolint:tagliatelle,lll
+	MatrixAttributes []string      `json:"matrixAttributes"`        //nolint:tagliatelle,lll
+	TransportMode    TransportMode `json:"transportMode,omitempty"` //nolint:tagliatelle,lll
 	Avoid            *avoid        `json:"avoid,omitempty"`
 	Truck            *Truck        `json:"truck,omitempty"`
 	Scooter          *Scooter      `json:"scooter,omitempty"`
@@ -145,22 +145,22 @@ const UTurns Feature = "uTurns"
 
 // Truck captures truck-specific routing parameters.
 type Truck struct {
-	ShippedHazardousGoods []HazardousGood `json:"shipped_hazardous_goods"`
+	ShippedHazardousGoods []HazardousGood `json:"shippedHazardousGoods,omitempty"` //nolint:tagliatelle,lll
 	// in kilograms
-	GrossWeight int32 `json:"gross_weight,omitempty"`
+	GrossWeight int32 `json:"grossWeight,omitempty"` //nolint:tagliatelle
 	// in kilograms
-	WeightPerAxle int32 `json:"weight_per_axle,omitempty"`
+	WeightPerAxle int32 `json:"weightPerAxle,omitempty"` //nolint:tagliatelle
 	// in centimeters
 	Height int32 `json:"height,omitempty"`
 	// in centimeters
 	Width int32 `json:"width,omitempty"`
 	// in centimeters
 	Length             int32               `json:"length,omitempty"`
-	TunnelCategory     TunnelCategory      `json:"tunnel_category,omitempty"`
-	AxleCount          int32               `json:"axle_count,omitempty"`
+	TunnelCategory     TunnelCategory      `json:"tunnelCategory,omitempty"` //nolint:tagliatelle,lll
+	AxleCount          int32               `json:"axleCount,omitempty"`      //nolint:tagliatelle,lll
 	Type               TruckType           `json:"type,omitempty"`
-	TrailerCount       int32               `json:"trailer_count,omitempty"`
-	WeightPerAxleGroup *WeightPerAxleGroup `json:"weight_per_axle_group,omitempty"`
+	TrailerCount       int32               `json:"trailerCount,omitempty"`       //nolint:tagliatelle,lll
+	WeightPerAxleGroup *WeightPerAxleGroup `json:"weightPerAxleGroup,omitempty"` //nolint:tagliatelle,lll
 }
 
 // WeightPerAxleGroup captures the weights of different axle groups.
@@ -236,10 +236,10 @@ const OtherHazardousGood HazardousGood = "other"
 
 // Scooter captures routing parameters that can be set on scooters.
 type Scooter struct {
-	AllowHighway bool `json:"allow_highway"`
+	AllowHighway bool `json:"allowHighway"` //nolint:tagliatelle
 }
 
 // Taxi captures routing parameters that can be set on taxis.
 type Taxi struct {
-	AllowDriveThroughTaxiRoads bool `json:"allow_drive_through_taxi_roads"`
+	AllowDriveThroughTaxiRoads bool `json:"allowDriveThroughTaxiRoads"` //nolint:tagliatelle,lll
 }

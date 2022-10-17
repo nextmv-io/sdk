@@ -249,7 +249,9 @@ func (c *client) fetchMatricesAsync( //nolint:gocyclo
 			return nil, nil, fmt.Errorf("getting result: %v", err)
 		}
 		defer func() {
-			err = resp.Body.Close()
+			if tempErr := resp.Body.Close(); tempErr != nil {
+				err = tempErr
+			}
 		}()
 		if err != nil {
 			return nil, nil, fmt.Errorf("closing response body: %w", err)
@@ -358,7 +360,9 @@ func (c *client) poll(
 		return "", false, true, fmt.Errorf("getting status: %w", err)
 	}
 	defer func() {
-		err = resp.Body.Close()
+		if tempErr := resp.Body.Close(); tempErr != nil {
+			err = tempErr
+		}
 	}()
 	if err != nil {
 		return "", false, true, fmt.Errorf("closing response body: %w", err)
