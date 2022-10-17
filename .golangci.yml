@@ -12,7 +12,14 @@ linters-settings:
   gomodguard:
     allowed:
       modules:
-        -
+        - github.com/nextmv-io/sdk
+        - github.com/dgraph-io/ristretto
+        - github.com/golang/mock
+        - github.com/google/go-cmp
+        - github.com/hashicorp/golang-lru
+        - github.com/nextmv-io/go-routingkit
+        - github.com/twpayne/go-polyline
+        - googlemaps.github.io/maps
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 10
@@ -148,3 +155,24 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
+
+    # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
+    - path: route/load\.go
+      linters:
+        - gocyclo
+      text: ByIndexLoader
+
+    # Tag should be 'measure' in both cases ByPoint and ByIndex
+    - path: route/load\.go
+      linters:
+        - tagliatelle
+      text: measure
+
+    # Please note that other Go modules have issues that are ignored but are
+    # not listed here. The reason is that linting must be done standing on the
+    # Go module and excluding issues here uses relative paths. That means that
+    # the relative paths from this file start from the root of sdk but for
+    # other modules the relative path start from that module. For that reason,
+    # linting is ignored by using the following syntax on a line: //nolint. If
+    # you look for uses of //nolint you will find the other linting issues
+    # being excluided.
