@@ -49,9 +49,10 @@ type Objective interface {
 	SetMaximize()
 	// SetMinimize sets the invoking objective to be a minimization objective.
 	SetMinimize()
-	// Term returns a term for variable with the sum of all coefficients of
-	// defined terms for variable. The second return argument defines how many
-	// terms have been defined on the objective for variable.
+	// Term returns a term for a given variable together with the sum of the
+	// coefficients of all terms referencing that variable. The second return
+	// argument defines how many terms have been defined on the objective for
+	// the given variable.
 	Term(variable Var) (Term, int)
 	// Terms returns a copy slice of terms of the invoking objective,
 	// each variable is reported once. If the same variable has been
@@ -59,6 +60,12 @@ type Objective interface {
 	// variable. The order of the terms is not specified and is not guaranteed
 	// to be the same from one invocation to the next.
 	Terms() Terms
+	// QuadraticTerm returns a quadratic term for a given pair of variables
+	// together with the sum of the coefficients of all quadratic terms
+	// referencing that variable. The second return argument defines how many
+	// quadratic terms have been defined on the objective the given pair of
+	// variables.
+	QuadraticTerm(variable1, variable2 Var) (QuadraticTerm, int)
 	// QuadraticTerms returns a copy slice of quadratic terms of the invoking
 	// objective, each variable pair is reported once. If the same pair has been
 	// added multiple times the sum of coefficients is reported for that
