@@ -199,3 +199,22 @@ func ExampleMatrix() {
 	// 0
 	// 1
 }
+
+// Check if some of the measures hold for the triangle inequality.
+func ExampleIsTriangular() {
+	// Haversine measure.
+	haversine := route.HaversineByPoint()
+	fmt.Println(route.IsTriangular(haversine))
+
+	// Euclidean measure.
+	euclidean := route.EuclideanByPoint()
+	fmt.Println(route.IsTriangular(euclidean))
+
+	// Matrix measure.
+	matrix := route.Matrix([][]float64{})
+	fmt.Println(route.IsTriangular(matrix))
+	// Output:
+	// true
+	// true
+	// false
+}
