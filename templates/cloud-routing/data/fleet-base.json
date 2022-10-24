@@ -1,0 +1,544 @@
+{
+  "defaults": {
+    "vehicles": {
+      "start": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "end": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "shift_start": "2021-10-17T09:00:00-06:00",
+      "speed": 20
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 200000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 105
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 95
+    },
+    {
+      "id": "vehicle-3",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-4",
+      "capacity": 135
+    },
+    {
+      "id": "vehicle-5",
+      "capacity": 165
+    },
+    {
+      "id": "vehicle-6",
+      "capacity": 150
+    },
+    {
+      "id": "vehicle-7",
+      "capacity": 165
+    },
+    {
+      "id": "vehicle-8",
+      "capacity": 145
+    },
+    {
+      "id": "vehicle-9",
+      "capacity": 145
+    },
+    {
+      "id": "vehicle-10",
+      "capacity": 125
+    }
+  ],
+  "stops": [
+    {
+      "id": "location-1",
+      "position": {
+        "lon": -96.827094,
+        "lat": 33.004745
+      },
+      "quantity": -27
+    },
+    {
+      "id": "location-2",
+      "position": {
+        "lon": -96.86074,
+        "lat": 33.005741
+      },
+      "quantity": -30
+    },
+    {
+      "id": "location-3",
+      "position": {
+        "lon": -96.820915,
+        "lat": 32.969456
+      },
+      "quantity": -56
+    },
+    {
+      "id": "location-4",
+      "position": {
+        "lon": -96.695259,
+        "lat": 32.921629
+      },
+      "quantity": -49
+    },
+    {
+      "id": "location-5",
+      "position": {
+        "lon": -96.673973,
+        "lat": 32.875507
+      },
+      "quantity": -71
+    },
+    {
+      "id": "location-6",
+      "position": {
+        "lon": -96.682899,
+        "lat": 32.810318
+      },
+      "quantity": -85
+    },
+    {
+      "id": "location-7",
+      "position": {
+        "lon": -96.75642,
+        "lat": 32.66026
+      },
+      "quantity": -51
+    },
+    {
+      "id": "location-8",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.673555
+      },
+      "quantity": -62
+    },
+    {
+      "id": "location-9",
+      "position": {
+        "lon": -96.888943,
+        "lat": 32.772914
+      },
+      "quantity": -81
+    },
+    {
+      "id": "location-10",
+      "position": {
+        "lon": -97.044811,
+        "lat": 32.862358
+      },
+      "quantity": -15
+    },
+    {
+      "id": "location-11",
+      "position": {
+        "lon": -97.021465,
+        "lat": 32.933848
+      },
+      "quantity": -19
+    },
+    {
+      "id": "location-12",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.84563
+      },
+      "quantity": -29
+    },
+    {
+      "id": "location-13",
+      "position": {
+        "lon": -96.893749,
+        "lat": 32.649276
+      },
+      "quantity": -23
+    },
+    {
+      "id": "location-14",
+      "position": {
+        "lon": -96.943874,
+        "lat": 32.653323
+      },
+      "quantity": -21
+    },
+    {
+      "id": "location-15",
+      "position": {
+        "lon": -96.846371,
+        "lat": 32.748662
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-16",
+      "position": {
+        "lon": -96.842251,
+        "lat": 32.735956
+      },
+      "quantity": -15
+    },
+    {
+      "id": "location-17",
+      "position": {
+        "lon": -96.840191,
+        "lat": 32.714583
+      },
+      "quantity": -25
+    },
+    {
+      "id": "location-18",
+      "position": {
+        "lon": -96.808605,
+        "lat": 32.710539
+      },
+      "quantity": -15
+    },
+    {
+      "id": "location-19",
+      "position": {
+        "lon": -96.595058,
+        "lat": 32.82486
+      },
+      "quantity": -18
+    },
+    {
+      "id": "location-20",
+      "position": {
+        "lon": -96.64175,
+        "lat": 32.772914
+      },
+      "quantity": -9
+    },
+    {
+      "id": "location-21",
+      "position": {
+        "lon": -96.573772,
+        "lat": 32.94134
+      },
+      "quantity": -22
+    },
+    {
+      "id": "location-22",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.895804
+      },
+      "quantity": -13
+    },
+    {
+      "id": "location-23",
+      "position": {
+        "lon": -96.950741,
+        "lat": 32.844476
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-24",
+      "position": {
+        "lon": -96.910915,
+        "lat": 32.939035
+      },
+      "quantity": -20
+    },
+    {
+      "id": "location-25",
+      "position": {
+        "lon": -96.592999,
+        "lat": 32.745775
+      },
+      "quantity": -25
+    },
+    {
+      "id": "location-28",
+      "position": {
+        "lon": -96.990566,
+        "lat": 32.85659
+      },
+      "quantity": -20
+    },
+    {
+      "id": "location-29",
+      "position": {
+        "lon": -96.831951,
+        "lat": 32.618629
+      },
+      "quantity": -14
+    },
+    {
+      "id": "location-30",
+      "position": {
+        "lon": -96.785259,
+        "lat": 32.706495
+      },
+      "quantity": -12
+    },
+    {
+      "id": "location-31",
+      "position": {
+        "lon": -96.874523,
+        "lat": 32.706495
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-32",
+      "position": {
+        "lon": -96.992626,
+        "lat": 32.800045
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-33",
+      "position": {
+        "lon": -97.012539,
+        "lat": 33.019675
+      },
+      "quantity": -11
+    },
+    {
+      "id": "location-34",
+      "position": {
+        "lon": -96.961727,
+        "lat": 32.973028
+      },
+      "quantity": -5
+    },
+    {
+      "id": "location-35",
+      "position": {
+        "lon": -97.002926,
+        "lat": 32.796005
+      },
+      "quantity": -18
+    },
+    {
+      "id": "location-36",
+      "position": {
+        "lon": -96.798992,
+        "lat": 32.707072
+      },
+      "quantity": -2
+    },
+    {
+      "id": "location-37",
+      "position": {
+        "lon": -96.796717,
+        "lat": 32.709934
+      },
+      "quantity": -5
+    },
+    {
+      "id": "location-38",
+      "position": {
+        "lon": -96.775195,
+        "lat": 32.70487
+      },
+      "quantity": -12
+    },
+    {
+      "id": "location-39",
+      "position": {
+        "lon": -96.754166,
+        "lat": 32.682658
+      },
+      "quantity": -11
+    },
+    {
+      "id": "location-40",
+      "position": {
+        "lon": -96.698623,
+        "lat": 32.76032
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-41",
+      "position": {
+        "lon": -96.705724,
+        "lat": 32.786149
+      },
+      "quantity": -19
+    },
+    {
+      "id": "location-42",
+      "position": {
+        "lon": -96.674118,
+        "lat": 32.832623
+      },
+      "quantity": -11
+    },
+    {
+      "id": "location-43",
+      "position": {
+        "lon": -96.659698,
+        "lat": 32.856419
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-44",
+      "position": {
+        "lon": -96.690515,
+        "lat": 32.995981
+      },
+      "quantity": -9
+    },
+    {
+      "id": "location-45",
+      "position": {
+        "lon": -96.783555,
+        "lat": 32.950762
+      },
+      "quantity": -10
+    },
+    {
+      "id": "location-46",
+      "position": {
+        "lon": -96.72622,
+        "lat": 32.893412
+      },
+      "quantity": -12
+    },
+    {
+      "id": "location-47",
+      "position": {
+        "lon": -96.837457,
+        "lat": 32.915319
+      },
+      "quantity": -8
+    },
+    {
+      "id": "location-48",
+      "position": {
+        "lon": -96.865266,
+        "lat": 32.89543
+      },
+      "quantity": -37
+    },
+    {
+      "id": "location-49",
+      "position": {
+        "lon": -96.865266,
+        "lat": 32.89543
+      },
+      "quantity": -31
+    },
+    {
+      "id": "location-50",
+      "position": {
+        "lon": -96.909898,
+        "lat": 33.010377
+      },
+      "quantity": -5
+    },
+    {
+      "id": "location-51",
+      "position": {
+        "lon": -96.922987,
+        "lat": 33.019625
+      },
+      "quantity": -5
+    },
+    {
+      "id": "location-52",
+      "position": {
+        "lon": -96.6983,
+        "lat": 32.76032
+      },
+      "quantity": -7
+    },
+    {
+      "id": "location-53",
+      "position": {
+        "lon": -96.705724,
+        "lat": 32.782249
+      },
+      "quantity": -13
+    },
+    {
+      "id": "location-54",
+      "position": {
+        "lon": -96.674118,
+        "lat": 32.832611
+      },
+      "quantity": -21
+    },
+    {
+      "id": "location-55",
+      "position": {
+        "lon": -96.623698,
+        "lat": 32.856889
+      },
+      "quantity": -4
+    },
+    {
+      "id": "location-56",
+      "position": {
+        "lon": -96.690515,
+        "lat": 32.995981
+      },
+      "quantity": -9
+    },
+    {
+      "id": "location-57",
+      "position": {
+        "lon": -96.783115,
+        "lat": 32.95055
+      },
+      "quantity": -14
+    },
+    {
+      "id": "location-58",
+      "position": {
+        "lon": -96.71622,
+        "lat": 32.893112
+      },
+      "quantity": -12
+    },
+    {
+      "id": "location-59",
+      "position": {
+        "lon": -96.537457,
+        "lat": 32.915317
+      },
+      "quantity": -28
+    },
+    {
+      "id": "location-60",
+      "position": {
+        "lon": -96.865006,
+        "lat": 32.80043
+      },
+      "quantity": -23
+    },
+    {
+      "id": "location-61",
+      "position": {
+        "lon": -96.895266,
+        "lat": 32.86543
+      },
+      "quantity": -19
+    },
+    {
+      "id": "location-63",
+      "position": {
+        "lon": -96.923987,
+        "lat": 33.029625
+      },
+      "quantity": -21
+    }
+  ]
+}

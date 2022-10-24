@@ -1,0 +1,689 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T08:00:00Z",
+      "shift_end": "2021-06-10T16:00:00Z",
+      "end": {
+        "lon": -96.87215,
+        "lat": 32.80875
+      },
+      "speed": 12
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-3",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-4",
+      "capacity": 350
+    },
+    {
+      "id": "vehicle-5",
+      "capacity": 350
+    },
+    {
+      "id": "vehicle-6",
+      "capacity": 350
+    },
+    {
+      "id": "vehicle-7",
+      "capacity": 200
+    }
+  ],
+  "stops": [
+    {
+      "id": "order-1-pickup",
+      "position": {
+        "lon": -96.7524,
+        "lat": 32.65764
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-2-pickup",
+      "position": {
+        "lon": -96.82663,
+        "lat": 32.6498
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-3-pickup",
+      "position": {
+        "lon": -96.9925,
+        "lat": 32.8922
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-4-pickup",
+      "position": {
+        "lon": -96.99433,
+        "lat": 32.89166
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-5-pickup",
+      "position": {
+        "lon": -96.88486,
+        "lat": 32.81559
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-6-pickup",
+      "position": {
+        "lon": -96.85313,
+        "lat": 32.80997
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-7-pickup",
+      "position": {
+        "lon": -96.58497,
+        "lat": 32.73941
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-8-pickup",
+      "position": {
+        "lon": -96.6335,
+        "lat": 32.7274
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-9-pickup",
+      "position": {
+        "lon": -96.67937,
+        "lat": 32.77418
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-10-pickup",
+      "position": {
+        "lon": -96.69089,
+        "lat": 32.77412
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-11-pickup",
+      "position": {
+        "lon": -97.09611,
+        "lat": 32.66673
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-12-pickup",
+      "position": {
+        "lon": -97.06902,
+        "lat": 32.69165
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-13-pickup",
+      "position": {
+        "lon": -96.9157,
+        "lat": 32.57605
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-14-pickup",
+      "position": {
+        "lon": -96.83226,
+        "lat": 32.57542
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-15-pickup",
+      "position": {
+        "lon": -97.02575,
+        "lat": 32.75759
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-16-pickup",
+      "position": {
+        "lon": -97.00757,
+        "lat": 32.75106
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-17-pickup",
+      "position": {
+        "lon": -97.26953,
+        "lat": 32.90896
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-18-pickup",
+      "position": {
+        "lon": -97.27819,
+        "lat": 32.87165
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-19-pickup",
+      "position": {
+        "lon": -96.91767,
+        "lat": 32.8335
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-20-pickup",
+      "position": {
+        "lon": -96.96781,
+        "lat": 32.81456
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-21-pickup",
+      "position": {
+        "lon": -97.14119,
+        "lat": 32.6914
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-22-pickup",
+      "position": {
+        "lon": -97.14001,
+        "lat": 32.7049
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-23-pickup",
+      "position": {
+        "lon": -96.91338,
+        "lat": 32.81572
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-24-pickup",
+      "position": {
+        "lon": -96.89299,
+        "lat": 32.78629
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-25-pickup",
+      "position": {
+        "lon": -97.06819,
+        "lat": 32.78366
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-26-pickup",
+      "position": {
+        "lon": -97.07571,
+        "lat": 32.74745
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-27-pickup",
+      "position": {
+        "lon": -97.10771,
+        "lat": 32.73423
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-28-pickup",
+      "position": {
+        "lon": -97.11424,
+        "lat": 32.74378
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-29-pickup",
+      "position": {
+        "lon": -96.80497,
+        "lat": 32.76309
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-30-pickup",
+      "position": {
+        "lon": -96.76166,
+        "lat": 32.76119
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-31-pickup",
+      "position": {
+        "lon": -97.07549,
+        "lat": 32.99633
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-32-pickup",
+      "position": {
+        "lon": -97.02657,
+        "lat": 32.98169
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-33-pickup",
+      "position": {
+        "lon": -96.83755,
+        "lat": 32.72714
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-34-pickup",
+      "position": {
+        "lon": -96.83107,
+        "lat": 32.74498
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-35-pickup",
+      "position": {
+        "lon": -96.75898,
+        "lat": 32.81226
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-36-pickup",
+      "position": {
+        "lon": -96.86107,
+        "lat": 32.86877
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-37-pickup",
+      "position": {
+        "lon": -96.87548,
+        "lat": 32.86909
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-38-pickup",
+      "position": {
+        "lon": -96.84767,
+        "lat": 32.85327
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-39-pickup",
+      "position": {
+        "lon": -97.11454,
+        "lat": 32.86066
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-40-pickup",
+      "position": {
+        "lon": -97.09216,
+        "lat": 32.80261
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-41-pickup",
+      "position": {
+        "lon": -96.98874,
+        "lat": 32.7878
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-42-pickup",
+      "position": {
+        "lon": -97.00073,
+        "lat": 32.79869
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-43-pickup",
+      "position": {
+        "lon": -96.95503,
+        "lat": 32.80223
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-44-pickup",
+      "position": {
+        "lon": -96.95133,
+        "lat": 32.75588
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-45-pickup",
+      "position": {
+        "lon": -97.24524,
+        "lat": 32.67599
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-46-pickup",
+      "position": {
+        "lon": -97.17783,
+        "lat": 32.69514
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-47-pickup",
+      "position": {
+        "lon": -96.99328,
+        "lat": 32.96625
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-48-pickup",
+      "position": {
+        "lon": -96.99882,
+        "lat": 32.95493
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-49-pickup",
+      "position": {
+        "lon": -97.11088,
+        "lat": 32.62739
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-50-pickup",
+      "position": {
+        "lon": -97.11645,
+        "lat": 32.64435
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-51-pickup",
+      "position": {
+        "lon": -97.03959,
+        "lat": 32.81613
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-52-pickup",
+      "position": {
+        "lon": -97.07473,
+        "lat": 32.84717
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-53-pickup",
+      "position": {
+        "lon": -96.74741,
+        "lat": 32.8013
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-54-pickup",
+      "position": {
+        "lon": -96.72232,
+        "lat": 32.81076
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-55-pickup",
+      "position": {
+        "lon": -96.97696,
+        "lat": 32.84465
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-56-pickup",
+      "position": {
+        "lon": -96.95654,
+        "lat": 32.85079
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-57-pickup",
+      "position": {
+        "lon": -97.05679,
+        "lat": 32.77299
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-58-pickup",
+      "position": {
+        "lon": -97.04503,
+        "lat": 32.7977
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-59-pickup",
+      "position": {
+        "lon": -96.88061,
+        "lat": 32.67237
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-60-pickup",
+      "position": {
+        "lon": -96.89393,
+        "lat": 32.67114
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-61-pickup",
+      "position": {
+        "lon": -96.93992,
+        "lat": 32.88471
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-62-pickup",
+      "position": {
+        "lon": -96.95648,
+        "lat": 32.8722
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-63-pickup",
+      "position": {
+        "lon": -96.74674,
+        "lat": 32.88443
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-64-pickup",
+      "position": {
+        "lon": -96.67467,
+        "lat": 32.8504
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-65-pickup",
+      "position": {
+        "lon": -96.91845,
+        "lat": 32.81436
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-66-pickup",
+      "position": {
+        "lon": -96.89822,
+        "lat": 32.83185
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-67-pickup",
+      "position": {
+        "lon": -97.03203,
+        "lat": 32.80744
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-68-pickup",
+      "position": {
+        "lon": -96.99126,
+        "lat": 32.84806
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-69-pickup",
+      "position": {
+        "lon": -96.84762,
+        "lat": 32.74112
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-70-pickup",
+      "position": {
+        "lon": -96.83339,
+        "lat": 32.75009
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-71-pickup",
+      "position": {
+        "lon": -96.91465,
+        "lat": 32.89979
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-72-pickup",
+      "position": {
+        "lon": -96.90247,
+        "lat": 32.88352
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-73-pickup",
+      "position": {
+        "lon": -96.83236,
+        "lat": 32.72217
+      },
+      "quantity": -25
+    },
+    {
+      "id": "order-74-pickup",
+      "position": {
+        "lon": -96.85765,
+        "lat": 32.72821
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-75-pickup",
+      "position": {
+        "lon": -96.87959,
+        "lat": 32.80067
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-76-pickup",
+      "position": {
+        "lon": -96.81691,
+        "lat": 32.80899
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-77-pickup",
+      "position": {
+        "lon": -97.07554,
+        "lat": 32.67805
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-78-pickup",
+      "position": {
+        "lon": -97.00809,
+        "lat": 32.66221
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-79-pickup",
+      "position": {
+        "lon": -97.08863,
+        "lat": 32.78551
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-80-pickup",
+      "position": {
+        "lon": -97.08802,
+        "lat": 32.77509
+      },
+      "quantity": -25
+    }
+  ]
+}

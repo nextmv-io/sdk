@@ -1,0 +1,605 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T09:45:00Z",
+      "shift_end": "2021-06-10T14:00:00Z",
+      "speed": 12
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 4,
+      "start": {
+        "lon": -96.91435,
+        "lat": 32.86707
+      }
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 5,
+      "start": {
+        "lon": -96.65922,
+        "lat": 32.89126
+      }
+    },
+    {
+      "id": "vehicle-3",
+      "capacity": 3,
+      "start": {
+        "lon": -96.65171,
+        "lat": 32.82611
+      }
+    },
+    {
+      "id": "vehicle-4",
+      "capacity": 3,
+      "start": {
+        "lon": -96.82171,
+        "lat": 32.64631
+      }
+    },
+    {
+      "id": "vehicle-5",
+      "capacity": 5,
+      "start": {
+        "lon": -96.68249,
+        "lat": 32.72675
+      }
+    },
+    {
+      "id": "vehicle-6",
+      "capacity": 5,
+      "start": {
+        "lon": -96.92171,
+        "lat": 32.84631
+      }
+    }
+  ],
+  "stops": [
+    {
+      "id": "restaurant-A-order-1-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-1-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-1-dropoff",
+      "position": {
+        "lon": -96.86074,
+        "lat": 32.67741
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-B-order-2-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-2-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-2-dropoff",
+      "position": {
+        "lon": -96.695259,
+        "lat": 32.921629
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-B-order-3-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-3-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-3-dropoff",
+      "position": {
+        "lon": -96.75642,
+        "lat": 32.66026
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-A-order-4-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-4-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-4-dropoff",
+      "position": {
+        "lon": -96.888943,
+        "lat": 32.772914
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-B-order-5-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-5-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-5-dropoff",
+      "position": {
+        "lon": -96.96496,
+        "lat": 32.86691
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-6-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-6-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-6-dropoff",
+      "position": {
+        "lon": -96.842251,
+        "lat": 32.735956
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-7-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-7-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-7-dropoff",
+      "position": {
+        "lon": -96.80605,
+        "lat": 32.71039
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-8-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-8-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-8-dropoff",
+      "position": {
+        "lon": -96.64175,
+        "lat": 32.772914
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-B-order-9-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-9-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-9-dropoff",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.895804
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-10-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-10-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-10-dropoff",
+      "position": {
+        "lon": -96.59299,
+        "lat": 32.74577
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-C-order-11-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-11-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-11-dropoff",
+      "position": {
+        "lon": -96.80274,
+        "lat": 32.82722
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-B-order-12-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-12-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-12-dropoff",
+      "position": {
+        "lon": -96.83151,
+        "lat": 32.61829
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-B-order-13-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-13-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-13-dropoff",
+      "position": {
+        "lon": -96.87452,
+        "lat": 32.70649
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-C-order-14-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-14-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-14-dropoff",
+      "position": {
+        "lon": -96.68549,
+        "lat": 32.71675
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-B-order-15-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-15-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-15-dropoff",
+      "position": {
+        "lon": -96.62926,
+        "lat": 32.79605
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-C-order-16-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-16-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-16-dropoff",
+      "position": {
+        "lon": -96.68519,
+        "lat": 32.81156
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-B-order-17-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-17-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-17-dropoff",
+      "position": {
+        "lon": -96.87187,
+        "lat": 32.84219
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-C-order-18-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-18-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-18-dropoff",
+      "position": {
+        "lon": -96.87207,
+        "lat": 32.83941
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-B-order-19-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-19-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-19-dropoff",
+      "position": {
+        "lon": -96.85891,
+        "lat": 32.74813
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-C-order-20-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-20-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-20-dropoff",
+      "position": {
+        "lon": -96.91345,
+        "lat": 32.93835
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-B-order-21-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-21-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-21-dropoff",
+      "position": {
+        "lon": -96.594245,
+        "lat": 32.87393
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-C-order-22-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-22-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-22-dropoff",
+      "position": {
+        "lon": -96.86521,
+        "lat": 32.89304
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-B-order-23-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-23-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-23-dropoff",
+      "position": {
+        "lon": -96.98071,
+        "lat": 32.89776
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-B-order-24-pickup",
+      "position": {
+        "lon": -96.62577,
+        "lat": 32.82512
+      },
+      "precedes": "restaurant-B-order-24-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-B-order-24-dropoff",
+      "position": {
+        "lon": -96.96012,
+        "lat": 32.82034
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-A-order-25-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-25-dropoff",
+      "quantity": -3,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-25-dropoff",
+      "position": {
+        "lon": -96.75519,
+        "lat": 32.82575
+      },
+      "quantity": 3
+    },
+    {
+      "id": "restaurant-A-order-26-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-26-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-26-dropoff",
+      "position": {
+        "lon": -97.01404,
+        "lat": 32.9172
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-27-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-27-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-27-dropoff",
+      "position": {
+        "lon": -96.68174,
+        "lat": 32.88722
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-28-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-28-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-28-dropoff",
+      "position": {
+        "lon": -96.94887,
+        "lat": 32.81619
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-29-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-29-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-29-dropoff",
+      "position": {
+        "lon": -96.83154,
+        "lat": 32.62059
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-C-order-30-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-30-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-30-dropoff",
+      "position": {
+        "lon": -96.85259,
+        "lat": 32.81695
+      },
+      "quantity": 1
+    }
+  ]
+}

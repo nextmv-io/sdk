@@ -4,11 +4,9 @@ jobs:
   sdk-markdown-lint:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the changes
       - name: git clone
         uses: actions/checkout@v3
 
-      # Use markdownlint-cli2
       - uses: DavidAnson/markdownlint-cli2-action@v7
         with:
           globs: "**/*.md"
