@@ -30,5 +30,5 @@ func connect() {
 	}
 	slug = "run-" + slug
 
-	plugin.Connect(slug, "RunRun", &runFunc)
+	plugin.Connect(slug, "RunNew", &newFunc)
 }
