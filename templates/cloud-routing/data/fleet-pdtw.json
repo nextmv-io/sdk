@@ -1,0 +1,632 @@
+{
+  "defaults": {
+    "vehicles": {
+      "start": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "end": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "shift_start": "2021-10-17T09:00:00-06:00",
+      "shift_end": "2021-10-17T11:00:00-06:00",
+      "speed": 20
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 200000,
+      "earliness_penalty": 2,
+      "lateness_penalty": 5
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 105
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 95
+    },
+    {
+      "id": "vehicle-3",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-4",
+      "capacity": 135
+    },
+    {
+      "id": "vehicle-5",
+      "capacity": 165
+    },
+    {
+      "id": "vehicle-6",
+      "capacity": 150
+    },
+    {
+      "id": "vehicle-7",
+      "capacity": 165
+    },
+    {
+      "id": "vehicle-8",
+      "capacity": 145
+    },
+    {
+      "id": "vehicle-9",
+      "capacity": 145
+    },
+    {
+      "id": "vehicle-10",
+      "capacity": 125
+    }
+  ],
+  "stops": [
+    {
+      "id": "order-1-pickup-1",
+      "position": {
+        "lon": -96.827094,
+        "lat": 33.004745
+      },
+      "precedes": "order-1-dropoff",
+      "quantity": -27
+    },
+    {
+      "id": "order-1-dropoff",
+      "target_time": "2021-10-17T09:45:00-06:00",
+      "position": {
+        "lon": -96.86074,
+        "lat": 33.005741
+      },
+      "quantity": 27,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T10:00:00-06:00"]
+    },
+    {
+      "id": "order-2-pickup-1",
+      "position": {
+        "lon": -96.820915,
+        "lat": 32.969456
+      },
+      "precedes": "order-2-dropoff",
+      "quantity": -56
+    },
+    {
+      "id": "order-2-dropoff",
+      "target_time": "2021-10-17T10:00:00-06:00",
+      "position": {
+        "lon": -96.695259,
+        "lat": 32.921629
+      },
+      "quantity": 56,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T10:00:00-06:00"]
+    },
+    {
+      "id": "order-3-pickup-1",
+      "position": {
+        "lon": -96.673973,
+        "lat": 32.875507
+      },
+      "precedes": "order-3-dropoff",
+      "quantity": -71
+    },
+    {
+      "id": "order-3-pickup-2",
+      "position": {
+        "lon": -96.682899,
+        "lat": 32.810318
+      },
+      "precedes": "order-3-dropoff",
+      "quantity": -85
+    },
+    {
+      "id": "order-3-dropoff",
+      "target_time": "2021-10-17T09:45:00-06:00",
+      "position": {
+        "lon": -96.75642,
+        "lat": 32.66026
+      },
+      "quantity": 156,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T11:00:00-06:00"]
+    },
+    {
+      "id": "order-4-pickup-1",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.673555
+      },
+      "precedes": "order-4-dropoff",
+      "quantity": -62
+    },
+    {
+      "id": "order-4-dropoff",
+      "target_time": "2021-10-17T09:45:00-06:00",
+      "position": {
+        "lon": -96.888943,
+        "lat": 32.772914
+      },
+      "quantity": 62,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T11:00:00-06:00"]
+    },
+    {
+      "id": "order-5-pickup-1",
+      "position": {
+        "lon": -97.044811,
+        "lat": 32.862358
+      },
+      "precedes": "order-5-dropoff",
+      "quantity": -15
+    },
+    {
+      "id": "order-5-pickup-2",
+      "position": {
+        "lon": -97.021465,
+        "lat": 32.933848
+      },
+      "precedes": "order-5-dropoff",
+      "quantity": -19
+    },
+    {
+      "id": "order-5-pickup-3",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.84563
+      },
+      "precedes": "order-5-dropoff",
+      "quantity": -29
+    },
+    {
+      "id": "order-5-dropoff",
+      "target_time": "2021-10-17T10:00:00-06:00",
+      "position": {
+        "lon": -96.9649670057751,
+        "lat": 32.86691792053951
+      },
+      "quantity": 63,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T11:00:00-06:00"]
+    },
+    {
+      "id": "order-6-pickup-1",
+      "position": {
+        "lon": -96.943874,
+        "lat": 32.653323
+      },
+      "precedes": "order-6-dropoff",
+      "quantity": -21
+    },
+    {
+      "id": "order-6-pickup-2",
+      "position": {
+        "lon": -96.846371,
+        "lat": 32.748662
+      },
+      "precedes": "order-6-dropoff",
+      "quantity": -10
+    },
+    {
+      "id": "order-6-dropoff",
+      "target_time": "2021-10-17T10:00:00-06:00",
+      "position": {
+        "lon": -96.842251,
+        "lat": 32.735956
+      },
+      "quantity": 31,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T11:00:00-06:00"]
+    },
+    {
+      "id": "order-7-pickup-1",
+      "position": {
+        "lon": -96.840191,
+        "lat": 32.714583
+      },
+      "precedes": "order-7-dropoff",
+      "quantity": -25
+    },
+    {
+      "id": "order-7-dropoff",
+      "target_time": "2021-10-17T10:00:00-06:00",
+      "position": {
+        "lon": -96.808605,
+        "lat": 32.710539
+      },
+      "quantity": 25,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T12:30:00-06:00"]
+    },
+    {
+      "id": "order-8-pickup-1",
+      "position": {
+        "lon": -96.595058,
+        "lat": 32.82486
+      },
+      "precedes": "order-8-dropoff",
+      "quantity": -18
+    },
+    {
+      "id": "order-8-pickup-2",
+      "position": {
+        "lon": -96.575058,
+        "lat": 32.80486
+      },
+      "precedes": "order-8-dropoff",
+      "quantity": -20
+    },
+    {
+      "id": "order-8-dropoff",
+      "target_time": "2021-10-17T10:00:00-06:00",
+      "position": {
+        "lon": -96.64175,
+        "lat": 32.772914
+      },
+      "quantity": 38,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T12:30:00-06:00"]
+    },
+    {
+      "id": "order-9-pickup-1",
+      "position": {
+        "lon": -96.573772,
+        "lat": 32.94134
+      },
+      "precedes": "order-9-dropoff",
+      "quantity": -22
+    },
+    {
+      "id": "order-9-dropoff",
+      "target_time": "2021-10-17T10:15:00-06:00",
+      "position": {
+        "lon": -96.87521,
+        "lat": 32.895804
+      },
+      "quantity": 22,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-10-pickup-1",
+      "position": {
+        "lon": -96.950741,
+        "lat": 32.844476
+      },
+      "precedes": "order-10-dropoff",
+      "quantity": -10
+    },
+    {
+      "id": "order-10-pickup-2",
+      "position": {
+        "lon": -96.910915,
+        "lat": 32.939035
+      },
+      "precedes": "order-10-dropoff",
+      "quantity": -20
+    },
+    {
+      "id": "order-10-dropoff",
+      "target_time": "2021-10-17T10:15:00-06:00",
+      "position": {
+        "lon": -96.592999,
+        "lat": 32.745775
+      },
+      "quantity": 30,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-11-pickup-1",
+      "position": {
+        "lon": -97.271404,
+        "lat": 32.933272
+      },
+      "precedes": "order-11-dropoff",
+      "quantity": -15
+    },
+    {
+      "id": "order-11-dropoff",
+      "target_time": "2021-10-17T10:15:00-06:00",
+      "position": {
+        "lon": -97.20274,
+        "lat": 32.902722
+      },
+      "quantity": 15,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T12:30:00-06:00"]
+    },
+    {
+      "id": "order-12-pickup-1",
+      "position": {
+        "lon": -96.990566,
+        "lat": 32.85659
+      },
+      "precedes": "order-12-dropoff",
+      "quantity": -20
+    },
+    {
+      "id": "order-12-dropoff",
+      "target_time": "2021-10-17T10:15:00-06:00",
+      "position": {
+        "lon": -96.831951,
+        "lat": 32.618629
+      },
+      "quantity": 20,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-13-pickup-1",
+      "position": {
+        "lon": -96.785259,
+        "lat": 32.706495
+      },
+      "precedes": "order-13-dropoff",
+      "quantity": -12
+    },
+    {
+      "id": "order-13-dropoff",
+      "target_time": "2021-10-17T10:15:00-06:00",
+      "position": {
+        "lon": -96.874523,
+        "lat": 32.706495
+      },
+      "quantity": 13,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-14-pickup-1",
+      "position": {
+        "lon": -96.992626,
+        "lat": 32.800045
+      },
+      "precedes": "order-14-dropoff",
+      "quantity": -10
+    },
+    {
+      "id": "order-14-dropoff",
+      "target_time": "2021-10-17T10:35:00-06:00",
+      "position": {
+        "lon": -97.012539,
+        "lat": 33.019675
+      },
+      "quantity": 10,
+      "hard_window": ["2021-10-17T10:00:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-15-pickup-1",
+      "position": {
+        "lon": -96.961727,
+        "lat": 32.973028
+      },
+      "precedes": "order-15-dropoff",
+      "quantity": -5
+    },
+    {
+      "id": "order-15-dropoff",
+      "target_time": "2021-10-17T10:35:00-06:00",
+      "position": {
+        "lon": -97.002926,
+        "lat": 32.796005
+      },
+      "quantity": 5,
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T12:30:00-06:00"]
+    },
+    {
+      "id": "order-16-pickup-1",
+      "position": {
+        "lon": -96.798992,
+        "lat": 32.707072
+      },
+      "precedes": "order-16-dropoff",
+      "quantity": -12
+    },
+    {
+      "id": "order-16-dropoff",
+      "target_time": "2021-10-17T10:35:00-06:00",
+      "position": {
+        "lon": -96.796717,
+        "lat": 32.709934
+      },
+      "quantity": 12,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-17-pickup-1",
+      "position": {
+        "lon": -96.775195,
+        "lat": 32.70487
+      },
+      "precedes": "order-17-dropoff",
+      "quantity": -12
+    },
+    {
+      "id": "order-17-pickup-2",
+      "position": {
+        "lon": -96.754166,
+        "lat": 32.682658
+      },
+      "precedes": "order-17-dropoff",
+      "quantity": -11
+    },
+    {
+      "id": "order-17-dropoff",
+      "target_time": "2021-10-17T10:35:00-06:00",
+      "position": {
+        "lon": -96.698623,
+        "lat": 32.76032
+      },
+      "quantity": 23,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-18-pickup-1",
+      "position": {
+        "lon": -96.705724,
+        "lat": 32.786149
+      },
+      "precedes": "order-18-dropoff",
+      "quantity": -19
+    },
+    {
+      "id": "order-18-pickup-2",
+      "position": {
+        "lon": -96.674118,
+        "lat": 32.832623
+      },
+      "precedes": "order-18-dropoff",
+      "quantity": -11
+    },
+    {
+      "id": "order-18-dropoff",
+      "target_time": "2021-10-17T10:35:00-06:00",
+      "position": {
+        "lon": -96.659698,
+        "lat": 32.856419
+      },
+      "quantity": 30,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-19-pickup-1",
+      "position": {
+        "lon": -96.690515,
+        "lat": 32.995981
+      },
+      "precedes": "order-19-dropoff",
+      "quantity": -9
+    },
+    {
+      "id": "order-19-dropoff",
+      "target_time": "2021-10-17T10:45:00-06:00",
+      "position": {
+        "lon": -96.783555,
+        "lat": 32.950762
+      },
+      "quantity": 9,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-20-pickup-1",
+      "position": {
+        "lon": -96.72622,
+        "lat": 32.893412
+      },
+      "precedes": "order-20-dropoff",
+      "quantity": -12
+    },
+    {
+      "id": "order-20-pickup-2",
+      "position": {
+        "lon": -96.837457,
+        "lat": 32.915319
+      },
+      "precedes": "order-20-dropoff",
+      "quantity": -8
+    },
+    {
+      "id": "order-20-dropoff",
+      "target_time": "2021-10-17T10:45:00-06:00",
+      "position": {
+        "lon": -96.845266,
+        "lat": 32.89543
+      },
+      "quantity": 20,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-21-pickup-1",
+      "position": {
+        "lon": -96.865266,
+        "lat": 32.88543
+      },
+      "precedes": "order-21-dropoff",
+      "quantity": -31
+    },
+    {
+      "id": "order-21-dropoff",
+      "target_time": "2021-10-17T10:45:00-06:00",
+      "position": {
+        "lon": -96.909898,
+        "lat": 33.010377
+      },
+      "quantity": 31,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-22-pickup-1",
+      "position": {
+        "lon": -96.922987,
+        "lat": 33.019625
+      },
+      "precedes": "order-22-dropoff",
+      "quantity": -5
+    },
+    {
+      "id": "order-22-pickup-2",
+      "position": {
+        "lon": -96.6983,
+        "lat": 32.76032
+      },
+      "precedes": "order-22-dropoff",
+      "quantity": -7
+    },
+    {
+      "id": "order-22-dropoff",
+      "target_time": "2021-10-17T10:45:00-06:00",
+      "position": {
+        "lon": -96.705724,
+        "lat": 32.782249
+      },
+      "quantity": 12,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-23-pickup-1",
+      "position": {
+        "lon": -96.674118,
+        "lat": 32.832611
+      },
+      "precedes": "order-23-dropoff",
+      "quantity": -21
+    },
+    {
+      "id": "order-23-dropoff",
+      "target_time": "2021-10-17T10:45:00-06:00",
+      "position": {
+        "lon": -96.623698,
+        "lat": 32.856889
+      },
+      "quantity": 21,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-24-pickup-1",
+      "position": {
+        "lon": -96.690515,
+        "lat": 32.995981
+      },
+      "precedes": "order-24-dropoff",
+      "quantity": -9
+    },
+    {
+      "id": "order-24-dropoff",
+      "target_time": "2021-10-17T10:55:00-06:00",
+      "position": {
+        "lon": -96.783115,
+        "lat": 32.95055
+      },
+      "quantity": 9,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    },
+    {
+      "id": "order-25-pickup-1",
+      "position": {
+        "lon": -96.71622,
+        "lat": 32.893112
+      },
+      "precedes": "order-25-dropoff",
+      "quantity": -28
+    },
+    {
+      "id": "order-25-dropoff",
+      "target_time": "2021-10-17T10:55:00-06:00",
+      "position": {
+        "lon": -96.865006,
+        "lat": 32.80043
+      },
+      "quantity": 28,
+      "hard_window": ["2021-10-17T09:30:00-06:00", "2021-10-17T12:00:00-06:00"]
+    }
+  ]
+}

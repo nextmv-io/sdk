@@ -1,0 +1,72 @@
+{
+  "items": [
+    {
+      "item_id": "cat",
+      "value": 100,
+      "weight": 20,
+      "volume": 20
+    },
+    {
+      "item_id": "dog",
+      "value": 20,
+      "weight": 45,
+      "volume": 30
+    },
+    {
+      "item_id": "water",
+      "value": 40,
+      "weight": 2,
+      "volume": 1
+    },
+    {
+      "item_id": "phone",
+      "value": 6,
+      "weight": 1,
+      "volume": 1
+    },
+    {
+      "item_id": "book",
+      "value": 63,
+      "weight": 10,
+      "volume": 2
+    },
+    {
+      "item_id": "rx",
+      "value": 81,
+      "weight": 1,
+      "volume": 5
+    },
+    {
+      "item_id": "tablet",
+      "value": 28,
+      "weight": 8,
+      "volume": 3
+    },
+    {
+      "item_id": "coat",
+      "value": 44,
+      "weight": 9,
+      "volume": 5
+    },
+    {
+      "item_id": "laptop",
+      "value": 51,
+      "weight": 13,
+      "volume": 3
+    },
+    {
+      "item_id": "keys",
+      "value": 92,
+      "weight": 1,
+      "volume": 1
+    },
+    {
+      "item_id": "nuts",
+      "value": 18,
+      "weight": 4,
+      "volume": 1
+    }
+  ],
+  "weight_capacity": 50,
+  "volume_capacity": 15
+}

@@ -1,0 +1,770 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T08:00:00Z",
+      "shift_end": "2021-06-10T16:00:00Z",
+      "start": {
+        "lon": -96.87215,
+        "lat": 32.80875
+      },
+      "speed": 12,
+      "max_distance": 50000
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": {
+        "weight": 200,
+        "volume": 1500
+      }
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": {
+        "weight": 200,
+        "volume": 1500
+      }
+    },
+    {
+      "id": "vehicle-3",
+      "capacity": {
+        "weight": 200,
+        "volume": 1500
+      }
+    },
+    {
+      "id": "vehicle-4",
+      "capacity": {
+        "weight": 350,
+        "volume": 2500
+      }
+    },
+    {
+      "id": "vehicle-5",
+      "capacity": {
+        "weight": 350,
+        "volume": 2500
+      }
+    },
+    {
+      "id": "vehicle-6",
+      "capacity": {
+        "weight": 350,
+        "volume": 2500
+      }
+    },
+    {
+      "id": "vehicle-7",
+      "capacity": {
+        "weight": 200,
+        "volume": 1500
+      }
+    }
+  ],
+  "stops": [
+    {
+      "id": "order-1-dropoff-express",
+      "position": {
+        "lon": -96.7524,
+        "lat": 32.65764
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -155
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-2-dropoff",
+      "position": {
+        "lon": -96.82663,
+        "lat": 32.6498
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -220
+      }
+    },
+    {
+      "id": "order-3-dropoff",
+      "position": {
+        "lon": -96.9925,
+        "lat": 32.8922
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -195
+      }
+    },
+    {
+      "id": "order-4-dropoff",
+      "position": {
+        "lon": -96.99433,
+        "lat": 32.89166
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -175
+      }
+    },
+    {
+      "id": "order-5-dropoff-express",
+      "position": {
+        "lon": -96.88486,
+        "lat": 32.81559
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -180
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-6-dropoff",
+      "position": {
+        "lon": -96.85313,
+        "lat": 32.80997
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -225
+      }
+    },
+    {
+      "id": "order-7-dropoff",
+      "position": {
+        "lon": -96.58497,
+        "lat": 32.73941
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -245
+      }
+    },
+    {
+      "id": "order-8-dropoff",
+      "position": {
+        "lon": -96.6335,
+        "lat": 32.7274
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -170
+      }
+    },
+    {
+      "id": "order-9-dropoff",
+      "position": {
+        "lon": -96.67937,
+        "lat": 32.77418
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -90
+      }
+    },
+    {
+      "id": "order-10-dropoff",
+      "position": {
+        "lon": -96.69089,
+        "lat": 32.77412
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -185
+      }
+    },
+    {
+      "id": "order-11-dropoff",
+      "position": {
+        "lon": -97.09611,
+        "lat": 32.66673
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -155
+      }
+    },
+    {
+      "id": "order-12-dropoff",
+      "position": {
+        "lon": -97.06902,
+        "lat": 32.69165
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -180
+      }
+    },
+    {
+      "id": "order-13-dropoff-express",
+      "position": {
+        "lon": -96.9157,
+        "lat": 32.57605
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -135
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-14-dropoff-express",
+      "position": {
+        "lon": -96.83226,
+        "lat": 32.57542
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -95
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-15-dropoff",
+      "position": {
+        "lon": -97.02575,
+        "lat": 32.75759
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -80
+      }
+    },
+    {
+      "id": "order-16-dropoff",
+      "position": {
+        "lon": -97.00757,
+        "lat": 32.75106
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -145
+      }
+    },
+    {
+      "id": "order-17-dropoff",
+      "position": {
+        "lon": -97.26953,
+        "lat": 32.90896
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -70
+      }
+    },
+    {
+      "id": "order-18-dropoff",
+      "position": {
+        "lon": -97.27819,
+        "lat": 32.87165
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -110
+      }
+    },
+    {
+      "id": "order-19-dropoff",
+      "position": {
+        "lon": -96.91767,
+        "lat": 32.8335
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -180
+      }
+    },
+    {
+      "id": "order-20-dropoff",
+      "position": {
+        "lon": -96.96781,
+        "lat": 32.81456
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -60
+      }
+    },
+    {
+      "id": "order-21-dropoff",
+      "position": {
+        "lon": -97.14119,
+        "lat": 32.6914
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -230
+      }
+    },
+    {
+      "id": "order-22-dropoff-express",
+      "position": {
+        "lon": -97.14001,
+        "lat": 32.7049
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -225
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-23-dropoff-express",
+      "position": {
+        "lon": -96.91338,
+        "lat": 32.81572
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -205
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-24-dropoff",
+      "position": {
+        "lon": -96.89299,
+        "lat": 32.78629
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -125
+      }
+    },
+    {
+      "id": "order-25-dropoff",
+      "position": {
+        "lon": -97.06819,
+        "lat": 32.78366
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -185
+      }
+    },
+    {
+      "id": "order-26-dropoff",
+      "position": {
+        "lon": -97.07571,
+        "lat": 32.74745
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -65
+      }
+    },
+    {
+      "id": "order-27-dropoff",
+      "position": {
+        "lon": -97.10771,
+        "lat": 32.73423
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -50
+      }
+    },
+    {
+      "id": "order-28-dropoff",
+      "position": {
+        "lon": -97.11424,
+        "lat": 32.74378
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -80
+      }
+    },
+    {
+      "id": "order-29-dropoff",
+      "position": {
+        "lon": -96.80497,
+        "lat": 32.76309
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -145
+      }
+    },
+    {
+      "id": "order-30-dropoff-express",
+      "position": {
+        "lon": -96.76166,
+        "lat": 32.76119
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -160
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-31-dropoff",
+      "position": {
+        "lon": -97.07549,
+        "lat": 32.99633
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -80
+      }
+    },
+    {
+      "id": "order-32-dropoff",
+      "position": {
+        "lon": -97.02657,
+        "lat": 32.98169
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -60
+      }
+    },
+    {
+      "id": "order-33-dropoff",
+      "position": {
+        "lon": -96.83755,
+        "lat": 32.72714
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -90
+      }
+    },
+    {
+      "id": "order-34-dropoff",
+      "position": {
+        "lon": -96.83107,
+        "lat": 32.74498
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -230
+      }
+    },
+    {
+      "id": "order-35-dropoff-express",
+      "position": {
+        "lon": -96.75898,
+        "lat": 32.81226
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -85
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-36-dropoff",
+      "position": {
+        "lon": -96.86107,
+        "lat": 32.86877
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -180
+      }
+    },
+    {
+      "id": "order-37-dropoff",
+      "position": {
+        "lon": -96.87548,
+        "lat": 32.86909
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -125
+      }
+    },
+    {
+      "id": "order-38-dropoff",
+      "position": {
+        "lon": -96.84767,
+        "lat": 32.85327
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -100
+      }
+    },
+    {
+      "id": "order-39-dropoff-express",
+      "position": {
+        "lon": -97.11454,
+        "lat": 32.86066
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -175
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-40-dropoff",
+      "position": {
+        "lon": -97.09216,
+        "lat": 32.80261
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -210
+      }
+    },
+    {
+      "id": "order-41-dropoff-express",
+      "position": {
+        "lon": -96.98874,
+        "lat": 32.7878
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -185
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-42-dropoff",
+      "position": {
+        "lon": -97.00073,
+        "lat": 32.79869
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -245
+      }
+    },
+    {
+      "id": "order-43-dropoff",
+      "position": {
+        "lon": -96.95503,
+        "lat": 32.80223
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -250
+      }
+    },
+    {
+      "id": "order-44-dropoff",
+      "position": {
+        "lon": -96.95133,
+        "lat": 32.75588
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -80
+      }
+    },
+    {
+      "id": "order-45-dropoff-express",
+      "position": {
+        "lon": -97.24524,
+        "lat": 32.67599
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -190
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-46-dropoff",
+      "position": {
+        "lon": -97.17783,
+        "lat": 32.69514
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -65
+      }
+    },
+    {
+      "id": "order-47-dropoff",
+      "position": {
+        "lon": -96.99328,
+        "lat": 32.96625
+      },
+      "quantity": {
+        "weight": -15,
+        "volume": -65
+      }
+    },
+    {
+      "id": "order-48-dropoff",
+      "position": {
+        "lon": -96.99882,
+        "lat": 32.95493
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -175
+      }
+    },
+    {
+      "id": "order-49-dropoff",
+      "position": {
+        "lon": -97.11088,
+        "lat": 32.62739
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -215
+      }
+    },
+    {
+      "id": "order-50-dropoff",
+      "position": {
+        "lon": -97.11645,
+        "lat": 32.64435
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -120
+      }
+    },
+    {
+      "id": "order-51-dropoff",
+      "position": {
+        "lon": -97.03959,
+        "lat": 32.81613
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -245
+      }
+    },
+    {
+      "id": "order-52-dropoff",
+      "position": {
+        "lon": -97.07473,
+        "lat": 32.84717
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -220
+      }
+    },
+    {
+      "id": "order-53-dropoff",
+      "position": {
+        "lon": -96.74741,
+        "lat": 32.8013
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -140
+      }
+    },
+    {
+      "id": "order-54-dropoff-express",
+      "position": {
+        "lon": -96.72232,
+        "lat": 32.81076
+      },
+      "quantity": {
+        "weight": -10,
+        "volume": -205
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-55-dropoff",
+      "position": {
+        "lon": -96.97696,
+        "lat": 32.84465
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -200
+      }
+    },
+    {
+      "id": "order-56-dropoff",
+      "position": {
+        "lon": -96.95654,
+        "lat": 32.85079
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -190
+      }
+    },
+    {
+      "id": "order-57-dropoff",
+      "position": {
+        "lon": -97.05679,
+        "lat": 32.77299
+      },
+      "quantity": {
+        "weight": -20,
+        "volume": -190
+      }
+    },
+    {
+      "id": "order-58-dropoff",
+      "position": {
+        "lon": -97.04503,
+        "lat": 32.7977
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -175
+      }
+    },
+    {
+      "id": "order-59-dropoff-express",
+      "position": {
+        "lon": -96.88061,
+        "lat": 32.67237
+      },
+      "quantity": {
+        "weight": -25,
+        "volume": -55
+      },
+      "target_time": "2021-06-10T08:30:00Z",
+      "lateness_penalty": 10,
+      "unassigned_penalty": 200000
+    },
+    {
+      "id": "order-60-dropoff",
+      "position": {
+        "lon": -96.89393,
+        "lat": 32.67114
+      },
+      "quantity": {
+        "weight": -5,
+        "volume": -240
+      }
+    }
+  ]
+}

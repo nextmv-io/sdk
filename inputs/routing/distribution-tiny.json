@@ -1,0 +1,109 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T08:00:00Z",
+      "shift_end": "2021-06-10T16:00:00Z",
+      "start": {
+        "lon": -96.87215,
+        "lat": 32.80875
+      },
+      "speed": 12
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 200
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 200
+    }
+  ],
+  "stops": [
+    {
+      "id": "order-1-dropoff",
+      "position": {
+        "lon": -96.7524,
+        "lat": 32.65764
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-2-dropoff",
+      "position": {
+        "lon": -96.82663,
+        "lat": 32.6498
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-3-dropoff",
+      "position": {
+        "lon": -96.9925,
+        "lat": 32.8922
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-4-dropoff",
+      "position": {
+        "lon": -96.99433,
+        "lat": 32.89166
+      },
+      "quantity": -5
+    },
+    {
+      "id": "order-5-dropoff",
+      "position": {
+        "lon": -96.88486,
+        "lat": 32.81559
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-6-dropoff",
+      "position": {
+        "lon": -96.85313,
+        "lat": 32.80997
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-7-dropoff",
+      "position": {
+        "lon": -96.58497,
+        "lat": 32.73941
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-8-dropoff",
+      "position": {
+        "lon": -96.6335,
+        "lat": 32.7274
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-9-dropoff",
+      "position": {
+        "lon": -96.67937,
+        "lat": 32.77418
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-10-dropoff",
+      "position": {
+        "lon": -96.69089,
+        "lat": 32.77412
+      },
+      "quantity": -10
+    }
+  ]
+}
