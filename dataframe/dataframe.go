@@ -1,16 +1,21 @@
 package dataframe
 
-import (
-	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/run/decode"
-)
+type DataFrame interface {
+	Column(string) (AnyColumn, error)
+	Columns() AnyColumns
 
-func FromCSV() decode.Decoder {
-	connect.Connect(con, &fromCSV)
-	return fromCSV()
+	Bools(string) (BoolColumn, error)
+	Ints(string) (IntColumn, error)
+	Floats(string) (FloatColumn, error)
+	Strings(string) (StringColumn, error)
+
+	// Distinct(columns ...Column) DataFrame
+
+	Filter(filter Filter) (DataFrame, error)
+
+	GroupBy(columns Columns) Groups
+
+	Len() int
+
+	Select(columns ...Column) DataFrame
 }
-
-var (
-	con     = connect.NewConnector("sdk", "Dataframe")
-	fromCSV func() decode.Decoder
-)
