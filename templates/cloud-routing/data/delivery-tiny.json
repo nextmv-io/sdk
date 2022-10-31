@@ -1,0 +1,123 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T10:45:00Z",
+      "shift_end": "2021-06-10T14:00:00Z",
+      "speed": 12
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 4,
+      "start": {
+        "lon": -96.83171,
+        "lat": 32.76631
+      }
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 4,
+      "start": {
+        "lon": -96.80249,
+        "lat": 32.77675
+      }
+    }
+  ],
+  "stops": [
+    {
+      "id": "restaurant-A-order-1-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-1-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-1-dropoff",
+      "position": {
+        "lon": -96.86074,
+        "lat": 32.67741
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-A-order-2-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-2-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-2-dropoff",
+      "position": {
+        "lon": -96.842251,
+        "lat": 32.735956
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-3-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-3-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-3-dropoff",
+      "position": {
+        "lon": -96.80605,
+        "lat": 32.71039
+      },
+      "quantity": 1
+    },
+    {
+      "id": "restaurant-A-order-4-pickup",
+      "position": {
+        "lon": -96.82794,
+        "lat": 32.74745
+      },
+      "precedes": "restaurant-A-order-4-dropoff",
+      "quantity": -2,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-A-order-4-dropoff",
+      "position": {
+        "lon": -96.888943,
+        "lat": 32.772914
+      },
+      "quantity": 2
+    },
+    {
+      "id": "restaurant-C-order-5-pickup",
+      "position": {
+        "lon": -96.76579,
+        "lat": 32.84525
+      },
+      "precedes": "restaurant-C-order-5-dropoff",
+      "quantity": -1,
+      "stop_duration": 300
+    },
+    {
+      "id": "restaurant-C-order-5-dropoff",
+      "position": {
+        "lon": -96.80274,
+        "lat": 32.82722
+      },
+      "quantity": 1
+    }
+  ]
+}

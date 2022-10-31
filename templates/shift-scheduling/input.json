@@ -1,0 +1,42 @@
+{
+  "days": 5,
+  "workers": 5,
+  "preferences": {
+    "shift_type": [
+      {
+        "worker": 1,
+        "type": "morning"
+      },
+      {
+        "worker": 2,
+        "type": "day"
+      },
+      {
+        "worker": 3,
+        "type": "day"
+      },
+      {
+        "worker": 4,
+        "type": "night"
+      },
+      {
+        "worker": 5,
+        "type": "morning"
+      }
+    ]
+  },
+  "unavailable": [
+    {
+      "worker": 1,
+      "days": [1]
+    },
+    {
+      "worker": 4,
+      "days": [4, 5]
+    },
+    {
+      "worker": 5,
+      "days": [4, 5]
+    }
+  ]
+}

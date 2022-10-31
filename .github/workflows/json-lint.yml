@@ -1,0 +1,19 @@
+name: json lint
+on: [push]
+jobs:
+  sdk-json-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: git clone
+        uses: actions/checkout@v3
+
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.1
+
+      - name: install prettier
+        run: npm install prettier@v2.7.1 --global
+
+      - name: lint .json files with prettier
+        run: prettier -c "**/*.json"
