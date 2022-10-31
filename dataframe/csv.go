@@ -5,6 +5,8 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
+// FromCSV returns a decoder to decode comma seperated values (CSV) files and
+// turn it into a DataFrame.
 func FromCSV() decode.Decoder {
 	connect.Connect(con, &fromCSV)
 	return fromCSV()
