@@ -41,6 +41,7 @@ var solver = func(i input, opt store.Options) (store.Solver, error) {
 		latenessPenalties:  routerInput.LatenessPenalty,
 		targetTimes:        routerInput.TargetTimes,
 		penalties:          routerInput.Penalties,
+		initCosts:          routerInput.InitializationCosts,
 	}
 	v := vehicleData{}
 
@@ -164,6 +165,7 @@ type planData struct {
 	latenessPenalties  []int
 	targetTimes        []int
 	penalties          []int
+	initCosts          []float64
 }
 
 func (d planData) Update(
@@ -171,11 +173,16 @@ func (d planData) Update(
 ) (route.PlanUpdater, int, bool) {
 	// Prepare data to update the solution's value.
 	newValue := 0
-	for _, v := range s.Vehicles() {
+	for j, v := range s.Vehicles() {
 		var totalEarliness, totalLateness int
 		route := v.Route()
 		etas := v.Times().EstimatedArrival
 		etds := v.Times().EstimatedDeparture
+
+		if len(route) > 2 {
+			newValue += int(d.initCosts[j])
+		}
+
 		// The new solution value is the travel time with all waiting and
 		// service times.
 		newValue += etds[len(etds)-1] - etas[0]
