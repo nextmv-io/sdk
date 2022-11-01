@@ -143,8 +143,8 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 					changes = append(changes, happiness.Set(happiness.Get(s)+1))
 				}
 
-				s1 := s.Apply(changes...)
-				s1 = s1.Propagate(constraint.propagate)
+				s = s.Apply(changes...)
+				s = s.Propagate(constraint.propagate)
 
 				// At last we update the worker count in case some future shifts
 				// are fixed now.
@@ -155,7 +155,7 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 					}
 				}
 
-				return s1.Apply(workerCount.Set(len(workerMap)))
+				return s.Apply(workerCount.Set(len(workerMap)))
 			})
 	}).Validate(func(s store.Store) bool {
 		// The store is operationally valid if exactly one worker is assigned
