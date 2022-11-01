@@ -72,31 +72,10 @@ func Example() {
 	//       "id": "v1",
 	//       "route": [
 	//         {
-	//           "id": "Fushimi Inari Taisha",
+	//           "id": "Kinkaku-ji",
 	//           "position": {
-	//             "lon": 135.772695,
-	//             "lat": 34.967146
-	//           }
-	//         },
-	//         {
-	//           "id": "Kiyomizu-dera",
-	//           "position": {
-	//             "lon": 135.78506,
-	//             "lat": 34.994857
-	//           }
-	//         },
-	//         {
-	//           "id": "Gionmachi",
-	//           "position": {
-	//             "lon": 135.775682,
-	//             "lat": 35.002457
-	//           }
-	//         },
-	//         {
-	//           "id": "Kyoto Imperial Palace",
-	//           "position": {
-	//             "lon": 135.762057,
-	//             "lat": 35.025431
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
 	//           }
 	//         },
 	//         {
@@ -107,10 +86,31 @@ func Example() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Kinkaku-ji",
+	//           "id": "Kyoto Imperial Palace",
 	//           "position": {
-	//             "lon": 135.728898,
-	//             "lat": 35.039705
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
 	//           }
 	//         }
 	//       ],
@@ -250,24 +250,10 @@ func ExampleRouter_options() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Fushimi Inari Taisha",
+	//           "id": "Nijō Castle",
 	//           "position": {
-	//             "lon": 135.772695,
-	//             "lat": 34.967146
-	//           }
-	//         },
-	//         {
-	//           "id": "Kiyomizu-dera",
-	//           "position": {
-	//             "lon": 135.78506,
-	//             "lat": 34.994857
-	//           }
-	//         },
-	//         {
-	//           "id": "Gionmachi",
-	//           "position": {
-	//             "lon": 135.775682,
-	//             "lat": 35.002457
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
 	//           }
 	//         },
 	//         {
@@ -278,10 +264,24 @@ func ExampleRouter_options() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Nijō Castle",
+	//           "id": "Gionmachi",
 	//           "position": {
-	//             "lon": 135.748134,
-	//             "lat": 35.014239
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
 	//           }
 	//         },
 	//         {
@@ -407,17 +407,10 @@ func ExampleRouter_plan() {
 	//     "id": "v1",
 	//     "route": [
 	//       {
-	//         "id": "Gionmachi",
+	//         "id": "Kinkaku-ji",
 	//         "position": {
-	//           "lon": 135.775682,
-	//           "lat": 35.002457
-	//         }
-	//       },
-	//       {
-	//         "id": "Kyoto Imperial Palace",
-	//         "position": {
-	//           "lon": 135.762057,
-	//           "lat": 35.025431
+	//           "lon": 135.728898,
+	//           "lat": 35.039705
 	//         }
 	//       },
 	//       {
@@ -428,10 +421,17 @@ func ExampleRouter_plan() {
 	//         }
 	//       },
 	//       {
-	//         "id": "Kinkaku-ji",
+	//         "id": "Kyoto Imperial Palace",
 	//         "position": {
-	//           "lon": 135.728898,
-	//           "lat": 35.039705
+	//           "lon": 135.762057,
+	//           "lat": 35.025431
+	//         }
+	//       },
+	//       {
+	//         "id": "Gionmachi",
+	//         "position": {
+	//           "lon": 135.775682,
+	//           "lat": 35.002457
 	//         }
 	//       }
 	//     ],
@@ -504,17 +504,17 @@ func ExampleNewRouter() {
 	//       "id": "v1",
 	//       "route": [
 	//         {
-	//           "id": "Fushimi Inari Taisha",
-	//           "position": {
-	//             "lon": 135.772695,
-	//             "lat": 34.967146
-	//           }
-	//         },
-	//         {
 	//           "id": "Kiyomizu-dera",
 	//           "position": {
 	//             "lon": 135.78506,
 	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
 	//           }
 	//         }
 	//       ],
