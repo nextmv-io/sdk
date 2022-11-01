@@ -1,6 +1,34 @@
 package dataframe
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/nextmv-io/sdk/connect"
+)
+
+// Bools returns a BoolColumn identified by name.
+func Bools(name string) BoolColumn {
+	connect.Connect(con, &newBoolColumn)
+	return newBoolColumn(name)
+}
+
+// Floats returns a FloatColumn identified by name.
+func Floats(name string) FloatColumn {
+	connect.Connect(con, &newFloatColumn)
+	return newFloatColumn(name)
+}
+
+// Ints returns a IntColumn identified by name.
+func Ints(name string) IntColumn {
+	connect.Connect(con, &newIntColumn)
+	return newIntColumn(name)
+}
+
+// Strings returns a StringColumn identified by name.
+func Strings(name string) StringColumn {
+	connect.Connect(con, &newStringColumn)
+	return newStringColumn(name)
+}
 
 // DataType defines the types of colums available in DataFrame.
 type DataType string
@@ -33,45 +61,24 @@ type Column interface {
 // Columns is the slice of Column instances.
 type Columns []Column
 
-// AnyColumn is the interface to cast a column to a typed column.
-type AnyColumn interface {
-	Column
-
-	// ToBoolColumn return the column as a BoolColumn, panics if the column
-	// is not of type Bool.
-	ToBoolColumn() BoolColumn
-	// ToIntColumn return the column as a IntColumn, panics if the column
-	// is not of type Int.
-	ToIntColumn() IntColumn
-	// ToFloatColumn return the column as a FloatColumn, panics if the column
-	// is not of type Float.
-	ToFloatColumn() FloatColumn
-	// ToStringColumn return the column as a StringColumn, panics if the column
-	// is not of type String.
-	ToStringColumn() StringColumn
-}
-
-// AnyColumns is the slice of AnyColumn instances.
-type AnyColumns []AnyColumn
-
-// BoolColumn is the typed column of type Bool
+// BoolColumn is the typed column of type Bool.
 type BoolColumn interface {
 	Column
-	BoolAggregations
 
 	// NewIsFalse creates a filter to filter all rows having value false.
 	NewIsFalse() Filter
 	// NewIsTrue creates a filter to filter all rows having value true.
 	NewIsTrue() Filter
 
-	// ItemAt return the value in row i, panics if out of bound.
-	ItemAt(i int) bool
+	// Row return the value in row i for dataframe df,
+	// panics if out of bound.
+	Row(df DataFrame, i int) bool
 
-	// Slice returns all the values in the column.
-	Slice() []bool
+	// Rows returns all the values in the column for dataframe df.
+	Rows(df DataFrame) []bool
 }
 
-// FloatColumn is the typed column of type Float
+// FloatColumn is the typed column of type Float.
 type FloatColumn interface {
 	Column
 	NumericAggregations
@@ -79,14 +86,14 @@ type FloatColumn interface {
 	// NewIsInRange creates a filter to filter all rows within range [min, max].
 	NewIsInRange(min, max float64) Filter
 
-	// ItemAt return the value in row i, panics if out of bound.
-	ItemAt(i int) float64
+	// Row return the value in row i, panics if out of bound.
+	Row(df DataFrame, i int) float64
 
-	// Slice returns all the values in the column.
-	Slice() []float64
+	// Rows returns all the values in the column.
+	Rows(df DataFrame) []float64
 }
 
-// IntColumn is the typed column of type Int
+// IntColumn is the typed column of type Int.
 type IntColumn interface {
 	Column
 	NumericAggregations
@@ -94,23 +101,30 @@ type IntColumn interface {
 	// NewIsInRange creates a filter to filter all value within range [min, max].
 	NewIsInRange(min, max int) Filter
 
-	// ItemAt return the value in row i, panics if out of bound.
-	ItemAt(i int) int
+	// Row return the value in row i, panics if out of bound.
+	Row(df DataFrame, i int) int
 
-	// Slice returns all the values in the column.
-	Slice() []int
+	// Rows returns all the values in the column.
+	Rows(df DataFrame) []int
 }
 
-// StringColumn is the typed column of type String
+// StringColumn is the typed column of type String.
 type StringColumn interface {
 	Column
 
 	// NewEquals creates a filter to filter all rows having value value.
 	NewEquals(value string) Filter
 
-	// ItemAt return the value in row i, panics if out of bound.
-	ItemAt(i int) *string
+	// Row return the value in row i, panics if out of bound.
+	Row(df DataFrame, i int) *string
 
-	// Slice returns all the values in the column.
-	Slice() []*string
+	// Rows returns all the values in the column.
+	Rows(df DataFrame) []*string
 }
+
+var (
+	newBoolColumn   func(string) BoolColumn
+	newFloatColumn  func(string) FloatColumn
+	newIntColumn    func(string) IntColumn
+	newStringColumn func(string) StringColumn
+)
