@@ -2,12 +2,12 @@
   "binkies": 27,
   "meals": [
     {
-      "name": "B",
-      "quantity": 3
-    },
-    {
       "name": "A",
       "quantity": 2
+    },
+    {
+      "name": "B",
+      "quantity": 3
     }
   ],
   "runtime": "613.208µs",
