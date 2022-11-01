@@ -1,0 +1,108 @@
+{
+  "defaults": {
+    "vehicles": {
+      "shift_start": "2021-06-10T08:00:00Z",
+      "shift_end": "2021-06-10T16:00:00Z",
+      "speed": 12,
+      "end": {
+        "lon": -96.87215,
+        "lat": 32.80875
+      }
+    },
+    "stops": {
+      "unassigned_penalty": 100000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 75
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 100
+    }
+  ],
+  "stops": [
+    {
+      "id": "order-1-pickup",
+      "position": {
+        "lon": -96.8024,
+        "lat": 32.67764
+      },
+      "quantity": -15
+    },
+    {
+      "id": "order-2-pickup",
+      "position": {
+        "lon": -96.84663,
+        "lat": 32.7098
+      },
+      "quantity": -10
+    },
+    {
+      "id": "order-3-pickup",
+      "position": {
+        "lon": -96.78486,
+        "lat": 32.81559
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-4-pickup",
+      "position": {
+        "lon": -96.81313,
+        "lat": 32.83997
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-5-pickup",
+      "position": {
+        "lon": -96.65497,
+        "lat": 32.73941
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-6-pickup",
+      "position": {
+        "lon": -96.6335,
+        "lat": 32.7274
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-7-pickup",
+      "position": {
+        "lon": -96.67937,
+        "lat": 32.77418
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-8-pickup",
+      "position": {
+        "lon": -96.6335,
+        "lat": 32.7274
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-9-pickup",
+      "position": {
+        "lon": -96.67937,
+        "lat": 32.77418
+      },
+      "quantity": -20
+    },
+    {
+      "id": "order-10-pickup",
+      "position": {
+        "lon": -96.69089,
+        "lat": 32.77412
+      },
+      "quantity": -10
+    }
+  ]
+}

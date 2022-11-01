@@ -121,7 +121,7 @@ func Scale(m ByIndex, constant float64) ByIndex {
 
 // ScaleByPoint scales the cost of some other measure by a constant.
 func ScaleByPoint(m ByPoint, constant float64) ByPoint {
-	connect.Connect(con, &scaleFunc)
+	connect.Connect(con, &scaleByPointFunc)
 	return scaleByPointFunc(m, constant)
 }
 
@@ -184,6 +184,14 @@ func Matrix(arcs [][]float64) ByIndex {
 	return matrixFunc(arcs)
 }
 
+// IsTriangular returns true if the triangle inequality holds for the provided
+// measure. It returns false if the measure does not implement the Triangular
+// interface or the triangle inequality does not hold.
+func IsTriangular(m any) bool {
+	connect.Connect(con, &isTriangularFunc)
+	return isTriangularFunc(m)
+}
+
 var (
 	con                  = connect.NewConnector("sdk", "Route")
 	binFunc              func([]ByIndex, func(int, int) int) ByIndex
@@ -205,4 +213,5 @@ var (
 	sumFunc              func(...ByIndex) ByIndex
 	taxicabByPointFunc   func() ByPoint
 	truncateFunc         func(ByIndex, float64, float64) ByIndex
+	isTriangularFunc     func(m any) bool
 )

@@ -53,8 +53,10 @@ linters:
     - containedctx
     # Check the function whether use a non-inherited context.
     - contextcheck
-    # Finds unused code.
-    - deadcode
+    # Finds unused code. WARN [runner] The linter 'deadcode' is deprecated
+    # (since v1.49.0) due to: The owner seems to have abandoned the linter.
+    # Replaced by unused.
+    # - deadcode
     # check declaration order and count of types, constants, variables and functions.
     - decorder
     # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
@@ -119,8 +121,10 @@ linters:
     - revive
     # Staticcheck is a go vet on steroids, applying a ton of static analysis checks.
     - staticcheck
-    # Finds unused struct fields.
-    - structcheck
+    # Finds unused struct fields. WARN [runner] The linter 'structcheck' is
+    # deprecated (since v1.49.0) due to: The owner seems to have abandoned the
+    # linter.  Replaced by unused.
+    # - structcheck
     # Stylecheck is a replacement for golint.
     - stylecheck
     # Checks the struct tags.
@@ -133,8 +137,10 @@ linters:
     - unparam
     # Checks Go code for unused constants, variables, functions and types.
     - unused
-    # Finds unused global variables and constants.
-    - varcheck
+    # Finds unused global variables and constants. WARN [runner] The linter
+    # 'varcheck' is deprecated (since v1.49.0) due to: The owner seems to have
+    # abandoned the linter.  Replaced by unused.
+    # - varcheck
     # wastedassign finds wasted assignment statements.
     - wastedassign
     # Tool for detection of leading and trailing whitespace.
@@ -176,3 +182,44 @@ issues:
     # linting is ignored by using the following syntax on a line: //nolint. If
     # you look for uses of //nolint you will find the other linting issues
     # being excluided.
+
+    # TODO: fix cyclomatic complexity issues on these templates. This linter is
+    # ignored for expediency.
+    - path: templates/cloud-routing/helper\.go
+      linters:
+        - gocyclo
+    - path: templates/cloud-routing/schema\.go
+      linters:
+        - gocyclo
+    - path: templates/cloud-routing/solver\.go
+      linters:
+        - gocyclo
+    - path: templates/mip-knapsack/main\.go
+      linters:
+        - gocyclo
+    - path: templates/mip-meal-allocation/main\.go
+      linters:
+        - gocyclo
+    - path: templates/pager-duty/main\.go
+      linters:
+        - gocyclo
+    - path: templates/shift-scheduling/main\.go
+      linters:
+        - gocyclo
+    - path: templates/sudoku/main\.go
+      linters:
+        - gocyclo
+
+    # TODO: figure out a better way to Marshal to JSON with some sort of error
+    # checking.
+    - path: templates/cloud-routing/schema\.go
+      linters:
+        - unparam
+      text: cloudDuration
+
+    # The linter suggests switching an if-elseif-else statement to use switch.
+    # This is not reasonable right now because the conditions are complex.
+    - path: templates/cloud-routing/helper\.go
+      linters:
+        - gocritic
+      text: ifElseChain

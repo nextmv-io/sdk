@@ -1,0 +1,113 @@
+{
+  "defaults": {
+    "vehicles": {
+      "start": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "end": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "shift_start": "2021-10-17T09:00:00-06:00",
+      "shift_end": "2021-10-17T11:00:00-06:00",
+      "speed": 10
+    },
+    "stops": {
+      "stop_duration": 120,
+      "unassigned_penalty": 200000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "capacity": 305
+    },
+    {
+      "id": "vehicle-2",
+      "capacity": 205
+    }
+  ],
+  "stops": [
+    {
+      "id": "location-1",
+      "position": {
+        "lon": -96.75038245222624,
+        "lat": 33.20580830033956
+      },
+      "quantity": -27
+    },
+    {
+      "id": "location-2",
+      "position": {
+        "lon": -96.54613745932127,
+        "lat": 33.2259142720506
+      },
+      "quantity": -30
+    },
+    {
+      "id": "location-3",
+      "position": {
+        "lon": -96.61059803136642,
+        "lat": 33.23528740544529
+      },
+      "quantity": -36
+    },
+    {
+      "id": "location-4",
+      "position": {
+        "lon": -96.61356543957307,
+        "lat": 33.20379744909628
+      },
+      "quantity": -19
+    },
+    {
+      "id": "location-5",
+      "position": {
+        "lon": -96.64137458150537,
+        "lat": 33.178801586789376
+      },
+      "quantity": -31
+    },
+    {
+      "id": "location-6",
+      "position": {
+        "lon": -96.83157538607735,
+        "lat": 33.02896457334468
+      },
+      "quantity": -15
+    },
+    {
+      "id": "location-7",
+      "position": {
+        "lon": -96.62951544963792,
+        "lat": 33.08670100884261
+      },
+      "quantity": -31
+    },
+    {
+      "id": "location-8",
+      "position": {
+        "lon": -96.86007117348946,
+        "lat": 33.08133590083287
+      },
+      "quantity": -52
+    },
+    {
+      "id": "location-9",
+      "position": {
+        "lon": -96.87346076034575,
+        "lat": 33.092841906114394
+      },
+      "quantity": -48
+    },
+    {
+      "id": "location-10",
+      "position": {
+        "lon": -96.79586982112724,
+        "lat": 33.10492159118987
+      },
+      "quantity": -40
+    }
+  ]
+}

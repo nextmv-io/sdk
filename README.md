@@ -9,6 +9,11 @@ problems. Please find the following packages:
 - [run][run]: convenient runners that read an input, run a solver and write an
       output.
 - [model][model]: modeling components such as integer domains and ranges.
+- [mip][mip]: Mixed-Integer Programming API with various solvers.
+- [templates][templates]: ready-to-go applications for solving various types of
+      decision automation problems. Designed to work with the [Nextmv CLI][cli].
+- [inputs][inputs]: `.json` inputs for working with the Nextmv routing app.
+      Designed to work with the [Nextmv CLI][cli].
 
 Please visit the official [Nextmv docs][docs] for comprehensive information.
 
@@ -24,4 +29,8 @@ go get github.com/nextmv-io/sdk
 [route]: ./route
 [run]: ./run
 [model]: ./model
+[mip]: ./mip
+[templates]: ./templates
+[inputs]: ./inputs
 [docs]: https://docs.nextmv.io
+[cli]: https://docs.nextmv.io/reference/cli
