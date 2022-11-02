@@ -209,6 +209,9 @@ issues:
     - path: templates/sudoku/main\.go
       linters:
         - gocyclo
+    - path: templates/mip-budget-allocation/main\.go
+      linters:
+        - gocyclo
 
     # TODO: figure out a better way to Marshal to JSON with some sort of error
     # checking.
