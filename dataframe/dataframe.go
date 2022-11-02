@@ -23,16 +23,16 @@ type DataFrame interface {
 	// HasColumn reports if a columns with name is present in the dataframe.
 	HasColumn(name string) bool
 
-	// IsBools returns true if column by name is of type Bool, otherwise false.
-	IsBools(name string) bool
-	// IsInts returns true if column by name is of type Int, otherwise false.
-	IsInts(name string) bool
-	// IsFloats returns true if column by name is of type floats, otherwise
+	// AreBools returns true if column by name is of type Bool, otherwise false.
+	AreBools(name string) bool
+	// AreInts returns true if column by name is of type Int, otherwise false.
+	AreInts(name string) bool
+	// AreFloats returns true if column by name is of type floats, otherwise
 	// false.
-	IsFloats(name string) bool
-	// IsStrings returns true if column by name is of type String, otherwise
+	AreFloats(name string) bool
+	// AreStrings returns true if column by name is of type String, otherwise
 	// false.
-	IsStrings(name string) bool
+	AreStrings(name string) bool
 
 	// Len returns the number of rows in the dataframe.
 	Len() int

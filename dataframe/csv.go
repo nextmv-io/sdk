@@ -13,6 +13,6 @@ func FromCSV() decode.Decoder {
 }
 
 var (
-	con     = connect.NewConnector("sdk", "Dataframe")
+	con     = connect.NewConnector("sdk", "DataFrame")
 	fromCSV func() decode.Decoder
 )

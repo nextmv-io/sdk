@@ -21,13 +21,13 @@ type Aggregations []Aggregation
 // NumericAggregations defines the possible aggregations which can be applied on
 // columns of type Float and Int.
 type NumericAggregations interface {
-	// NewMaximum creates an aggregation which reports the maximum value using
+	// Max creates an aggregation which reports the maximum value using
 	// name as.
-	NewMaximum(as string) Aggregation
-	// NewMinimum creates an aggregation which reports the minimum value using
+	Max(as string) Aggregation
+	// Min creates an aggregation which reports the minimum value using
 	// name as.
-	NewMinimum(as string) Aggregation
-	// NewSum creates an aggregation which reports the sum of values using
+	Min(as string) Aggregation
+	// Sum creates an aggregation which reports the sum of values using
 	// name as.
-	NewSum(as string) Aggregation
+	Sum(as string) Aggregation
 }

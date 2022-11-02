@@ -65,10 +65,10 @@ type Columns []Column
 type BoolColumn interface {
 	Column
 
-	// NewIsFalse creates a filter to filter all rows having value false.
-	NewIsFalse() Filter
-	// NewIsTrue creates a filter to filter all rows having value true.
-	NewIsTrue() Filter
+	// IsFalse creates a filter to filter all rows having value false.
+	IsFalse() Filter
+	// IsTrue creates a filter to filter all rows having value true.
+	IsTrue() Filter
 
 	// Value return the value at row for dataframe df,
 	// panics if out of bound.
@@ -83,8 +83,8 @@ type FloatColumn interface {
 	Column
 	NumericAggregations
 
-	// NewIsInRange creates a filter to filter all rows within range [min, max].
-	NewIsInRange(min, max float64) Filter
+	// IsInRange creates a filter to filter all rows within range [min, max].
+	IsInRange(min, max float64) Filter
 
 	// Value return the value at row, panics if out of bound.
 	Value(df DataFrame, row int) float64
@@ -98,8 +98,8 @@ type IntColumn interface {
 	Column
 	NumericAggregations
 
-	// NewIsInRange creates a filter to filter all value within range [min, max].
-	NewIsInRange(min, max int) Filter
+	// IsInRange creates a filter to filter all value within range [min, max].
+	IsInRange(min, max int) Filter
 
 	// Value return the value at row, panics if out of bound.
 	Value(df DataFrame, row int) int
@@ -112,8 +112,8 @@ type IntColumn interface {
 type StringColumn interface {
 	Column
 
-	// NewEquals creates a filter to filter all rows having value value.
-	NewEquals(value string) Filter
+	// Equals creates a filter to filter all rows having value value.
+	Equals(value string) Filter
 
 	// Value return the value at row, panics if out of bound.
 	Value(df DataFrame, row int) *string
