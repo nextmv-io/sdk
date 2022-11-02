@@ -70,12 +70,12 @@ type BoolColumn interface {
 	// NewIsTrue creates a filter to filter all rows having value true.
 	NewIsTrue() Filter
 
-	// Row return the value in row i for dataframe df,
+	// Value return the value at row for dataframe df,
 	// panics if out of bound.
-	Row(df DataFrame, i int) bool
+	Value(df DataFrame, row int) bool
 
-	// Rows returns all the values in the column for dataframe df.
-	Rows(df DataFrame) []bool
+	// Values returns all the values in the column for dataframe df.
+	Values(df DataFrame) []bool
 }
 
 // FloatColumn is the typed column of type Float.
@@ -86,11 +86,11 @@ type FloatColumn interface {
 	// NewIsInRange creates a filter to filter all rows within range [min, max].
 	NewIsInRange(min, max float64) Filter
 
-	// Row return the value in row i, panics if out of bound.
-	Row(df DataFrame, i int) float64
+	// Value return the value at row, panics if out of bound.
+	Value(df DataFrame, row int) float64
 
-	// Rows returns all the values in the column.
-	Rows(df DataFrame) []float64
+	// Values returns all the values in the column.
+	Values(df DataFrame) []float64
 }
 
 // IntColumn is the typed column of type Int.
@@ -101,11 +101,11 @@ type IntColumn interface {
 	// NewIsInRange creates a filter to filter all value within range [min, max].
 	NewIsInRange(min, max int) Filter
 
-	// Row return the value in row i, panics if out of bound.
-	Row(df DataFrame, i int) int
+	// Value return the value at row, panics if out of bound.
+	Value(df DataFrame, row int) int
 
-	// Rows returns all the values in the column.
-	Rows(df DataFrame) []int
+	// Values returns all the values in the column.
+	Values(df DataFrame) []int
 }
 
 // StringColumn is the typed column of type String.
@@ -115,11 +115,11 @@ type StringColumn interface {
 	// NewEquals creates a filter to filter all rows having value value.
 	NewEquals(value string) Filter
 
-	// Row return the value in row i, panics if out of bound.
-	Row(df DataFrame, i int) *string
+	// Value return the value at row, panics if out of bound.
+	Value(df DataFrame, row int) *string
 
-	// Rows returns all the values in the column.
-	Rows(df DataFrame) []*string
+	// Values returns all the values in the column.
+	Values(df DataFrame) []*string
 }
 
 var (
