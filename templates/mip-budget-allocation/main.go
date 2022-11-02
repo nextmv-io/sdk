@@ -60,7 +60,9 @@ func solver(
 
 	// This constraint ensures the budgetConstraint of the knapsack will
 	// not be exceeded.
-	budgetConstraint := m.NewConstraint(mip.LessThanOrEqual, float64(input.Budget))
+	budgetConstraint := m.NewConstraint(
+		mip.LessThanOrEqual, float64(input.Budget),
+	)
 
 	userIncentive := make(map[string][]mip.Var, len(input.Users))
 	for _, user := range input.Users {
@@ -149,7 +151,9 @@ func solver(
 			assigned := []assignments{}
 			for i, user := range input.Users {
 				for j := range user.Incentives {
-					if int(math.Round(solution.Value(userIncentive[user.ID][j]))) < 1 {
+					if int(math.Round(
+						solution.Value(userIncentive[user.ID][j])),
+					) < 1 {
 						continue
 					}
 					oc := assignments{
