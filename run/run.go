@@ -8,6 +8,7 @@ import (
 
 /*
 Run a solver via a handler.
+
 	func main() {
 		handler := func(v int, opt store.Options) (store.Solver, error) {
 			s := store.New()
