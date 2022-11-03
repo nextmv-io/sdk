@@ -2,7 +2,8 @@
 package templates
 
 import (
-	// Embed ...
+	// This package is required to embed files using the `//go:embed` directive albeit
+	// it is not used directly.
 	_ "embed"
 )
 
