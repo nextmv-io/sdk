@@ -538,6 +538,7 @@ func ExamplePrecedence() {
 		stops,
 		vehicles,
 		route.Precedence(precedences),
+		route.Threads(1),
 	)
 	if err != nil {
 		panic(err)
