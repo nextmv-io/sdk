@@ -145,37 +145,28 @@ func ExampleDefaultOptions() {
 	fmt.Println(string(b))
 	// Output:
 	// {
-	//   "diagram": {
-	//     "expansion": {
-	//       "limit": 0
+	//   "store": 16,
+	//   "statistics": {
+	//     "bounds": {
+	//       "lower": -1,
+	//       "upper": 0
 	//     },
-	//     "width": 10
-	//   },
-	//   "limits": {
-	//     "duration": "168h0m0s"
-	//   },
-	//   "search": {
-	//     "buffer": 100
-	//   },
-	//   "sense": "minimize"
-	// }
-	// {
-	//   "diagram": {
-	//     "expansion": {
-	//       "limit": 1
+	//     "search": {
+	//       "generated": 6,
+	//       "filtered": 0,
+	//       "expanded": 6,
+	//       "reduced": 0,
+	//       "restricted": 6,
+	//       "deferred": 6,
+	//       "explored": 0,
+	//       "solutions": 7
 	//     },
-	//     "width": 10
-	//   },
-	//   "limits": {
-	//     "duration": "4s"
-	//   },
-	//   "search": {
-	//     "buffer": 100
-	//   },
-	//   "sense": "minimize",
-	//   "tags": {
-	//     "bar": 2,
-	//     "foo": 1
+	//     "time": {
+	//       "elapsed": "0s",
+	//       "elapsed_seconds": 0,
+	//       "start": "0001-01-01T00:00:00Z"
+	//     },
+	//     "value": 0
 	//   }
 	// }
 }
