@@ -7,7 +7,7 @@ import "fmt"
 type Aggregation interface {
 	fmt.Stringer
 
-	// Column return the column the aggregation will be applied to.
+	// Column returns the column the aggregation will be applied to.
 	Column() Column
 
 	// As return the column  to be used to identify the newly created column
