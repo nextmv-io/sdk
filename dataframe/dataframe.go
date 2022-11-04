@@ -10,7 +10,7 @@ type DataFrame interface {
 
 	// Distinct returns a new DataFrame that only contains unique rows with
 	// respect to the specified columns. If no columns are given Distinct will
-	// return rows where allow columns are unique.
+	// return rows where all columns are unique.
 	Distinct(columns ...Column) DataFrame
 
 	// Filter returns a new filtered DataFrame according to the filter.
