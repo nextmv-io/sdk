@@ -145,28 +145,36 @@ func ExampleDefaultOptions() {
 	fmt.Println(string(b))
 	// Output:
 	// {
-	//   "store": 16,
-	//   "statistics": {
-	//     "bounds": {
-	//       "lower": -1,
-	//       "upper": 0
+	//   "diagram": {
+	//     "expansion": {
+	//       "limit": 1
 	//     },
-	//     "search": {
-	//       "generated": 6,
-	//       "filtered": 0,
-	//       "expanded": 6,
-	//       "reduced": 0,
-	//       "restricted": 6,
-	//       "deferred": 6,
-	//       "explored": 0,
-	//       "solutions": 7
+	//     "width": 10
+	//   },
+	//   "search": {
+	//     "buffer": 100
+	//   },
+	//   "sense": "minimize"
+	// }
+	// {
+	//   "diagram": {
+	//     "expansion": {
+	//       "limit": 1
 	//     },
-	//     "time": {
-	//       "elapsed": "0s",
-	//       "elapsed_seconds": 0,
-	//       "start": "0001-01-01T00:00:00Z"
-	//     },
-	//     "value": 0
+	//     "width": 10
+	//   },
+	//   "limits": {
+	//     "duration": "4s",
+	//     "nodes": 0,
+	//     "solutions": 0
+	//   },
+	//   "search": {
+	//     "buffer": 100
+	//   },
+	//   "sense": "minimize",
+	//   "tags": {
+	//     "bar": 2,
+	//     "foo": 1
 	//   }
 	// }
 }
@@ -388,14 +396,14 @@ func ExampleStore_bound() {
 	//       "upper": 0
 	//     },
 	//     "search": {
-	//       "generated": 23,
+	//       "generated": 6,
 	//       "filtered": 0,
-	//       "expanded": 23,
+	//       "expanded": 6,
 	//       "reduced": 0,
-	//       "restricted": 10,
-	//       "deferred": 13,
-	//       "explored": 1,
-	//       "solutions": 2
+	//       "restricted": 6,
+	//       "deferred": 6,
+	//       "explored": 0,
+	//       "solutions": 7
 	//     },
 	//     "time": {
 	//       "elapsed": "0s",
