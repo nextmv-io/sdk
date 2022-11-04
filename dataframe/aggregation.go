@@ -10,7 +10,7 @@ type Aggregation interface {
 	// Column returns the column the aggregation will be applied to.
 	Column() Column
 
-	// As return the column  to be used to identify the newly created column
+	// As returns the column to be used to identify the newly created column.
 	// containing the aggregated value.
 	As() Column
 }
