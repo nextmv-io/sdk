@@ -147,12 +147,9 @@ func ExampleDefaultOptions() {
 	// {
 	//   "diagram": {
 	//     "expansion": {
-	//       "limit": 0
+	//       "limit": 1
 	//     },
 	//     "width": 10
-	//   },
-	//   "limits": {
-	//     "duration": "168h0m0s"
 	//   },
 	//   "search": {
 	//     "buffer": 100
@@ -167,7 +164,9 @@ func ExampleDefaultOptions() {
 	//     "width": 10
 	//   },
 	//   "limits": {
-	//     "duration": "4s"
+	//     "duration": "4s",
+	//     "nodes": 0,
+	//     "solutions": 0
 	//   },
 	//   "search": {
 	//     "buffer": 100
@@ -397,14 +396,14 @@ func ExampleStore_bound() {
 	//       "upper": 0
 	//     },
 	//     "search": {
-	//       "generated": 23,
+	//       "generated": 6,
 	//       "filtered": 0,
-	//       "expanded": 23,
+	//       "expanded": 6,
 	//       "reduced": 0,
-	//       "restricted": 10,
-	//       "deferred": 13,
-	//       "explored": 1,
-	//       "solutions": 2
+	//       "restricted": 6,
+	//       "deferred": 6,
+	//       "explored": 0,
+	//       "solutions": 7
 	//     },
 	//     "time": {
 	//       "elapsed": "0s",

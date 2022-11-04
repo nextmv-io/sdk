@@ -50,23 +50,26 @@ func TestTemplate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := output{}
-	if err := json.Unmarshal(b, &got); err != nil {
+	gotOutput := output{}
+	if err := json.Unmarshal(b, &gotOutput); err != nil {
 		t.Fatal(err)
 	}
 
 	// Get the expected solution.
-	want := output{}
+	wantOutput := output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := json.Unmarshal(b, &want); err != nil {
+	if err := json.Unmarshal(b, &wantOutput); err != nil {
 		t.Fatal(err)
 	}
 
+	got := gotOutput.Binkies
+	want := wantOutput.Binkies
+
 	// Compare against expected.
-	if !reflect.DeepEqual(got.Meals, want.Meals) {
-		t.Errorf("got %+v, want %+v", got.Meals, want.Meals)
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }
