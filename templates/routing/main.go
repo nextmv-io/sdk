@@ -45,7 +45,7 @@ type input struct {
 // solver takes the input and solver options and constructs a routing solver.
 // All route features/options depend on the input format. Depending on your
 // goal you can add, delete or fix options or add more input validations. Please
-// the [route package
+// see the [route package
 // documentation](https://pkg.go.dev/github.com/nextmv-io/sdk/route) for further
 // information on the options available to you.
 func solver(i input, opt store.Options) (store.Solver, error) {

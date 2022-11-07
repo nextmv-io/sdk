@@ -16,7 +16,7 @@ func main() {
 	run.Run(solver)
 }
 
-// An item has an a Value, Weight and Volume. ItemID is optional and can be any
+// An item has a Value, Weight and Volume. ItemID is optional and can be any
 // type.
 type item struct {
 	ItemID string  `json:"item_id,omitempty"`
