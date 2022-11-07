@@ -14,9 +14,9 @@ func main() {
 }
 
 // schedulingProblem describes a variant of the "Nurse scheduling problem".
-// There are a number of `Days` each having three shifts: moring, day, night.
-// Each shift needs a worker, but not all worker need to be assigned to a shift.
-// Workers can state preferences regarding their perferred shift type.
+// There are a number of `Days` each having three shifts: morning, day, night.
+// Each shift needs a worker, but not all workers need to be assigned to a
+// shift. Workers can state preferences regarding their preferred shift type.
 // Workers can also be unavailable for certain full days.
 type schedulingProblem struct {
 	Days        int           `json:"days"`
@@ -105,7 +105,7 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 	// stores that bring us closer to a valid schedule.
 	schedule = schedule.Generate(func(s store.Store) store.Generator {
 		// We take the first shift for which a worker has not been yet assigned.
-		// Then we generated for each worker that can be assigned to a shift
+		// Then we generate for each worker that can be assigned to a shift
 		// i a new store.
 		i, ok := shifts.First(s)
 		workers := shifts.Domain(s, i).Slice()

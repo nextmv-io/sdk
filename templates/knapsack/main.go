@@ -64,7 +64,7 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 		// with the item and one without.
 		i := 0
 		return store.Lazy(
-			// Define if we want to branch of more stores from store s
+			// Define if we want to branch off more stores from store s
 			// We continue with a new branch for including and excluding
 			// an item (i <= 2), if there are items left
 			// (next < len(input.Items) and if there is capacity for the
