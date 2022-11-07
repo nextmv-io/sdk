@@ -2,14 +2,13 @@ name: merge check stable branch
 on:
   pull_request:
     types: [opened, ready_for_review]
-    branches: [stable]
 jobs:
   sdk-stable-merge-check:
     runs-on: ubuntu-latest
     steps:
       - name: check that head branch is allowed
-        if: ${{ github.head_ref != 'develop' && startsWith(github.head_ref, 'hotfix/') == false }}
+        if: ${{ github.base_ref == 'stable' && github.head_ref != 'develop' && startsWith(github.head_ref, 'hotfix/') == false }}
         uses: actions/github-script@v3
         with:
           script: |
-            core.setFailed('merging to stable is only allowed from: develop, hotfix/*')
+            core.setFailed('target branch is stable and only these branches are allowed to merge: develop, hotfix/*')
