@@ -9,7 +9,7 @@ To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
 by solving a incentive allocation problem.
 
-Given a collection of incentives per a user with a cost and effect, our
+Given a collection of incentives per user with a cost and effect, our
 objective is to maximize the total effect without exceeding a given budget.
 
 The input defines a number of users which have an id to identify them, and a set
