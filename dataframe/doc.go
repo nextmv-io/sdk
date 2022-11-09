@@ -37,7 +37,7 @@ to the handler function. The handler function can then use the dataframe
 to solve the problem. To pass a CSV file to the example use the
 input path flag:
 
-	go run -trimpath . \
+	nextmv run local . -- \
 		-hop.runner.input.path ./data.csv.gz \
 		-hop.runner.output.path output.json
 */
