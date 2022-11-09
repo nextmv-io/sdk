@@ -8,6 +8,7 @@ jobs:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       RESOURCES: resources
       NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
+      GOVERSION: 1.19.2
     # Use a matrix strategy to test all the modules simultaneously.
     strategy:
       fail-fast: false
@@ -31,7 +32,7 @@ jobs:
       - name: set up go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          go-version: ${{ env.GOVERSION }}
         id: go
 
       - name: setup SSH Keys and known_hosts
@@ -49,7 +50,7 @@ jobs:
 
       # Gets the token and stores it in a variable.
       - name: export local branch
-        run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/plugins ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
+        run: echo "BRANCH_CHECK=$(git ls-remote --heads https://github.com/nextmv-io/platform ${{ env.LOCAL_BRANCH }})" >> $GITHUB_ENV
 
       # We always want to fall back to develop, even when the branch is stable,
       # which means we are syncing a hotfix back on to develop.
@@ -60,10 +61,10 @@ jobs:
       - name: git clone
         uses: actions/checkout@v3
 
-      - name: clone plugins repository
+      - name: clone platform repository
         uses: actions/checkout@v3
         with:
-          repository: nextmv-io/plugins
+          repository: nextmv-io/platform
           path: ${{ env.RESOURCES }}
           ref: ${{ env.LOCAL_BRANCH }}
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
@@ -75,12 +76,15 @@ jobs:
       - name: build plugins
         run: |
 
-          # To get testing working, the dependency that plugins uses for sdk is
-          # replaced for the local sdk repo checked out in this action.
+          # To get testing working, the dependency that platform uses for sdk
+          # is replaced for the local sdk repo checked out in this action.
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          REMOVE_TRIMPATH=1 NO_HIGHS_TODAY=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
+          REMOVE_TRIMPATH=1 \
+            NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} \
+            GOVERSION=${{ env.GOVERSION }} \
+            bash scripts/build-plugins.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build

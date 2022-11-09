@@ -1,0 +1,42 @@
+{
+  "items": [
+    {
+      "name": "Endive",
+      "stock": 12
+    },
+    {
+      "name": "Carrots",
+      "stock": 5
+    }
+  ],
+  "meals": [
+    {
+      "name": "A",
+      "binkies": 6,
+      "ingredients": [
+        {
+          "name": "Endive",
+          "quantity": 3
+        },
+        {
+          "name": "Carrots",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "B",
+      "binkies": 5,
+      "ingredients": [
+        {
+          "name": "Endive",
+          "quantity": 2
+        },
+        {
+          "name": "Carrots",
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}

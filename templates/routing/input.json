@@ -1,0 +1,232 @@
+{
+  "vehicles": ["v1", "v2"],
+  "velocities": [1.0, 1.0],
+  "stops": [
+    {
+      "id": "West",
+      "position": {
+        "lon": -74.04866,
+        "lat": 4.69018
+      }
+    },
+    {
+      "id": "North",
+      "position": {
+        "lon": -74.044215,
+        "lat": 4.693907
+      }
+    },
+    {
+      "id": "East",
+      "position": {
+        "lon": -74.039745,
+        "lat": 4.689886
+      }
+    },
+    {
+      "id": "South",
+      "position": {
+        "lon": -74.044219,
+        "lat": 4.686293
+      }
+    },
+    {
+      "id": "North East",
+      "position": {
+        "lon": -74.041242,
+        "lat": 4.692397
+      }
+    },
+    {
+      "id": "South West",
+      "position": {
+        "lon": -74.047572,
+        "lat": 4.687877
+      }
+    },
+    {
+      "id": "North West",
+      "position": {
+        "lon": -74.046988,
+        "lat": 4.692952
+      }
+    },
+    {
+      "id": "South East",
+      "position": {
+        "lon": -74.040685,
+        "lat": 4.687558
+      }
+    },
+    {
+      "id": "Resting Place 1",
+      "position": {
+        "lon": -74.047,
+        "lat": 4.69014
+      }
+    },
+    {
+      "id": "Resting Place 2",
+      "position": {
+        "lon": -74.0485,
+        "lat": 4.69017
+      }
+    },
+    {
+      "id": "Resting Place 3",
+      "position": {
+        "lon": -74.049,
+        "lat": 4.69012
+      }
+    },
+    {
+      "id": "Resting Place 4",
+      "position": {
+        "lon": -74.048,
+        "lat": 4.69015
+      }
+    }
+  ],
+  "starts": [
+    {
+      "lon": -74.04866,
+      "lat": 4.69018
+    },
+    {
+      "lon": -74.04866,
+      "lat": 4.69018
+    }
+  ],
+  "ends": [
+    {
+      "lon": -74.04866,
+      "lat": 4.69018
+    },
+    {
+      "lon": -74.04866,
+      "lat": 4.69018
+    }
+  ],
+  "quantities": [-1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0],
+  "capacities": [4, 4],
+  "precedences": [
+    {
+      "pick_up": "West",
+      "drop_off": "North"
+    }
+  ],
+  "service_times": [
+    {
+      "id": "North",
+      "duration": 200
+    }
+  ],
+  "shifts": [
+    {
+      "start": "2020-10-17T09:00:00-06:00",
+      "end": "2020-10-17T17:00:00-06:00"
+    },
+    {
+      "start": "2020-10-17T09:00:00-06:00",
+      "end": "2020-10-17T17:00:00-06:00"
+    }
+  ],
+  "windows": [
+    {
+      "time_window": {
+        "start": "2020-10-17T09:00:00-06:00",
+        "end": "2020-10-17T17:00:00-06:00"
+      },
+      "max_wait": 100
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "time_window": {
+        "start": "2020-10-17T09:45:00-06:00",
+        "end": "2020-10-17T10:15:00-06:00"
+      },
+      "max_wait": -1
+    },
+    {
+      "time_window": {
+        "start": "2020-10-17T10:00:00-06:00",
+        "end": "2020-10-17T10:20:00-06:00"
+      },
+      "max_wait": -1
+    },
+    {
+      "time_window": {
+        "start": "2020-10-17T10:00:00-06:00",
+        "end": "2020-10-17T10:15:00-06:00"
+      },
+      "max_wait": -1
+    },
+    {
+      "time_window": {
+        "start": "2020-10-17T09:50:00-06:00",
+        "end": "2020-10-17T10:10:00-06:00"
+      },
+      "max_wait": -1
+    }
+  ],
+  "penalties": [
+    2000000, 2000000, 2000000, 2000000, 2000000, 2000000, 2000000, 2000000,
+    2000000, 2000000, 2000000, 2000000
+  ],
+  "initialization_costs": [400, 200],
+  "backlogs": [
+    {
+      "vehicle_id": "v1",
+      "stops": []
+    },
+    {
+      "vehicle_id": "v2",
+      "stops": ["North West", "North East"]
+    }
+  ],
+  "duration_limits": [8000, 8000],
+  "distance_limits": [8000, 8000],
+  "vehicle_attributes": [
+    {
+      "id": "v1",
+      "attributes": ["A"]
+    },
+    {
+      "id": "v2",
+      "attributes": ["B"]
+    }
+  ],
+  "stop_attributes": [
+    {
+      "id": "South East",
+      "attributes": ["A", "C"]
+    },
+    {
+      "id": "North West",
+      "attributes": ["B"]
+    }
+  ],
+  "groups": [["South", "South West"]],
+  "alternate_stops": [
+    {
+      "vehicle_id": "v1",
+      "stops": ["Resting Place 1", "Resting Place 4"]
+    },
+    {
+      "vehicle_id": "v2",
+      "stops": ["Resting Place 2", "Resting Place 3"]
+    }
+  ],
+  "service_groups": [
+    {
+      "group": ["North East", "South"],
+      "duration": 100
+    }
+  ]
+}
