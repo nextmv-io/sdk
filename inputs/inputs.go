@@ -3,8 +3,8 @@
 package inputs
 
 import (
-	// This package is required to embed files using the `//go:embed` directive albeit
-	// it is not used directly.
+	// This package is required to embed files using the `//go:embed` directive
+	// albeit it is not used directly.
 	_ "embed"
 )
 

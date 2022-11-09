@@ -1,4 +1,5 @@
-// package main holds the implementation of the mip incentive allocation template.
+// package main holds the implementation of the mip incentive allocation
+// template.
 package main
 
 import (
