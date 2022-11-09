@@ -1,4 +1,4 @@
-# Nextmv MIP budget allocation template
+# Nextmv MIP incentive allocation template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
 using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS). To run
@@ -7,7 +7,7 @@ HiGHS interface.
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
-by solving a budget allocation problem.
+by solving a incentive allocation problem.
 
 Given a collection of incentives per a user with a cost and effect, our
 objective is to maximize the total effect without exceeding a given budget.
@@ -18,7 +18,7 @@ available budget.
 
 The most important files created are `main.go` and `input.json`.
 
-* `main.go` implements a MIP budget allocation solver.
+* `main.go` implements a MIP incentive allocation solver.
 * `input.json` is a sample input file that follows the input definition in
 `main.go`.
 

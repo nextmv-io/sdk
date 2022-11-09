@@ -1,4 +1,4 @@
-// package main holds the implementation of the mip budget allocation template.
+// package main holds the implementation of the mip incentive allocation template.
 package main
 
 import (
@@ -12,15 +12,15 @@ import (
 // This template demonstrates how to solve a Mixed Integer Programming problem.
 // To solve a mixed integer problem is to optimize a linear objective function
 // of many variables, subject to linear constraints. We demonstrate this by
-// solving a budget allocation problem.
+// solving a incentive allocation problem.
 func main() {
 	run.Run(solver)
 }
 
-// budgetAllocationProblem describes the needed input data to run the model.
+// incentiveAllocationProblem describes the needed input data to run the model.
 // There is a fixed budget that must not be exceeded, a fixed number of users
 // that may receive incentives, and a description of the available incentives.
-type budgetAllocationProblem struct {
+type incentiveAllocationProblem struct {
 	Users  []user `json:"users"`
 	Budget int    `json:"budget"`
 }
@@ -49,17 +49,16 @@ type assignments struct {
 }
 
 func solver(
-	input budgetAllocationProblem,
+	input incentiveAllocationProblem,
 	opts store.Options,
 ) (store.Solver, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
-	// We want to maximize the value of the knapsack.
+	// We want to maximize the value of the problem.
 	m.Objective().SetMaximize()
 
-	// This constraint ensures the budgetConstraint of the knapsack will
-	// not be exceeded.
+	// This constraint ensures the budget of the will not be exceeded.
 	budgetConstraint := m.NewConstraint(
 		mip.LessThanOrEqual, float64(input.Budget),
 	)

@@ -20,7 +20,7 @@ type output struct {
 
 func TestTemplate(t *testing.T) {
 	// Read the input from the file.
-	input := budgetAllocationProblem{}
+	input := incentiveAllocationProblem{}
 	b, err := os.ReadFile("input.json")
 	if err != nil {
 		t.Fatal(err)
