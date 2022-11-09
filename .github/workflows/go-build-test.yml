@@ -8,6 +8,7 @@ jobs:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       RESOURCES: resources
       NEXTMV_LIBRARY_PATH: ~/.nextmv/lib
+      GOVERSION: 1.19.2
     # Use a matrix strategy to test all the modules simultaneously.
     strategy:
       fail-fast: false
@@ -31,7 +32,7 @@ jobs:
       - name: set up go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19.2
+          go-version: ${{ env.GOVERSION }}
         id: go
 
       - name: setup SSH Keys and known_hosts
@@ -80,7 +81,10 @@ jobs:
           go mod edit -replace=github.com/nextmv-io/sdk=${{env.SDK_PATH}}
 
           # Build the plugins.
-          REMOVE_TRIMPATH=1 NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} bash scripts/build.sh > /dev/null 2>&1
+          REMOVE_TRIMPATH=1 \
+            NEXTMV_LIBRARY_PATH=${{ env.NEXTMV_LIBRARY_PATH }} \
+            GOVERSION=${{ env.GOVERSION }} \
+            bash scripts/build-plugins.sh > /dev/null 2>&1
         working-directory: ${{env.RESOURCES}}
 
       - name: go build
