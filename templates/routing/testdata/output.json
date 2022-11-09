@@ -1,143 +1,143 @@
 {
- "unassigned": [],
- "vehicles": [
-  {
-   "id": "v1",
-   "route": [
+  "unassigned": [],
+  "vehicles": [
     {
-     "id": "v1-start",
-     "position": {
-      "lon": -74.04866,
-      "lat": 4.69018
-     },
-     "estimated_arrival": "2020-10-17T09:00:00-06:00",
-     "estimated_departure": "2020-10-17T09:00:00-06:00"
+      "id": "v1",
+      "route": [
+        {
+          "id": "v1-start",
+          "position": {
+            "lon": -74.04866,
+            "lat": 4.69018
+          },
+          "estimated_arrival": "2020-10-17T09:00:00-06:00",
+          "estimated_departure": "2020-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "South West",
+          "position": {
+            "lon": -74.047572,
+            "lat": 4.687877
+          },
+          "estimated_arrival": "2020-10-17T09:04:43-06:00",
+          "estimated_departure": "2020-10-17T09:04:43-06:00"
+        },
+        {
+          "id": "South",
+          "position": {
+            "lon": -74.044219,
+            "lat": 4.686293
+          },
+          "estimated_arrival": "2020-10-17T09:11:34-06:00",
+          "estimated_departure": "2020-10-17T09:13:14-06:00"
+        },
+        {
+          "id": "South East",
+          "position": {
+            "lon": -74.040685,
+            "lat": 4.687558
+          },
+          "estimated_arrival": "2020-10-17T09:20:10-06:00",
+          "estimated_departure": "2020-10-17T09:20:10-06:00"
+        },
+        {
+          "id": "East",
+          "position": {
+            "lon": -74.039745,
+            "lat": 4.689886
+          },
+          "estimated_arrival": "2020-10-17T09:24:49-06:00",
+          "estimated_departure": "2020-10-17T09:24:49-06:00"
+        },
+        {
+          "id": "Resting Place 4",
+          "position": {
+            "lon": -74.048,
+            "lat": 4.69015
+          },
+          "estimated_arrival": "2020-10-17T09:40:04-06:00",
+          "estimated_departure": "2020-10-17T09:50:00-06:00"
+        },
+        {
+          "id": "v1-end",
+          "position": {
+            "lon": -74.04866,
+            "lat": 4.69018
+          },
+          "estimated_arrival": "2020-10-17T09:51:13-06:00",
+          "estimated_departure": "2020-10-17T09:51:13-06:00"
+        }
+      ],
+      "route_duration": 3073
     },
     {
-     "id": "South West",
-     "position": {
-      "lon": -74.047572,
-      "lat": 4.687877
-     },
-     "estimated_arrival": "2020-10-17T09:04:43-06:00",
-     "estimated_departure": "2020-10-17T09:04:43-06:00"
-    },
-    {
-     "id": "South",
-     "position": {
-      "lon": -74.044219,
-      "lat": 4.686293
-     },
-     "estimated_arrival": "2020-10-17T09:11:34-06:00",
-     "estimated_departure": "2020-10-17T09:13:14-06:00"
-    },
-    {
-     "id": "South East",
-     "position": {
-      "lon": -74.040685,
-      "lat": 4.687558
-     },
-     "estimated_arrival": "2020-10-17T09:20:10-06:00",
-     "estimated_departure": "2020-10-17T09:20:10-06:00"
-    },
-    {
-     "id": "East",
-     "position": {
-      "lon": -74.039745,
-      "lat": 4.689886
-     },
-     "estimated_arrival": "2020-10-17T09:24:49-06:00",
-     "estimated_departure": "2020-10-17T09:24:49-06:00"
-    },
-    {
-     "id": "Resting Place 4",
-     "position": {
-      "lon": -74.048,
-      "lat": 4.69015
-     },
-     "estimated_arrival": "2020-10-17T09:40:04-06:00",
-     "estimated_departure": "2020-10-17T09:50:00-06:00"
-    },
-    {
-     "id": "v1-end",
-     "position": {
-      "lon": -74.04866,
-      "lat": 4.69018
-     },
-     "estimated_arrival": "2020-10-17T09:51:13-06:00",
-     "estimated_departure": "2020-10-17T09:51:13-06:00"
+      "id": "v2",
+      "route": [
+        {
+          "id": "v2-start",
+          "position": {
+            "lon": -74.04866,
+            "lat": 4.69018
+          },
+          "estimated_arrival": "2020-10-17T09:00:00-06:00",
+          "estimated_departure": "2020-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "West",
+          "position": {
+            "lon": -74.04866,
+            "lat": 4.69018
+          },
+          "estimated_arrival": "2020-10-17T09:00:00-06:00",
+          "estimated_departure": "2020-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "North West",
+          "position": {
+            "lon": -74.046988,
+            "lat": 4.692952
+          },
+          "estimated_arrival": "2020-10-17T09:06:00-06:00",
+          "estimated_departure": "2020-10-17T09:06:00-06:00"
+        },
+        {
+          "id": "North",
+          "position": {
+            "lon": -74.044215,
+            "lat": 4.693907
+          },
+          "estimated_arrival": "2020-10-17T09:11:25-06:00",
+          "estimated_departure": "2020-10-17T09:14:45-06:00"
+        },
+        {
+          "id": "North East",
+          "position": {
+            "lon": -74.041242,
+            "lat": 4.692397
+          },
+          "estimated_arrival": "2020-10-17T09:20:55-06:00",
+          "estimated_departure": "2020-10-17T09:22:35-06:00"
+        },
+        {
+          "id": "Resting Place 2",
+          "position": {
+            "lon": -74.0485,
+            "lat": 4.69017
+          },
+          "estimated_arrival": "2020-10-17T09:36:37-06:00",
+          "estimated_departure": "2020-10-17T10:00:00-06:00"
+        },
+        {
+          "id": "v2-end",
+          "position": {
+            "lon": -74.04866,
+            "lat": 4.69018
+          },
+          "estimated_arrival": "2020-10-17T10:00:18-06:00",
+          "estimated_departure": "2020-10-17T10:00:18-06:00"
+        }
+      ],
+      "route_duration": 3618
     }
-   ],
-   "route_duration": 3073
-  },
-  {
-   "id": "v2",
-   "route": [
-    {
-     "id": "v2-start",
-     "position": {
-      "lon": -74.04866,
-      "lat": 4.69018
-     },
-     "estimated_arrival": "2020-10-17T09:00:00-06:00",
-     "estimated_departure": "2020-10-17T09:00:00-06:00"
-    },
-    {
-     "id": "West",
-     "position": {
-      "lon": -74.04866,
-      "lat": 4.69018
-     },
-     "estimated_arrival": "2020-10-17T09:00:00-06:00",
-     "estimated_departure": "2020-10-17T09:00:00-06:00"
-    },
-    {
-     "id": "North West",
-     "position": {
-      "lon": -74.046988,
-      "lat": 4.692952
-     },
-     "estimated_arrival": "2020-10-17T09:06:00-06:00",
-     "estimated_departure": "2020-10-17T09:06:00-06:00"
-    },
-    {
-     "id": "North",
-     "position": {
-      "lon": -74.044215,
-      "lat": 4.693907
-     },
-     "estimated_arrival": "2020-10-17T09:11:25-06:00",
-     "estimated_departure": "2020-10-17T09:14:45-06:00"
-    },
-    {
-     "id": "North East",
-     "position": {
-      "lon": -74.041242,
-      "lat": 4.692397
-     },
-     "estimated_arrival": "2020-10-17T09:20:55-06:00",
-     "estimated_departure": "2020-10-17T09:22:35-06:00"
-    },
-    {
-     "id": "Resting Place 2",
-     "position": {
-      "lon": -74.0485,
-      "lat": 4.69017
-     },
-     "estimated_arrival": "2020-10-17T09:36:37-06:00",
-     "estimated_departure": "2020-10-17T10:00:00-06:00"
-    },
-    {
-     "id": "v2-end",
-     "position": {
-      "lon": -74.04866,
-      "lat": 4.69018
-     },
-     "estimated_arrival": "2020-10-17T10:00:18-06:00",
-     "estimated_departure": "2020-10-17T10:00:18-06:00"
-    }
-   ],
-   "route_duration": 3618
-  }
- ]
+  ]
 }
