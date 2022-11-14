@@ -8,6 +8,11 @@ This package includes a decoder for CSV files which can be used to create
 dataframes from CSV files. The decoder is not a streaming decoder and will
 load the entire CSV file into memory.
 
+In addition there exist an Apache Feather decoder which can be used to read
+dataframes from Apache Arrow Feather files (IPC format). Like the CSV decoder
+this decoder is not a streaming decoder and will load the entire file into
+memory.
+
 The following example shows how to create a dataframe from a CSV file:
 
 	package main
