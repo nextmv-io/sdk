@@ -14,8 +14,8 @@ func FromCSV() decode.Decoder {
 
 // FromFeather returns a decoder to decode Apache Arrow Feather files in IPC
 // format and turns it into a DataFrame. This decoder is not a streaming decoder
-// and will load the entire file into memory. It does not support the Arrow
-// Dictionary type.
+// and will load the entire file into memory. It currently only supports columns
+// of type bool, int32, int64, float64 and string.
 func FromFeather() decode.Decoder {
 	connect.Connect(con, &fromFeather)
 	return fromFeather()
