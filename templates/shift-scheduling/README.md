@@ -30,7 +30,7 @@ Before you start customizing, run the command below to see if everything works
 as expected:
 
 ```bash
-nextmv run local main.go -- -hop.runner.input.path input.json \
+nextmv run local . -- -hop.runner.input.path input.json \
   -hop.runner.output.path output.json -hop.solver.limits.duration 10s
 ```
 
