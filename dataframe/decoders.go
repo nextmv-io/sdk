@@ -22,7 +22,6 @@ func FromFeather() decode.Decoder {
 }
 
 var (
-	con         = connect.NewConnector("sdk", "DataFrame")
 	fromCSV     func() decode.Decoder
 	fromFeather func() decode.Decoder
 )

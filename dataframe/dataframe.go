@@ -1,5 +1,7 @@
 package dataframe
 
+import "github.com/nextmv-io/sdk/connect"
+
 // DataFrame is an immutable data frame that support filtering, aggregation and
 // data manipulation.
 type DataFrame interface {
@@ -43,3 +45,5 @@ type DataFrame interface {
 
 // DataFrames is the slice of DataFrame instances.
 type DataFrames []DataFrame
+
+var con = connect.NewConnector("dataframe", "DataFrame")
