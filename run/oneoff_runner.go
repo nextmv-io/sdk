@@ -4,17 +4,24 @@ import (
 	"context"
 )
 
-// DefaultOneOffRunner is the default one-off runner.
-func DefaultOneOffRunner[Input, Option, Solution any](
+// CliRunner is the default CLI runner.
+func CliRunner[Input, Option, Solution any](
 	handler Algorithm[Input, Option, Solution],
 ) Runner[Input, Option, Solution] {
-	return NewOneOffRunner(
-		DefaultIOProducer,
-		JSONDecoder[Input],
-		OptionsDecoder[Option],
-		handler,
-		JSONEncoder[Solution],
-	)
+	runner := &oneOffRunner[Input, Option, Solution]{
+		IOProducer:    DefaultIOProducer,
+		InputDecoder:  JSONDecoder[Input],
+		OptionDecoder: NoopOptionsDecoder[Option],
+		Algorithm:     handler,
+		Encoder:       JSONEncoder[Solution],
+	}
+	runnerConfig, decodedOption, err := DefaultFlagParser[Option, CliRunnerConfig]()
+	runner.runnerConfig = runnerConfig
+	runner.decodedOption = decodedOption
+	if err != nil {
+		panic(err)
+	}
+	return runner
 }
 
 // NewOneOffRunner creates a new one-off runner.
@@ -31,37 +38,35 @@ func NewOneOffRunner[Input, Option, Solution any](
 		OptionDecoder: optionDecoder,
 		Algorithm:     handler,
 		Encoder:       encoder,
-		FlagParser:    DefaultFlagParser[Option],
 	}
 }
 
 type oneOffRunner[Input, Option, Solution any] struct {
-	FlagParser    FlagParser[Option]
 	IOProducer    IOProducer
 	InputDecoder  InputDecoder[Input]
 	OptionDecoder OptionDecoder[Option]
 	Algorithm     Algorithm[Input, Option, Solution]
 	Encoder       Encoder[Solution]
+	runnerConfig  any
+	decodedOption Option
 }
 
 func (r *oneOffRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
-	runnerConfig, decodedOption, err := r.FlagParser()
-	if err != nil {
-		return err
-	}
-	ioData := r.IOProducer(context, runnerConfig)
+	ioData := r.IOProducer(context, r.runnerConfig)
 
 	decodedInput, err := r.InputDecoder(context, ioData.Input())
 	if err != nil {
 		return err
 	}
-	decodedOption, err = r.OptionDecoder(context, ioData.Option(), decodedOption)
+	r.decodedOption, err = r.OptionDecoder(
+		context, ioData.Option(), r.decodedOption,
+	)
 	if err != nil {
 		return err
 	}
-	solutions, err := r.Algorithm(context, decodedInput, decodedOption)
+	solutions, err := r.Algorithm(context, decodedInput, r.decodedOption)
 	if err != nil {
 		return err
 	}

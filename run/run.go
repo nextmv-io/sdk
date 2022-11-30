@@ -28,7 +28,7 @@ func Run[Input, Option any](solver func(
 		}
 		return solver.All(ctx), nil
 	}
-	runner := DefaultOneOffRunner(algorithm)
+	runner := CliRunner(algorithm)
 	return runner.Run(context.Background())
 }
 
@@ -95,16 +95,16 @@ func JSONDecoder[Input any](
 	return input, err
 }
 
-// OptionsDecoder is a Decoder that decodes options from flags and env vars.
-func OptionsDecoder[Input any](
+// NoopOptionsDecoder is a Decoder that returns the option as is.
+func NoopOptionsDecoder[Input any](
 	_ context.Context, _ any, input Input,
 ) (Input, error) {
 	return input, nil
 }
 
 // DefaultFlagParser parses flags and env vars.
-func DefaultFlagParser[Option any]() (
-	runnerConfig any, option Option, err error,
+func DefaultFlagParser[Option, RunnerCfg any]() (
+	runnerConfig RunnerCfg, option Option, err error,
 ) {
 	// create a FlagSetFiller
 	filler := flagsfiller.New(
@@ -121,16 +121,14 @@ func DefaultFlagParser[Option any]() (
 		return runnerConfig, option, err
 	}
 
-	// TODO: make this generic
-	var runnercfg RunnerConfig
-	err = filler.Fill(flag.CommandLine, &runnercfg)
+	err = filler.Fill(flag.CommandLine, &runnerConfig)
 	if err != nil {
 		return runnerConfig, option, err
 	}
 
 	flag.Parse()
 
-	return runnercfg, option, nil
+	return runnerConfig, option, nil
 }
 
 // Algorithm is a function that runs an algorithm.
@@ -140,15 +138,30 @@ type Algorithm[Input, Option, Solution any] func(
 
 // DefaultIOProducer is a test IOProducer.
 func DefaultIOProducer(_ context.Context, config any) IOData {
-	cfg := config.(RunnerConfig)
-	reader, err := os.Open(cfg.Runner.Input.Path)
-	if err != nil {
-		log.Fatal(err)
+	cfg, ok := config.(CliRunnerConfig)
+	if !ok {
+		log.Fatal("DefaultIOProducer is not compatible with the runner")
+	}
+	reader := os.Stdin
+	if cfg.Runner.Input.Path != "" {
+		r, err := os.Open(cfg.Runner.Input.Path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		reader = r
+	}
+	writer := os.Stdout
+	if cfg.Runner.Output.Path != "" {
+		w, err := os.Create(cfg.Runner.Output.Path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		writer = w
 	}
 	return NewIOData(
 		reader,
 		nil,
-		os.Stdout,
+		writer,
 	)
 }
 

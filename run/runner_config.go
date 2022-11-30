@@ -2,16 +2,11 @@ package run
 
 import "errors"
 
-// RunnerConfig is the configuration of a runner.
-type RunnerConfig struct {
+// CliRunnerConfig is the configuration of the  CliRunner.
+type CliRunnerConfig struct {
 	Runner struct {
 		Input struct {
 			Path string // Path to input file
-		}
-		HTTP struct {
-			Address     string // HTTP address (e.g. ":8000")
-			Certificate string // TLS certificate file
-			Key         string // TLS key file
 		}
 		Profile struct { // CLI only
 			CPU    string // CPU profile location
@@ -19,8 +14,6 @@ type RunnerConfig struct {
 		}
 		Output struct {
 			Path      string    // Path to output file
-			Quiet     bool      // Only output solutions
-			Stream    bool      // Stream solutions (CLI only)
 			Solutions Solutions // All solutions or last (best) solution
 		}
 	}
