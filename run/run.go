@@ -211,8 +211,7 @@ func JSONEncoder[Solution any](
 
 func jsonEncodeChan(w io.Writer, vc any) (err error) {
 	cval := reflect.ValueOf(vc)
-	_, err = w.Write([]byte{'['})
-	if err != nil {
+	if _, err = w.Write([]byte{'['}); err != nil {
 		return
 	}
 	v, ok := cval.Recv()
@@ -234,13 +233,12 @@ Loop:
 		return
 	}
 Encode:
-	err = enc.Encode(v.Interface())
-	if err == nil {
-		_, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
-		buf.Reset()
-	}
-	if err != nil {
+	if err = enc.Encode(v.Interface()); err != nil {
 		return
 	}
+	if _, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n")); err != nil {
+		return
+	}
+	buf.Reset()
 	goto Loop
 }
