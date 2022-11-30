@@ -20,13 +20,17 @@ func Run[Input, Option any](solver func(
 ) (store.Solver, error),
 ) error {
 	algorithm := func(
-		ctx context.Context, input Input, option Option,
-	) (<-chan store.Solution, error) {
+		ctx context.Context,
+		input Input, option Option, solutions chan<- store.Solution,
+	) (bool, error) {
 		solver, err := solver(input, option)
 		if err != nil {
-			return nil, err
+			return false, err
 		}
-		return solver.All(ctx), nil
+		for solution := range solver.All(ctx) {
+			solutions <- solution
+		}
+		return false, nil
 	}
 	runner := CliRunner(algorithm)
 	return runner.Run(context.Background())
@@ -133,8 +137,8 @@ func DefaultFlagParser[Option, RunnerCfg any]() (
 
 // Algorithm is a function that runs an algorithm.
 type Algorithm[Input, Option, Solution any] func(
-	context.Context, Input, Option,
-) (<-chan Solution, error)
+	context.Context, Input, Option, chan<- Solution,
+) (bool, error)
 
 // DefaultIOProducer is a test IOProducer.
 func DefaultIOProducer(_ context.Context, config any) IOData {
@@ -166,22 +170,49 @@ func DefaultIOProducer(_ context.Context, config any) IOData {
 }
 
 // Encoder is a function that encodes a struct into a writer.
-type Encoder[Solution any] func(context.Context, <-chan Solution, any) error
+type Encoder[Solution any] func(
+	context.Context, <-chan Solution, any, any,
+) error
 
 // JSONEncoder is an Encoder that encodes a struct into a json.
 func JSONEncoder[Solution any](
-	_ context.Context, solutions <-chan Solution, writer any,
+	_ context.Context, solutions <-chan Solution, writer any, runnerCfg any,
 ) error {
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
 		return errors.New("JsonEncoder is not compatible with configured IOProducer")
 	}
+	runnerConfig, ok := runnerCfg.(CliRunnerConfig)
+	if !ok {
+		return errors.New("JsonEncoder is not compatible with configured IOProducer")
+	}
 	encoder := json.NewEncoder(ioWriter)
-	for solution := range solutions {
-		err := encoder.Encode(solution)
+	switch runnerConfig.Runner.Output.Solutions {
+	case All:
+		_, err := ioWriter.Write([]byte("["))
+		if err != nil {
+			return err
+		}
+		for solution := range solutions {
+			err = encoder.Encode(solution)
+			if err != nil {
+				return err
+			}
+		}
+		_, err = ioWriter.Write([]byte("]"))
+		if err != nil {
+			return err
+		}
+	case Last:
+		var last Solution
+		for solution := range solutions {
+			last = solution
+		}
+		err := encoder.Encode(last)
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }

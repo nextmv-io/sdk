@@ -15,7 +15,9 @@ func CliRunner[Input, Option, Solution any](
 		Algorithm:     handler,
 		Encoder:       JSONEncoder[Solution],
 	}
-	runnerConfig, decodedOption, err := DefaultFlagParser[Option, CliRunnerConfig]()
+	runnerConfig, decodedOption, err := DefaultFlagParser[
+		Option, CliRunnerConfig,
+	]()
 	runner.runnerConfig = runnerConfig
 	runner.decodedOption = decodedOption
 	if err != nil {
@@ -54,27 +56,47 @@ type oneOffRunner[Input, Option, Solution any] struct {
 func (r *oneOffRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
+	// get IO
 	ioData := r.IOProducer(context, r.runnerConfig)
 
+	// decode input
 	decodedInput, err := r.InputDecoder(context, ioData.Input())
 	if err != nil {
 		return err
 	}
+
+	// decode option
 	r.decodedOption, err = r.OptionDecoder(
 		context, ioData.Option(), r.decodedOption,
 	)
 	if err != nil {
 		return err
 	}
-	solutions, err := r.Algorithm(context, decodedInput, r.decodedOption)
+
+	// run algorithm
+	solutions := make(chan Solution)
+	errors := make(chan error, 1)
+	go func() {
+		defer close(solutions)
+		defer close(errors)
+		cont := true
+		for cont {
+			cont, err = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
+			if err != nil {
+				errors <- err
+				return
+			}
+		}
+	}()
+
+	// encode solutions
+	err = r.Encoder(context, solutions, ioData.Writer(), r.runnerConfig)
 	if err != nil {
 		return err
 	}
-	err = r.Encoder(context, solutions, ioData.Writer())
-	if err != nil {
-		return err
-	}
-	return nil
+
+	// return potential errors
+	return <-errors
 }
 
 func (r *oneOffRunner[Input, Option, Solution]) SetIOProducer(
