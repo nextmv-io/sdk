@@ -1,7 +1,9 @@
 package run
 
 import (
+	"bufio"
 	"bytes"
+	"compress/gzip"
 	"context"
 	"errors"
 	"flag"
@@ -97,6 +99,23 @@ func CustomDecoder[Input any, Decoder decode.Decoder](
 			"JsonDecoder is not compatible with configured IOProducer",
 		)
 	}
+
+	// Convert to buffered reader and read magic bytes
+	bufferedReader := bufio.NewReader(ioReader)
+	testBytes, err := bufferedReader.Peek(2)
+
+	// Test for gzip magic bytes and use corresponding reader, if given
+	if err == nil && testBytes[0] == 31 && testBytes[1] == 139 {
+		var gzipReader *gzip.Reader
+		if gzipReader, err = gzip.NewReader(bufferedReader); err != nil {
+			return input, err
+		}
+		ioReader = gzipReader
+	} else {
+		// Default case: assume text input
+		ioReader = bufferedReader
+	}
+
 	decoder := *new(Decoder)
 	err = decoder.Decode(ioReader, &input)
 	return input, err
@@ -157,13 +176,16 @@ func DefaultIOProducer(_ context.Context, config any) IOData {
 		}
 		reader = r
 	}
-	writer := os.Stdout
+	var writer io.Writer = os.Stdout
 	if cfg.Runner.Output.Path != "" {
 		w, err := os.Create(cfg.Runner.Output.Path)
 		if err != nil {
 			log.Fatal(err)
 		}
 		writer = w
+		if strings.HasSuffix(cfg.Runner.Output.Path, ".gz") {
+			writer = gzip.NewWriter(writer)
+		}
 	}
 	return NewIOData(
 		reader,
