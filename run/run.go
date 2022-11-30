@@ -3,7 +3,6 @@ package run
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"flag"
 	"io"
@@ -13,6 +12,8 @@ import (
 	"strings"
 
 	"github.com/itzg/go-flagsfiller"
+	"github.com/nextmv-io/sdk/run/decode"
+	"github.com/nextmv-io/sdk/run/encode"
 	"github.com/nextmv-io/sdk/store"
 )
 
@@ -86,8 +87,8 @@ type OptionDecoder[Option any] func(
 // FlagParser is a function that parses flags.
 type FlagParser[Input any] func() (any, Input, error)
 
-// JSONDecoder is a Decoder that decodes a json into a struct.
-func JSONDecoder[Input any](
+// CustomDecoder is a Decoder that decodes a json into a struct.
+func CustomDecoder[Input any, Decoder decode.Decoder](
 	_ context.Context, reader any) (input Input, err error,
 ) {
 	ioReader, ok := reader.(io.Reader)
@@ -96,8 +97,8 @@ func JSONDecoder[Input any](
 			"JsonDecoder is not compatible with configured IOProducer",
 		)
 	}
-	decoder := json.NewDecoder(ioReader)
-	err = decoder.Decode(&input)
+	decoder := *new(Decoder)
+	err = decoder.Decode(ioReader, &input)
 	return input, err
 }
 
@@ -176,10 +177,11 @@ type Encoder[Solution any] func(
 	context.Context, <-chan Solution, any, any,
 ) error
 
-// JSONEncoder is an Encoder that encodes a struct into a json.
-func JSONEncoder[Solution any](
+// CustomEncoder is an Encoder that encodes a struct.
+func CustomEncoder[Solution any, Encoder encode.Encoder](
 	_ context.Context, solutions <-chan Solution, writer any, runnerCfg any,
 ) error {
+	encoder := *new(Encoder)
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
 		return errors.New("JsonEncoder is not compatible with configured IOProducer")
@@ -190,7 +192,7 @@ func JSONEncoder[Solution any](
 	}
 	switch runnerConfig.Runner.Output.Solutions {
 	case All:
-		err := jsonEncodeChan(ioWriter, solutions)
+		err := jsonEncodeChan(encoder, ioWriter, solutions)
 		if err != nil {
 			return err
 		}
@@ -199,8 +201,7 @@ func JSONEncoder[Solution any](
 		for solution := range solutions {
 			last = solution
 		}
-		encoder := json.NewEncoder(ioWriter)
-		err := encoder.Encode(last)
+		err := encoder.Encode(ioWriter, last)
 		if err != nil {
 			return err
 		}
@@ -209,7 +210,7 @@ func JSONEncoder[Solution any](
 	return nil
 }
 
-func jsonEncodeChan(w io.Writer, vc any) (err error) {
+func jsonEncodeChan[Encoder encode.Encoder](enc Encoder, w io.Writer, vc any) (err error) {
 	cval := reflect.ValueOf(vc)
 	if _, err = w.Write([]byte{'['}); err != nil {
 		return
@@ -221,7 +222,6 @@ func jsonEncodeChan(w io.Writer, vc any) (err error) {
 	}
 	// create buffer & encoder only if we have a value
 	buf := new(bytes.Buffer)
-	enc := json.NewEncoder(buf)
 	goto Encode
 Loop:
 	v, ok = cval.Recv()
@@ -233,7 +233,7 @@ Loop:
 		return
 	}
 Encode:
-	if err = enc.Encode(v.Interface()); err != nil {
+	if err = enc.Encode(w, v.Interface()); err != nil {
 		return
 	}
 	if _, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n")); err != nil {

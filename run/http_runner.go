@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/nextmv-io/sdk/run/decode"
+	"github.com/nextmv-io/sdk/run/encode"
 )
 
 // HTTPRunner is a Runner that uses HTTP as its IO.
@@ -39,10 +42,10 @@ func DefaultHTTPOneOffRunner[Input, Option, Solution any](
 ) Runner[Input, Option, Solution] {
 	return NewOneOffRunner(
 		nil,
-		JSONDecoder[Input],
+		CustomDecoder[Input, decode.JSONDecoder],
 		HeaderDecoder[Option],
 		handler,
-		JSONEncoder[Solution],
+		CustomEncoder[Solution, encode.JSONEncoder],
 	)
 }
 

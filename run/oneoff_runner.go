@@ -2,6 +2,9 @@ package run
 
 import (
 	"context"
+
+	"github.com/nextmv-io/sdk/run/decode"
+	"github.com/nextmv-io/sdk/run/encode"
 )
 
 // CliRunner is the default CLI runner.
@@ -10,10 +13,10 @@ func CliRunner[Input, Option, Solution any](
 ) Runner[Input, Option, Solution] {
 	runner := &oneOffRunner[Input, Option, Solution]{
 		IOProducer:    DefaultIOProducer,
-		InputDecoder:  JSONDecoder[Input],
+		InputDecoder:  CustomDecoder[Input, decode.JSONDecoder],
 		OptionDecoder: NoopOptionsDecoder[Option],
 		Algorithm:     handler,
-		Encoder:       JSONEncoder[Solution],
+		Encoder:       CustomEncoder[Solution, encode.JSONEncoder],
 	}
 	runnerConfig, decodedOption, err := DefaultFlagParser[
 		Option, CliRunnerConfig,
