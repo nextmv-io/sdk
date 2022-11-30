@@ -183,9 +183,6 @@ func DefaultIOProducer(_ context.Context, config any) IOData {
 			log.Fatal(err)
 		}
 		writer = w
-		if strings.HasSuffix(cfg.Runner.Output.Path, ".gz") {
-			writer = gzip.NewWriter(writer)
-		}
 	}
 	return NewIOData(
 		reader,
@@ -212,6 +209,9 @@ func CustomEncoder[Solution any, Encoder encode.Encoder](
 	if !ok {
 		return errors.New("JsonEncoder is not compatible with configured IOProducer")
 	}
+	if strings.HasSuffix(runnerConfig.Runner.Output.Path, ".gz") {
+		ioWriter = gzip.NewWriter(ioWriter)
+	}
 	switch runnerConfig.Runner.Output.Solutions {
 	case All:
 		err := jsonEncodeChan(encoder, ioWriter, solutions)
@@ -232,7 +232,9 @@ func CustomEncoder[Solution any, Encoder encode.Encoder](
 	return nil
 }
 
-func jsonEncodeChan[Encoder encode.Encoder](enc Encoder, w io.Writer, vc any) (err error) {
+func jsonEncodeChan[Encoder encode.Encoder](
+	enc Encoder, w io.Writer, vc any,
+) (err error) {
 	cval := reflect.ValueOf(vc)
 	if _, err = w.Write([]byte{'['}); err != nil {
 		return
