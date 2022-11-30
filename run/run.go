@@ -1,6 +1,7 @@
 package run
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -8,6 +9,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/itzg/go-flagsfiller"
@@ -186,20 +188,9 @@ func JSONEncoder[Solution any](
 	if !ok {
 		return errors.New("JsonEncoder is not compatible with configured IOProducer")
 	}
-	encoder := json.NewEncoder(ioWriter)
 	switch runnerConfig.Runner.Output.Solutions {
 	case All:
-		_, err := ioWriter.Write([]byte("["))
-		if err != nil {
-			return err
-		}
-		for solution := range solutions {
-			err = encoder.Encode(solution)
-			if err != nil {
-				return err
-			}
-		}
-		_, err = ioWriter.Write([]byte("]"))
+		err := jsonEncodeChan(ioWriter, solutions)
 		if err != nil {
 			return err
 		}
@@ -208,6 +199,7 @@ func JSONEncoder[Solution any](
 		for solution := range solutions {
 			last = solution
 		}
+		encoder := json.NewEncoder(ioWriter)
 		err := encoder.Encode(last)
 		if err != nil {
 			return err
@@ -215,4 +207,40 @@ func JSONEncoder[Solution any](
 	}
 
 	return nil
+}
+
+func jsonEncodeChan(w io.Writer, vc any) (err error) {
+	cval := reflect.ValueOf(vc)
+	_, err = w.Write([]byte{'['})
+	if err != nil {
+		return
+	}
+	v, ok := cval.Recv()
+	if !ok {
+		_, err = w.Write([]byte{']'})
+		return
+	}
+	// create buffer & encoder only if we have a value
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	goto Encode
+Loop:
+	v, ok = cval.Recv()
+	if !ok {
+		_, err = w.Write([]byte{']'})
+		return
+	}
+	if _, err = w.Write([]byte{','}); err != nil {
+		return
+	}
+Encode:
+	err = enc.Encode(v.Interface())
+	if err == nil {
+		_, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
+		buf.Reset()
+	}
+	if err != nil {
+		return
+	}
+	goto Loop
 }
