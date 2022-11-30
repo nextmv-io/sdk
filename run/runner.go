@@ -1,21 +1,19 @@
 package run
 
-import (
-	"github.com/nextmv-io/sdk/run/decode"
-	"github.com/nextmv-io/sdk/run/encode"
-)
+import "context"
 
 // Runner defines the interface of the runner.
-type Runner interface {
-	// Run invokes a solver by invoking the associated handler.
-	Run()
-
-	// SetDecoder sets decoder to be used to decode input.
-	SetDecoder(decoder decode.Decoder)
-	// SetEncoder sets encoder to be used to encode output.
-	SetEncoder(encoder encode.Encoder)
-	// SetHandler sets the handler to be used by the run invocation.
-	SetHandler(any)
+type Runner[Input, Option, Solution any] interface {
+	// Run runs the runner.
+	Run(context.Context) error
+	// SetIOProducer sets the ioProducer of a runner.
+	SetIOProducer(IOProducer)
+	// SetInputDecoder sets the inputDecoder of a runner.
+	SetInputDecoder(InputDecoder[Input])
+	// SetOptionDecoder sets the optionDecoder of a runner.
+	SetOptionDecoder(OptionDecoder[Option])
+	// SetAlgorithm sets the algorithm of a runner.
+	SetAlgorithm(Algorithm[Input, Option, Solution])
+	// SetEncoder sets the encoder of a runner.
+	SetEncoder(Encoder[Solution])
 }
-
-var newFunc func() Runner

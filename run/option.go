@@ -1,19 +1,13 @@
 package run
 
-import (
-	"github.com/nextmv-io/sdk/run/decode"
-	"github.com/nextmv-io/sdk/run/encode"
+// RunnerOption configures a Runner.
+type RunnerOption[Input, Option, Solution any] func(
+	Runner[Input, Option, Solution],
 )
 
-// An Option configures a Runner.
-type Option func(Runner)
-
 // Decode sets the decoder of a runner using f.
-func Decode(f func() decode.Decoder) func(Runner) {
-	return func(r Runner) { r.SetDecoder(f()) }
-}
-
-// Encode sets the encoder of a runner using f.
-func Encode(f func() encode.Encoder) func(Runner) {
-	return func(r Runner) { r.SetEncoder(f()) }
+func Decode[Input, Option, Solution any](d InputDecoder[Input]) func(
+	Runner[Input, Option, Solution],
+) {
+	return func(r Runner[Input, Option, Solution]) { r.SetInputDecoder(d) }
 }
