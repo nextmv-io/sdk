@@ -2,9 +2,14 @@
 package main
 
 import (
+	"log"
+
 	"github.com/nextmv-io/sdk/run"
 )
 
 func main() {
-	_ = run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
