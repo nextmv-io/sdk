@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 
 	"github.com/nextmv-io/sdk/mip"
@@ -22,7 +23,10 @@ import (
 // head, or both. A bunny may binky because it is feeling happy or safe in its
 // environment.
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // The input defines a number of meals we can use to maximize binkies. Each

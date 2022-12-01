@@ -2,6 +2,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
@@ -13,7 +15,10 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving the well known knapsack problem.
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // An item has a Value, Weight and Volume. ItemID is optional and can be any

@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	_ = run.Run(solver)
 }
