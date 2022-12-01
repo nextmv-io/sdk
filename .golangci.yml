@@ -20,6 +20,7 @@ linters-settings:
         - github.com/nextmv-io/go-routingkit
         - github.com/twpayne/go-polyline
         - googlemaps.github.io/maps
+        - github.com/itzg/go-flagsfiller
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 10
