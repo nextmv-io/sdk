@@ -224,3 +224,10 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
+    # Deactivating gocritic because of a gocritic bug that was fixed on October
+    # 6th, but the fix has not yet been released
+    # https://github.com/go-critic/go-critic/pull/1273
+    - path: run/run\.go
+      linters:
+        - gocritic
+      text: newDeref
