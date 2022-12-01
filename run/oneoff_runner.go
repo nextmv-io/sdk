@@ -82,13 +82,10 @@ func (r *oneOffRunner[Input, Option, Solution]) Run(
 	go func() {
 		defer close(solutions)
 		defer close(errors)
-		cont := true
-		for cont {
-			cont, err = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
-			if err != nil {
-				errors <- err
-				return
-			}
+		err = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
+		if err != nil {
+			errors <- err
+			return
 		}
 	}()
 

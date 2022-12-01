@@ -27,15 +27,15 @@ func Run[Input, Option any](solver func(
 	algorithm := func(
 		ctx context.Context,
 		input Input, option Option, solutions chan<- store.Solution,
-	) (bool, error) {
+	) error {
 		solver, err := solver(input, option)
 		if err != nil {
-			return false, err
+			return err
 		}
 		for solution := range solver.All(ctx) {
 			solutions <- solution
 		}
-		return false, nil
+		return nil
 	}
 	runner := CliRunner(algorithm)
 	return runner.Run(context.Background())
@@ -160,7 +160,7 @@ func DefaultFlagParser[Option, RunnerCfg any]() (
 // Algorithm is a function that runs an algorithm.
 type Algorithm[Input, Option, Solution any] func(
 	context.Context, Input, Option, chan<- Solution,
-) (bool, error)
+) error
 
 // DefaultIOProducer is a test IOProducer.
 func DefaultIOProducer(_ context.Context, config any) IOData {
@@ -233,7 +233,7 @@ func CustomEncoder[Solution any, Encoder encode.Encoder](
 }
 
 func jsonEncodeChan[Encoder encode.Encoder](
-	enc Encoder, w io.Writer, vc any,
+	encoder Encoder, w io.Writer, vc any,
 ) (err error) {
 	cval := reflect.ValueOf(vc)
 	if _, err = w.Write([]byte{'['}); err != nil {
@@ -242,27 +242,27 @@ func jsonEncodeChan[Encoder encode.Encoder](
 	v, ok := cval.Recv()
 	if !ok {
 		_, err = w.Write([]byte{']'})
-		return
+		return err
 	}
 	// create buffer & encoder only if we have a value
 	buf := new(bytes.Buffer)
 	goto Encode
 Loop:
-	v, ok = cval.Recv()
-	if !ok {
+	if v, ok = cval.Recv(); !ok {
 		_, err = w.Write([]byte{']'})
-		return
+		return err
 	}
 	if _, err = w.Write([]byte{','}); err != nil {
 		return
 	}
 Encode:
-	if err = enc.Encode(w, v.Interface()); err != nil {
+	err = encoder.Encode(buf, v.Interface())
+	if err == nil {
+		_, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
+		buf.Reset()
+	}
+	if err != nil {
 		return
 	}
-	if _, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n")); err != nil {
-		return
-	}
-	buf.Reset()
 	goto Loop
 }
