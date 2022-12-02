@@ -61,56 +61,8 @@ func Run[Input, Option any](solver func(
 	return runner.Run(context.Background())
 }
 
-// IOData describes the data that is used in the IOProducer.
-type IOData interface {
-	Input() any
-	Option() any
-	Writer() any
-}
-
-// NewIOData creates a new IOData.
-func NewIOData(input any, option any, writer any) IOData {
-	return ioData{
-		input:  input,
-		option: option,
-		writer: writer,
-	}
-}
-
-type ioData struct {
-	input  any
-	option any
-	writer any
-}
-
-func (d ioData) Input() any {
-	return d.input
-}
-
-func (d ioData) Option() any {
-	return d.option
-}
-
-func (d ioData) Writer() any {
-	return d.writer
-}
-
-// IOProducer is a function that produces the input, option and writer.
-type IOProducer func(context.Context, any) IOData
-
-// InputDecoder is a function that decodes a reader into a struct.
-type InputDecoder[Input any] func(context.Context, any) (Input, error)
-
-// OptionDecoder is a function that decodes a reader into a struct.
-type OptionDecoder[Option any] func(
-	context.Context, any, Option,
-) (Option, error)
-
-// FlagParser is a function that parses flags.
-type FlagParser[Input any] func() (any, Input, error)
-
-// CustomDecoder is a Decoder that decodes a json into a struct.
-func CustomDecoder[Input any, Decoder decode.Decoder](
+// GenericDecoder is a Decoder that decodes a json into a struct.
+func GenericDecoder[Input any, Decoder decode.Decoder](
 	_ context.Context, reader any) (input Input, err error,
 ) {
 	ioReader, ok := reader.(io.Reader)
@@ -177,11 +129,6 @@ func DefaultFlagParser[Option, RunnerCfg any]() (
 	return runnerConfig, option, nil
 }
 
-// Algorithm is a function that runs an algorithm.
-type Algorithm[Input, Option, Solution any] func(
-	context.Context, Input, Option, chan<- Solution,
-) error
-
 // DefaultIOProducer is a test IOProducer.
 func DefaultIOProducer(_ context.Context, config any) IOData {
 	cfg, ok := config.(CliRunnerConfig)
@@ -211,10 +158,6 @@ func DefaultIOProducer(_ context.Context, config any) IOData {
 	)
 }
 
-// Encoder is a function that encodes a struct into a writer.
-type Encoder[Solution, Option any] func(
-	context.Context, <-chan Solution, any, any, Option) error
-
 type version struct {
 	Sdk string `json:"sdk"`
 }
@@ -224,8 +167,8 @@ type meta[Options any] struct {
 	Store   string  `json:"store"`
 }
 
-// CustomEncoder is an Encoder that encodes a struct.
-func CustomEncoder[Solution, Options any, Encoder encode.Encoder](
+// GenericEncoder is an Encoder that encodes a struct.
+func GenericEncoder[Solution, Options any, Encoder encode.Encoder](
 	_ context.Context,
 	solutions <-chan Solution,
 	writer any,

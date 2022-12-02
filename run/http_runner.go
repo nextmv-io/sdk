@@ -36,26 +36,19 @@ func SetAddr[Input, Option, Solution any](addr string) func(
 	return func(r *httpRunner[Input, Option, Solution]) { r.setHTTPAddr(addr) }
 }
 
-// DefaultHTTPOneOffRunner is the default http one-off runner.
-func DefaultHTTPOneOffRunner[Input, Option, Solution any](
-	handler Algorithm[Input, Option, Solution],
-) Runner[Input, Option, Solution] {
-	return NewOneOffRunner(
-		nil,
-		CustomDecoder[Input, decode.JSONDecoder],
-		HeaderDecoder[Option],
-		handler,
-		CustomEncoder[Solution, Option, encode.JSONEncoder],
-	)
-}
-
 // NewHTTPRunner creates a new HTTPRunner.
 func NewHTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...HTTPRunnerOption[Input, Option, Solution],
 ) HTTPRunner[Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
-		oneOffRunner: DefaultHTTPOneOffRunner(algorithm),
+		genericRunner: NewGenericRunner(
+			nil,
+			GenericDecoder[Input, decode.JSONDecoder],
+			HeaderDecoder[Option],
+			algorithm,
+			GenericEncoder[Solution, Option, encode.JSONEncoder],
+		),
 	}
 
 	// default http server
@@ -77,9 +70,9 @@ func NewHTTPRunner[Input, Option, Solution any](
 }
 
 type httpRunner[Input, Option, Solution any] struct {
-	oneOffRunner Runner[Input, Option, Solution]
-	run          func(context.Context) error
-	httpServer   *http.Server
+	genericRunner Runner[Input, Option, Solution]
+	run           func(context.Context) error
+	httpServer    *http.Server
 }
 
 func (h *httpRunner[Input, Option, Solution]) setHTTPAddr(addr string) {
@@ -96,33 +89,33 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 func (h *httpRunner[Input, Option, Solution]) SetIOProducer(
 	ioHandler IOProducer,
 ) {
-	h.oneOffRunner.SetIOProducer(ioHandler)
+	h.genericRunner.SetIOProducer(ioHandler)
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetInputDecoder(
 	decoder InputDecoder[Input],
 ) {
-	h.oneOffRunner.SetInputDecoder(decoder)
+	h.genericRunner.SetInputDecoder(decoder)
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetOptionDecoder(
 	decoder OptionDecoder[Option],
 ) {
-	h.oneOffRunner.SetOptionDecoder(decoder)
+	h.genericRunner.SetOptionDecoder(decoder)
 }
 
 // SetHandler sets the handler of a runner using f.
 func (h *httpRunner[Input, Option, Solution]) SetAlgorithm(
 	algorithm Algorithm[Input, Option, Solution],
 ) {
-	h.oneOffRunner.SetAlgorithm(algorithm)
+	h.genericRunner.SetAlgorithm(algorithm)
 }
 
 // SetEncoder sets the encoder of a runner using f.
 func (h *httpRunner[Input, Option, Solution]) SetEncoder(
 	encoder Encoder[Solution, Option],
 ) {
-	h.oneOffRunner.SetEncoder(encoder)
+	h.genericRunner.SetEncoder(encoder)
 }
 
 // SetRun sets the run function of a runner using f.
@@ -141,14 +134,14 @@ func (h *httpRunner[Input, Option, Solution]) GetHTTPHandler() http.Handler {
 func (h *httpRunner[Input, Option, Solution]) GetOneOffRunner() Runner[
 	Input, Option, Solution,
 ] {
-	return h.oneOffRunner
+	return h.genericRunner
 }
 
 // ServeHTTP implements the http.Handler interface.
 func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	w http.ResponseWriter, req *http.Request,
 ) {
-	runner := h.oneOffRunner
+	runner := h.genericRunner
 	var reader io.Reader = req.Body
 	var writer io.Writer = w
 	runner.SetIOProducer(

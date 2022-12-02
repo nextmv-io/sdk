@@ -11,12 +11,12 @@ import (
 func CliRunner[Input, Option, Solution any](
 	handler Algorithm[Input, Option, Solution],
 ) Runner[Input, Option, Solution] {
-	runner := &oneOffRunner[Input, Option, Solution]{
+	runner := &genericRunner[Input, Option, Solution]{
 		IOProducer:    DefaultIOProducer,
-		InputDecoder:  CustomDecoder[Input, decode.JSONDecoder],
+		InputDecoder:  GenericDecoder[Input, decode.JSONDecoder],
 		OptionDecoder: NoopOptionsDecoder[Option],
 		Algorithm:     handler,
-		Encoder:       CustomEncoder[Solution, Option, encode.JSONEncoder],
+		Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
 	}
 	runnerConfig, decodedOption, err := DefaultFlagParser[
 		Option, CliRunnerConfig,
@@ -29,15 +29,15 @@ func CliRunner[Input, Option, Solution any](
 	return runner
 }
 
-// NewOneOffRunner creates a new one-off runner.
-func NewOneOffRunner[Input, Option, Solution any](
+// NewGenericRunner creates a new one-off runner.
+func NewGenericRunner[Input, Option, Solution any](
 	ioHandler IOProducer,
 	inputDecoder InputDecoder[Input],
 	optionDecoder OptionDecoder[Option],
 	handler Algorithm[Input, Option, Solution],
 	encoder Encoder[Solution, Option],
 ) Runner[Input, Option, Solution] {
-	return &oneOffRunner[Input, Option, Solution]{
+	return &genericRunner[Input, Option, Solution]{
 		IOProducer:    ioHandler,
 		InputDecoder:  inputDecoder,
 		OptionDecoder: optionDecoder,
@@ -46,7 +46,7 @@ func NewOneOffRunner[Input, Option, Solution any](
 	}
 }
 
-type oneOffRunner[Input, Option, Solution any] struct {
+type genericRunner[Input, Option, Solution any] struct {
 	IOProducer    IOProducer
 	InputDecoder  InputDecoder[Input]
 	OptionDecoder OptionDecoder[Option]
@@ -56,7 +56,7 @@ type oneOffRunner[Input, Option, Solution any] struct {
 	decodedOption Option
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) Run(
+func (r *genericRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
 	// get IO
@@ -101,31 +101,31 @@ func (r *oneOffRunner[Input, Option, Solution]) Run(
 	return <-errs
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) SetIOProducer(
+func (r *genericRunner[Input, Option, Solution]) SetIOProducer(
 	ioProducer IOProducer,
 ) {
 	r.IOProducer = ioProducer
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) SetInputDecoder(
+func (r *genericRunner[Input, Option, Solution]) SetInputDecoder(
 	decoder InputDecoder[Input],
 ) {
 	r.InputDecoder = decoder
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) SetOptionDecoder(
+func (r *genericRunner[Input, Option, Solution]) SetOptionDecoder(
 	decoder OptionDecoder[Option],
 ) {
 	r.OptionDecoder = decoder
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) SetAlgorithm(
+func (r *genericRunner[Input, Option, Solution]) SetAlgorithm(
 	algorithm Algorithm[Input, Option, Solution],
 ) {
 	r.Algorithm = algorithm
 }
 
-func (r *oneOffRunner[Input, Option, Solution]) SetEncoder(
+func (r *genericRunner[Input, Option, Solution]) SetEncoder(
 	encoder Encoder[Solution, Option],
 ) {
 	r.Encoder = encoder
