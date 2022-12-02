@@ -17,49 +17,7 @@ import (
 	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/run/decode"
 	"github.com/nextmv-io/sdk/run/encode"
-	"github.com/nextmv-io/sdk/store"
 )
-
-// Simple runs the runner in a simple way.
-func Simple[Input, Option, Solution any](solver func(
-	input Input, option Option) (Solution, error),
-) error {
-	algorithm := func(
-		_ context.Context,
-		input Input, option Option, solutions chan<- Solution,
-	) error {
-		solution, err := solver(input, option)
-		if err != nil {
-			return err
-		}
-		solutions <- solution
-		return nil
-	}
-	runner := CliRunner(algorithm)
-	return runner.Run(context.Background())
-}
-
-// Run runs the runner.
-func Run[Input, Option any](solver func(
-	input Input, option Option,
-) (store.Solver, error),
-) error {
-	algorithm := func(
-		ctx context.Context,
-		input Input, option Option, solutions chan<- store.Solution,
-	) error {
-		solver, err := solver(input, option)
-		if err != nil {
-			return err
-		}
-		for solution := range solver.All(ctx) {
-			solutions <- solution
-		}
-		return nil
-	}
-	runner := CliRunner(algorithm)
-	return runner.Run(context.Background())
-}
 
 // GenericDecoder is a Decoder that decodes a json into a struct.
 func GenericDecoder[Input any, Decoder decode.Decoder](
@@ -100,8 +58,8 @@ func NoopOptionsDecoder[Input any](
 	return input, nil
 }
 
-// DefaultFlagParser parses flags and env vars.
-func DefaultFlagParser[Option, RunnerCfg any]() (
+// FlagParser parses flags and env vars.
+func FlagParser[Option, RunnerCfg any]() (
 	runnerConfig RunnerCfg, option Option, err error,
 ) {
 	// create a FlagSetFiller
@@ -129,8 +87,8 @@ func DefaultFlagParser[Option, RunnerCfg any]() (
 	return runnerConfig, option, nil
 }
 
-// DefaultIOProducer is a test IOProducer.
-func DefaultIOProducer(_ context.Context, config any) IOData {
+// CliIOProducer is a test IOProducer.
+func CliIOProducer(_ context.Context, config any) IOData {
 	cfg, ok := config.(CliRunnerConfig)
 	if !ok {
 		log.Fatal("DefaultIOProducer is not compatible with the runner")

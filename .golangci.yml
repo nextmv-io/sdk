@@ -234,4 +234,4 @@ issues:
     # Deactivate gocyclo for CustomEncoder in run.go
     - path: run/run\.go
         - gocyclo
-      source: "^func CustomEncoder"
+      source: "^func GenericEncoder"
