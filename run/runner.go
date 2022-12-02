@@ -15,5 +15,5 @@ type Runner[Input, Option, Solution any] interface {
 	// SetAlgorithm sets the algorithm of a runner.
 	SetAlgorithm(Algorithm[Input, Option, Solution])
 	// SetEncoder sets the encoder of a runner.
-	SetEncoder(Encoder[Solution])
+	SetEncoder(Encoder[Solution, Option])
 }

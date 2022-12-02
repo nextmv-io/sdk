@@ -16,7 +16,7 @@ func CliRunner[Input, Option, Solution any](
 		InputDecoder:  CustomDecoder[Input, decode.JSONDecoder],
 		OptionDecoder: NoopOptionsDecoder[Option],
 		Algorithm:     handler,
-		Encoder:       CustomEncoder[Solution, encode.JSONEncoder],
+		Encoder:       CustomEncoder[Solution, Option, encode.JSONEncoder],
 	}
 	runnerConfig, decodedOption, err := DefaultFlagParser[
 		Option, CliRunnerConfig,
@@ -35,7 +35,7 @@ func NewOneOffRunner[Input, Option, Solution any](
 	inputDecoder InputDecoder[Input],
 	optionDecoder OptionDecoder[Option],
 	handler Algorithm[Input, Option, Solution],
-	encoder Encoder[Solution],
+	encoder Encoder[Solution, Option],
 ) Runner[Input, Option, Solution] {
 	return &oneOffRunner[Input, Option, Solution]{
 		IOProducer:    ioHandler,
@@ -51,7 +51,7 @@ type oneOffRunner[Input, Option, Solution any] struct {
 	InputDecoder  InputDecoder[Input]
 	OptionDecoder OptionDecoder[Option]
 	Algorithm     Algorithm[Input, Option, Solution]
-	Encoder       Encoder[Solution]
+	Encoder       Encoder[Solution, Option]
 	runnerConfig  any
 	decodedOption Option
 }
@@ -78,25 +78,27 @@ func (r *oneOffRunner[Input, Option, Solution]) Run(
 
 	// run algorithm
 	solutions := make(chan Solution)
-	errors := make(chan error, 1)
+	errs := make(chan error, 1)
 	go func() {
 		defer close(solutions)
-		defer close(errors)
+		defer close(errs)
 		err = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
 		if err != nil {
-			errors <- err
+			errs <- err
 			return
 		}
 	}()
 
 	// encode solutions
-	err = r.Encoder(context, solutions, ioData.Writer(), r.runnerConfig)
+	err = r.Encoder(
+		context, solutions, ioData.Writer(), r.runnerConfig, r.decodedOption,
+	)
 	if err != nil {
 		return err
 	}
 
 	// return potential errors
-	return <-errors
+	return <-errs
 }
 
 func (r *oneOffRunner[Input, Option, Solution]) SetIOProducer(
@@ -124,7 +126,7 @@ func (r *oneOffRunner[Input, Option, Solution]) SetAlgorithm(
 }
 
 func (r *oneOffRunner[Input, Option, Solution]) SetEncoder(
-	encoder Encoder[Solution],
+	encoder Encoder[Solution, Option],
 ) {
 	r.Encoder = encoder
 }

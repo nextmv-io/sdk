@@ -14,6 +14,7 @@ type CliRunnerConfig struct {
 		}
 		Output struct {
 			Path      string    // Path to output file
+			Quiet     bool      // Only output solutions
 			Solutions Solutions // All solutions or last (best) solution
 		}
 	}

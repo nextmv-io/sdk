@@ -14,10 +14,30 @@ import (
 	"strings"
 
 	"github.com/itzg/go-flagsfiller"
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/run/decode"
 	"github.com/nextmv-io/sdk/run/encode"
 	"github.com/nextmv-io/sdk/store"
 )
+
+// Simple runs the runner in a simple way.
+func Simple[Input, Option, Solution any](solver func(
+	input Input, option Option) (Solution, error),
+) error {
+	algorithm := func(
+		_ context.Context,
+		input Input, option Option, solutions chan<- Solution,
+	) error {
+		solution, err := solver(input, option)
+		if err != nil {
+			return err
+		}
+		solutions <- solution
+		return nil
+	}
+	runner := CliRunner(algorithm)
+	return runner.Run(context.Background())
+}
 
 // Run runs the runner.
 func Run[Input, Option any](solver func(
@@ -192,13 +212,25 @@ func DefaultIOProducer(_ context.Context, config any) IOData {
 }
 
 // Encoder is a function that encodes a struct into a writer.
-type Encoder[Solution any] func(
-	context.Context, <-chan Solution, any, any,
-) error
+type Encoder[Solution, Option any] func(
+	context.Context, <-chan Solution, any, any, Option) error
+
+type version struct {
+	Sdk string `json:"sdk"`
+}
+type meta[Options any] struct {
+	Version version `json:"version"`
+	Options Options `json:"options"`
+	Store   string  `json:"store"`
+}
 
 // CustomEncoder is an Encoder that encodes a struct.
-func CustomEncoder[Solution any, Encoder encode.Encoder](
-	_ context.Context, solutions <-chan Solution, writer any, runnerCfg any,
+func CustomEncoder[Solution, Options any, Encoder encode.Encoder](
+	_ context.Context,
+	solutions <-chan Solution,
+	writer any,
+	runnerCfg any,
+	options Options,
 ) error {
 	encoder := *new(Encoder)
 	ioWriter, ok := writer.(io.Writer)
@@ -212,19 +244,42 @@ func CustomEncoder[Solution any, Encoder encode.Encoder](
 	if strings.HasSuffix(runnerConfig.Runner.Output.Path, ".gz") {
 		ioWriter = gzip.NewWriter(ioWriter)
 	}
-	switch runnerConfig.Runner.Output.Solutions {
-	case All:
-		err := jsonEncodeChan(encoder, ioWriter, solutions)
+
+	if !runnerConfig.Runner.Output.Quiet {
+		meta := meta[Options]{
+			Version: version{
+				Sdk: sdk.VERSION,
+			},
+			Options: options,
+		}
+		// Write version
+		buf := new(bytes.Buffer)
+		if err := encoder.Encode(buf, meta); err != nil {
+			return err
+		}
+		_, err := ioWriter.Write(bytes.TrimRight(buf.Bytes(), "\"}\n"))
 		if err != nil {
 			return err
 		}
-	case Last:
+	}
+
+	if runnerConfig.Runner.Output.Solutions == Last {
 		var last Solution
 		for solution := range solutions {
 			last = solution
 		}
-		err := encoder.Encode(ioWriter, last)
-		if err != nil {
+		tempSolutions := make(chan Solution, 1)
+		tempSolutions <- last
+		close(tempSolutions)
+		solutions = tempSolutions
+	}
+
+	if err := jsonEncodeChan(encoder, ioWriter, solutions); err != nil {
+		return err
+	}
+
+	if !runnerConfig.Runner.Output.Quiet {
+		if _, err := ioWriter.Write([]byte{'}'}); err != nil {
 			return err
 		}
 	}
@@ -253,16 +308,19 @@ Loop:
 		return err
 	}
 	if _, err = w.Write([]byte{','}); err != nil {
-		return
+		return err
 	}
 Encode:
 	err = encoder.Encode(buf, v.Interface())
 	if err == nil {
 		_, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
+		if err != nil {
+			return err
+		}
 		buf.Reset()
 	}
 	if err != nil {
-		return
+		return err
 	}
 	goto Loop
 }

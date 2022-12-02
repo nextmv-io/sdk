@@ -45,7 +45,7 @@ func DefaultHTTPOneOffRunner[Input, Option, Solution any](
 		CustomDecoder[Input, decode.JSONDecoder],
 		HeaderDecoder[Option],
 		handler,
-		CustomEncoder[Solution, encode.JSONEncoder],
+		CustomEncoder[Solution, Option, encode.JSONEncoder],
 	)
 }
 
@@ -120,7 +120,7 @@ func (h *httpRunner[Input, Option, Solution]) SetAlgorithm(
 
 // SetEncoder sets the encoder of a runner using f.
 func (h *httpRunner[Input, Option, Solution]) SetEncoder(
-	encoder Encoder[Solution],
+	encoder Encoder[Solution, Option],
 ) {
 	h.oneOffRunner.SetEncoder(encoder)
 }
