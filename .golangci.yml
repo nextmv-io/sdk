@@ -231,3 +231,7 @@ issues:
       linters:
         - gocritic
       text: newDeref
+    # Deactivate gocyclo for CustomEncoder in run.go
+    - path: run/run\.go
+        - gocyclo
+      text: cyclomatic complexity * of func `CustomEncoder`
