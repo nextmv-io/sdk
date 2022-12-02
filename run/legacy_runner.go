@@ -10,6 +10,7 @@ import (
 func Run[Input, Option any](solver func(
 	input Input, option Option,
 ) (store.Solver, error),
+	options ...RunnerOption[Input, Option, store.Solution],
 ) error {
 	algorithm := func(
 		ctx context.Context,
@@ -24,6 +25,6 @@ func Run[Input, Option any](solver func(
 		}
 		return nil
 	}
-	runner := CliRunner(algorithm)
+	runner := CliRunner(algorithm, options...)
 	return runner.Run(context.Background())
 }
