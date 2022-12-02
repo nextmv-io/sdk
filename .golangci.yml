@@ -231,6 +231,7 @@ issues:
       linters:
         - gocritic
       text: newDeref
-    # Deactivate gocyclo in run.go
+    # Deactivate gocyclo for CustomEncoder in run.go
     - path: run/run\.go
         - gocyclo
+      source: "^func CustomEncoder"
