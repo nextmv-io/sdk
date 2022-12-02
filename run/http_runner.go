@@ -19,9 +19,9 @@ type HTTPRunner[Input, Option, Solution any] interface {
 	// also provide GetHttpHandler to get the handler.
 	SetRun(func(context.Context) error)
 	GetHTTPHandler() http.Handler
-	// GetOneOffRunner returns a Runner that is used internally. This method is
+	// GetGenericRunner returns a Runner that is used internally. This method is
 	// useful when users want to implement their own http.Handler.
-	GetOneOffRunner() Runner[Input, Option, Solution]
+	GetGenericRunner() Runner[Input, Option, Solution]
 }
 
 // HTTPRunnerOption configures a HttpRunner.
@@ -42,7 +42,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	options ...HTTPRunnerOption[Input, Option, Solution],
 ) HTTPRunner[Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
-		genericRunner: NewGenericRunner(
+		Runner: NewGenericRunner(
 			nil,
 			GenericDecoder[Input, decode.JSONDecoder],
 			HeaderDecoder[Option],
@@ -70,9 +70,9 @@ func NewHTTPRunner[Input, Option, Solution any](
 }
 
 type httpRunner[Input, Option, Solution any] struct {
-	genericRunner Runner[Input, Option, Solution]
-	run           func(context.Context) error
-	httpServer    *http.Server
+	Runner[Input, Option, Solution]
+	run        func(context.Context) error
+	httpServer *http.Server
 }
 
 func (h *httpRunner[Input, Option, Solution]) setHTTPAddr(addr string) {
@@ -83,39 +83,6 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
 	return h.run(context)
-}
-
-// SetIOHandler sets the ioHandler of a runner using f.
-func (h *httpRunner[Input, Option, Solution]) SetIOProducer(
-	ioHandler IOProducer,
-) {
-	h.genericRunner.SetIOProducer(ioHandler)
-}
-
-func (h *httpRunner[Input, Option, Solution]) SetInputDecoder(
-	decoder InputDecoder[Input],
-) {
-	h.genericRunner.SetInputDecoder(decoder)
-}
-
-func (h *httpRunner[Input, Option, Solution]) SetOptionDecoder(
-	decoder OptionDecoder[Option],
-) {
-	h.genericRunner.SetOptionDecoder(decoder)
-}
-
-// SetHandler sets the handler of a runner using f.
-func (h *httpRunner[Input, Option, Solution]) SetAlgorithm(
-	algorithm Algorithm[Input, Option, Solution],
-) {
-	h.genericRunner.SetAlgorithm(algorithm)
-}
-
-// SetEncoder sets the encoder of a runner using f.
-func (h *httpRunner[Input, Option, Solution]) SetEncoder(
-	encoder Encoder[Solution, Option],
-) {
-	h.genericRunner.SetEncoder(encoder)
 }
 
 // SetRun sets the run function of a runner using f.
@@ -130,21 +97,20 @@ func (h *httpRunner[Input, Option, Solution]) GetHTTPHandler() http.Handler {
 	return h
 }
 
-// GetOneOffRunner returns the one-off runner of the runner.
-func (h *httpRunner[Input, Option, Solution]) GetOneOffRunner() Runner[
+// GetGenericRunner returns the one-off runner of the runner.
+func (h *httpRunner[Input, Option, Solution]) GetGenericRunner() Runner[
 	Input, Option, Solution,
 ] {
-	return h.genericRunner
+	return h
 }
 
 // ServeHTTP implements the http.Handler interface.
 func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	w http.ResponseWriter, req *http.Request,
 ) {
-	runner := h.genericRunner
 	var reader io.Reader = req.Body
 	var writer io.Writer = w
-	runner.SetIOProducer(
+	h.SetIOProducer(
 		func(ctx context.Context, config any) IOData {
 			return NewIOData(
 				reader,
@@ -153,7 +119,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			)
 		},
 	)
-	err := runner.Run(context.Background())
+	err := h.Run(context.Background())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
