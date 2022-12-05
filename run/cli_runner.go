@@ -12,7 +12,7 @@ func CliRunner[Input, Option, Solution any](
 ) Runner[Input, Option, Solution] {
 	runner := &genericRunner[Input, Option, Solution]{
 		IOProducer:    CliIOProducer,
-		InputDecoder:  GenericDecoder[Input, decode.JSONDecoder],
+		InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
 		OptionDecoder: NoopOptionsDecoder[Option],
 		Algorithm:     handler,
 		Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],

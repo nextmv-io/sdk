@@ -7,14 +7,14 @@ import (
 )
 
 // Run runs the runner.
-func Run[Input, Option any](solver func(
-	input Input, option Option,
+func Run[Input any](solver func(
+	input Input, option store.Options,
 ) (store.Solver, error),
-	options ...RunnerOption[Input, Option, store.Solution],
+	options ...RunnerOption[Input, store.Options, store.Solution],
 ) error {
 	algorithm := func(
 		ctx context.Context,
-		input Input, option Option, solutions chan<- store.Solution,
+		input Input, option store.Options, solutions chan<- store.Solution,
 	) error {
 		solver, err := solver(input, option)
 		if err != nil {

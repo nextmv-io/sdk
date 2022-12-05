@@ -10,8 +10,18 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
+// NewGenericDecoder returns a new InputDecoder that decodes the input.
+func NewGenericDecoder[Input any](decoder decode.Decoder) InputDecoder[Input] {
+	dec := genericDecoder[Input]{decoder}
+	return dec.Decoder
+}
+
+type genericDecoder[Input any] struct {
+	decoder decode.Decoder
+}
+
 // GenericDecoder is a Decoder that decodes a json into a struct.
-func GenericDecoder[Input any, Decoder decode.Decoder](
+func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {
 	ioReader, ok := reader.(io.Reader)
@@ -37,8 +47,7 @@ func GenericDecoder[Input any, Decoder decode.Decoder](
 		ioReader = bufferedReader
 	}
 
-	decoder := *new(Decoder)
-	err = decoder.Decode(ioReader, &input)
+	err = g.decoder.Decode(ioReader, &input)
 	return input, err
 }
 

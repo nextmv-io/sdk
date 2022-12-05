@@ -44,7 +44,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	runner := &httpRunner[Input, Option, Solution]{
 		Runner: NewGenericRunner(
 			nil,
-			GenericDecoder[Input, decode.JSONDecoder],
+			NewGenericDecoder[Input](decode.JSON()),
 			HeaderDecoder[Option],
 			algorithm,
 			GenericEncoder[Solution, Option, encode.JSONEncoder],
