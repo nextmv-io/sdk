@@ -133,7 +133,20 @@ func solver(
 		return b
 	})
 
-	root = root.Format(func(s store.Store) any {
+	root = root.Format(format(so, input, userIncentive))
+
+	// We invoke Satisfier which will result in invoking Format and
+	// report the solution.
+	return root.Satisfier(opts), nil
+}
+
+// format returns a function to format the solution output.
+func format(
+	so store.Var[mip.Solution],
+	input incentiveAllocationProblem,
+	userIncentive map[string][]mip.Var,
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		// Get solution from store.
 		solution := so.Get(s)
 
@@ -169,9 +182,5 @@ func solver(
 			report["value"] = solution.ObjectiveValue()
 		}
 		return report
-	})
-
-	// We invoke Satisfier which will result in invoking Format and
-	// report the solution.
-	return root.Satisfier(opts), nil
+	}
 }

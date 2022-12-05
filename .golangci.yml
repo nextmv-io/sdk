@@ -197,9 +197,6 @@ issues:
     - path: templates/mip-knapsack/main\.go
       linters:
         - gocyclo
-    - path: templates/mip-incentive-allocation/main\.go
-      linters:
-        - gocyclo
     - path: templates/pager-duty/main\.go
       linters:
         - gocyclo
