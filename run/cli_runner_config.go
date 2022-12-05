@@ -8,14 +8,14 @@ type CliRunnerConfig struct {
 		Input struct {
 			Path string // Path to input file
 		}
-		Profile struct { // CLI only
+		Profile struct {
 			CPU    string // CPU profile location
 			Memory string // Memory profile location
 		}
 		Output struct {
-			Path      string    // Path to output file
-			Quiet     bool      // Only output solutions
-			Solutions Solutions // All solutions or last (best) solution
+			Path      string // Path to output file
+			Solutions string // All solutions or last (best) solution
+			Quiet     bool   // Only output solutions
 		}
 	}
 }

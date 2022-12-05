@@ -61,7 +61,11 @@ func GenericEncoder[Solution, Options any, Encoder encode.Encoder](
 		}
 	}
 
-	if runnerConfig.Runner.Output.Solutions == Last {
+	solutionFlag, err := ParseSolutions(runnerConfig.Runner.Output.Solutions)
+	if err != nil {
+		return err
+	}
+	if solutionFlag == Last {
 		var last Solution
 		for solution := range solutions {
 			last = solution
