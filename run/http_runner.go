@@ -14,26 +14,29 @@ import (
 // HTTPRunner is a Runner that uses HTTP as its IO.
 type HTTPRunner[Input, Option, Solution any] interface {
 	Runner[Input, Option, Solution]
-	// SetRun allows to fully configure and control the run process, e.g.
-	// setting up and listening to a http server. Since a handler is needed, we
-	// also provide GetHttpHandler to get the handler.
-	SetRun(func(context.Context) error)
-	GetHTTPHandler() http.Handler
-	// GetGenericRunner returns a Runner that is used internally. This method is
-	// useful when users want to implement their own http.Handler.
-	GetGenericRunner() Runner[Input, Option, Solution]
+	// SetHTTPAddr sets the address the http server listens on.
+	SetHTTPAddr(string)
+	// SetLogger sets the logger of the http server.
+	SetLogger(*log.Logger)
 }
 
-// HTTPRunnerOption configures a HttpRunner.
+// HTTPRunnerOption configures a HTTPRunner.
 type HTTPRunnerOption[Input, Option, Solution any] func(
-	*httpRunner[Input, Option, Solution],
+	HTTPRunner[Input, Option, Solution],
 )
 
 // SetAddr sets the address the http server listens on.
 func SetAddr[Input, Option, Solution any](addr string) func(
-	*httpRunner[Input, Option, Solution],
+	HTTPRunner[Input, Option, Solution],
 ) {
-	return func(r *httpRunner[Input, Option, Solution]) { r.setHTTPAddr(addr) }
+	return func(r HTTPRunner[Input, Option, Solution]) { r.SetHTTPAddr(addr) }
+}
+
+// SetLogger sets the logger of the http server.
+func SetLogger[Input, Option, Solution any](l *log.Logger) func(
+	HTTPRunner[Input, Option, Solution],
+) {
+	return func(r HTTPRunner[Input, Option, Solution]) { r.SetLogger(l) }
 }
 
 // NewHTTPRunner creates a new HTTPRunner.
@@ -42,24 +45,28 @@ func NewHTTPRunner[Input, Option, Solution any](
 	options ...HTTPRunnerOption[Input, Option, Solution],
 ) HTTPRunner[Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
-		Runner: NewGenericRunner(
-			nil,
-			NewGenericDecoder[Input](decode.JSON()),
-			HeaderDecoder[Option],
-			algorithm,
-			GenericEncoder[Solution, Option, encode.JSONEncoder],
-		),
+		genericRunner: &genericRunner[Input, Option, Solution]{
+			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
+			OptionDecoder: HeaderDecoder[Option],
+			Algorithm:     algorithm,
+			Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
+		},
+	}
+
+	runnerConfig, decodedOption, err := FlagParser[
+		Option, HTTPRunnerConfig,
+	]()
+	runner.genericRunner.runnerConfig = runnerConfig
+	runner.genericRunner.decodedOption = decodedOption
+	if err != nil {
+		panic(err)
 	}
 
 	// default http server
 	runner.httpServer = &http.Server{
-		Addr:     ":9000",
-		ErrorLog: log.New(os.Stderr, "", log.LstdFlags),
+		Addr:     runnerConfig.Runner.HTTP.Address,
+		ErrorLog: log.New(os.Stderr, "HTTPRunner", log.LstdFlags),
 		Handler:  runner,
-	}
-	// default value for run
-	runner.run = func(context.Context) error {
-		return runner.httpServer.ListenAndServe()
 	}
 
 	for _, option := range options {
@@ -70,38 +77,30 @@ func NewHTTPRunner[Input, Option, Solution any](
 }
 
 type httpRunner[Input, Option, Solution any] struct {
-	Runner[Input, Option, Solution]
-	run        func(context.Context) error
+	*genericRunner[Input, Option, Solution]
 	httpServer *http.Server
 }
 
-func (h *httpRunner[Input, Option, Solution]) setHTTPAddr(addr string) {
+func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
 	h.httpServer.Addr = addr
+}
+
+func (h *httpRunner[Input, Option, Solution]) SetLogger(l *log.Logger) {
+	h.httpServer.ErrorLog = l
 }
 
 func (h *httpRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
-	return h.run(context)
-}
-
-// SetRun sets the run function of a runner using f.
-func (h *httpRunner[Input, Option, Solution]) SetRun(
-	f func(context.Context) error,
-) {
-	h.run = f
-}
-
-// GetHTTPHandler returns the http.Handler of the runner.
-func (h *httpRunner[Input, Option, Solution]) GetHTTPHandler() http.Handler {
-	return h
-}
-
-// GetGenericRunner returns the one-off runner of the runner.
-func (h *httpRunner[Input, Option, Solution]) GetGenericRunner() Runner[
-	Input, Option, Solution,
-] {
-	return h
+	httpRunnerConfig := h.genericRunner.runnerConfig.(HTTPRunnerConfig)
+	if httpRunnerConfig.Runner.HTTP.Certificate != "" ||
+		httpRunnerConfig.Runner.HTTP.Key != "" {
+		return h.httpServer.ListenAndServeTLS(
+			httpRunnerConfig.Runner.HTTP.Certificate,
+			httpRunnerConfig.Runner.HTTP.Key,
+		)
+	}
+	return h.httpServer.ListenAndServe()
 }
 
 // ServeHTTP implements the http.Handler interface.
@@ -119,7 +118,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			)
 		},
 	)
-	err := h.Run(context.Background())
+	err := h.genericRunner.Run(context.Background())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -131,4 +130,16 @@ func HeaderDecoder[Option any](
 ) (Option, error) {
 	// TODO: transform headers to output
 	return option, nil
+}
+
+// HTTPRunnerConfig is the configuration of the HTTPRunner.
+type HTTPRunnerConfig struct {
+	Runner struct {
+		Log  *log.Logger
+		HTTP struct {
+			Address     string `default:":9000" usage:"The host address"`
+			Certificate string `usage:"The certificate file path"`
+			Key         string `usage:"The key file path"`
+		}
+	}
 }

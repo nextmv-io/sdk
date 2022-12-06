@@ -16,16 +16,16 @@ type MemoryProfiler interface {
 type CliRunnerConfig struct {
 	Runner struct {
 		Input struct {
-			Path string // Path to input file
+			Path string `usage:"The input file path"`
 		}
 		Profile struct {
-			CPU    string // CPU profile location
-			Memory string // Memory profile location
+			CPU    string `usage:"The CPU profile file path"`
+			Memory string `usage:"The memory profile file path"`
 		}
 		Output struct {
-			Path      string // Path to output file
-			Solutions string // All solutions or last (best) solution
-			Quiet     bool   // Only output solutions
+			Path      string `usage:"The output file path"`
+			Solutions string `default:"all" usage:"Return all or last solution"`
+			Quiet     bool   `default:"false" usage:"Do not return statistics"`
 		}
 	}
 }

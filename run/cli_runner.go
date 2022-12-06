@@ -18,10 +18,6 @@ func CliRunner[Input, Option, Solution any](
 		Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
 	}
 
-	for _, option := range options {
-		option(runner)
-	}
-
 	runnerConfig, decodedOption, err := FlagParser[
 		Option, CliRunnerConfig,
 	]()
@@ -30,5 +26,10 @@ func CliRunner[Input, Option, Solution any](
 	if err != nil {
 		panic(err)
 	}
+
+	for _, option := range options {
+		option(runner)
+	}
+
 	return runner
 }
