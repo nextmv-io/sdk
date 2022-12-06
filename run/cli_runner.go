@@ -15,7 +15,7 @@ func CliRunner[Input, Option, Solution any](
 		InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
 		OptionDecoder: NoopOptionsDecoder[Option],
 		Algorithm:     algorithm,
-		Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
+		Encoder:       NewGenericEncoder[Solution, Option](encode.JSON()),
 	}
 
 	runnerConfig, decodedOption, err := FlagParser[

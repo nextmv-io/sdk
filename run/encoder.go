@@ -22,28 +22,38 @@ type meta[Options any] struct {
 	Store   string  `json:"store"`
 }
 
+// NewGenericEncoder returns a new Encoder that encodes the solution.
+func NewGenericEncoder[Solution, Options any](
+	encoder encode.Encoder,
+) Encoder[Solution, Options] {
+	enc := genericEncoder[Solution, Options]{encoder}
+	return enc.Encode
+}
+
+type genericEncoder[Solution, Options any] struct {
+	encoder encode.Encoder
+}
+
 // GenericEncoder is an Encoder that encodes a struct.
-func GenericEncoder[Solution, Options any, Encoder encode.Encoder](
+func (g *genericEncoder[Solution, Options]) Encode(
 	_ context.Context,
 	solutions <-chan Solution,
 	writer any,
 	runnerCfg any,
 	options Options,
 ) error {
-	encoder := *new(Encoder)
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
 		return errors.New("JsonEncoder is not compatible with configured IOProducer")
 	}
-	runnerConfig, ok := runnerCfg.(CliRunnerConfig)
-	if !ok {
-		return errors.New("JsonEncoder is not compatible with configured IOProducer")
-	}
-	if strings.HasSuffix(runnerConfig.Runner.Output.Path, ".gz") {
-		ioWriter = gzip.NewWriter(ioWriter)
+
+	if outputPather, ok := runnerCfg.(OutputPather); ok {
+		if strings.HasSuffix(outputPather.OutputPath(), ".gz") {
+			ioWriter = gzip.NewWriter(ioWriter)
+		}
 	}
 
-	if !runnerConfig.Runner.Output.Quiet {
+	if quieter, ok := runnerCfg.(Quieter); ok && !quieter.Quiet() {
 		meta := meta[Options]{
 			Version: version{
 				Sdk: sdk.VERSION,
@@ -52,7 +62,7 @@ func GenericEncoder[Solution, Options any, Encoder encode.Encoder](
 		}
 		// Write version
 		buf := new(bytes.Buffer)
-		if err := encoder.Encode(buf, meta); err != nil {
+		if err := g.encoder.Encode(buf, meta); err != nil {
 			return err
 		}
 		_, err := ioWriter.Write(bytes.TrimRight(buf.Bytes(), "\"}\n"))
@@ -61,26 +71,29 @@ func GenericEncoder[Solution, Options any, Encoder encode.Encoder](
 		}
 	}
 
-	solutionFlag, err := ParseSolutions(runnerConfig.Runner.Output.Solutions)
-	if err != nil {
-		return err
-	}
-	if solutionFlag == Last {
-		var last Solution
-		for solution := range solutions {
-			last = solution
+	if limiter, ok := runnerCfg.(SolutionLimiter); ok {
+		solutionFlag, err := limiter.Solutions()
+		if err != nil {
+			return err
 		}
-		tempSolutions := make(chan Solution, 1)
-		tempSolutions <- last
-		close(tempSolutions)
-		solutions = tempSolutions
+
+		if solutionFlag == Last {
+			var last Solution
+			for solution := range solutions {
+				last = solution
+			}
+			tempSolutions := make(chan Solution, 1)
+			tempSolutions <- last
+			close(tempSolutions)
+			solutions = tempSolutions
+		}
 	}
 
-	if err := jsonEncodeChan(encoder, ioWriter, solutions); err != nil {
+	if err := jsonEncodeChan(g.encoder, ioWriter, solutions); err != nil {
 		return err
 	}
 
-	if !runnerConfig.Runner.Output.Quiet {
+	if quieter, ok := runnerCfg.(Quieter); ok && !quieter.Quiet() {
 		if _, err := ioWriter.Write([]byte{'}'}); err != nil {
 			return err
 		}

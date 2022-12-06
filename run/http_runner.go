@@ -49,7 +49,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
 			OptionDecoder: HeaderDecoder[Option],
 			Algorithm:     algorithm,
-			Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
+			Encoder:       NewGenericEncoder[Solution, Option](encode.JSON()),
 		},
 	}
 

@@ -12,6 +12,21 @@ type MemoryProfiler interface {
 	MemoryProfilePath() string
 }
 
+// OutputPather is the interface for getting the output path.
+type OutputPather interface {
+	OutputPath() string
+}
+
+// Quieter is the interface for getting the quiet flag.
+type Quieter interface {
+	Quiet() bool
+}
+
+// SolutionLimiter is the interface for getting the configured solutions.
+type SolutionLimiter interface {
+	Solutions() (Solutions, error)
+}
+
 // CliRunnerConfig is the configuration of the  CliRunner.
 type CliRunnerConfig struct {
 	Runner struct {
@@ -30,6 +45,16 @@ type CliRunnerConfig struct {
 	}
 }
 
+// OutputPath returns the output path.
+func (c CliRunnerConfig) OutputPath() string {
+	return c.Runner.Output.Path
+}
+
+// Quiet returns the quiet flag.
+func (c CliRunnerConfig) Quiet() bool {
+	return c.Runner.Output.Quiet
+}
+
 // CPUProfilePath returns the CPU profile path.
 func (c CliRunnerConfig) CPUProfilePath() string {
 	return c.Runner.Profile.CPU
@@ -38,6 +63,11 @@ func (c CliRunnerConfig) CPUProfilePath() string {
 // MemoryProfilePath returns the memory profile path.
 func (c CliRunnerConfig) MemoryProfilePath() string {
 	return c.Runner.Profile.Memory
+}
+
+// Solutions returns the configured solutions.
+func (c CliRunnerConfig) Solutions() (Solutions, error) {
+	return ParseSolutions(c.Runner.Output.Solutions)
 }
 
 // Solutions can be all or last.
