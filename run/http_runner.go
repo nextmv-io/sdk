@@ -18,6 +18,8 @@ type HTTPRunner[Input, Option, Solution any] interface {
 	SetHTTPAddr(string)
 	// SetLogger sets the logger of the http server.
 	SetLogger(*log.Logger)
+	// SetMaxParallel sets the maximum number of parallel requests.
+	SetMaxParallel(int)
 }
 
 // HTTPRunnerOption configures a HTTPRunner.
@@ -39,6 +41,15 @@ func SetLogger[Input, Option, Solution any](l *log.Logger) func(
 	return func(r HTTPRunner[Input, Option, Solution]) { r.SetLogger(l) }
 }
 
+// SetMaxParallel sets the maximum number of parallel requests.
+func SetMaxParallel[Input, Option, Solution any](maxParallel int) func(
+	HTTPRunner[Input, Option, Solution],
+) {
+	return func(r HTTPRunner[Input, Option, Solution]) {
+		r.SetMaxParallel(maxParallel)
+	}
+}
+
 // NewHTTPRunner creates a new HTTPRunner.
 func NewHTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
@@ -56,11 +67,13 @@ func NewHTTPRunner[Input, Option, Solution any](
 	runnerConfig, decodedOption, err := FlagParser[
 		Option, HTTPRunnerConfig,
 	]()
-	runner.genericRunner.runnerConfig = runnerConfig
-	runner.genericRunner.decodedOption = decodedOption
 	if err != nil {
 		panic(err)
 	}
+	runner.genericRunner.runnerConfig = runnerConfig
+	runner.genericRunner.decodedOption = decodedOption
+
+	runner.maxParallel = make(chan struct{}, runnerConfig.Runner.HTTP.MaxParallel)
 
 	// default http server
 	runner.httpServer = &http.Server{
@@ -78,7 +91,8 @@ func NewHTTPRunner[Input, Option, Solution any](
 
 type httpRunner[Input, Option, Solution any] struct {
 	*genericRunner[Input, Option, Solution]
-	httpServer *http.Server
+	httpServer  *http.Server
+	maxParallel chan struct{}
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
@@ -87,6 +101,10 @@ func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
 
 func (h *httpRunner[Input, Option, Solution]) SetLogger(l *log.Logger) {
 	h.httpServer.ErrorLog = l
+}
+
+func (h *httpRunner[Input, Option, Solution]) SetMaxParallel(maxParallel int) {
+	h.maxParallel = make(chan struct{}, maxParallel)
 }
 
 func (h *httpRunner[Input, Option, Solution]) Run(
@@ -107,6 +125,20 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	w http.ResponseWriter, req *http.Request,
 ) {
+	for {
+		select {
+		case h.maxParallel <- struct{}{}:
+			// We have a free slot, so we can start a new run.
+			defer func() { <-h.maxParallel }()
+			break
+		default:
+			// No free slot, so we immediately return an error.
+			http.Error(w, "max number of parallel requests exceeded",
+				http.StatusTooManyRequests)
+		}
+		break
+	}
+
 	var reader io.Reader = req.Body
 	var writer io.Writer = w
 	h.SetIOProducer(
@@ -140,6 +172,7 @@ type HTTPRunnerConfig struct {
 			Address     string `default:":9000" usage:"The host address"`
 			Certificate string `usage:"The certificate file path"`
 			Key         string `usage:"The key file path"`
+			MaxParallel int    `default:"1" usage:"The maximum number of parallel requests"`
 		}
 	}
 }
