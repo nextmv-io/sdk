@@ -7,14 +7,14 @@ import (
 
 // CliRunner is the default CLI runner.
 func CliRunner[Input, Option, Solution any](
-	handler Algorithm[Input, Option, Solution],
+	algorithm Algorithm[Input, Option, Solution],
 	options ...RunnerOption[Input, Option, Solution],
 ) Runner[Input, Option, Solution] {
 	runner := &genericRunner[Input, Option, Solution]{
 		IOProducer:    CliIOProducer,
 		InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
 		OptionDecoder: NoopOptionsDecoder[Option],
-		Algorithm:     handler,
+		Algorithm:     algorithm,
 		Encoder:       GenericEncoder[Solution, Option, encode.JSONEncoder],
 	}
 

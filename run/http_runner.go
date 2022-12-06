@@ -126,9 +126,9 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 }
 
 // HeaderDecoder is a Decoder that decodes a header into a struct.
-func HeaderDecoder[Input any](
-	context context.Context, header any, input Input,
-) (Input, error) {
+func HeaderDecoder[Option any](
+	context context.Context, header any, option Option,
+) (Option, error) {
 	// TODO: transform headers to output
-	return input, nil
+	return option, nil
 }
