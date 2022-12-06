@@ -2,6 +2,16 @@ package run
 
 import "errors"
 
+// CPUProfiler is the interface for profiling CPU usage.
+type CPUProfiler interface {
+	CPUProfilePath() string
+}
+
+// MemoryProfiler is the interface for profiling memory usage.
+type MemoryProfiler interface {
+	MemoryProfilePath() string
+}
+
 // CliRunnerConfig is the configuration of the  CliRunner.
 type CliRunnerConfig struct {
 	Runner struct {
@@ -18,6 +28,16 @@ type CliRunnerConfig struct {
 			Quiet     bool   // Only output solutions
 		}
 	}
+}
+
+// CPUProfilePath returns the CPU profile path.
+func (c CliRunnerConfig) CPUProfilePath() string {
+	return c.Runner.Profile.CPU
+}
+
+// MemoryProfilePath returns the memory profile path.
+func (c CliRunnerConfig) MemoryProfilePath() string {
+	return c.Runner.Profile.Memory
 }
 
 // Solutions can be all or last.
@@ -39,6 +59,8 @@ func (s Solutions) String() string {
 // ParseSolutions converts "all" to All and "last" to Last.
 func ParseSolutions(s string) (Solutions, error) {
 	switch s {
+	case "":
+		return All, nil
 	case "all":
 		return All, nil
 	case "last":

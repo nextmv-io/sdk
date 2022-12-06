@@ -2,6 +2,9 @@ package run
 
 import (
 	"context"
+	"os"
+	"runtime"
+	"runtime/pprof"
 )
 
 // NewGenericRunner creates a new one-off runner.
@@ -31,9 +34,71 @@ type genericRunner[Input, Option, Solution any] struct {
 	decodedOption Option
 }
 
+func (r *genericRunner[Input, Option, Solution]) handleCPUProfile(
+	runnerConfig any,
+) (deferFunc func() error, err error) {
+	deferFunc = func() error {
+		return nil
+	}
+	if cpuProfiler, ok := runnerConfig.(CPUProfiler); ok &&
+		cpuProfiler.CPUProfilePath() != "" {
+		// CPU profiler.
+		f, err := os.Create(cpuProfiler.CPUProfilePath())
+		if err != nil {
+			return deferFunc, err
+		}
+		deferFunc = func() error {
+			return f.Close()
+		}
+
+		if err := pprof.StartCPUProfile(f); err != nil {
+			return deferFunc, err
+		}
+		defer pprof.StopCPUProfile()
+	}
+	return deferFunc, nil
+}
+
+func (r *genericRunner[Input, Option, Solution]) handleMemoryProfile(
+	runnerConfig any,
+) (deferFunc func() error, err error) {
+	deferFunc = func() error {
+		return nil
+	}
+	// Memory profile.
+	if memoryProfiler, ok := runnerConfig.(MemoryProfiler); ok &&
+		memoryProfiler.MemoryProfilePath() != "" {
+		f, err := os.Create(memoryProfiler.MemoryProfilePath())
+		if err != nil {
+			return deferFunc, err
+		}
+		deferFunc = func() error {
+			return f.Close()
+		}
+
+		// Clean up unused objects from the heap before profiling. But do not
+		// garbage collect the runner, so we can see in-use memory.
+		runtime.GC()
+		runtime.KeepAlive(r)
+
+		if err := pprof.WriteHeapProfile(f); err != nil {
+			return deferFunc, err
+		}
+	}
+	return deferFunc, nil
+}
+
 func (r *genericRunner[Input, Option, Solution]) Run(
 	context context.Context,
-) error {
+) (retErr error) {
+	// handle CPU profile
+	deferFuncCPU, err := r.handleCPUProfile(r.runnerConfig)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		retErr = deferFuncCPU()
+	}()
 	// get IO
 	ioData := r.IOProducer(context, r.runnerConfig)
 
@@ -71,6 +136,15 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	if err != nil {
 		return err
 	}
+
+	// handle memory profile
+	deferFuncMemory, err := r.handleMemoryProfile(r.runnerConfig)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		retErr = deferFuncMemory()
+	}()
 
 	// return potential errors
 	return <-errs
