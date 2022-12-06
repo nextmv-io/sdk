@@ -92,31 +92,32 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) (retErr error) {
 	// handle CPU profile
-	deferFuncCPU, err := r.handleCPUProfile(r.runnerConfig)
-	if err != nil {
-		return err
+	deferFuncCPU, retErr := r.handleCPUProfile(r.runnerConfig)
+	if retErr != nil {
+		return retErr
 	}
 	defer func() {
-		localErr := deferFuncCPU()
-		if localErr != nil {
-			retErr = localErr
+		err := deferFuncCPU()
+		// the first error is more important
+		if retErr == nil {
+			retErr = err
 		}
 	}()
 	// get IO
 	ioData := r.IOProducer(context, r.runnerConfig)
 
 	// decode input
-	decodedInput, err := r.InputDecoder(context, ioData.Input())
-	if err != nil {
-		return err
+	decodedInput, retErr := r.InputDecoder(context, ioData.Input())
+	if retErr != nil {
+		return retErr
 	}
 
 	// decode option
-	r.decodedOption, err = r.OptionDecoder(
+	r.decodedOption, retErr = r.OptionDecoder(
 		context, ioData.Option(), r.decodedOption,
 	)
-	if err != nil {
-		return err
+	if retErr != nil {
+		return retErr
 	}
 
 	// run algorithm
@@ -125,30 +126,31 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	go func() {
 		defer close(solutions)
 		defer close(errs)
-		err = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
-		if err != nil {
-			errs <- err
+		retErr = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
+		if retErr != nil {
+			errs <- retErr
 			return
 		}
 	}()
 
 	// encode solutions
-	err = r.Encoder(
+	retErr = r.Encoder(
 		context, solutions, ioData.Writer(), r.runnerConfig, r.decodedOption,
 	)
-	if err != nil {
-		return err
+	if retErr != nil {
+		return retErr
 	}
 
 	// handle memory profile
-	deferFuncMemory, err := r.handleMemoryProfile(r.runnerConfig)
-	if err != nil {
-		return err
+	deferFuncMemory, retErr := r.handleMemoryProfile(r.runnerConfig)
+	if retErr != nil {
+		return retErr
 	}
 	defer func() {
-		localErr := deferFuncMemory()
-		if localErr != nil {
-			retErr = localErr
+		err := deferFuncMemory()
+		// the first error is more important
+		if retErr == nil {
+			retErr = err
 		}
 	}()
 
