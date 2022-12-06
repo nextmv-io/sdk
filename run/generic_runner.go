@@ -97,7 +97,10 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 		return err
 	}
 	defer func() {
-		retErr = deferFuncCPU()
+		localErr := deferFuncCPU()
+		if localErr != nil {
+			retErr = localErr
+		}
 	}()
 	// get IO
 	ioData := r.IOProducer(context, r.runnerConfig)
@@ -143,7 +146,10 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 		return err
 	}
 	defer func() {
-		retErr = deferFuncMemory()
+		localErr := deferFuncMemory()
+		if localErr != nil {
+			retErr = localErr
+		}
 	}()
 
 	// return potential errors
