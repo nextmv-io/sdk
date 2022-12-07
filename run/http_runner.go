@@ -123,14 +123,14 @@ type httpRunner[Input, Option, Solution any] struct {
 func MultiPartHandlerToIOProducer(
 	w http.ResponseWriter, req *http.Request,
 ) (IOProducer, error) {
-	read_form, err := req.MultipartReader()
+	readForm, err := req.MultipartReader()
 	if err != nil {
 		return nil, err
 	}
 	var inputReader, optionReader io.Reader
 	for {
-		part, err_part := read_form.NextPart()
-		if err_part == io.EOF {
+		part, errPart := readForm.NextPart()
+		if errPart == io.EOF {
 			break
 		}
 		switch part.FormName() {
@@ -197,18 +197,14 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	w http.ResponseWriter, req *http.Request,
 ) {
-	for {
-		select {
-		case h.maxParallel <- struct{}{}:
-			// We have a free slot, so we can start a new run.
-			defer func() { <-h.maxParallel }()
-			break
-		default:
-			// No free slot, so we immediately return an error.
-			http.Error(w, "max number of parallel requests exceeded",
-				http.StatusTooManyRequests)
-		}
-		break
+	select {
+	case h.maxParallel <- struct{}{}:
+		// We have a free slot, so we can start a new run.
+		defer func() { <-h.maxParallel }()
+	default:
+		// No free slot, so we immediately return an error.
+		http.Error(w, "max number of parallel requests exceeded",
+			http.StatusTooManyRequests)
 	}
 
 	// configure how to turn the request and response into an IOProducer.
@@ -245,7 +241,7 @@ type HTTPRunnerConfig struct {
 			Address     string `default:":9000" usage:"The host address"`
 			Certificate string `usage:"The certificate file path"`
 			Key         string `usage:"The key file path"`
-			MaxParallel int    `default:"1" usage:"The maximum number of parallel requests"`
+			MaxParallel int    `default:"1" usage:"The max number of requests"`
 		}
 		Output struct {
 			Solutions string `default:"all" usage:"Return all or last solution"`
