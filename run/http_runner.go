@@ -85,7 +85,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 		Option, HTTPRunnerConfig,
 	]()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	runner.genericRunner.runnerConfig = runnerConfig
 	runner.genericRunner.decodedOption = decodedOption
@@ -95,7 +95,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	// default http server
 	runner.httpServer = &http.Server{
 		Addr:     runnerConfig.Runner.HTTP.Address,
-		ErrorLog: log.New(os.Stderr, "HTTPRunner", log.LstdFlags),
+		ErrorLog: log.New(os.Stderr, "[Nextmv HTTPRunner] ", log.LstdFlags),
 		Handler:  runner,
 	}
 
@@ -214,6 +214,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	// configure how to turn the request and response into an IOProducer.
 	producer, err := h.handlerToIOProducer(w, req)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -222,6 +223,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 
 	err = h.genericRunner.Run(context.Background())
 	if err != nil {
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
