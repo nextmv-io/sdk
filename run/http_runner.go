@@ -20,6 +20,8 @@ type HTTPRunner[Input, Option, Solution any] interface {
 	SetLogger(*log.Logger)
 	// SetMaxParallel sets the maximum number of parallel requests.
 	SetMaxParallel(int)
+	// HandlerToIOProducer configures the IOProducer based on the http request.
+	HandlerToIOProducer(func(w http.ResponseWriter, req *http.Request) IOProducer)
 }
 
 // HTTPRunnerOption configures a HTTPRunner.
@@ -47,6 +49,17 @@ func SetMaxParallel[Input, Option, Solution any](maxParallel int) func(
 ) {
 	return func(r HTTPRunner[Input, Option, Solution]) {
 		r.SetMaxParallel(maxParallel)
+	}
+}
+
+// HandlerToIOProducer configures the IOProducer based on the http request.
+func HandlerToIOProducer[Input, Option, Solution any](
+	f func(w http.ResponseWriter, req *http.Request) IOProducer,
+) func(
+	HTTPRunner[Input, Option, Solution],
+) {
+	return func(r HTTPRunner[Input, Option, Solution]) {
+		r.HandlerToIOProducer(f)
 	}
 }
 
@@ -82,6 +95,21 @@ func NewHTTPRunner[Input, Option, Solution any](
 		Handler:  runner,
 	}
 
+	// default handler to IOProducer
+	runner.handlerToIOProducer = func(
+		w http.ResponseWriter, req *http.Request,
+	) IOProducer {
+		var reader io.Reader = req.Body
+		var writer io.Writer = w
+		return func(ctx context.Context, config any) IOData {
+			return NewIOData(
+				reader,
+				req.Header,
+				writer,
+			)
+		}
+	}
+
 	for _, option := range options {
 		option(runner)
 	}
@@ -91,8 +119,9 @@ func NewHTTPRunner[Input, Option, Solution any](
 
 type httpRunner[Input, Option, Solution any] struct {
 	*genericRunner[Input, Option, Solution]
-	httpServer  *http.Server
-	maxParallel chan struct{}
+	httpServer          *http.Server
+	maxParallel         chan struct{}
+	handlerToIOProducer func(w http.ResponseWriter, req *http.Request) IOProducer
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
@@ -105,6 +134,12 @@ func (h *httpRunner[Input, Option, Solution]) SetLogger(l *log.Logger) {
 
 func (h *httpRunner[Input, Option, Solution]) SetMaxParallel(maxParallel int) {
 	h.maxParallel = make(chan struct{}, maxParallel)
+}
+
+func (h *httpRunner[Input, Option, Solution]) HandlerToIOProducer(
+	f func(w http.ResponseWriter, req *http.Request) IOProducer,
+) {
+	h.handlerToIOProducer = f
 }
 
 func (h *httpRunner[Input, Option, Solution]) Run(
@@ -139,17 +174,9 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		break
 	}
 
-	var reader io.Reader = req.Body
-	var writer io.Writer = w
-	h.SetIOProducer(
-		func(ctx context.Context, config any) IOData {
-			return NewIOData(
-				reader,
-				req.Header,
-				writer,
-			)
-		},
-	)
+	// configure how to turn the request and response into an IOProducer.
+	h.SetIOProducer(h.handlerToIOProducer(w, req))
+
 	err := h.genericRunner.Run(context.Background())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -174,5 +201,19 @@ type HTTPRunnerConfig struct {
 			Key         string `usage:"The key file path"`
 			MaxParallel int    `default:"1" usage:"The maximum number of parallel requests"`
 		}
+		Output struct {
+			Solutions string `default:"all" usage:"Return all or last solution"`
+			Quiet     bool   `default:"false" usage:"Do not return statistics"`
+		}
 	}
+}
+
+// Quiet returns the quiet flag.
+func (c HTTPRunnerConfig) Quiet() bool {
+	return c.Runner.Output.Quiet
+}
+
+// Solutions returns the configured solutions.
+func (c HTTPRunnerConfig) Solutions() (Solutions, error) {
+	return ParseSolutions(c.Runner.Output.Solutions)
 }

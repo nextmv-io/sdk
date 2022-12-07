@@ -7,11 +7,11 @@ import (
 	"os"
 )
 
-// CliIOProducer is a test IOProducer.
+// CliIOProducer is the default IOProducer for the CliRunner.
 func CliIOProducer(_ context.Context, config any) IOData {
 	cfg, ok := config.(CliRunnerConfig)
 	if !ok {
-		log.Fatal("DefaultIOProducer is not compatible with the runner")
+		log.Fatal("CliIOProducer is not compatible with the runner")
 	}
 	reader := os.Stdin
 	if cfg.Runner.Input.Path != "" {
