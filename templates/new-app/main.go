@@ -51,7 +51,16 @@ func solver(i input, opt store.Options) (store.Solver, error) {
 		// Write a condition that checks whether the store is operationally
 		// valid.
 		return true
-	}).Format(func(s store.Store) any {
+	}).Format(format(aVariable))
+	// Return the solver using the Minimizer, Maximizer or Satisfier func.
+	return newStore.Minimizer(opt), nil
+}
+
+// format returns a function to format the solution output.
+func format(
+	aVariable store.Var[int],
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		// Define the output that you need here. E.g., you can use a map
 		// like it is shown below.
 		output := map[string]any{
@@ -59,7 +68,5 @@ func solver(i input, opt store.Options) (store.Solver, error) {
 			"value":   aVariable.Get(s),
 		}
 		return output
-	})
-	// Return the solver using the Minimizer, Maximizer or Satisfier func.
-	return newStore.Minimizer(opt), nil
+	}
 }

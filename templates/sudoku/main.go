@@ -139,18 +139,10 @@ func solver(input [9][9]int, opt store.Options) (store.Solver, error) {
 				return s2
 			},
 		)
-	}).Format(
-		func(s store.Store) any {
-			grid := [9][9]model.Domain{}
-			for i := 0; i < 9*9; i++ {
-				grid[i/9][i%9] = x.Domain(s, i)
-			}
-			return grid
-		},
-	).Validate(func(s store.Store) bool {
+	}).Validate(func(s store.Store) bool {
 		// We have a valid solution if all cells have a single value.
 		return x.Singleton(s)
-	})
+	}).Format(format(x))
 
 	return root.Satisfier(opt), nil
 }
@@ -315,4 +307,17 @@ func (a *unique) provenInfeasible(s store.Store) bool {
 // Index returns the index in the array of domains for the cell [col, row].
 func index(row, col int) int {
 	return (row * 9) + col
+}
+
+// format returns a function to format the solution output.
+func format(
+	x store.Domains,
+) func(s store.Store) any {
+	return func(s store.Store) any {
+		grid := [9][9]model.Domain{}
+		for i := 0; i < 9*9; i++ {
+			grid[i/9][i%9] = x.Domain(s, i)
+		}
+		return grid
+	}
 }
