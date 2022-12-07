@@ -1,7 +1,9 @@
 package run
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -21,7 +23,9 @@ type HTTPRunner[Input, Option, Solution any] interface {
 	// SetMaxParallel sets the maximum number of parallel requests.
 	SetMaxParallel(int)
 	// HandlerToIOProducer configures the IOProducer based on the http request.
-	HandlerToIOProducer(func(w http.ResponseWriter, req *http.Request) IOProducer)
+	HandlerToIOProducer(
+		func(w http.ResponseWriter, req *http.Request,
+		) (IOProducer, error))
 }
 
 // HTTPRunnerOption configures a HTTPRunner.
@@ -54,7 +58,7 @@ func SetMaxParallel[Input, Option, Solution any](maxParallel int) func(
 
 // HandlerToIOProducer configures the IOProducer based on the http request.
 func HandlerToIOProducer[Input, Option, Solution any](
-	f func(w http.ResponseWriter, req *http.Request) IOProducer,
+	f func(w http.ResponseWriter, req *http.Request) (IOProducer, error),
 ) func(
 	HTTPRunner[Input, Option, Solution],
 ) {
@@ -71,7 +75,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	runner := &httpRunner[Input, Option, Solution]{
 		genericRunner: &genericRunner[Input, Option, Solution]{
 			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
-			OptionDecoder: HeaderDecoder[Option],
+			OptionDecoder: NewGenericDecoder[Option](decode.JSON()),
 			Algorithm:     algorithm,
 			Encoder:       NewGenericEncoder[Solution, Option](encode.JSON()),
 		},
@@ -96,19 +100,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	}
 
 	// default handler to IOProducer
-	runner.handlerToIOProducer = func(
-		w http.ResponseWriter, req *http.Request,
-	) IOProducer {
-		var reader io.Reader = req.Body
-		var writer io.Writer = w
-		return func(ctx context.Context, config any) IOData {
-			return NewIOData(
-				reader,
-				req.Header,
-				writer,
-			)
-		}
-	}
+	runner.handlerToIOProducer = MultiPartHandlerToIOProducer
 
 	for _, option := range options {
 		option(runner)
@@ -121,7 +113,52 @@ type httpRunner[Input, Option, Solution any] struct {
 	*genericRunner[Input, Option, Solution]
 	httpServer          *http.Server
 	maxParallel         chan struct{}
-	handlerToIOProducer func(w http.ResponseWriter, req *http.Request) IOProducer
+	handlerToIOProducer func(
+		w http.ResponseWriter, req *http.Request,
+	) (IOProducer, error)
+}
+
+// MultiPartHandlerToIOProducer allows the input and option to be sent as a
+// multipart request.
+func MultiPartHandlerToIOProducer(
+	w http.ResponseWriter, req *http.Request,
+) (IOProducer, error) {
+	read_form, err := req.MultipartReader()
+	if err != nil {
+		return nil, err
+	}
+	var inputReader, optionReader io.Reader
+	for {
+		part, err_part := read_form.NextPart()
+		if err_part == io.EOF {
+			break
+		}
+		switch part.FormName() {
+		case "input":
+			buf := new(bytes.Buffer)
+			if _, err := io.Copy(buf, part); err != nil {
+				return nil, err
+			}
+			inputReader = buf
+		case "option":
+			buf := new(bytes.Buffer)
+			if _, err := io.Copy(buf, part); err != nil {
+				return nil, err
+			}
+			optionReader = buf
+		}
+	}
+	if inputReader == nil {
+		return nil, errors.New("input not found")
+	}
+	var writer io.Writer = w
+	return func(ctx context.Context, config any) IOData {
+		return NewIOData(
+			inputReader,
+			optionReader,
+			writer,
+		)
+	}, nil
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
@@ -137,7 +174,7 @@ func (h *httpRunner[Input, Option, Solution]) SetMaxParallel(maxParallel int) {
 }
 
 func (h *httpRunner[Input, Option, Solution]) HandlerToIOProducer(
-	f func(w http.ResponseWriter, req *http.Request) IOProducer,
+	f func(w http.ResponseWriter, req *http.Request) (IOProducer, error),
 ) {
 	h.handlerToIOProducer = f
 }
@@ -175,11 +212,18 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	}
 
 	// configure how to turn the request and response into an IOProducer.
-	h.SetIOProducer(h.handlerToIOProducer(w, req))
-
-	err := h.genericRunner.Run(context.Background())
+	producer, err := h.handlerToIOProducer(w, req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	h.SetIOProducer(producer)
+
+	err = h.genericRunner.Run(context.Background())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 

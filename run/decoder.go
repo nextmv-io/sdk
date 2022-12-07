@@ -10,8 +10,10 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
-// NewGenericDecoder returns a new InputDecoder that decodes the input.
-func NewGenericDecoder[Input any](decoder decode.Decoder) InputDecoder[Input] {
+// NewGenericDecoder returns a new generic decoder.
+func NewGenericDecoder[Input any](
+	decoder decode.Decoder,
+) Decoder[Input] {
 	dec := genericDecoder[Input]{decoder}
 	return dec.Decoder
 }
@@ -20,7 +22,7 @@ type genericDecoder[Input any] struct {
 	decoder decode.Decoder
 }
 
-// GenericDecoder is a Decoder that decodes a json into a struct.
+// GenericDecoder is an InputDecoder that decodes a json into a struct.
 func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {
@@ -52,8 +54,8 @@ func (g *genericDecoder[Input]) Decoder(
 }
 
 // NoopOptionsDecoder is a Decoder that returns the option as is.
-func NoopOptionsDecoder[Input any](
-	_ context.Context, _ any, input Input,
-) (Input, error) {
-	return input, nil
+func NoopOptionsDecoder[Option any](
+	_ context.Context, _ any,
+) (option Option, err error) {
+	return option, nil
 }

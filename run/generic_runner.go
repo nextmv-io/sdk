@@ -10,8 +10,8 @@ import (
 // NewGenericRunner creates a new one-off runner.
 func NewGenericRunner[Input, Option, Solution any](
 	ioHandler IOProducer,
-	inputDecoder InputDecoder[Input],
-	optionDecoder OptionDecoder[Option],
+	inputDecoder Decoder[Input],
+	optionDecoder Decoder[Option],
 	handler Algorithm[Input, Option, Solution],
 	encoder Encoder[Solution, Option],
 ) Runner[Input, Option, Solution] {
@@ -26,8 +26,8 @@ func NewGenericRunner[Input, Option, Solution any](
 
 type genericRunner[Input, Option, Solution any] struct {
 	IOProducer    IOProducer
-	InputDecoder  InputDecoder[Input]
-	OptionDecoder OptionDecoder[Option]
+	InputDecoder  Decoder[Input]
+	OptionDecoder Decoder[Option]
 	Algorithm     Algorithm[Input, Option, Solution]
 	Encoder       Encoder[Solution, Option]
 	runnerConfig  any
@@ -112,12 +112,16 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 		return retErr
 	}
 
-	// decode option
-	r.decodedOption, retErr = r.OptionDecoder(
-		context, ioData.Option(), r.decodedOption,
-	)
-	if retErr != nil {
-		return retErr
+	// use options configured in runner via flags and environment variables
+	decodedOption := r.decodedOption
+	// decode option if provided
+	if ioData.Option() != nil {
+		decodedOption, retErr = r.OptionDecoder(
+			context, ioData.Option(),
+		)
+		if retErr != nil {
+			return retErr
+		}
 	}
 
 	// run algorithm
@@ -126,7 +130,7 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	go func() {
 		defer close(solutions)
 		defer close(errs)
-		retErr = r.Algorithm(context, decodedInput, r.decodedOption, solutions)
+		retErr = r.Algorithm(context, decodedInput, decodedOption, solutions)
 		if retErr != nil {
 			errs <- retErr
 			return
@@ -135,7 +139,7 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 
 	// encode solutions
 	retErr = r.Encoder(
-		context, solutions, ioData.Writer(), r.runnerConfig, r.decodedOption,
+		context, solutions, ioData.Writer(), r.runnerConfig, decodedOption,
 	)
 	if retErr != nil {
 		return retErr
@@ -165,13 +169,13 @@ func (r *genericRunner[Input, Option, Solution]) SetIOProducer(
 }
 
 func (r *genericRunner[Input, Option, Solution]) SetInputDecoder(
-	decoder InputDecoder[Input],
+	decoder Decoder[Input],
 ) {
 	r.InputDecoder = decoder
 }
 
 func (r *genericRunner[Input, Option, Solution]) SetOptionDecoder(
-	decoder OptionDecoder[Option],
+	decoder Decoder[Option],
 ) {
 	r.OptionDecoder = decoder
 }

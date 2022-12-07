@@ -9,9 +9,9 @@ type Runner[Input, Option, Solution any] interface {
 	// SetIOProducer sets the ioProducer of a runner.
 	SetIOProducer(IOProducer)
 	// SetInputDecoder sets the inputDecoder of a runner.
-	SetInputDecoder(InputDecoder[Input])
+	SetInputDecoder(Decoder[Input])
 	// SetOptionDecoder sets the optionDecoder of a runner.
-	SetOptionDecoder(OptionDecoder[Option])
+	SetOptionDecoder(Decoder[Option])
 	// SetAlgorithm sets the algorithm of a runner.
 	SetAlgorithm(Algorithm[Input, Option, Solution])
 	// SetEncoder sets the encoder of a runner.
@@ -21,13 +21,8 @@ type Runner[Input, Option, Solution any] interface {
 // IOProducer is a function that produces the input, option and writer.
 type IOProducer func(context.Context, any) IOData
 
-// InputDecoder is a function that decodes a reader into a struct.
-type InputDecoder[Input any] func(context.Context, any) (Input, error)
-
-// OptionDecoder is a function that decodes a reader into a struct.
-type OptionDecoder[Option any] func(
-	context.Context, any, Option,
-) (Option, error)
+// Decoder is a function that decodes a reader into a struct.
+type Decoder[Input any] func(context.Context, any) (Input, error)
 
 // Algorithm is a function that runs an algorithm.
 type Algorithm[Input, Option, Solution any] func(

@@ -11,7 +11,7 @@ type RunnerOption[Input, Option, Solution any] func(
 )
 
 // InputDecode sets the decoder of a runner.
-func InputDecode[Input, Option, Solution any](i InputDecoder[Input]) func(
+func InputDecode[Input, Option, Solution any](i Decoder[Input]) func(
 	Runner[Input, Option, Solution],
 ) {
 	return func(r Runner[Input, Option, Solution]) { r.SetInputDecoder(i) }
@@ -30,7 +30,7 @@ func Decode[Input any, Decoder decode.Decoder](
 }
 
 // OptionDecode sets the options decoder of a runner.
-func OptionDecode[Input, Option, Solution any](o OptionDecoder[Option]) func(
+func OptionDecode[Input, Option, Solution any](o Decoder[Option]) func(
 	Runner[Input, Option, Solution],
 ) {
 	return func(r Runner[Input, Option, Solution]) { r.SetOptionDecoder(o) }
