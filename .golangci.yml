@@ -233,5 +233,6 @@ issues:
       text: newDeref
     # Deactivate gocyclo for CustomEncoder in run.go
     - path: run/encoder\.go
+      linters:
         - gocyclo
       source: ^func \(g \*genericEncoder.*$
