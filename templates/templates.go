@@ -74,6 +74,19 @@ var (
 	//go:embed mip-meal-allocation/README.md
 	MipMealAllocationReadme string
 
+	// MipIncentiveAllocationMain is the main.go file in the
+	// mip-incentive-allocation template.
+	//go:embed mip-incentive-allocation/main.go
+	MipIncentiveAllocationMain string
+	// MipIncentiveAllocationInput is the input.json file in the
+	// mip-incentive-allocation template.
+	//go:embed mip-incentive-allocation/input.json
+	MipIncentiveAllocationInput string
+	// MipIncentiveAllocationReadme is the README.md file in the
+	// mip-incentive-allocation template.
+	//go:embed mip-incentive-allocation/README.md
+	MipIncentiveAllocationReadme string
+
 	// CloudRoutingMain is the main.go file in the cloud-routing template.
 	//go:embed cloud-routing/main.go
 	CloudRoutingMain string
