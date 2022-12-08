@@ -3,6 +3,7 @@
 package main
 
 import (
+	"log"
 	"math"
 
 	"github.com/nextmv-io/sdk/mip"
@@ -15,7 +16,10 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving a incentive allocation problem.
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // incentiveAllocationProblem describes the needed input data to run the model.
