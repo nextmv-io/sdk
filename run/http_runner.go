@@ -1,9 +1,7 @@
 package run
 
 import (
-	"bytes"
 	"context"
-	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -75,7 +73,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	runner := &httpRunner[Input, Option, Solution]{
 		genericRunner: &genericRunner[Input, Option, Solution]{
 			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
-			OptionDecoder: NewGenericDecoder[Option](decode.JSON()),
+			OptionDecoder: QueryParamDecoder[Option],
 			Algorithm:     algorithm,
 			Encoder:       NewGenericEncoder[Solution, Option](encode.JSON()),
 		},
@@ -100,7 +98,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	}
 
 	// default handler to IOProducer
-	runner.handlerToIOProducer = MultiPartHandlerToIOProducer
+	runner.handlerToIOProducer = DefaultHandlerToIOProducer
 
 	for _, option := range options {
 		option(runner)
@@ -118,44 +116,16 @@ type httpRunner[Input, Option, Solution any] struct {
 	) (IOProducer, error)
 }
 
-// MultiPartHandlerToIOProducer allows the input and option to be sent as a
-// multipart request.
-func MultiPartHandlerToIOProducer(
+// DefaultHandlerToIOProducer allows the input and option to be sent as body and
+// query parameters.
+func DefaultHandlerToIOProducer(
 	w http.ResponseWriter, req *http.Request,
 ) (IOProducer, error) {
-	readForm, err := req.MultipartReader()
-	if err != nil {
-		return nil, err
-	}
-	var inputReader, optionReader io.Reader
-	for {
-		part, errPart := readForm.NextPart()
-		if errPart == io.EOF {
-			break
-		}
-		switch part.FormName() {
-		case "input":
-			buf := new(bytes.Buffer)
-			if _, err := io.Copy(buf, part); err != nil {
-				return nil, err
-			}
-			inputReader = buf
-		case "option":
-			buf := new(bytes.Buffer)
-			if _, err := io.Copy(buf, part); err != nil {
-				return nil, err
-			}
-			optionReader = buf
-		}
-	}
-	if inputReader == nil {
-		return nil, errors.New("input not found")
-	}
 	var writer io.Writer = w
 	return func(ctx context.Context, config any) IOData {
 		return NewIOData(
-			inputReader,
-			optionReader,
+			req.Body,
+			req.URL.Query(),
 			writer,
 		)
 	}, nil
@@ -224,14 +194,6 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-}
-
-// HeaderDecoder is a Decoder that decodes a header into a struct.
-func HeaderDecoder[Option any](
-	context context.Context, header any, option Option,
-) (Option, error) {
-	// TODO: transform headers to output
-	return option, nil
 }
 
 // HTTPRunnerConfig is the configuration of the HTTPRunner.

@@ -6,7 +6,9 @@ import (
 	"context"
 	"errors"
 	"io"
+	"net/url"
 
+	"github.com/gorilla/schema"
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
@@ -58,4 +60,24 @@ func NoopOptionsDecoder[Option any](
 	_ context.Context, _ any,
 ) (option Option, err error) {
 	return option, nil
+}
+
+// QueryParamDecoder is a Decoder that returns option from query params.
+func QueryParamDecoder[Option any](
+	_ context.Context, reader any,
+) (option Option, err error) {
+	urlValues, ok := reader.(url.Values)
+	if !ok {
+		return option, errors.New(
+			"QueryParamDecoder is not compatible with configured IOProducer",
+		)
+	}
+
+	if len(urlValues) == 0 {
+		return option, nil
+	}
+
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(&option, urlValues)
+	return option, err
 }

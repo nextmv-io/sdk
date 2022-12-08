@@ -3,6 +3,7 @@ package run
 import (
 	"context"
 	"os"
+	"reflect"
 	"runtime"
 	"runtime/pprof"
 )
@@ -115,13 +116,14 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	// use options configured in runner via flags and environment variables
 	decodedOption := r.decodedOption
 	// decode option if provided
-	if ioData.Option() != nil {
-		decodedOption, retErr = r.OptionDecoder(
-			context, ioData.Option(),
-		)
-		if retErr != nil {
-			return retErr
-		}
+	tempOption, err := r.OptionDecoder(context, ioData.Option())
+	if err != nil {
+		return err
+	}
+	var defaultOption Option
+	// if option is not default, use it
+	if !reflect.DeepEqual(tempOption, defaultOption) {
+		decodedOption = tempOption
 	}
 
 	// run algorithm
