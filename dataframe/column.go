@@ -116,10 +116,10 @@ type StringColumn interface {
 	Equals(value string) Filter
 
 	// Value return the value at row, panics if out of bound.
-	Value(df DataFrame, row int) *string
+	Value(df DataFrame, row int) string
 
 	// Values returns all the values in the column.
-	Values(df DataFrame) []*string
+	Values(df DataFrame) []string
 }
 
 var (
