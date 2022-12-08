@@ -205,6 +205,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		// No free slot, so we immediately return an error.
 		http.Error(w, "max number of parallel requests exceeded",
 			http.StatusTooManyRequests)
+		return
 	}
 
 	// configure how to turn the request and response into an IOProducer.
