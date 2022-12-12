@@ -1,9 +1,7 @@
 package run
 
 import (
-	"bytes"
 	"context"
-	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -77,6 +75,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	options ...HTTPRunnerOption[Input, Option, Solution],
 ) HTTPRunner[Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
+		// the IOProducer will be dynamically set by the http request handler.
 		genericRunner: genericRunner[Input, Option, Solution]{
 			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
 			OptionDecoder: QueryParamDecoder[Option],
@@ -118,94 +117,6 @@ type httpRunner[Input, Option, Solution any] struct {
 	httpServer         *http.Server
 	maxParallel        chan struct{}
 	httpRequestHandler HTTPRequestHandler
-}
-
-// NewHTTPRequestHandler allows the input and option to be sent as body and
-// query parameters.
-func NewHTTPRequestHandler(
-	w http.ResponseWriter, req *http.Request,
-) (Callback, IOProducer, error) {
-	return nil, func(ctx context.Context, config any) IOData {
-		return NewIOData(
-			req.Body,
-			req.URL.Query(),
-			w,
-		)
-	}, nil
-}
-
-// AsyncHTTPRequestHandlerOption configures an AsyncHTTPRequestHandler.
-type AsyncHTTPRequestHandlerOption func(*asyncHTTPHandler)
-
-// CallbackURL sets a default callback url.
-func CallbackURL(url string) AsyncHTTPRequestHandlerOption {
-	return func(h *asyncHTTPHandler) { h.callbackURL = url }
-}
-
-// RequestOverride sets whether to allow the callback url to be overridden by
-// the request header (callback_url).
-func RequestOverride(allow bool) AsyncHTTPRequestHandlerOption {
-	return func(h *asyncHTTPHandler) { h.requestOverride = allow }
-}
-
-// NewAsyncHTTPRequestHandler creates a new HTTPRequestHandler.
-func NewAsyncHTTPRequestHandler(
-	options ...AsyncHTTPRequestHandlerOption,
-) HTTPRequestHandler {
-	handler := &asyncHTTPHandler{
-		httpClient:      http.DefaultClient,
-		requestOverride: true,
-	}
-	for _, option := range options {
-		option(handler)
-	}
-	return handler.Handler
-}
-
-type asyncHTTPHandler struct {
-	httpClient      *http.Client
-	callbackURL     string
-	requestOverride bool
-}
-
-func (a asyncHTTPHandler) Handler(
-	_ http.ResponseWriter, req *http.Request,
-) (Callback, IOProducer, error) {
-	callbackURL := a.callbackURL
-	if a.requestOverride {
-		headerCBURL := req.Header.Get("callback_url")
-		if headerCBURL != "" {
-			callbackURL = headerCBURL
-		}
-		if callbackURL == "" {
-			return nil, nil, errors.New(
-				"callback_url not configured and not found in header",
-			)
-		}
-	} else if callbackURL == "" {
-		return nil, nil, errors.New("callback_url not configured")
-	}
-
-	buf := new(bytes.Buffer)
-	callbackFunc := func() (err error) {
-		resp, err := a.httpClient.Post(callbackURL, "application/json", buf)
-		if err != nil {
-			return err
-		}
-		defer func() {
-			if cerr := resp.Body.Close(); cerr != nil {
-				err = cerr
-			}
-		}()
-		return err
-	}
-	return callbackFunc, func(ctx context.Context, config any) IOData {
-		return NewIOData(
-			req.Body,
-			req.URL.Query(),
-			buf,
-		)
-	}, nil
 }
 
 func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
@@ -296,31 +207,4 @@ func handleError(async bool, err error, w http.ResponseWriter) {
 	if !async {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-// HTTPRunnerConfig is the configuration of the HTTPRunner.
-type HTTPRunnerConfig struct {
-	Runner struct {
-		Log  *log.Logger
-		HTTP struct {
-			Address     string `default:":9000" usage:"The host address"`
-			Certificate string `usage:"The certificate file path"`
-			Key         string `usage:"The key file path"`
-			MaxParallel int    `default:"1" usage:"The max number of requests"`
-		}
-		Output struct {
-			Solutions string `default:"all" usage:"Return all or last solution"`
-			Quiet     bool   `default:"false" usage:"Do not return statistics"`
-		}
-	}
-}
-
-// Quiet returns the quiet flag.
-func (c HTTPRunnerConfig) Quiet() bool {
-	return c.Runner.Output.Quiet
-}
-
-// Solutions returns the configured solutions.
-func (c HTTPRunnerConfig) Solutions() (Solutions, error) {
-	return ParseSolutions(c.Runner.Output.Solutions)
 }
