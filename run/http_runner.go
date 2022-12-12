@@ -134,23 +134,56 @@ func NewHTTPRequestHandler(
 	}, nil
 }
 
+// AsyncHTTPRequestHandlerOption configures an AsyncHTTPRequestHandler.
+type AsyncHTTPRequestHandlerOption func(*asyncHTTPHandler)
+
+// CallbackURL sets a default callback url.
+func CallbackURL(url string) AsyncHTTPRequestHandlerOption {
+	return func(h *asyncHTTPHandler) { h.callbackURL = url }
+}
+
+// RequestOverride sets whether to allow the callback url to be overridden by
+// the request header (callback_url).
+func RequestOverride(allow bool) AsyncHTTPRequestHandlerOption {
+	return func(h *asyncHTTPHandler) { h.requestOverride = allow }
+}
+
 // NewAsyncHTTPRequestHandler creates a new HTTPRequestHandler.
-func NewAsyncHTTPRequestHandler(httpClient *http.Client) HTTPRequestHandler {
-	return asyncHTTPHandler{
-		httpClient: httpClient,
-	}.Handler
+func NewAsyncHTTPRequestHandler(
+	options ...AsyncHTTPRequestHandlerOption,
+) HTTPRequestHandler {
+	handler := &asyncHTTPHandler{
+		httpClient:      http.DefaultClient,
+		requestOverride: true,
+	}
+	for _, option := range options {
+		option(handler)
+	}
+	return handler.Handler
 }
 
 type asyncHTTPHandler struct {
-	httpClient *http.Client
+	httpClient      *http.Client
+	callbackURL     string
+	requestOverride bool
 }
 
 func (a asyncHTTPHandler) Handler(
 	_ http.ResponseWriter, req *http.Request,
 ) (Callback, IOProducer, error) {
-	callbackURL := req.Header.Get("callback_url")
-	if callbackURL == "" {
-		return nil, nil, errors.New("callback_url not found in header")
+	callbackURL := a.callbackURL
+	if a.requestOverride {
+		headerCBURL := req.Header.Get("callback_url")
+		if headerCBURL != "" {
+			callbackURL = headerCBURL
+		}
+		if callbackURL == "" {
+			return nil, nil, errors.New(
+				"callback_url not configured and not found in header",
+			)
+		}
+	} else if callbackURL == "" {
+		return nil, nil, errors.New("callback_url not configured")
 	}
 
 	buf := new(bytes.Buffer)
