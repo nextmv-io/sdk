@@ -7,4 +7,7 @@ require (
 	github.com/itzg/go-flagsfiller v1.9.1
 )
 
-require github.com/iancoleman/strcase v0.2.0 // indirect
+require (
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/iancoleman/strcase v0.2.0 // indirect
+)

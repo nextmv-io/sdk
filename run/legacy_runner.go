@@ -25,6 +25,6 @@ func Run[Input any](solver func(
 		}
 		return nil
 	}
-	runner := CliRunner(algorithm, options...)
+	runner := NewCLIRunner(algorithm, options...)
 	return runner.Run(context.Background())
 }

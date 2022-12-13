@@ -22,8 +22,8 @@ type meta[Options any] struct {
 	Store   string  `json:"store"`
 }
 
-// NewGenericEncoder returns a new Encoder that encodes the solution.
-func NewGenericEncoder[Solution, Options any](
+// GenericEncoder returns a new Encoder that encodes the solution.
+func GenericEncoder[Solution, Options any](
 	encoder encode.Encoder,
 ) Encoder[Solution, Options] {
 	enc := genericEncoder[Solution, Options]{encoder}

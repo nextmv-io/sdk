@@ -7,6 +7,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/nextmv-io/sdk/run/decode"
 	"github.com/nextmv-io/sdk/run/encode"
 )
@@ -25,7 +26,7 @@ type HTTPRunner[Input, Option, Solution any] interface {
 }
 
 // Callback is a function that is called after the request is processed.
-type Callback func() error
+type Callback func(string) error
 
 // HTTPRequestHandler is a function that handles an http request.
 type HTTPRequestHandler func(
@@ -77,10 +78,10 @@ func NewHTTPRunner[Input, Option, Solution any](
 	runner := &httpRunner[Input, Option, Solution]{
 		// the IOProducer will be dynamically set by the http request handler.
 		genericRunner: genericRunner[Input, Option, Solution]{
-			InputDecoder:  NewGenericDecoder[Input](decode.JSON()),
+			InputDecoder:  GenericDecoder[Input](decode.JSON()),
 			OptionDecoder: QueryParamDecoder[Option],
 			Algorithm:     algorithm,
-			Encoder:       NewGenericEncoder[Solution, Option](encode.JSON()),
+			Encoder:       GenericEncoder[Solution, Option](encode.JSON()),
 		},
 	}
 
@@ -172,7 +173,15 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		// configure how to turn the request and response into an IOProducer.
 		callbackFunc, producer, err := h.httpRequestHandler(w, req)
 		async := callbackFunc != nil
+		// generate a new requestID
+		requestID := uuid.New().String()
 		if async {
+			// write the guid to the response.
+			_, err = w.Write([]byte(requestID))
+			if err != nil {
+				handleError(async, err, w)
+				return
+			}
 			wg.Done()
 		} else {
 			defer wg.Done()
@@ -192,7 +201,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 
 		// if the request is async, call the callbackFunc.
 		if async {
-			err = callbackFunc()
+			err = callbackFunc(requestID)
 			if err != nil {
 				handleError(async, err, w)
 				return

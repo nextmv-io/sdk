@@ -9,7 +9,7 @@ import (
 
 // CliIOProducer is the default IOProducer for the CliRunner.
 func CliIOProducer(_ context.Context, config any) IOData {
-	cfg, ok := config.(CliRunnerConfig)
+	cfg, ok := config.(CLIRunnerConfig)
 	if !ok {
 		log.Fatal("CliIOProducer is not compatible with the runner")
 	}

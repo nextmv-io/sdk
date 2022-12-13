@@ -25,7 +25,7 @@ func Decode[Input any, Decoder decode.Decoder](
 	Runner[Input, store.Options, store.Solution],
 ) {
 	return InputDecode[Input, store.Options, store.Solution](
-		NewGenericDecoder[Input](d),
+		GenericDecoder[Input](d),
 	)
 }
 

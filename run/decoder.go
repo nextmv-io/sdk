@@ -12,8 +12,8 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
-// NewGenericDecoder returns a new generic decoder.
-func NewGenericDecoder[Input any](
+// GenericDecoder returns a new generic decoder.
+func GenericDecoder[Input any](
 	decoder decode.Decoder,
 ) Decoder[Input] {
 	dec := genericDecoder[Input]{decoder}

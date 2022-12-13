@@ -27,8 +27,8 @@ type SolutionLimiter interface {
 	Solutions() (Solutions, error)
 }
 
-// CliRunnerConfig is the configuration of the  CliRunner.
-type CliRunnerConfig struct {
+// CLIRunnerConfig is the configuration of the  CliRunner.
+type CLIRunnerConfig struct {
 	Runner struct {
 		Input struct {
 			Path string `usage:"The input file path"`
@@ -46,27 +46,27 @@ type CliRunnerConfig struct {
 }
 
 // OutputPath returns the output path.
-func (c CliRunnerConfig) OutputPath() string {
+func (c CLIRunnerConfig) OutputPath() string {
 	return c.Runner.Output.Path
 }
 
 // Quiet returns the quiet flag.
-func (c CliRunnerConfig) Quiet() bool {
+func (c CLIRunnerConfig) Quiet() bool {
 	return c.Runner.Output.Quiet
 }
 
 // CPUProfilePath returns the CPU profile path.
-func (c CliRunnerConfig) CPUProfilePath() string {
+func (c CLIRunnerConfig) CPUProfilePath() string {
 	return c.Runner.Profile.CPU
 }
 
 // MemoryProfilePath returns the memory profile path.
-func (c CliRunnerConfig) MemoryProfilePath() string {
+func (c CLIRunnerConfig) MemoryProfilePath() string {
 	return c.Runner.Profile.Memory
 }
 
 // Solutions returns the configured solutions.
-func (c CliRunnerConfig) Solutions() (Solutions, error) {
+func (c CLIRunnerConfig) Solutions() (Solutions, error) {
 	return ParseSolutions(c.Runner.Output.Solutions)
 }
 

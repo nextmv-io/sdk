@@ -237,6 +237,3 @@ issues:
       linters:
         - gocyclo
       source: ^func \(g \*genericEncoder.*$
-    - path: run/request_handlers\.go
-      linters:
-        - noctx
