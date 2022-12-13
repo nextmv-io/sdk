@@ -60,8 +60,10 @@ jobs:
 
       - name: git clone
         uses: actions/checkout@v3
+        with:
+          lfs: true
 
-      - name: clone platform repository
+      - name: clone platform repository 
         uses: actions/checkout@v3
         with:
           repository: nextmv-io/platform
@@ -69,6 +71,7 @@ jobs:
           ref: ${{ env.LOCAL_BRANCH }}
           ssh-key: ${{ secrets.NEXTMVBOT_SSH_KEY }}
           ssh-known-hosts: ssh-keyscan github.com
+          lfs: true
 
       - name: export sdk path used in this action
         run: echo "SDK_PATH=$(pwd)" >> $GITHUB_ENV
