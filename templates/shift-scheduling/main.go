@@ -169,22 +169,6 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 		}
 
 		return !constraint.isProvenInfeasible(s)
-	}).Format(func(s store.Store) any {
-		outputShifts := make([]shift, 0, nShifts)
-		for i, v := range shifts.Slices(s) {
-			day := i/3 + 1
-			shiftType := typeMap[i%3]
-			outputShifts = append(outputShifts, shift{
-				Worker: workerID(v[0]),
-				Day:    day,
-				Type:   shiftType,
-			})
-		}
-		return output{
-			Shifts:    outputShifts,
-			Happiness: happiness.Get(s),
-			Workers:   workerCount.Get(s),
-		}
 	}).Bound(func(s store.Store) store.Bounds {
 		// In order to make the search more efficient we define bounds.
 		// Given a partial schedule, `Bounds` returns a lower and an upper bound
@@ -236,7 +220,7 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 			Lower: workerCountImportance*wcLower - happinessUpper,
 			Upper: workerCountImportance*wcUpper - happinessLower,
 		}
-	})
+	}).Format(format(nShifts, shifts, typeMap, happiness, workerCount))
 
 	return schedule.Minimizer(opts), nil
 }
@@ -347,4 +331,31 @@ func (t *breakConstraint) checkFeasible(s store.Store, w1, domain int) bool {
 		}
 	}
 	return false
+}
+
+// format returns a function to format the solution output.
+func format(
+	nShifts int,
+	shifts store.Domains,
+	typeMap [3]shiftType,
+	happiness store.Var[int],
+	workerCount store.Var[int],
+) func(s store.Store) any {
+	return func(s store.Store) any {
+		outputShifts := make([]shift, 0, nShifts)
+		for i, v := range shifts.Slices(s) {
+			day := i/3 + 1
+			shiftType := typeMap[i%3]
+			outputShifts = append(outputShifts, shift{
+				Worker: workerID(v[0]),
+				Day:    day,
+				Type:   shiftType,
+			})
+		}
+		return output{
+			Shifts:    outputShifts,
+			Happiness: happiness.Get(s),
+			Workers:   workerCount.Get(s),
+		}
+	}
 }

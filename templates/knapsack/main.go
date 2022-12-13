@@ -149,7 +149,20 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 				Lower: value.Get(s),
 				Upper: int(math.Ceil(upperBound)),
 			}
-		}).Format(func(s store.Store) any {
+		}).Format(format(trace, value, weight, input))
+
+	// We are optimizing to search for the largest value of the knapsack.
+	return knapsack.Maximizer(opts), nil
+}
+
+// format returns a function to format the solution output.
+func format(
+	trace []store.Var[bool],
+	value store.Var[int],
+	weight store.Var[int],
+	input input,
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		selectedItems := make([]item, 0, len(trace))
 		for i, v := range trace {
 			if v.Get(s) {
@@ -161,8 +174,5 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 			"value":  value.Get(s),
 			"weight": weight.Get(s),
 		}
-	})
-
-	// We are optimizing to search for the largest value of the knapsack.
-	return knapsack.Maximizer(opts), nil
+	}
 }

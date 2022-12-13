@@ -156,7 +156,19 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 		return b
 	})
 
-	root = root.Format(func(s store.Store) any {
+	root = root.Format(format(so, nrMealsVars))
+
+	// We invoke Satisfier which will result in invoking Format and
+	// report the solution
+	return root.Satisfier(opts), nil
+}
+
+// format returns a function to format the solution output.
+func format(
+	so store.Var[mip.Solution],
+	nrMealsVars map[string]mip.Int,
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		// get solution from store
 		solution := so.Get(s)
 
@@ -192,9 +204,5 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 		}
 
 		return report
-	})
-
-	// We invoke Satisfier which will result in invoking Format and
-	// report the solution
-	return root.Satisfier(opts), nil
+	}
 }

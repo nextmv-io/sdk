@@ -122,9 +122,20 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 		// write a check to test for actual validity
 		b := solution.HasValues()
 		return b
-	})
+	}).Format(format(so, x, input))
 
-	root = root.Format(func(s store.Store) any {
+	// We invoke Satisfier which will result in invoking Format and
+	// report the solution
+	return root.Satisfier(opts), nil
+}
+
+// format returns a function to format the solution output.
+func format(
+	so store.Var[mip.Solution],
+	x model.MultiMap[mip.Bool, item],
+	input input,
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		// get solution from store
 		solution := so.Get(s)
 
@@ -154,9 +165,5 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 			report["items"] = items
 		}
 		return report
-	})
-
-	// We invoke Satisfier which will result in invoking Format and
-	// report the solution
-	return root.Satisfier(opts), nil
+	}
 }
