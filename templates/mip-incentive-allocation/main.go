@@ -131,9 +131,7 @@ func solver(
 		// write a check to test for actual validity.
 		b := solution.HasValues()
 		return b
-	})
-
-	root = root.Format(format(so, input, userIncentive))
+	}).Format(format(so, userIncentive, input))
 
 	// We invoke Satisfier which will result in invoking Format and
 	// report the solution.
@@ -143,8 +141,8 @@ func solver(
 // format returns a function to format the solution output.
 func format(
 	so store.Var[mip.Solution],
-	input incentiveAllocationProblem,
 	userIncentive map[string][]mip.Var,
+	input incentiveAllocationProblem,
 ) func(s store.Store) any {
 	return func(s store.Store) any {
 		// Get solution from store.

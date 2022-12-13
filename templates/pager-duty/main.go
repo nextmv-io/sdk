@@ -196,7 +196,38 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 
 		// Balance days between users and maximize minimum happiness.
 		return sumSquares - minHappiness
-	}).Format(func(s store.Store) any {
+	}).Format(format(assignedDays, days, input))
+
+	return pagerDuty.Minimizer(opts), nil
+}
+
+// We define a min helper function to use in our Value calculations.
+func min(array []int) int {
+	min := math.MaxInt
+	for _, value := range array {
+		if min > value {
+			min = value
+		}
+	}
+	return min
+}
+
+// We define a sumSquare helper function to use in our Value calculations.
+func sumSquare(array []int) int {
+	ss := 0
+	for _, value := range array {
+		ss += value * value
+	}
+	return ss
+}
+
+// format returns a function to format the solution output.
+func format(
+	assignedDays store.Slice[int],
+	days store.Domains,
+	input input,
+) func(s store.Store) any {
+	return func(s store.Store) any {
 		// Next, we define the output format for our schedule.
 		// We want to structure our output in a way that the PagerDuty API
 		// understands.
@@ -225,27 +256,5 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 			"overrides":       overrides,
 			"min_days_worked": min(assignedDays.Slice(s)),
 		}
-	})
-
-	return pagerDuty.Minimizer(opts), nil
-}
-
-// We define a min helper function to use in our Value calculations.
-func min(array []int) int {
-	min := math.MaxInt
-	for _, value := range array {
-		if min > value {
-			min = value
-		}
 	}
-	return min
-}
-
-// We define a sumSquare helper function to use in our Value calculations.
-func sumSquare(array []int) int {
-	ss := 0
-	for _, value := range array {
-		ss += value * value
-	}
-	return ss
 }
