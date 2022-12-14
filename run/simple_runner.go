@@ -1,11 +1,13 @@
 package run
 
-import "context"
+import (
+	"context"
+)
 
 // CLI runs the runner in a simple way returning all solutions.
 func CLI[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
-	options ...RunnerOption[Input, Option, Solution],
+	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
 ) error {
 	algorithm := func(
 		_ context.Context,

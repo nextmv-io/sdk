@@ -61,26 +61,19 @@ func SetHTTPRequestHandler[Input, Option, Solution any](
 func HTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...HTTPRunnerOption[Input, Option, Solution],
-) Runner[Input, Option, Solution] {
+) Runner[HTTPRunnerConfig, Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
 		// the IOProducer will be dynamically set by the http request handler.
-		genericRunner: genericRunner[Input, Option, Solution]{
-			InputDecoder:  GenericDecoder[Input](decode.JSON()),
-			OptionDecoder: QueryParamDecoder[Option],
-			Algorithm:     algorithm,
-			Encoder:       GenericEncoder[Solution, Option](encode.JSON()),
-		},
+		Runner: GenericRunner[HTTPRunnerConfig](
+			nil,
+			GenericDecoder[Input](decode.JSON()),
+			QueryParamDecoder[Option],
+			algorithm,
+			GenericEncoder[Solution, Option](encode.JSON()),
+		),
 	}
 
-	runnerConfig, decodedOption, err := FlagParser[
-		Option, HTTPRunnerConfig,
-	]()
-	if err != nil {
-		log.Fatal(err)
-	}
-	runner.genericRunner.runnerConfig = runnerConfig
-	runner.genericRunner.decodedOption = decodedOption
-
+	runnerConfig := runner.Runner.RunnerConfig()
 	runner.maxParallel = make(chan struct{}, runnerConfig.Runner.HTTP.MaxParallel)
 
 	// default http server
@@ -101,7 +94,7 @@ func HTTPRunner[Input, Option, Solution any](
 }
 
 type httpRunner[Input, Option, Solution any] struct {
-	genericRunner[Input, Option, Solution]
+	Runner[HTTPRunnerConfig, Input, Option, Solution]
 	httpServer         *http.Server
 	maxParallel        chan struct{}
 	httpRequestHandler HTTPRequestHandler
@@ -128,7 +121,7 @@ func (h *httpRunner[Input, Option, Solution]) setHTTPRequestHandler(
 func (h *httpRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
-	httpRunnerConfig := h.genericRunner.runnerConfig.(HTTPRunnerConfig)
+	httpRunnerConfig := h.Runner.RunnerConfig()
 	if httpRunnerConfig.Runner.HTTP.Certificate != "" ||
 		httpRunnerConfig.Runner.HTTP.Key != "" {
 		return h.httpServer.ListenAndServeTLS(
@@ -178,7 +171,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			return
 		}
 		// get a copy of the genericRunner set the IOProducer and run it.
-		genericRunner := h.genericRunner
+		genericRunner := h.Runner
 		genericRunner.SetIOProducer(producer)
 		err = genericRunner.Run(context.Background())
 		if err != nil {

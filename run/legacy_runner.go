@@ -10,7 +10,7 @@ import (
 func Run[Input any](solver func(
 	input Input, option store.Options,
 ) (store.Solver, error),
-	options ...RunnerOption[Input, store.Options, store.Solution],
+	options ...RunnerOption[CLIRunnerConfig, Input, store.Options, store.Solution],
 ) error {
 	algorithm := func(
 		ctx context.Context,

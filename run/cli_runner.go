@@ -8,24 +8,15 @@ import (
 // CLIRunner is the default CLI runner.
 func CLIRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
-	options ...RunnerOption[Input, Option, Solution],
-) Runner[Input, Option, Solution] {
-	runner := &genericRunner[Input, Option, Solution]{
-		IOProducer:    CliIOProducer,
-		InputDecoder:  GenericDecoder[Input](decode.JSON()),
-		OptionDecoder: NoopOptionsDecoder[Option],
-		Algorithm:     algorithm,
-		Encoder:       GenericEncoder[Solution, Option](encode.JSON()),
-	}
-
-	runnerConfig, decodedOption, err := FlagParser[
-		Option, CLIRunnerConfig,
-	]()
-	runner.runnerConfig = runnerConfig
-	runner.decodedOption = decodedOption
-	if err != nil {
-		panic(err)
-	}
+	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
+) Runner[CLIRunnerConfig, Input, Option, Solution] {
+	runner := GenericRunner[CLIRunnerConfig](
+		CliIOProducer,
+		GenericDecoder[Input](decode.JSON()),
+		NoopOptionsDecoder[Option],
+		algorithm,
+		GenericEncoder[Solution, Option](encode.JSON()),
+	)
 
 	for _, option := range options {
 		option(runner)

@@ -6,46 +6,60 @@ import (
 )
 
 // RunnerOption configures a Runner.
-type RunnerOption[Input, Option, Solution any] func(
-	Runner[Input, Option, Solution],
+type RunnerOption[RunnerConfig, Input, Option, Solution any] func(
+	Runner[RunnerConfig, Input, Option, Solution],
 )
 
 // InputDecode sets the decoder of a runner.
-func InputDecode[Input, Option, Solution any](i Decoder[Input]) func(
-	Runner[Input, Option, Solution],
+func InputDecode[
+	RunnerConfig, Input, Option, Solution any,
+](i Decoder[Input]) func(
+	Runner[RunnerConfig, Input, Option, Solution],
 ) {
-	return func(r Runner[Input, Option, Solution]) { r.SetInputDecoder(i) }
+	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
+		r.SetInputDecoder(i)
+	}
 }
 
 // Decode sets the decoder of a runner. This is a legacy function. Alternatively
 // use InputDecode.
-func Decode[Input any, Decoder decode.Decoder](
+func Decode[RunnerConfig, Input any, Decoder decode.Decoder](
 	d Decoder,
 ) func(
-	Runner[Input, store.Options, store.Solution],
+	Runner[RunnerConfig, Input, store.Options, store.Solution],
 ) {
-	return InputDecode[Input, store.Options, store.Solution](
+	return InputDecode[RunnerConfig, Input, store.Options, store.Solution](
 		GenericDecoder[Input](d),
 	)
 }
 
 // OptionDecode sets the options decoder of a runner.
-func OptionDecode[Input, Option, Solution any](o Decoder[Option]) func(
-	Runner[Input, Option, Solution],
+func OptionDecode[
+	RunnerConfig, Input, Option, Solution any,
+](o Decoder[Option]) func(
+	Runner[RunnerConfig, Input, Option, Solution],
 ) {
-	return func(r Runner[Input, Option, Solution]) { r.SetOptionDecoder(o) }
+	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
+		r.SetOptionDecoder(o)
+	}
 }
 
 // Encode sets the encoder of a runner.
-func Encode[Input, Option, Solution any](e Encoder[Solution, Option]) func(
-	Runner[Input, Option, Solution],
+func Encode[
+	RunnerConfig, Input, Option, Solution any,
+](e Encoder[Solution, Option]) func(
+	Runner[RunnerConfig, Input, Option, Solution],
 ) {
-	return func(r Runner[Input, Option, Solution]) { r.SetEncoder(e) }
+	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
+		r.SetEncoder(e)
+	}
 }
 
 // IOProduce sets the ioProducer of a runner.
-func IOProduce[Input, Option, Solution any](i IOProducer) func(
-	Runner[Input, Option, Solution],
+func IOProduce[RunnerConfig, Input, Option, Solution any](i IOProducer) func(
+	Runner[RunnerConfig, Input, Option, Solution],
 ) {
-	return func(r Runner[Input, Option, Solution]) { r.SetIOProducer(i) }
+	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
+		r.SetIOProducer(i)
+	}
 }

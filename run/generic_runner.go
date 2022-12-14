@@ -2,6 +2,7 @@ package run
 
 import (
 	"context"
+	"log"
 	"os"
 	"reflect"
 	"runtime"
@@ -9,33 +10,41 @@ import (
 )
 
 // GenericRunner creates a new one-off runner.
-func GenericRunner[Input, Option, Solution any](
+func GenericRunner[RunnerConfig, Input, Option, Solution any](
 	ioHandler IOProducer,
 	inputDecoder Decoder[Input],
 	optionDecoder Decoder[Option],
 	handler Algorithm[Input, Option, Solution],
 	encoder Encoder[Solution, Option],
-) Runner[Input, Option, Solution] {
-	return &genericRunner[Input, Option, Solution]{
+) Runner[RunnerConfig, Input, Option, Solution] {
+	runnerConfig, option, err := FlagParser[
+		Option, RunnerConfig,
+	]()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &genericRunner[RunnerConfig, Input, Option, Solution]{
 		IOProducer:    ioHandler,
 		InputDecoder:  inputDecoder,
 		OptionDecoder: optionDecoder,
 		Algorithm:     handler,
 		Encoder:       encoder,
+		runnerConfig:  runnerConfig,
+		defaultOption: option,
 	}
 }
 
-type genericRunner[Input, Option, Solution any] struct {
+type genericRunner[RunnerConfig, Input, Option, Solution any] struct {
 	IOProducer    IOProducer
 	InputDecoder  Decoder[Input]
 	OptionDecoder Decoder[Option]
 	Algorithm     Algorithm[Input, Option, Solution]
 	Encoder       Encoder[Solution, Option]
-	runnerConfig  any
-	decodedOption Option
+	runnerConfig  RunnerConfig
+	defaultOption Option
 }
 
-func (r *genericRunner[Input, Option, Solution]) handleCPUProfile(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) handleCPUProfile(
 	runnerConfig any,
 ) (deferFunc func() error, err error) {
 	deferFunc = func() error {
@@ -60,8 +69,8 @@ func (r *genericRunner[Input, Option, Solution]) handleCPUProfile(
 	return deferFunc, nil
 }
 
-func (r *genericRunner[Input, Option, Solution]) handleMemoryProfile(
-	runnerConfig any,
+func (r *genericRunner[RunnerConfig, Input, Option, Solution],
+) handleMemoryProfile(runnerConfig any,
 ) (deferFunc func() error, err error) {
 	deferFunc = func() error {
 		return nil
@@ -89,7 +98,7 @@ func (r *genericRunner[Input, Option, Solution]) handleMemoryProfile(
 	return deferFunc, nil
 }
 
-func (r *genericRunner[Input, Option, Solution]) Run(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	context context.Context,
 ) (retErr error) {
 	// handle CPU profile
@@ -114,7 +123,7 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	}
 
 	// use options configured in runner via flags and environment variables
-	decodedOption := r.decodedOption
+	decodedOption := r.defaultOption
 	// decode option if provided
 	tempOption, err := r.OptionDecoder(context, ioData.Option())
 	if err != nil {
@@ -164,32 +173,38 @@ func (r *genericRunner[Input, Option, Solution]) Run(
 	return <-errs
 }
 
-func (r *genericRunner[Input, Option, Solution]) SetIOProducer(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetIOProducer(
 	ioProducer IOProducer,
 ) {
 	r.IOProducer = ioProducer
 }
 
-func (r *genericRunner[Input, Option, Solution]) SetInputDecoder(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetInputDecoder(
 	decoder Decoder[Input],
 ) {
 	r.InputDecoder = decoder
 }
 
-func (r *genericRunner[Input, Option, Solution]) SetOptionDecoder(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetOptionDecoder(
 	decoder Decoder[Option],
 ) {
 	r.OptionDecoder = decoder
 }
 
-func (r *genericRunner[Input, Option, Solution]) SetAlgorithm(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetAlgorithm(
 	algorithm Algorithm[Input, Option, Solution],
 ) {
 	r.Algorithm = algorithm
 }
 
-func (r *genericRunner[Input, Option, Solution]) SetEncoder(
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetEncoder(
 	encoder Encoder[Solution, Option],
 ) {
 	r.Encoder = encoder
+}
+
+func (r *genericRunner[
+	RunnerConfig, Input, Option, Solution],
+) RunnerConfig() RunnerConfig {
+	return r.runnerConfig
 }

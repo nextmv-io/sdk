@@ -3,7 +3,7 @@ package run
 import "context"
 
 // Runner defines the interface of the runner.
-type Runner[Input, Option, Solution any] interface {
+type Runner[RunnerConfig, Input, Option, Solution any] interface {
 	// Run runs the runner.
 	Run(context.Context) error
 	// SetIOProducer sets the ioProducer of a runner.
@@ -16,6 +16,8 @@ type Runner[Input, Option, Solution any] interface {
 	SetAlgorithm(Algorithm[Input, Option, Solution])
 	// SetEncoder sets the encoder of a runner.
 	SetEncoder(Encoder[Solution, Option])
+	// RunnerConfig returns the runnerConfig of a runner.
+	RunnerConfig() RunnerConfig
 }
 
 // IOProducer is a function that produces the input, option and writer.
