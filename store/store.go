@@ -278,7 +278,7 @@ func (d Diagram) MarshalJSON() ([]byte, error) {
 type Limits struct {
 	// Time Duration.
 	Duration time.Duration
-	// Nodes reprent active Stores in the search.
+	// Nodes represent active Stores in the search.
 	Nodes int
 	// Solutions represent operationally valid Stores.
 	Solutions int
