@@ -31,7 +31,7 @@ func (g *genericDecoder[Input]) Decoder(
 	ioReader, ok := reader.(io.Reader)
 	if !ok {
 		return input, errors.New(
-			"JsonDecoder is not compatible with configured IOProducer",
+			"Decoder is not compatible with configured IOProducer",
 		)
 	}
 
