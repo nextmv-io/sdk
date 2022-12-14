@@ -24,24 +24,24 @@ func GenericRunner[RunnerConfig, Input, Option, Solution any](
 		log.Fatal(err)
 	}
 	return &genericRunner[RunnerConfig, Input, Option, Solution]{
-		IOProducer:    ioHandler,
-		InputDecoder:  inputDecoder,
-		OptionDecoder: optionDecoder,
-		Algorithm:     handler,
-		Encoder:       encoder,
-		runnerConfig:  runnerConfig,
-		defaultOption: option,
+		IOProducer:       ioHandler,
+		InputDecoder:     inputDecoder,
+		OptionDecoder:    optionDecoder,
+		Algorithm:        handler,
+		Encoder:          encoder,
+		runnerConfig:     runnerConfig,
+		flagParsedOption: option,
 	}
 }
 
 type genericRunner[RunnerConfig, Input, Option, Solution any] struct {
-	IOProducer    IOProducer
-	InputDecoder  Decoder[Input]
-	OptionDecoder Decoder[Option]
-	Algorithm     Algorithm[Input, Option, Solution]
-	Encoder       Encoder[Solution, Option]
-	runnerConfig  RunnerConfig
-	defaultOption Option
+	IOProducer       IOProducer
+	InputDecoder     Decoder[Input]
+	OptionDecoder    Decoder[Option]
+	Algorithm        Algorithm[Input, Option, Solution]
+	Encoder          Encoder[Solution, Option]
+	runnerConfig     RunnerConfig
+	flagParsedOption Option
 }
 
 func (r *genericRunner[RunnerConfig, Input, Option, Solution]) handleCPUProfile(
@@ -123,7 +123,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	}
 
 	// use options configured in runner via flags and environment variables
-	decodedOption := r.defaultOption
+	decodedOption := r.flagParsedOption
 	// decode option if provided
 	tempOption, err := r.OptionDecoder(context, ioData.Option())
 	if err != nil {
