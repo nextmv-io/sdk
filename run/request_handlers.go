@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-// NewHTTPRequestHandler allows the input and option to be sent as body and
+// SyncHTTPRequestHandler allows the input and option to be sent as body and
 // query parameters.
-func NewHTTPRequestHandler(
+func SyncHTTPRequestHandler(
 	w http.ResponseWriter, req *http.Request,
 ) (Callback, IOProducer, error) {
 	return nil, func(ctx context.Context, config any) IOData {
@@ -35,8 +35,8 @@ func RequestOverride(allow bool) AsyncHTTPRequestHandlerOption {
 	return func(h *asyncHTTPHandler) { h.requestOverride = allow }
 }
 
-// NewAsyncHTTPRequestHandler creates a new HTTPRequestHandler.
-func NewAsyncHTTPRequestHandler(
+// AsyncHTTPRequestHandler creates a new HTTPRequestHandler.
+func AsyncHTTPRequestHandler(
 	options ...AsyncHTTPRequestHandlerOption,
 ) HTTPRequestHandler {
 	handler := &asyncHTTPHandler{

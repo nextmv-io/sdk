@@ -8,8 +8,8 @@ import (
 	"runtime/pprof"
 )
 
-// NewGenericRunner creates a new one-off runner.
-func NewGenericRunner[Input, Option, Solution any](
+// GenericRunner creates a new one-off runner.
+func GenericRunner[Input, Option, Solution any](
 	ioHandler IOProducer,
 	inputDecoder Decoder[Input],
 	optionDecoder Decoder[Option],

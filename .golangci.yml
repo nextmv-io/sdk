@@ -22,6 +22,7 @@ linters-settings:
         - googlemaps.github.io/maps
         - github.com/itzg/go-flagsfiller
         - github.com/gorilla/schema
+        - github.com/google/uuid
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 10

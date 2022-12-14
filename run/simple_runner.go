@@ -20,7 +20,7 @@ func CLI[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := NewCLIRunner(algorithm, options...)
+	runner := CLIRunner(algorithm, options...)
 	return runner.Run(context.Background())
 }
 
@@ -42,6 +42,6 @@ func HTTP[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := NewHTTPRunner(algorithm, options...)
+	runner := HTTPRunner(algorithm, options...)
 	return runner.Run(context.Background())
 }

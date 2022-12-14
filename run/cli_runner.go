@@ -5,8 +5,8 @@ import (
 	"github.com/nextmv-io/sdk/run/encode"
 )
 
-// NewCLIRunner is the default CLI runner.
-func NewCLIRunner[Input, Option, Solution any](
+// CLIRunner is the default CLI runner.
+func CLIRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...RunnerOption[Input, Option, Solution],
 ) Runner[Input, Option, Solution] {

@@ -12,19 +12,6 @@ import (
 	"github.com/nextmv-io/sdk/run/encode"
 )
 
-// HTTPRunner is a Runner that uses HTTP as its IO.
-type HTTPRunner[Input, Option, Solution any] interface {
-	Runner[Input, Option, Solution]
-	// SetHTTPAddr sets the address the http server listens on.
-	SetHTTPAddr(string)
-	// SetLogger sets the logger of the http server.
-	SetLogger(*log.Logger)
-	// SetMaxParallel sets the maximum number of parallel requests.
-	SetMaxParallel(int)
-	// SetHTTPRequestHandler sets the function that handles the http request.
-	SetHTTPRequestHandler(HTTPRequestHandler)
-}
-
 // Callback is a function that is called after the request is processed.
 type Callback func(string) error
 
@@ -35,46 +22,46 @@ type HTTPRequestHandler func(
 
 // HTTPRunnerOption configures a HTTPRunner.
 type HTTPRunnerOption[Input, Option, Solution any] func(
-	HTTPRunner[Input, Option, Solution],
+	*httpRunner[Input, Option, Solution],
 )
 
 // SetAddr sets the address the http server listens on.
 func SetAddr[Input, Option, Solution any](addr string) func(
-	HTTPRunner[Input, Option, Solution],
+	*httpRunner[Input, Option, Solution],
 ) {
-	return func(r HTTPRunner[Input, Option, Solution]) { r.SetHTTPAddr(addr) }
+	return func(r *httpRunner[Input, Option, Solution]) { r.setHTTPAddr(addr) }
 }
 
 // SetLogger sets the logger of the http server.
 func SetLogger[Input, Option, Solution any](l *log.Logger) func(
-	HTTPRunner[Input, Option, Solution],
+	*httpRunner[Input, Option, Solution],
 ) {
-	return func(r HTTPRunner[Input, Option, Solution]) { r.SetLogger(l) }
+	return func(r *httpRunner[Input, Option, Solution]) { r.setLogger(l) }
 }
 
 // SetMaxParallel sets the maximum number of parallel requests.
 func SetMaxParallel[Input, Option, Solution any](maxParallel int) func(
-	HTTPRunner[Input, Option, Solution],
+	*httpRunner[Input, Option, Solution],
 ) {
-	return func(r HTTPRunner[Input, Option, Solution]) {
-		r.SetMaxParallel(maxParallel)
+	return func(r *httpRunner[Input, Option, Solution]) {
+		r.setMaxParallel(maxParallel)
 	}
 }
 
 // SetHTTPRequestHandler sets the function that handles the http request.
 func SetHTTPRequestHandler[Input, Option, Solution any](
-	f HTTPRequestHandler) func(HTTPRunner[Input, Option, Solution],
+	f HTTPRequestHandler) func(*httpRunner[Input, Option, Solution],
 ) {
-	return func(r HTTPRunner[Input, Option, Solution]) {
-		r.SetHTTPRequestHandler(f)
+	return func(r *httpRunner[Input, Option, Solution]) {
+		r.setHTTPRequestHandler(f)
 	}
 }
 
-// NewHTTPRunner creates a new HTTPRunner.
-func NewHTTPRunner[Input, Option, Solution any](
+// HTTPRunner creates a new HTTPRunner.
+func HTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...HTTPRunnerOption[Input, Option, Solution],
-) HTTPRunner[Input, Option, Solution] {
+) Runner[Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
 		// the IOProducer will be dynamically set by the http request handler.
 		genericRunner: genericRunner[Input, Option, Solution]{
@@ -104,7 +91,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 	}
 
 	// default handler to IOProducer
-	runner.httpRequestHandler = NewHTTPRequestHandler
+	runner.httpRequestHandler = SyncHTTPRequestHandler
 
 	for _, option := range options {
 		option(runner)
@@ -120,19 +107,19 @@ type httpRunner[Input, Option, Solution any] struct {
 	httpRequestHandler HTTPRequestHandler
 }
 
-func (h *httpRunner[Input, Option, Solution]) SetHTTPAddr(addr string) {
+func (h *httpRunner[Input, Option, Solution]) setHTTPAddr(addr string) {
 	h.httpServer.Addr = addr
 }
 
-func (h *httpRunner[Input, Option, Solution]) SetLogger(l *log.Logger) {
+func (h *httpRunner[Input, Option, Solution]) setLogger(l *log.Logger) {
 	h.httpServer.ErrorLog = l
 }
 
-func (h *httpRunner[Input, Option, Solution]) SetMaxParallel(maxParallel int) {
+func (h *httpRunner[Input, Option, Solution]) setMaxParallel(maxParallel int) {
 	h.maxParallel = make(chan struct{}, maxParallel)
 }
 
-func (h *httpRunner[Input, Option, Solution]) SetHTTPRequestHandler(
+func (h *httpRunner[Input, Option, Solution]) setHTTPRequestHandler(
 	f HTTPRequestHandler,
 ) {
 	h.httpRequestHandler = f
