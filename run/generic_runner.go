@@ -11,7 +11,7 @@ import (
 
 // GenericRunner creates a new one-off runner.
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
-	ioHandler IOProducer,
+	ioHandler IOProducer[RunnerConfig],
 	inputDecoder Decoder[Input],
 	optionDecoder Decoder[Option],
 	handler Algorithm[Input, Option, Solution],
@@ -35,7 +35,7 @@ func GenericRunner[RunnerConfig, Input, Option, Solution any](
 }
 
 type genericRunner[RunnerConfig, Input, Option, Solution any] struct {
-	IOProducer       IOProducer
+	IOProducer       IOProducer[RunnerConfig]
 	InputDecoder     Decoder[Input]
 	OptionDecoder    Decoder[Option]
 	Algorithm        Algorithm[Input, Option, Solution]
@@ -174,7 +174,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 }
 
 func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetIOProducer(
-	ioProducer IOProducer,
+	ioProducer IOProducer[RunnerConfig],
 ) {
 	r.IOProducer = ioProducer
 }

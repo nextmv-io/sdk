@@ -11,8 +11,8 @@ import (
 // query parameters.
 func SyncHTTPRequestHandler(
 	w http.ResponseWriter, req *http.Request,
-) (Callback, IOProducer, error) {
-	return nil, func(ctx context.Context, config any) IOData {
+) (Callback, IOProducer[HTTPRunnerConfig], error) {
+	return nil, func(ctx context.Context, config HTTPRunnerConfig) IOData {
 		return NewIOData(
 			req.Body,
 			req.URL.Query(),
@@ -57,12 +57,12 @@ type asyncHTTPHandler struct {
 
 func (a asyncHTTPHandler) Handler(
 	_ http.ResponseWriter, req *http.Request,
-) (Callback, IOProducer, error) {
+) (Callback, IOProducer[HTTPRunnerConfig], error) {
 	callbackURL := a.callbackURL
 	if a.requestOverride {
-		headerCBURL := req.Header.Get("callback_url")
-		if headerCBURL != "" {
-			callbackURL = headerCBURL
+		headerCallbackURL := req.Header.Get("callback_url")
+		if headerCallbackURL != "" {
+			callbackURL = headerCallbackURL
 		}
 		if callbackURL == "" {
 			return nil, nil, errors.New(
@@ -96,7 +96,9 @@ func (a asyncHTTPHandler) Handler(
 		}()
 		return err
 	}
-	return callbackFunc, func(ctx context.Context, config any) IOData {
+	return callbackFunc, func(
+		ctx context.Context, config HTTPRunnerConfig,
+	) IOData {
 		return NewIOData(
 			req.Body,
 			req.URL.Query(),

@@ -56,7 +56,9 @@ func Encode[
 }
 
 // IOProduce sets the ioProducer of a runner.
-func IOProduce[RunnerConfig, Input, Option, Solution any](i IOProducer) func(
+func IOProduce[
+	RunnerConfig, Input, Option, Solution any,
+](i IOProducer[RunnerConfig]) func(
 	Runner[RunnerConfig, Input, Option, Solution],
 ) {
 	return func(r Runner[RunnerConfig, Input, Option, Solution]) {

@@ -18,7 +18,7 @@ type Callback func(string) error
 // HTTPRequestHandler is a function that handles an http request.
 type HTTPRequestHandler func(
 	w http.ResponseWriter, req *http.Request,
-) (Callback, IOProducer, error)
+) (Callback, IOProducer[HTTPRunnerConfig], error)
 
 // HTTPRunnerOption configures a HTTPRunner.
 type HTTPRunnerOption[Input, Option, Solution any] func(

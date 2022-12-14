@@ -10,7 +10,7 @@ func CLIRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
 ) Runner[CLIRunnerConfig, Input, Option, Solution] {
-	runner := GenericRunner[CLIRunnerConfig](
+	runner := GenericRunner(
 		CliIOProducer,
 		GenericDecoder[Input](decode.JSON()),
 		NoopOptionsDecoder[Option],
