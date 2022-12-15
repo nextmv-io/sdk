@@ -2,7 +2,7 @@ package run
 
 import "log"
 
-// HTTPRunnerConfig is the configuration of the HTTPRunner.
+// HTTPRunnerConfig defines the configuration of the HTTPRunner.
 type HTTPRunnerConfig struct {
 	Runner struct {
 		Log  *log.Logger

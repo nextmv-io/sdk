@@ -12,7 +12,9 @@ import (
 	"github.com/nextmv-io/sdk/run/encode"
 )
 
-// Callback is a function that is called after the request is processed.
+// Callback is a function that is called after the request is processed. It is
+// used to send the result asynchronously to some other service. The argument is
+// the request id.
 type Callback func(string) error
 
 // HTTPRequestHandler is a function that handles an http request.

@@ -10,7 +10,7 @@ type RunnerOption[RunnerConfig, Input, Option, Solution any] func(
 	Runner[RunnerConfig, Input, Option, Solution],
 )
 
-// InputDecode sets the decoder of a runner.
+// InputDecode sets the input decoder of a runner.
 func InputDecode[
 	RunnerConfig, Input, Option, Solution any,
 ](i Decoder[Input]) func(
@@ -55,7 +55,7 @@ func Encode[
 	}
 }
 
-// IOProduce sets the ioProducer of a runner.
+// IOProduce sets the IOProducer of a runner.
 func IOProduce[
 	RunnerConfig, Input, Option, Solution any,
 ](i IOProducer[RunnerConfig]) func(

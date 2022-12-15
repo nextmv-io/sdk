@@ -4,7 +4,8 @@ import (
 	"context"
 )
 
-// CLI runs the runner in a simple way returning all solutions.
+// CLI instantiates a CLIRunner and runs it. This is a wrapper function that
+// allows for simple usage of the CLIRunner.
 func CLI[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
@@ -26,7 +27,8 @@ func CLI[Input, Option, Solution any](solver func(
 	return runner.Run(context.Background())
 }
 
-// HTTP runs the HTTPRunner in a simple way returning all solutions.
+// HTTP instantiates an HTTPRunner and runs it. This is a wrapper function that
+// allows for simple usage of the HTTPRunner.
 func HTTP[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...HTTPRunnerOption[Input, Option, Solution],

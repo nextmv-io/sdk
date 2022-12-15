@@ -22,7 +22,8 @@ type meta[Options any] struct {
 	Store   string  `json:"store"`
 }
 
-// GenericEncoder returns a new Encoder that encodes the solution.
+// GenericEncoder returns a new Encoder that encodes the solution using the
+// given encoder.
 func GenericEncoder[Solution, Options any](
 	encoder encode.Encoder,
 ) Encoder[Solution, Options] {
@@ -34,7 +35,8 @@ type genericEncoder[Solution, Options any] struct {
 	encoder encode.Encoder
 }
 
-// GenericEncoder is an Encoder that encodes a struct.
+// Encode encodes the solution using the given encoder. If a given output path
+// ends in .gz, it will be gzipped after encoding.
 func (g *genericEncoder[Solution, Options]) Encode(
 	_ context.Context,
 	solutions <-chan Solution,

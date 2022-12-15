@@ -2,27 +2,32 @@ package run
 
 import "errors"
 
-// CPUProfiler is the interface for profiling CPU usage.
+// CPUProfiler is the interface a runner configuration can implement to return
+// the CPU profile path.
 type CPUProfiler interface {
 	CPUProfilePath() string
 }
 
-// MemoryProfiler is the interface for profiling memory usage.
+// MemoryProfiler is the interface a runner configuration can implement to
+// return the memory profile path.
 type MemoryProfiler interface {
 	MemoryProfilePath() string
 }
 
-// OutputPather is the interface for getting the output path.
+// OutputPather is the interface a runner configuration can implement to return
+// the output path.
 type OutputPather interface {
 	OutputPath() string
 }
 
-// Quieter is the interface for getting the quiet flag.
+// Quieter is the interface a runner configuration can implement to enable a
+// runner to strip metadata from the output.
 type Quieter interface {
 	Quiet() bool
 }
 
-// SolutionLimiter is the interface for getting the configured solutions.
+// SolutionLimiter is the interface a runner configuration can implement to
+// control whether all or only the last solution is returned.
 type SolutionLimiter interface {
 	Solutions() (Solutions, error)
 }

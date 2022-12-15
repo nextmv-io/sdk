@@ -24,7 +24,9 @@ type genericDecoder[Input any] struct {
 	decoder decode.Decoder
 }
 
-// GenericDecoder is an InputDecoder that decodes a json into a struct.
+// Decoder is a function that decodes the input from the reader. It uses the
+// given decoder to decode the input. If the input is gzipped, it will be
+// decoded using the gzip.reader.
 func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {

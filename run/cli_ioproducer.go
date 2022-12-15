@@ -7,7 +7,9 @@ import (
 	"os"
 )
 
-// CliIOProducer is the default IOProducer for the CliRunner.
+// CliIOProducer is the IOProducer for the CliRunner. The input and output paths
+// are used to configure the input and output readers and writers. If the paths
+// are empty, os.Stdin and os.Stdout are used.
 func CliIOProducer(_ context.Context, cfg CLIRunnerConfig) IOData {
 	reader := os.Stdin
 	if cfg.Runner.Input.Path != "" {

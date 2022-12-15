@@ -6,7 +6,8 @@ import (
 	"github.com/nextmv-io/sdk/store"
 )
 
-// Run runs the runner.
+// Run runs the runner. This is a legacy function that is kept for backwards
+// compatibility.
 func Run[Input any](solver func(
 	input Input, option store.Options,
 ) (store.Solver, error),

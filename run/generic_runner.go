@@ -9,7 +9,7 @@ import (
 	"runtime/pprof"
 )
 
-// GenericRunner creates a new one-off runner.
+// GenericRunner creates a new runner from the given components.
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
 	ioHandler IOProducer[RunnerConfig],
 	inputDecoder Decoder[Input],

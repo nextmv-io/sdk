@@ -1,6 +1,8 @@
 package run
 
-// IOData describes the data that is used in the IOProducer.
+// IOData describes the data that is used in the IOProducer. The input is the
+// source of the input data. The option is the source of the option data. The
+// writer is the destination of the output data.
 type IOData interface {
 	Input() any
 	Option() any

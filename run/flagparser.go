@@ -7,7 +7,7 @@ import (
 	"github.com/itzg/go-flagsfiller"
 )
 
-// FlagParser parses flags and env vars.
+// FlagParser parses flags and env vars and returns a runner config and options.
 func FlagParser[Option, RunnerCfg any]() (
 	runnerConfig RunnerCfg, option Option, err error,
 ) {

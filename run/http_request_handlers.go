@@ -8,7 +8,7 @@ import (
 )
 
 // SyncHTTPRequestHandler allows the input and option to be sent as body and
-// query parameters.
+// query parameters. The output is written synchronously to the response writer.
 func SyncHTTPRequestHandler(
 	w http.ResponseWriter, req *http.Request,
 ) (Callback, IOProducer[HTTPRunnerConfig], error) {
@@ -24,7 +24,8 @@ func SyncHTTPRequestHandler(
 // AsyncHTTPRequestHandlerOption configures an AsyncHTTPRequestHandler.
 type AsyncHTTPRequestHandlerOption func(*asyncHTTPHandler)
 
-// CallbackURL sets a default callback url.
+// CallbackURL sets a default callback url. This is used to send the result of
+// the algorithm to another service.
 func CallbackURL(url string) AsyncHTTPRequestHandlerOption {
 	return func(h *asyncHTTPHandler) { h.callbackURL = url }
 }
@@ -35,7 +36,8 @@ func RequestOverride(allow bool) AsyncHTTPRequestHandlerOption {
 	return func(h *asyncHTTPHandler) { h.requestOverride = allow }
 }
 
-// AsyncHTTPRequestHandler creates a new HTTPRequestHandler.
+// AsyncHTTPRequestHandler creates a new asynchronous HTTPRequestHandler. The
+// given options are used to configure the handler.
 func AsyncHTTPRequestHandler(
 	options ...AsyncHTTPRequestHandlerOption,
 ) HTTPRequestHandler {
