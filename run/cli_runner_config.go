@@ -44,7 +44,7 @@ type CLIRunnerConfig struct {
 		}
 		Output struct {
 			Path      string `usage:"The output file path"`
-			Solutions string `default:"all" usage:"{all, last}"`
+			Solutions string `default:"last" usage:"{all, last}"`
 			Quiet     bool   `default:"false" usage:"only output solutions"`
 		}
 	}
@@ -95,7 +95,7 @@ func (s Solutions) String() string {
 func ParseSolutions(s string) (Solutions, error) {
 	switch s {
 	case "":
-		return All, nil
+		return Last, nil
 	case "all":
 		return All, nil
 	case "last":
