@@ -2,9 +2,12 @@ package run
 
 import (
 	"flag"
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/itzg/go-flagsfiller"
+	"github.com/nextmv-io/sdk"
 )
 
 // FlagParser parses flags and env vars and returns a runner config and options.
@@ -30,8 +33,21 @@ func FlagParser[Option, RunnerCfg any]() (
 	if err != nil {
 		return runnerConfig, option, err
 	}
-
+	flag.Usage = usage
 	flag.Parse()
 
 	return runnerConfig, option, nil
+}
+
+func usage() {
+	fs := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	out := fs.Output()
+
+	fmt.Fprintf(
+		out,
+		"\"Nextmv Hybrid Optimization Platform (hop)\" %s\n",
+		sdk.VERSION,
+	)
+	fmt.Fprintf(out, "Usage: %s\n", os.Args[0])
+	flag.PrintDefaults()
 }
