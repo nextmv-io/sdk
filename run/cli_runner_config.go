@@ -44,8 +44,8 @@ type CLIRunnerConfig struct {
 		}
 		Output struct {
 			Path      string `usage:"The output file path"`
-			Solutions string `default:"all" usage:"Return all or last solution"`
-			Quiet     bool   `default:"false" usage:"Do not return statistics"`
+			Solutions string `default:"all" usage:"{all, last}"`
+			Quiet     bool   `default:"false" usage:"only output solutions"`
 		}
 	}
 }
