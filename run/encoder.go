@@ -17,9 +17,9 @@ type version struct {
 	Sdk string `json:"sdk"`
 }
 type meta[Options any] struct {
-	Version version `json:"version"`
-	Options Options `json:"options"`
-	Store   string  `json:"store"`
+	Version   version `json:"version"`
+	Options   Options `json:"options"`
+	Solutions string  `json:"solutions"`
 }
 
 // GenericEncoder returns a new Encoder that encodes the solution using the
