@@ -45,7 +45,7 @@ func usage() {
 
 	fmt.Fprintf(
 		out,
-		"\"Nextmv Hybrid Optimization Platform (hop)\" %s\n",
+		"\"Nextmv Hybrid Optimization Platform\" %s\n",
 		sdk.VERSION,
 	)
 	fmt.Fprintf(out, "Usage: %s\n", os.Args[0])
