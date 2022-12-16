@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
@@ -217,6 +218,14 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 			Upper: workerCountImportance*wcUpper - happinessLower,
 		}
 	}).Format(format(nShifts, shifts, typeMap, happiness, workerCount))
+
+	// If the duration limit is unset, we set it to 10s. You can configure
+	// longer solver run times here. For local runs there is no time limitation.
+	// If you want to make cloud runs for longer than 5 minutes, please contact:
+	// sales@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
 
 	return schedule.Minimizer(opts), nil
 }

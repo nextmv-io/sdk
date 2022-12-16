@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"hash/maphash"
+	"time"
 
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
@@ -14,7 +15,7 @@ func main() {
 	run.Run(solver)
 }
 
-func solver(input [9][9]int, opt store.Options) (store.Solver, error) {
+func solver(input [9][9]int, opts store.Options) (store.Solver, error) {
 	root := store.New()
 
 	// Create 81 domains, each domain has 9 possible values for each cell.
@@ -144,7 +145,15 @@ func solver(input [9][9]int, opt store.Options) (store.Solver, error) {
 		return x.Singleton(s)
 	}).Format(format(x))
 
-	return root.Satisfier(opt), nil
+	// If the duration limit is unset, we set it to 10s. You can configure
+	// longer solver run times here. For local runs there is no time limitation.
+	// If you want to make cloud runs for longer than 5 minutes, please contact:
+	// sales@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
+
+	return root.Satisfier(opts), nil
 }
 
 // Now we define some helper structs and functions.

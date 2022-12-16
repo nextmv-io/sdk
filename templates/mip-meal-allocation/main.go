@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"time"
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
@@ -153,6 +154,14 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 	})
 
 	root = root.Format(format(so, nrMealsVars))
+
+	// If the duration limit is unset, we set it to 10s. You can configure
+	// longer solver run times here. For local runs there is no time limitation.
+	// If you want to make cloud runs for longer than 5 minutes, please contact:
+	// sales@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
 
 	// We invoke Satisfier which will result in invoking Format and
 	// report the solution
