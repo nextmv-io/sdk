@@ -137,7 +137,7 @@ func solver(
 	// If the duration limit is unset, we set it to 10s. You can configure
 	// longer solver run times here. For local runs there is no time limitation.
 	// If you want to make cloud runs for longer than 5 minutes, please contact:
-	// sales@nextmv.io
+	// support@nextmv.io
 	if opts.Limits.Duration == 0 {
 		opts.Limits.Duration = 10 * time.Second
 	}
