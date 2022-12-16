@@ -148,11 +148,11 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 				Upper: int(math.Ceil(upperBound)),
 			}
 		}).Format(format(trace, value, weight, input))
-
-	// If the duration limit is unset, we set it to 10s. You can configure
-	// longer solver run times here. For local runs there is no time limitation.
-	// If you want to make cloud runs for longer than 5 minutes, please contact:
-	// support@nextmv.io
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
 	if opts.Limits.Duration == 0 {
 		opts.Limits.Duration = 10 * time.Second
 	}
