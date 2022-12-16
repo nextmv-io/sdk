@@ -139,6 +139,7 @@ func solver(
 
 	// We invoke Satisfier which will result in invoking Format and
 	// report the solution.
+	opts.Sense = store.Satisfy
 	return root.Satisfier(opts), nil
 }
 

@@ -148,6 +148,7 @@ func solver(input [9][9]int, opt store.Options) (store.Solver, error) {
 		return x.Singleton(s)
 	}).Format(format(x))
 
+	opt.Sense = store.Satisfy
 	return root.Satisfier(opt), nil
 }
 

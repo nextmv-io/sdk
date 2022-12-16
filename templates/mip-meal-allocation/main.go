@@ -158,9 +158,10 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 
 	root = root.Format(format(so, nrMealsVars))
 
-	// We invoke Satisfier which will result in invoking Format and
+	// We invoke Maximizer which will result in invoking Format and
 	// report the solution
-	return root.Satisfier(opts), nil
+	opts.Sense = store.Maximize
+	return root.Maximizer(opts), nil
 }
 
 // format returns a function to format the solution output.
