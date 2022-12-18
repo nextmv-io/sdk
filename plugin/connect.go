@@ -14,11 +14,22 @@ import (
 	"github.com/nextmv-io/sdk"
 )
 
+// Token is used to permanently inject a Token into an application.
+var Token string
+
 // Connect a symbol in a plugin to a func target.
 //
 //	var fooFunc func()
 //	plugin.Connect("sdk", "Foo", &func)
 func Connect[T any](slug string, name string, target *T) {
+	// If a token is injected, use it
+	if Token != "" {
+		err := os.Setenv("NEXTMV_BAKED_IN_TOKEN", Token)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "err setting token: %v", err)
+		}
+	}
+
 	// the two locations plugins can be found in are the current working
 	// directory and the nextmv library path
 	paths, err := potentialPluginPaths(slug)
