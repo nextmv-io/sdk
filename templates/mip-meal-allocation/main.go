@@ -160,7 +160,6 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 
 	// We invoke Maximizer which will result in invoking Format and
 	// report the solution
-	opts.Sense = store.Maximize
 	return root.Maximizer(opts), nil
 }
 

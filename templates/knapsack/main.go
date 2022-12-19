@@ -152,7 +152,6 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 		}).Format(format(trace, value, weight, input))
 
 	// We are optimizing to search for the largest value of the knapsack.
-	opts.Sense = store.Maximize
 	return knapsack.Maximizer(opts), nil
 }
 
