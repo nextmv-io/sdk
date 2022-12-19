@@ -3,6 +3,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/run"
@@ -53,7 +54,7 @@ type input struct {
 // see the [route package
 // documentation](https://pkg.go.dev/github.com/nextmv-io/sdk/route) for further
 // information on the options available to you.
-func solver(i input, opt store.Options) (store.Solver, error) {
+func solver(i input, opts store.Options) (store.Solver, error) {
 	// In case you directly expose the solver to untrusted, external input,
 	// it is advisable from a security point of view to add strong
 	// input validations before passing the data to the solver.
@@ -92,7 +93,15 @@ func solver(i input, opt store.Options) (store.Solver, error) {
 	}
 
 	// You can also fix solver options like the expansion limit below.
-	opt.Diagram.Expansion.Limit = 1
+	opts.Diagram.Expansion.Limit = 1
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
 
-	return router.Solver(opt)
+	return router.Solver(opts)
 }

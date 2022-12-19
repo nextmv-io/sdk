@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"sort"
+	"time"
 
 	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/store"
@@ -35,6 +36,7 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 	// The model works under the assumptions that the items are sorted by
 	// efficiency = value / weight i.e. the most value per weight. Hence, we
 	// sort them here.
+
 	sort.SliceStable(input.Items, func(i, j int) bool {
 		value := func(x item) float64 {
 			return float64(x.Value) / float64(x.Weight)
@@ -150,6 +152,14 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 				Upper: int(math.Ceil(upperBound)),
 			}
 		}).Format(format(trace, value, weight, input))
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
 
 	// We are optimizing to search for the largest value of the knapsack.
 	return knapsack.Maximizer(opts), nil
