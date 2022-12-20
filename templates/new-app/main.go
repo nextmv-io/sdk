@@ -2,6 +2,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/store"
 )
@@ -17,7 +19,7 @@ type input struct {
 }
 
 // solver returns a Solver for a problem.
-func solver(i input, opt store.Options) (store.Solver, error) {
+func solver(i input, opts store.Options) (store.Solver, error) {
 	// A new store is created.
 	newStore := store.New()
 
@@ -52,8 +54,17 @@ func solver(i input, opt store.Options) (store.Solver, error) {
 		// valid.
 		return true
 	}).Format(format(aVariable))
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
+
 	// Return the solver using the Minimizer, Maximizer or Satisfier func.
-	return newStore.Minimizer(opt), nil
+	return newStore.Minimizer(opts), nil
 }
 
 // format returns a function to format the solution output.
