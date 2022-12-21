@@ -59,6 +59,19 @@ func SetHTTPRequestHandler[Input, Option, Solution any](
 	}
 }
 
+// SetHTTPServer sets the http server. Note that if you want to set the address
+// or the logger of the http server you are setting through this option and you
+// want to make use of SetAddr and SetLogger, you should pass them after passing
+// this option. Alternatively you can fully configure the http server and just
+// pass it to SetHTTPServer.
+func SetHTTPServer[Input, Option, Solution any](
+	s *http.Server) func(*httpRunner[Input, Option, Solution],
+) {
+	return func(r *httpRunner[Input, Option, Solution]) {
+		r.setHTTPServer(s)
+	}
+}
+
 // HTTPRunner creates a new HTTPRunner.
 func HTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
@@ -118,6 +131,10 @@ func (h *httpRunner[Input, Option, Solution]) setHTTPRequestHandler(
 	f HTTPRequestHandler,
 ) {
 	h.httpRequestHandler = f
+}
+
+func (h *httpRunner[Input, Option, Solution]) setHTTPServer(s *http.Server) {
+	h.httpServer = s
 }
 
 func (h *httpRunner[Input, Option, Solution]) Run(
