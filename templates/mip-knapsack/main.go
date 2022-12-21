@@ -113,7 +113,7 @@ func solver(input input, opts Option) ([]Output, error) {
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	output, err := format(solution, input, x)
