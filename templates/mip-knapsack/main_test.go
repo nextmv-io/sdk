@@ -8,13 +8,6 @@ import (
 	"time"
 )
 
-type output struct {
-	Status  string  `json:"status,omitempty"`
-	Runtime string  `json:"runtime,omitempty"`
-	Value   float64 `json:"value,omitempty"`
-	Items   []item  `json:"items,omitempty"`
-}
-
 func TestTemplate(t *testing.T) {
 	// Read the input from the file.
 	input := input{}
@@ -26,23 +19,19 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Declare the solution.
-	solution, err := solver(input, Option{Duration: 5 * time.Second})
+	// Declare the output.
+	output, err := solver(input, Option{Duration: 5 * time.Second})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	b, err = json.MarshalIndent(solution, "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := output{}
+	got := output[0]
 	if err = json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
 	// Get the expected solution.
-	want := output{}
+	want := Output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)

@@ -52,7 +52,15 @@ type Option struct {
 	Duration time.Duration `json:"duration" default:"10s"`
 }
 
-func solver(input input, opts Option) ([]map[string]any, error) {
+// Output is the output of the solver.
+type Output struct {
+	Status  string  `json:"status,omitempty"`
+	Runtime string  `json:"runtime,omitempty"`
+	Items   []item  `json:"items,omitempty"`
+	Value   float64 `json:"value,omitempty"`
+}
+
+func solver(input input, opts Option) ([]Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -108,19 +116,30 @@ func solver(input input, opts Option) ([]map[string]any, error) {
 		panic(err)
 	}
 
-	report := make(map[string]any)
+	output, err := format(solution, input, x)
+	if err != nil {
+		return nil, err
+	}
 
-	report["status"] = "infeasible"
-	report["runtime"] = solution.RunTime().String()
+	return []Output{output}, nil
+}
+
+func format(
+	solution mip.Solution,
+	input input,
+	x model.MultiMap[mip.Bool, item],
+) (output Output, err error) {
+	output.Status = "infeasible"
+	output.Runtime = solution.RunTime().String()
 
 	if solution != nil && solution.HasValues() {
 		if solution.IsOptimal() {
-			report["status"] = "optimal"
+			output.Status = "optimal"
 		} else {
-			report["status"] = "suboptimal"
+			output.Status = "suboptimal"
 		}
 
-		report["value"] = solution.ObjectiveValue()
+		output.Value = solution.ObjectiveValue()
 
 		items := make([]item, 0)
 
@@ -131,10 +150,10 @@ func solver(input input, opts Option) ([]map[string]any, error) {
 				items = append(items, item)
 			}
 		}
-		report["items"] = items
+		output.Items = items
 	} else {
-		return nil, errors.New("no solution found")
+		return output, errors.New("no solution found")
 	}
 
-	return []map[string]any{report}, nil
+	return output, nil
 }
