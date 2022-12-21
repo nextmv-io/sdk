@@ -122,7 +122,7 @@ func solver(
 	}
 
 	// Set verbose level to see a more detailed output.
-	solveOptions.SetVerbosity(mip.Low)
+	solveOptions.SetVerbosity(mip.Off)
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
