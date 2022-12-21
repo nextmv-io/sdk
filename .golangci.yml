@@ -194,9 +194,6 @@ issues:
     - path: templates/cloud-routing/solver\.go
       linters:
         - gocyclo
-    - path: templates/mip-knapsack/main\.go
-      linters:
-        - gocyclo
     - path: templates/pager-duty/main\.go
       linters:
         - gocyclo
@@ -204,9 +201,6 @@ issues:
       linters:
         - gocyclo
     - path: templates/sudoku/main\.go
-      linters:
-        - gocyclo
-    - path: templates/mip-meal-allocation/main\.go
       linters:
         - gocyclo
 

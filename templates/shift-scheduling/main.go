@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
@@ -165,22 +166,6 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 		}
 
 		return !constraint.isProvenInfeasible(s)
-	}).Format(func(s store.Store) any {
-		outputShifts := make([]shift, 0, nShifts)
-		for i, v := range shifts.Slices(s) {
-			day := i/3 + 1
-			shiftType := typeMap[i%3]
-			outputShifts = append(outputShifts, shift{
-				Worker: workerID(v[0]),
-				Day:    day,
-				Type:   shiftType,
-			})
-		}
-		return output{
-			Shifts:    outputShifts,
-			Happiness: happiness.Get(s),
-			Workers:   workerCount.Get(s),
-		}
 	}).Bound(func(s store.Store) store.Bounds {
 		// In order to make the search more efficient we define bounds.
 		// Given a partial schedule, `Bounds` returns a lower and an upper bound
@@ -232,7 +217,15 @@ func solver(input schedulingProblem, opts store.Options) (store.Solver, error) {
 			Lower: workerCountImportance*wcLower - happinessUpper,
 			Upper: workerCountImportance*wcUpper - happinessLower,
 		}
-	})
+	}).Format(format(nShifts, shifts, typeMap, happiness, workerCount))
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	if opts.Limits.Duration == 0 {
+		opts.Limits.Duration = 10 * time.Second
+	}
 
 	return schedule.Minimizer(opts), nil
 }
@@ -343,4 +336,31 @@ func (t *breakConstraint) checkFeasible(s store.Store, w1, domain int) bool {
 		}
 	}
 	return false
+}
+
+// format returns a function to format the solution output.
+func format(
+	nShifts int,
+	shifts store.Domains,
+	typeMap [3]shiftType,
+	happiness store.Var[int],
+	workerCount store.Var[int],
+) func(s store.Store) any {
+	return func(s store.Store) any {
+		outputShifts := make([]shift, 0, nShifts)
+		for i, v := range shifts.Slices(s) {
+			day := i/3 + 1
+			shiftType := typeMap[i%3]
+			outputShifts = append(outputShifts, shift{
+				Worker: workerID(v[0]),
+				Day:    day,
+				Type:   shiftType,
+			})
+		}
+		return output{
+			Shifts:    outputShifts,
+			Happiness: happiness.Get(s),
+			Workers:   workerCount.Get(s),
+		}
+	}
 }
