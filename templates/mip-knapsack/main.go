@@ -42,8 +42,8 @@ type input struct {
 	WeightCapacity int    `json:"weight_capacity"`
 }
 
-// The option for the solver.
-type option struct {
+// The Option for the solver.
+type Option struct {
 	// A duration limit of 0 is treated as infinity. For cloud runs you need to
 	// set an explicit duration limit which is why it is currently set to 10s
 	// here in case no duration limit is set. For local runs there is no time
@@ -52,7 +52,7 @@ type option struct {
 	Duration time.Duration `json:"duration" default:"10s"`
 }
 
-func solver(input input, opts option) ([]map[string]any, error) {
+func solver(input input, opts Option) ([]map[string]any, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 

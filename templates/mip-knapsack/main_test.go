@@ -1,14 +1,11 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/nextmv-io/sdk/store"
 )
 
 type output struct {
@@ -25,30 +22,22 @@ func TestTemplate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := json.Unmarshal(b, &input); err != nil {
+	if err = json.Unmarshal(b, &input); err != nil {
 		t.Fatal(err)
 	}
 
-	// Declare the options.
-	opt := store.DefaultOptions()
-	opt.Limits.Duration = 5 * time.Second
-	opt.Diagram.Expansion.Limit = 1
-	opt.Limits.Solutions = 1
-
-	// Declare the solver.
-	solver, err := solver(input, opt)
+	// Declare the solution.
+	solution, err := solver(input, Option{Duration: 5 * time.Second})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Get the solution.
-	last := solver.Last(context.Background())
-	b, err = json.MarshalIndent(last.Store, "", "  ")
+	b, err = json.MarshalIndent(solution, "", "  ")
 	if err != nil {
 		t.Fatal(err)
 	}
 	got := output{}
-	if err := json.Unmarshal(b, &got); err != nil {
+	if err = json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
