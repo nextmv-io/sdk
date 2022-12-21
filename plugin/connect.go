@@ -21,13 +21,10 @@ import (
 func Connect[T any](slug string, name string, target *T) {
 	// the two locations plugins can be found in are the current working
 	// directory and the nextmv library path
-	paths, err := potentialPluginPaths(slug)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "err getting plugin paths: %v", err)
-	}
+	paths := potentialPluginPaths(slug)
 	pluginPath := ""
 	for _, path := range paths {
-		if _, err = os.Stat(path); !errors.Is(err, os.ErrNotExist) {
+		if _, err := os.Stat(path); !errors.Is(err, os.ErrNotExist) {
 			pluginPath = path
 			break
 		}
@@ -57,7 +54,7 @@ func Connect[T any](slug string, name string, target *T) {
 					Interface().(T) // any.(func(...))
 }
 
-func potentialPluginPaths(slug string) ([]string, error) {
+func potentialPluginPaths(slug string) []string {
 	// Get plugin filename we are looking for
 	filename := fmt.Sprintf(
 		"nextmv-%s-%s-%s-%s-%s%s.so",
@@ -98,5 +95,5 @@ func potentialPluginPaths(slug string) ([]string, error) {
 		}
 	}
 
-	return paths, nil
+	return paths
 }
