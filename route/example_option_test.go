@@ -1317,7 +1317,7 @@ func ExampleMultiWindows() {
 		{},
 	}
 
-	maxWaitTimes := []int{900, 0, 0, 0, 0, 0, 0, 0}
+	maxWaitTimes := []int{900, 0, 0, 0, 0, 0, 0}
 
 	// Define shifts for every vehicle
 	shifts := []route.TimeWindow{
