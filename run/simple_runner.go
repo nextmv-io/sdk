@@ -27,8 +27,8 @@ func CLI[Input, Option, Solution any](solver func(
 	return runner.Run(context.Background())
 }
 
-// HTTP instantiates an HTTPRunner and runs it. This is a wrapper function that
-// allows for simple usage of the HTTPRunner.
+// HTTP instantiates an HTTPRunner and runs it. The default port is 9000 and
+// protocol is HTTP. Pass HTTPRunnerOptions to change these settings.
 func HTTP[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...HTTPRunnerOption[Input, Option, Solution],
