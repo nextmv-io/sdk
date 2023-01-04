@@ -1,4 +1,4 @@
-// Package cli provides additional features for CLI runners.
+// Package cli provides additional features for CLIRunner.
 package cli
 
 import (
