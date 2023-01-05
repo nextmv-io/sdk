@@ -56,6 +56,6 @@ func usage() {
 		"\"Nextmv Hybrid Optimization Platform\" %s\n",
 		version,
 	)
-	fmt.Fprintf(out, "Usage: %s\n", os.Args[0])
+	fmt.Fprint(out, "Usage:\n")
 	flag.PrintDefaults()
 }
