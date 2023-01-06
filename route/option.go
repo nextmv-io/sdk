@@ -361,6 +361,7 @@ func Filter(compatible func(vehicle, location int) bool) Option {
 }
 
 var (
+	con                       = connect.NewConnector("sdk", "Route")
 	startsFunc                func([]Position) Option
 	endsFunc                  func([]Position) Option
 	capacityFunc              func([]int, []int) Option

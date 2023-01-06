@@ -192,7 +192,7 @@ The following ByPoint implementations are available.
 	HaversineByPoint: Haversine distance between two points
 	TaxicabByPoint:   Taxicab distance between two points
 
-Points may be of any dimension. If the points passed in to any of these
+Unassigned may be of any dimension. If the points passed in to any of these
 measures have differing dimensionality, they will project the lower dimension
 point into the higher dimension by appending 0s.
 
