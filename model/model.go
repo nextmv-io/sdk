@@ -17,7 +17,7 @@ const (
 // A Domain of integers.
 type Domain interface {
 	// Add values to a domain.
-	Add(...int) Domain
+	Add(v ...int) Domain
 	// AtLeast updates the domain to the subdomain of at least some value.
 	AtLeast(int) Domain
 	// AtMost updates the domain to the subdomain of at most some value.
@@ -38,6 +38,8 @@ type Domain interface {
 	Max() (int, bool)
 	// Min of a domain and a boolean indicating it is nonempty.
 	Min() (int, bool)
+	// Overlaps returns true if a domain overlaps another domain.
+	Overlaps(other Domain) bool
 	// Remove values from a domain.
 	Remove([]int) Domain
 	// Slice representation of a domain.
