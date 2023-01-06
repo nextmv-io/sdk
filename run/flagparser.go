@@ -43,18 +43,10 @@ func usage() {
 	fs := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	out := fs.Output()
 
-	version := sdk.VERSION
-
-	// internal test expectations use <<PRESENCE>> as the version so we do not
-	// have to update expectations every time the version changes
-	if ver, ok := os.LookupEnv("USE_PRESENCE"); ok && ver == "1" {
-		version = "<<PRESENCE>>"
-	}
-
 	fmt.Fprintf(
 		out,
 		"\"Nextmv Hybrid Optimization Platform\" %s\n",
-		version,
+		sdk.VERSION,
 	)
 	fmt.Fprint(out, "Usage:\n")
 	flag.PrintDefaults()

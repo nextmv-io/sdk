@@ -5,6 +5,7 @@ package sdk
 
 import (
 	_ "embed"
+	"os"
 	"runtime/debug"
 	"strings"
 )
@@ -18,6 +19,12 @@ var versionFallback string
 var VERSION = getVersion()
 
 func getVersion() string {
+	// internal test expectations use <<PRESENCE>> as the version so we do not
+	// have to update expectations every time the version changes
+	if ver, ok := os.LookupEnv("USE_PRESENCE"); ok && ver == "1" {
+		return "<<PRESENCE>>"
+	}
+
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
 		return versionFallback
