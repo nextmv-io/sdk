@@ -101,7 +101,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 func (g *genericEncoder[Solution, Options]) ContentType() string {
 	contentTyper, ok := g.encoder.(ContentTyper)
 	if !ok {
-		return "application/text"
+		return "text/plain"
 	}
 	return contentTyper.ContentType()
 }
