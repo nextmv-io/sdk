@@ -1,12 +1,10 @@
 package run
 
 import (
-	"bytes"
 	"compress/gzip"
 	"context"
 	"errors"
 	"io"
-	"reflect"
 	"strings"
 
 	"github.com/nextmv-io/sdk"
@@ -16,10 +14,10 @@ import (
 type version struct {
 	Sdk string `json:"sdk"`
 }
-type meta[Options any] struct {
-	Version   version `json:"version"`
-	Options   Options `json:"options"`
-	Solutions string  `json:"solutions"`
+type meta[Options, Solution any] struct {
+	Version   version    `json:"version"`
+	Options   Options    `json:"options"`
+	Solutions []Solution `json:"solutions"`
 }
 
 // GenericEncoder returns a new Encoder that encodes the solution using the
@@ -28,7 +26,7 @@ func GenericEncoder[Solution, Options any](
 	encoder encode.Encoder,
 ) Encoder[Solution, Options] {
 	enc := genericEncoder[Solution, Options]{encoder}
-	return enc.Encode
+	return &enc
 }
 
 type genericEncoder[Solution, Options any] struct {
@@ -46,30 +44,12 @@ func (g *genericEncoder[Solution, Options]) Encode(
 ) error {
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
-		return errors.New("JsonEncoder is not compatible with configured IOProducer")
+		return errors.New("Encoder is not compatible with configured IOProducer")
 	}
 
 	if outputPather, ok := runnerCfg.(OutputPather); ok {
 		if strings.HasSuffix(outputPather.OutputPath(), ".gz") {
 			ioWriter = gzip.NewWriter(ioWriter)
-		}
-	}
-
-	if quieter, ok := runnerCfg.(Quieter); ok && !quieter.Quiet() {
-		meta := meta[Options]{
-			Version: version{
-				Sdk: sdk.VERSION,
-			},
-			Options: options,
-		}
-		// Write version
-		buf := new(bytes.Buffer)
-		if err := g.encoder.Encode(buf, meta); err != nil {
-			return err
-		}
-		_, err := ioWriter.Write(bytes.TrimRight(buf.Bytes(), "\"}\n"))
-		if err != nil {
-			return err
 		}
 	}
 
@@ -90,54 +70,38 @@ func (g *genericEncoder[Solution, Options]) Encode(
 			solutions = tempSolutions
 		}
 	}
-
-	if err := jsonEncodeChan(g.encoder, ioWriter, solutions); err != nil {
-		return err
-	}
-
 	if quieter, ok := runnerCfg.(Quieter); ok && !quieter.Quiet() {
-		if _, err := ioWriter.Write([]byte{'}'}); err != nil {
+		m := meta[Options, Solution]{
+			Version: version{
+				Sdk: sdk.VERSION,
+			},
+			Options: options,
+		}
+		for solution := range solutions {
+			m.Solutions = append(m.Solutions, solution)
+		}
+		if err := g.encoder.Encode(ioWriter, m); err != nil {
 			return err
 		}
+
+		return nil
+	}
+
+	m := []Solution{}
+	for solution := range solutions {
+		m = append(m, solution)
+	}
+	if err := g.encoder.Encode(ioWriter, m); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func jsonEncodeChan[Encoder encode.Encoder](
-	encoder Encoder, w io.Writer, vc any,
-) (err error) {
-	cval := reflect.ValueOf(vc)
-	if _, err = w.Write([]byte{'['}); err != nil {
-		return
-	}
-	v, ok := cval.Recv()
+func (g *genericEncoder[Solution, Options]) ContentType() string {
+	contentTyper, ok := g.encoder.(ContentTyper)
 	if !ok {
-		_, err = w.Write([]byte{']'})
-		return err
+		return "application/text"
 	}
-	// create buffer & encoder only if we have a value
-	buf := new(bytes.Buffer)
-	goto Encode
-Loop:
-	if v, ok = cval.Recv(); !ok {
-		_, err = w.Write([]byte{']'})
-		return err
-	}
-	if _, err = w.Write([]byte{','}); err != nil {
-		return err
-	}
-Encode:
-	err = encoder.Encode(buf, v.Interface())
-	if err == nil {
-		_, err = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
-		if err != nil {
-			return err
-		}
-		buf.Reset()
-	}
-	if err != nil {
-		return err
-	}
-	goto Loop
+	return contentTyper.ContentType()
 }

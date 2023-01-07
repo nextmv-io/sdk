@@ -16,6 +16,8 @@ type Runner[RunnerConfig, Input, Option, Solution any] interface {
 	SetAlgorithm(Algorithm[Input, Option, Solution])
 	// SetEncoder sets the encoder of a runner.
 	SetEncoder(Encoder[Solution, Option])
+	// GetEncoder returns the encoder of a runner.
+	GetEncoder() Encoder[Solution, Option]
 	// RunnerConfig returns the runnerConfig of a runner.
 	RunnerConfig() RunnerConfig
 }
@@ -31,6 +33,14 @@ type Algorithm[Input, Option, Solution any] func(
 	context.Context, Input, Option, chan<- Solution,
 ) error
 
-// Encoder is a function that encodes a struct into a writer.
-type Encoder[Solution, Option any] func(
-	context.Context, <-chan Solution, any, any, Option) error
+// Encoder is an interface which defines the Encode function that encodes a
+// struct into a writer.
+type Encoder[Solution, Option any] interface {
+	Encode(context.Context, <-chan Solution, any, any, Option) error
+}
+
+// ContentTyper is an interface which defines the ContentType function that
+// describes the content type of the encoder.
+type ContentTyper interface {
+	ContentType() string
+}

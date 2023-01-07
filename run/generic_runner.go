@@ -149,7 +149,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	}()
 
 	// encode solutions
-	retErr = r.Encoder(
+	retErr = r.Encoder.Encode(
 		context, solutions, ioData.Writer(), r.runnerConfig, decodedOption,
 	)
 	if retErr != nil {
@@ -201,6 +201,12 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetEncoder(
 	encoder Encoder[Solution, Option],
 ) {
 	r.Encoder = encoder
+}
+
+func (r *genericRunner[
+	RunnerConfig, Input, Option, Solution,
+]) GetEncoder() Encoder[Solution, Option] {
+	return r.Encoder
 }
 
 func (r *genericRunner[

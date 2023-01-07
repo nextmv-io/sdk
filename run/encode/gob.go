@@ -18,3 +18,8 @@ type GobEncoder struct{}
 func (g GobEncoder) Encode(w io.Writer, v any) error {
 	return gob.NewEncoder(w).Encode(v)
 }
+
+// ContentType returns the content type of the encoder.
+func (g GobEncoder) ContentType() string {
+	return "application/gob"
+}

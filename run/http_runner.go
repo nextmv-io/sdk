@@ -2,6 +2,7 @@ package run
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -13,9 +14,10 @@ import (
 )
 
 // Callback is a function that is called after the request is processed. It is
-// used to send the result asynchronously to some other service. The argument is
-// the request id.
-type Callback func(string) error
+// used to send the result asynchronously to some other service. The first
+// argument is the request id. The second argument is the contentType, e.g.
+// application/json.
+type Callback func(requestID string, contentType string) error
 
 // HTTPRequestHandler is a function that handles an http request.
 type HTTPRequestHandler func(
@@ -56,6 +58,17 @@ func SetHTTPRequestHandler[Input, Option, Solution any](
 ) {
 	return func(r *httpRunner[Input, Option, Solution]) {
 		r.setHTTPRequestHandler(f)
+	}
+}
+
+// SetRunnerOption sets a runner option on the underlying runner.
+func SetRunnerOption[Input, Option, Solution any](
+	option RunnerOption[HTTPRunnerConfig, Input, Option, Solution],
+) func(
+	*httpRunner[Input, Option, Solution],
+) {
+	return func(r *httpRunner[Input, Option, Solution]) {
+		r.setRunnerOption(option)
 	}
 }
 
@@ -137,6 +150,12 @@ func (h *httpRunner[Input, Option, Solution]) setHTTPServer(s *http.Server) {
 	h.httpServer = s
 }
 
+func (h *httpRunner[Input, Option, Solution]) setRunnerOption(
+	option RunnerOption[HTTPRunnerConfig, Input, Option, Solution],
+) {
+	option(h.Runner)
+}
+
 func (h *httpRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
@@ -172,8 +191,21 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		// configure how to turn the request and response into an IOProducer.
 		callbackFunc, producer, err := h.httpRequestHandler(w, req)
 		async := callbackFunc != nil
+		if err != nil {
+			handleError(async, err, w)
+			return
+		}
 		// generate a new requestID
 		requestID := uuid.New().String()
+
+		// get content type from the encoder
+		contentTyper, ok := h.Runner.GetEncoder().(ContentTyper)
+		if !ok {
+			handleError(async,
+				errors.New("encoder does not implement ContentTyper"), w)
+			return
+		}
+
 		if async {
 			// write the guid to the response.
 			_, err = w.Write([]byte(requestID))
@@ -183,6 +215,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			}
 			wg.Done()
 		} else {
+			w.Header().Add("Content-Type", contentTyper.ContentType())
 			defer wg.Done()
 		}
 		if err != nil {
@@ -200,7 +233,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 
 		// if the request is async, call the callbackFunc.
 		if async {
-			err = callbackFunc(requestID)
+			err = callbackFunc(requestID, contentTyper.ContentType())
 			if err != nil {
 				handleError(async, err, w)
 				return

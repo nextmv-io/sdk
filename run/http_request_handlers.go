@@ -76,7 +76,7 @@ func (a asyncHTTPHandler) Handler(
 	}
 
 	buf := new(bytes.Buffer)
-	callbackFunc := func(requestID string) (err error) {
+	callbackFunc := func(requestID, contentType string) (err error) {
 		// Create a new request
 		callbackReq, err := http.NewRequestWithContext(
 			context.Background(), "POST", callbackURL, buf,
@@ -86,6 +86,8 @@ func (a asyncHTTPHandler) Handler(
 		}
 		// Set the GUID header
 		callbackReq.Header.Set("request_id", requestID)
+		// Set the encoding header
+		callbackReq.Header.Set("Content-Type", contentType)
 		// Send the request
 		resp, err := a.httpClient.Do(callbackReq)
 		if err != nil {

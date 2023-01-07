@@ -18,3 +18,8 @@ type JSONEncoder struct{}
 func (j JSONEncoder) Encode(w io.Writer, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
+
+// ContentType returns the content type of the encoder.
+func (j JSONEncoder) ContentType() string {
+	return "application/json"
+}
