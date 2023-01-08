@@ -2,6 +2,8 @@ package run
 
 import (
 	"context"
+
+	"github.com/nextmv-io/sdk/store"
 )
 
 // CLI instantiates a CLIRunner and runs it. This is a wrapper function that
@@ -48,4 +50,18 @@ func HTTP[Input, Option, Solution any](solver func(
 	}
 	runner := HTTPRunner(algorithm, options...)
 	return runner.Run(context.Background())
+}
+
+// Unwrap is a helper function that unwraps a (store.Solver,error) into
+// ([]store.Solution, error).
+func Unwrap(
+	solver store.Solver, err error,
+) (solutions []store.Solution, retErr error) {
+	if err != nil {
+		return nil, err
+	}
+	for solution := range solver.All(context.Background()) {
+		solutions = append(solutions, solution)
+	}
+	return solutions, nil
 }
