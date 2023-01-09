@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -100,11 +101,17 @@ func (a asyncHTTPHandler) Handler(
 		}()
 		return err
 	}
+
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	return callbackFunc, func(
 		ctx context.Context, config HTTPRunnerConfig,
 	) IOData {
 		return NewIOData(
-			req.Body,
+			bytes.NewReader(body),
 			req.URL.Query(),
 			buf,
 		)
