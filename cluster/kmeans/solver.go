@@ -30,6 +30,7 @@ type SolveOptions interface {
 	// between points to derive the solution. Defaults to Euclidean
 	// measure.
 	Measure() measure.ByPoint
+
 	// Random returns the random number generator used to derive the
 	// solution. Defaults to a new random number generator seeded
 	// with the current time.

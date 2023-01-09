@@ -17,12 +17,14 @@ type ClusterModel interface {
 	// ExcludedPointIndices returns the points that were excluded from the
 	// cluster.
 	ExcludedPointIndices() []int
+
 	// MaximumPoints returns the maximum number of points that can be
 	// assigned to the cluster.
 	MaximumPoints() int
 	// MaximumSumValueConstraints returns the constraints on the sum of
 	// the values of the points in the cluster.
 	MaximumSumValueConstraints() []MaximumSumValueConstraint
+
 	// SetExcludedPointIndices sets the points that were excluded from the
 	// cluster. The indices contain the index of the point in the
 	// model to be excluded.
