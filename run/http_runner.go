@@ -192,7 +192,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		callbackFunc, producer, err := h.httpRequestHandler(w, req)
 		async := callbackFunc != nil
 		if err != nil {
-			handleError(async, err, w)
+			handleError(h.httpServer.ErrorLog, async, err, w)
 			return
 		}
 		// generate a new requestID
@@ -201,7 +201,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		// get content type from the encoder
 		contentTyper, ok := h.Runner.GetEncoder().(ContentTyper)
 		if !ok {
-			handleError(async,
+			handleError(h.httpServer.ErrorLog, async,
 				errors.New("encoder does not implement ContentTyper"), w)
 			return
 		}
@@ -210,7 +210,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			// write the guid to the response.
 			_, err = w.Write([]byte(requestID))
 			if err != nil {
-				handleError(async, err, w)
+				handleError(h.httpServer.ErrorLog, async, err, w)
 				return
 			}
 			wg.Done()
@@ -219,7 +219,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			defer wg.Done()
 		}
 		if err != nil {
-			handleError(async, err, w)
+			handleError(h.httpServer.ErrorLog, async, err, w)
 			return
 		}
 		// get a copy of the genericRunner set the IOProducer and run it.
@@ -227,7 +227,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		genericRunner.SetIOProducer(producer)
 		err = genericRunner.Run(context.Background())
 		if err != nil {
-			handleError(async, err, w)
+			handleError(h.httpServer.ErrorLog, async, err, w)
 			return
 		}
 
@@ -235,7 +235,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		if async {
 			err = callbackFunc(requestID, contentTyper.ContentType())
 			if err != nil {
-				handleError(async, err, w)
+				handleError(h.httpServer.ErrorLog, async, err, w)
 				return
 			}
 		}
@@ -243,7 +243,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	wg.Wait()
 }
 
-func handleError(async bool, err error, w http.ResponseWriter) {
+func handleError(log *log.Logger, async bool, err error, w http.ResponseWriter) {
 	log.Println(err)
 	if !async {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
