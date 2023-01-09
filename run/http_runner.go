@@ -243,7 +243,9 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	wg.Wait()
 }
 
-func handleError(log *log.Logger, async bool, err error, w http.ResponseWriter) {
+func handleError(log *log.Logger,
+	async bool, err error, w http.ResponseWriter,
+) {
 	log.Println(err)
 	if !async {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
