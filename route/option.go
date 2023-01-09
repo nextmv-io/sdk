@@ -86,6 +86,19 @@ func Windows(windows []Window) Option {
 	return windowsFunc(windows)
 }
 
+// MultiWindows adds a time window constraint to the list of constraints. The
+// method takes in multiple windows per stop, which are indexed by stop and
+// represent several fixed time frames in which the stop must be served.
+// Furthermore, a wait time per stop must be specified where -1 means that a
+// vehicle may wait indefinitely until a window opens. Service times at the
+// stops can be optionally added using the Services option.
+//
+// PLEASE NOTE: this option requires using the Shift option.
+func MultiWindows(windows [][]TimeWindow, maxWaitTimes []int) Option {
+	connect.Connect(con, &multiWindowsFunc)
+	return multiWindowsFunc(windows, maxWaitTimes)
+}
+
 // Unassigned sets the unassigned penalties indexed by stop. The length must
 // match the stops' length.
 func Unassigned(penalties []int) Option {
@@ -370,6 +383,7 @@ var (
 	servicesFunc              func([]Service) Option
 	shiftsFunc                func([]TimeWindow) Option
 	windowsFunc               func([]Window) Option
+	multiWindowsFunc          func([][]TimeWindow, []int) Option
 	unassignedFunc            func([]int) Option
 	backlogsFunc              func([]Backlog) Option
 	minimizeFunc              func() Option
