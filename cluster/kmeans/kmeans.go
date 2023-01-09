@@ -20,7 +20,7 @@ func NewModel(
 	return newModel(points, clusters)
 }
 
-// NewSolver returns a new Solver implemented by the given provider.
+// NewSolver returns a new Solver.
 func NewSolver(model Model) (Solver, error) {
 	connect.Connect(con, &newSolver)
 	return newSolver(model)
