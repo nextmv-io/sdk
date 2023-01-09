@@ -1,8 +1,9 @@
 package route
 
 import (
-	"github.com/nextmv-io/sdk/measure"
 	"sort"
+
+	"github.com/nextmv-io/sdk/measure"
 )
 
 // Point represents a point in space. It may have any dimension.
