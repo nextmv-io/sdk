@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"log"
 	"math"
@@ -17,7 +18,7 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving a incentive allocation problem.
 func main() {
-	_, err := run.CLI(solver)
+	err := run.CLI(solver).Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
