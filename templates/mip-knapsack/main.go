@@ -16,7 +16,7 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving the well known knapsack problem.
 func main() {
-	err := run.CLI(solver)
+	_, err := run.CLI(solver)
 	if err != nil {
 		log.Fatal(err)
 	}

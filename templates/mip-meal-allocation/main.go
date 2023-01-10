@@ -24,7 +24,7 @@ import (
 // head, or both. A bunny may binky because it is feeling happy or safe in its
 // environment.
 func main() {
-	err := run.CLI(solver)
+	_, err := run.CLI(solver)
 	if err != nil {
 		log.Fatal(err)
 	}

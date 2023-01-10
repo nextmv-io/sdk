@@ -85,11 +85,17 @@ func SetHTTPServer[Input, Option, Solution any](
 	}
 }
 
-// HTTPRunner creates a new HTTPRunner.
-func HTTPRunner[Input, Option, Solution any](
+// HTTPRunner is a runner that runs an algorithm as an http server.
+type HTTPRunner[RunnerConfig, Input, Option, Solution any] interface {
+	Runner[RunnerConfig, Input, Option, Solution]
+	ActiveRuns() int
+}
+
+// NewHTTPRunner creates a new NewHTTPRunner.
+func NewHTTPRunner[Input, Option, Solution any](
 	algorithm Algorithm[Input, Option, Solution],
 	options ...HTTPRunnerOption[Input, Option, Solution],
-) Runner[HTTPRunnerConfig, Input, Option, Solution] {
+) HTTPRunner[HTTPRunnerConfig, Input, Option, Solution] {
 	runner := &httpRunner[Input, Option, Solution]{
 		// the IOProducer will be dynamically set by the http request handler.
 		Runner: GenericRunner[HTTPRunnerConfig](
@@ -138,6 +144,10 @@ func (h *httpRunner[Input, Option, Solution]) setLogger(l *log.Logger) {
 
 func (h *httpRunner[Input, Option, Solution]) setMaxParallel(maxParallel int) {
 	h.maxParallel = make(chan struct{}, maxParallel)
+}
+
+func (h *httpRunner[Input, Option, Solution]) ActiveRuns() int {
+	return len(h.maxParallel)
 }
 
 func (h *httpRunner[Input, Option, Solution]) setHTTPRequestHandler(

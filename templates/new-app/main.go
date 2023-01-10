@@ -11,7 +11,7 @@ import (
 
 // run.Run reads input data and solver options to run the solver.
 func main() {
-	err := run.Run(solver)
+	_, err := run.Run(solver)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -11,7 +11,7 @@ import (
 func CLI[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
-) error {
+) (Runner[CLIRunnerConfig, Input, Option, Solution], error) {
 	algorithm := func(
 		_ context.Context,
 		input Input, option Option, sols chan<- Solution,
@@ -25,8 +25,8 @@ func CLI[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := CLIRunner(algorithm, options...)
-	return runner.Run(context.Background())
+	runner := NewCLIRunner(algorithm, options...)
+	return runner, runner.Run(context.Background())
 }
 
 // HTTP instantiates an HTTPRunner and runs it. The default port is 9000 and
@@ -34,7 +34,7 @@ func CLI[Input, Option, Solution any](solver func(
 func HTTP[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...HTTPRunnerOption[Input, Option, Solution],
-) error {
+) (HTTPRunner[HTTPRunnerConfig, Input, Option, Solution], error) {
 	algorithm := func(
 		_ context.Context,
 		input Input, option Option, sols chan<- Solution,
@@ -48,13 +48,13 @@ func HTTP[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := HTTPRunner(algorithm, options...)
-	return runner.Run(context.Background())
+	runner := NewHTTPRunner(algorithm, options...)
+	return runner, runner.Run(context.Background())
 }
 
-// Unwrap is a helper function that unwraps a (store.Solver,error) into
+// AllSolutions is a helper function that unwraps a (store.Solver,error) into
 // ([]store.Solution, error).
-func Unwrap(
+func AllSolutions(
 	solver store.Solver, err error,
 ) (solutions []store.Solution, retErr error) {
 	if err != nil {
