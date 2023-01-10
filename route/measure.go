@@ -193,11 +193,11 @@ func IsTriangular(m any) bool {
 	return isTriangularFunc(m)
 }
 
-// BuildRequestSlice builds a slice of points in the correct format to request a
+// BuildMatrixRequestPoints builds a slice of points in the correct format to request a
 // matrix from any of the supported platforms (e.g. OSRM, Routingkit, Google,
 // HERE). It takes the stops to be routed, start and end stops of vehicles
 // (optional) and the number of to be used.
-func BuildRequestSlice(
+func BuildMatrixRequestPoints(
 	stops, starts,
 	ends []Point,
 	vehiclesCount int,
