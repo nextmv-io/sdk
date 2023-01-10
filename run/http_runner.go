@@ -88,6 +88,7 @@ func SetHTTPServer[Input, Option, Solution any](
 // HTTPRunner is a runner that runs an algorithm as an http server.
 type HTTPRunner[RunnerConfig, Input, Option, Solution any] interface {
 	Runner[RunnerConfig, Input, Option, Solution]
+	// ActiveRuns returns the number of currently active runs.
 	ActiveRuns() int
 }
 
