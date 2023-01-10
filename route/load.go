@@ -12,13 +12,6 @@ type ByPointLoader struct {
 	byPoint ByPoint
 }
 
-// NewByPointLoader creates a new ByPointLoader for the given ByPoint measure.
-func NewByPointLoader(m ByPoint) ByPointLoader {
-	return ByPointLoader{
-		byPoint: m,
-	}
-}
-
 type pointType string
 
 const (
@@ -77,13 +70,6 @@ func (l *ByPointLoader) To() ByPoint {
 // object into the appropriate implementation.
 type ByIndexLoader struct {
 	byIndex ByIndex
-}
-
-// NewByIndexLoader creates a new ByIndexLoader for the given ByIndex measure.
-func NewByIndexLoader(m ByIndex) ByIndexLoader {
-	return ByIndexLoader{
-		byIndex: m,
-	}
 }
 
 // byIndexJSON includes the union of all fields that may appear on a ByIndex
