@@ -1,6 +1,7 @@
 package route
 
 import (
+	"errors"
 	"sort"
 
 	"github.com/nextmv-io/sdk/connect"
@@ -190,6 +191,48 @@ func Matrix(arcs [][]float64) ByIndex {
 func IsTriangular(m any) bool {
 	connect.Connect(con, &isTriangularFunc)
 	return isTriangularFunc(m)
+}
+
+// BuildRequestSlice builds a slice of points in the correct format to request a
+// matrix from any of the supported platforms (e.g. OSRM, Routingkit, Google,
+// HERE). It takes the stops to be routed, start and end stops of vehicles
+// (optional) and the number of to be used.
+func BuildRequestSlice(
+	stops, starts,
+	ends []Point,
+	vehiclesCount int,
+) ([]Point, error) {
+	if len(starts) > 0 && len(starts) != vehiclesCount {
+		return nil, errors.New(
+			"if starts are given, they must match the number of vehicles",
+		)
+	}
+	if len(ends) > 0 && len(ends) != vehiclesCount {
+		return nil, errors.New(
+			"if ends are given, they must match the number of vehicles",
+		)
+	}
+	count := len(stops)
+	// Create points array of the expected size
+	points := make([]Point, count+2*vehiclesCount)
+	for i := range points {
+		// Set default values
+		points[i] = Point{0, 0}
+	}
+	copy(points, stops)
+
+	if len(starts) > 0 {
+		for v, start := range starts {
+			points[count+v*2] = start
+		}
+	}
+
+	if len(ends) > 0 {
+		for v, end := range ends {
+			points[count+v*2+1] = end
+		}
+	}
+	return points, nil
 }
 
 var (
