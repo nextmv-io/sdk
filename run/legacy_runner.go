@@ -12,7 +12,7 @@ func Run[Input any](solver func(
 	input Input, option store.Options,
 ) (store.Solver, error),
 	options ...RunnerOption[CLIRunnerConfig, Input, store.Options, store.Solution],
-) (Runner[CLIRunnerConfig, Input, store.Options, store.Solution], error) {
+) error {
 	algorithm := func(
 		ctx context.Context,
 		input Input, option store.Options, solutions chan<- store.Solution,
@@ -27,5 +27,5 @@ func Run[Input any](solver func(
 		return nil
 	}
 	runner := NewCLIRunner(algorithm, options...)
-	return runner, runner.Run(context.Background())
+	return runner.Run(context.Background())
 }

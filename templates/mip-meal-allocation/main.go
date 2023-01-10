@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -24,7 +25,7 @@ import (
 // head, or both. A bunny may binky because it is feeling happy or safe in its
 // environment.
 func main() {
-	_, err := run.CLI(solver)
+	err := run.CLI(solver).Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}

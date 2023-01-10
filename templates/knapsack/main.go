@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	_, err := run.Run(solver)
+	err := run.Run(solver)
 	if err != nil {
 		log.Fatal(err)
 	}

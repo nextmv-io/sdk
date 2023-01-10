@@ -11,7 +11,7 @@ import (
 func CLI[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...RunnerOption[CLIRunnerConfig, Input, Option, Solution],
-) (Runner[CLIRunnerConfig, Input, Option, Solution], error) {
+) Runner[CLIRunnerConfig, Input, Option, Solution] {
 	algorithm := func(
 		_ context.Context,
 		input Input, option Option, sols chan<- Solution,
@@ -25,8 +25,7 @@ func CLI[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := NewCLIRunner(algorithm, options...)
-	return runner, runner.Run(context.Background())
+	return NewCLIRunner(algorithm, options...)
 }
 
 // HTTP instantiates an HTTPRunner and runs it. The default port is 9000 and
@@ -34,7 +33,7 @@ func CLI[Input, Option, Solution any](solver func(
 func HTTP[Input, Option, Solution any](solver func(
 	input Input, option Option) (solutions []Solution, err error),
 	options ...HTTPRunnerOption[Input, Option, Solution],
-) (HTTPRunner[HTTPRunnerConfig, Input, Option, Solution], error) {
+) HTTPRunner[HTTPRunnerConfig, Input, Option, Solution] {
 	algorithm := func(
 		_ context.Context,
 		input Input, option Option, sols chan<- Solution,
@@ -48,8 +47,7 @@ func HTTP[Input, Option, Solution any](solver func(
 		}
 		return nil
 	}
-	runner := NewHTTPRunner(algorithm, options...)
-	return runner, runner.Run(context.Background())
+	return NewHTTPRunner(algorithm, options...)
 }
 
 // AllSolutions is a helper function that unwraps a (store.Solver,error) into

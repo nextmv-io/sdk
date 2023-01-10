@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"log"
 	"time"
@@ -16,7 +17,7 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving the well known knapsack problem.
 func main() {
-	_, err := run.CLI(solver)
+	err := run.CLI(solver).Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
