@@ -24,9 +24,9 @@ type genericDecoder[Input any] struct {
 	decoder decode.Decoder
 }
 
-// Decoder is a function that decodes the input from the reader. It uses the
-// given decoder to decode the input. If the input is gzipped, it will be
-// decoded using the gzip.reader.
+// Decoder is a function that decodes the input from the reader, which needs to
+// be an io.Reader. It uses the given decoder to decode the input. If the input
+// is gzipped, it will be decoded using the gzip.Reader.
 func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {

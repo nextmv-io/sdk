@@ -34,7 +34,8 @@ type genericEncoder[Solution, Options any] struct {
 }
 
 // Encode encodes the solution using the given encoder. If a given output path
-// ends in .gz, it will be gzipped after encoding.
+// ends in .gz, it will be gzipped after encoding. The writer needs to be an
+// io.Writer.
 func (g *genericEncoder[Solution, Options]) Encode(
 	_ context.Context,
 	solutions <-chan Solution,
