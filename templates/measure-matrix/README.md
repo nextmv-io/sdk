@@ -16,6 +16,7 @@ expected:
 
 ```bash
 nextmv run local .
+```
 
 One file should have been created: `routing-input.json`. This file can be used
 as a direct input for the `routing-matrix-input` app.
