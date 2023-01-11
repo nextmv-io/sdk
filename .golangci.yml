@@ -232,3 +232,7 @@ issues:
       linters:
         - gocyclo
       source: ^func \(g \*genericEncoder.*$
+    # Deactivate line length in http_runner_config.go because of go tags
+    - path: run/http_runner_config\.go
+      linters:
+        - lll
