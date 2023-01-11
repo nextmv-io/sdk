@@ -114,7 +114,10 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 		}
 	}()
 	// get IO
-	ioData := r.IOProducer(context, r.runnerConfig)
+	ioData, retErr := r.IOProducer(context, r.runnerConfig)
+	if retErr != nil {
+		return retErr
+	}
 
 	// decode input
 	decodedInput, retErr := r.InputDecoder(context, ioData.Input())

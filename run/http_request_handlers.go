@@ -13,13 +13,14 @@ import (
 func SyncHTTPRequestHandler(
 	w http.ResponseWriter, req *http.Request,
 ) (Callback, IOProducer[HTTPRunnerConfig], error) {
-	return nil, func(ctx context.Context, config HTTPRunnerConfig) IOData {
-		return NewIOData(
-			req.Body,
-			req.URL.Query(),
-			w,
-		)
-	}, nil
+	return nil,
+		func(ctx context.Context, config HTTPRunnerConfig) (IOData, error) {
+			return NewIOData(
+				req.Body,
+				req.URL.Query(),
+				w,
+			), nil
+		}, nil
 }
 
 // AsyncHTTPRequestHandlerOption configures an AsyncHTTPRequestHandler.
@@ -109,11 +110,11 @@ func (a asyncHTTPHandler) Handler(
 
 	return callbackFunc, func(
 		ctx context.Context, config HTTPRunnerConfig,
-	) IOData {
+	) (IOData, error) {
 		return NewIOData(
 			bytes.NewReader(body),
 			req.URL.Query(),
 			buf,
-		)
+		), nil
 	}, nil
 }

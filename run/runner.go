@@ -23,7 +23,9 @@ type Runner[RunnerConfig, Input, Option, Solution any] interface {
 }
 
 // IOProducer is a function that produces the input, option and writer.
-type IOProducer[RunnerConfig any] func(context.Context, RunnerConfig) IOData
+type IOProducer[RunnerConfig any] func(
+	context.Context, RunnerConfig,
+) (IOData, error)
 
 // Decoder is a function that decodes a reader into a struct.
 type Decoder[Input any] func(context.Context, any) (Input, error)
