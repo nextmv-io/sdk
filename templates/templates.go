@@ -202,4 +202,14 @@ var (
 	// PagerDutyReadme is the README.md file in the pager-duty template.
 	//go:embed pager-duty/README.md
 	PagerDutyReadme string
+
+	// ClusterMain is the main.go file in the cluster template.
+	//go:embed cluster/main.go
+	ClusterMain string
+	// ClusterInput is the input.json file in the cluster template.
+	//go:embed cluster/input.json
+	ClusterInput string
+	// ClusterReadme is the README.md file in the cluster template.
+	//go:embed cluster/README.md
+	ClusterReadme string
 )
