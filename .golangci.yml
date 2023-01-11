@@ -165,6 +165,16 @@ issues:
       linters:
         - dupl
 
+    # Complexity in LessClockwise is high due to multiple cases, fine for now.
+    - path: measure/sort\.go
+      linters:
+        - gocyclo
+
+    # Complexity in TestBin is high due to multiple cases, fine for now.
+    - path: measure/bin_test\.go
+      linters:
+        - gocyclo
+
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go
       linters:
