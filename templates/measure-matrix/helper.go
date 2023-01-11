@@ -14,7 +14,7 @@ type input struct {
 	Vehicles []string
 }
 
-type Output struct {
+type output struct {
 	Stops          []route.Stop       `json:"stops"`
 	Vehicles       []string           `json:"vehicles"`
 	Starts         []route.Position   `json:"starts"`

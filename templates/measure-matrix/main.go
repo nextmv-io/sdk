@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/nextmv-io/sdk/route"
-	osrm "github.com/nextmv-io/sdk/route/osrm"
+	"github.com/nextmv-io/sdk/route/osrm"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	}
 
 	// Build a slice of points in the correct format to use by a matrix provider.
-	points, err := route.BuildRequestSlice(
+	points, err := route.BuildMatrixRequestPoints(
 		input.Stops,
 		input.Starts,
 		input.Ends,
@@ -41,7 +41,10 @@ func main() {
 		"<YOUR-OSRM-SERVER-URL>",
 		true,
 	)
-	client.SnapRadius(0)
+	err = client.SnapRadius(0)
+	if err != nil {
+		panic(err)
+	}
 
 	// Get distance matrices.
 	distanceMatrix, durationMatrix, err := osrm.DistanceDurationMatrices(
@@ -71,7 +74,7 @@ func main() {
 
 	// Create an output for the routing app in the expected format.
 	now := time.Now()
-	out := Output{
+	out := output{
 		Stops:    convertToStop(input.Stops),
 		Starts:   convertToPosition(input.Starts),
 		Ends:     convertToPosition(input.Ends),
@@ -92,5 +95,8 @@ func main() {
 
 	// Write the output.
 	file, _ := json.MarshalIndent(out, "", " ")
-	_ = ioutil.WriteFile("routing-input.json", file, 0644)
+	err = os.WriteFile("routing-input.json", file, 0o644)
+	if err != nil {
+		panic(err)
+	}
 }
