@@ -205,6 +205,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		async := callbackFunc != nil
 		if err != nil {
 			handleError(h.httpServer.ErrorLog, async, err, w)
+			wg.Done()
 			return
 		}
 		// generate a new requestID
@@ -215,6 +216,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		if !ok {
 			handleError(h.httpServer.ErrorLog, async,
 				errors.New("encoder does not implement ContentTyper"), w)
+			wg.Done()
 			return
 		}
 

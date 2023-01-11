@@ -164,13 +164,11 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	if retErr != nil {
 		return retErr
 	}
-	defer func() {
-		err := deferFuncMemory()
-		// the first error is more important
-		if retErr == nil {
-			retErr = err
-		}
-	}()
+
+	retErr = deferFuncMemory()
+	if retErr != nil {
+		return retErr
+	}
 
 	// return potential errors
 	return <-errs

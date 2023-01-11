@@ -95,11 +95,7 @@ func (a asyncHTTPHandler) Handler(
 		if err != nil {
 			return err
 		}
-		defer func() {
-			if cerr := resp.Body.Close(); cerr != nil {
-				err = cerr
-			}
-		}()
+		err = resp.Body.Close()
 		return err
 	}
 
