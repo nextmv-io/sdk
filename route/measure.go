@@ -213,9 +213,11 @@ func OverrideZeroPoints(
 		m,
 		Constant(0),
 		func(from, to int) bool {
-			fromOverride := points[from][0] == 0 && points[from][1] == 0
-			toOverride := points[to][0] == 0 && points[to][1] == 0
-			if fromOverride || toOverride {
+			// If any point is nil or empty (len==0) or [0,0] return true.
+			if points[from] == nil || points[to] == nil ||
+				len(points[from]) == 0 || len(points[to]) == 0 ||
+				(points[from][0] == 0 && points[from][1] == 0) ||
+				(points[to][0] == 0 && points[to][1] == 0) {
 				return true
 			}
 			return false
