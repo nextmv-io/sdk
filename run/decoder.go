@@ -30,11 +30,23 @@ type genericDecoder[Input any] struct {
 func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {
+	closer, ok := reader.(io.Closer)
+	if ok {
+		defer func() {
+			tempErr := closer.Close()
+			// the first error is the most important
+			if err == nil {
+				err = tempErr
+			}
+		}()
+	}
+
 	ioReader, ok := reader.(io.Reader)
 	if !ok {
-		return input, errors.New(
+		err = errors.New(
 			"Decoder is not compatible with configured IOProducer",
 		)
+		return input, err
 	}
 
 	// Convert to buffered reader and read magic bytes

@@ -41,10 +41,22 @@ func (g *genericEncoder[Solution, Options]) Encode(
 	writer any,
 	runnerCfg any,
 	options Options,
-) error {
+) (err error) {
+	closer, ok := writer.(io.Closer)
+	if ok {
+		defer func() {
+			tempErr := closer.Close()
+			// the first error is the most important
+			if err == nil {
+				err = tempErr
+			}
+		}()
+	}
+
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
-		return errors.New("Encoder is not compatible with configured IOProducer")
+		err = errors.New("Encoder is not compatible with configured IOProducer")
+		return err
 	}
 
 	if outputPather, ok := runnerCfg.(OutputPather); ok {
@@ -54,9 +66,9 @@ func (g *genericEncoder[Solution, Options]) Encode(
 	}
 
 	if limiter, ok := runnerCfg.(SolutionLimiter); ok {
-		solutionFlag, err := limiter.Solutions()
-		if err != nil {
-			return err
+		solutionFlag, retErr := limiter.Solutions()
+		if retErr != nil {
+			return retErr
 		}
 
 		if solutionFlag == Last {
@@ -80,7 +92,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 		for solution := range solutions {
 			m.Solutions = append(m.Solutions, solution)
 		}
-		if err := g.encoder.Encode(ioWriter, m); err != nil {
+		if err = g.encoder.Encode(ioWriter, m); err != nil {
 			return err
 		}
 
@@ -91,7 +103,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 	for solution := range solutions {
 		m = append(m, solution)
 	}
-	if err := g.encoder.Encode(ioWriter, m); err != nil {
+	if err = g.encoder.Encode(ioWriter, m); err != nil {
 		return err
 	}
 
