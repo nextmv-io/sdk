@@ -12,7 +12,7 @@ linters-settings:
   gomodguard:
     allowed:
       modules:
-        - github.com/nextmv-io/sdk
+        - github.com/nextmv-io/sdk/*
         - github.com/dgraph-io/ristretto
         - github.com/golang/mock
         - github.com/google/go-cmp
