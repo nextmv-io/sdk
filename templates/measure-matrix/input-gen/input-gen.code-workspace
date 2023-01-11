@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "go.goroot": "~/.nextmv/go"
+  },
+  "launch": {
+    "configurations": [
+      {
+        "name": "Debug Matrix Measure",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        // this has to point the directory (NOT the file or debugging
+        // won't work!) which contains the file which has the main
+        // method
+        "program": "${workspaceFolder}",
+        "substitutePath": [
+          {
+            "from": "${workspaceFolder}",
+            // this has to match the module name
+            "to": "example.com/measure-matrix"
+          }
+        ],
+        "buildFlags": "-trimpath -tags=debug"
+      }
+    ]
+  }
+}
