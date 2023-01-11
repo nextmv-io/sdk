@@ -115,6 +115,8 @@ func main() {
 	}
 }
 
+// makeFloatMatrix is a helper function that takes a route.ByIndex and returns a
+// [][]float64.
 func makeFloatMatrix(matrix route.ByIndex, length int) [][]float64 {
 	out := make([][]float64, length)
 	for i := 0; i < length; i++ {
@@ -126,6 +128,8 @@ func makeFloatMatrix(matrix route.ByIndex, length int) [][]float64 {
 	return out
 }
 
+// convertToStop is a helper function that converts a []route.Point into a
+// []route.Stop.
 func convertToStop(points []route.Point) []route.Stop {
 	stops := make([]route.Stop, len(points))
 	for i, p := range points {
@@ -140,6 +144,8 @@ func convertToStop(points []route.Point) []route.Stop {
 	return stops
 }
 
+// convertToPosition is a helper function that converts a []route.Point into a
+// []route.Position.
 func convertToPosition(points []route.Point) []route.Position {
 	position := make([]route.Position, len(points))
 	for i, p := range points {
