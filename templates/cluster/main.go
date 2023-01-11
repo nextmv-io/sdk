@@ -2,6 +2,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/cluster/kmeans"
@@ -32,7 +33,10 @@ type output struct {
 }
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func solver(input input, opts store.Options) (store.Solver, error) {
