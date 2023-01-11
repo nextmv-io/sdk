@@ -202,3 +202,25 @@ func BuildMatrixRequestPoints(
 	}
 	return points, nil
 }
+
+// OverrideZeroPoints overrides points that have been passed as placeholders
+// [0,0] to build the matrix with zero values.
+func OverrideZeroPoints(
+	points []Point,
+	m ByIndex,
+) ByIndex {
+	m = Override(
+		m,
+		Constant(0),
+		func(from, to int) bool {
+			fromOverride := points[from][0] == 0 && points[from][1] == 0
+			toOverride := points[to][0] == 0 && points[to][1] == 0
+			if fromOverride || toOverride {
+				return true
+			}
+			return false
+		},
+	)
+
+	return m
+}
