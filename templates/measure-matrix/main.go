@@ -1,13 +1,33 @@
+// package main holds the implementation of the measure generation.
 package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/osrm"
 )
+
+type input struct {
+	Stops    []route.Point
+	Starts   []route.Point
+	Ends     []route.Point
+	Vehicles []string
+}
+
+type output struct {
+	Stops          []route.Stop       `json:"stops"`
+	Vehicles       []string           `json:"vehicles"`
+	Starts         []route.Position   `json:"starts"`
+	Ends           []route.Position   `json:"ends"`
+	Shifts         []route.TimeWindow `json:"shifts"`
+	DurationMatrix [][]float64        `json:"duration_matrix"`
+	DistanceMatrix [][]float64        `json:"distance_matrix"`
+}
 
 func main() {
 	// Some input data to create matrices for. This input data routes points in
@@ -57,18 +77,12 @@ func main() {
 	}
 
 	// Override values for empty locations in the input.
-	distanceMatrix = overrideMeasureValues(
-		input.Stops,
-		input.Starts,
-		input.Ends,
-		len(input.Vehicles),
+	distanceMatrix = route.OverrideZeroPoints(
+		points,
 		distanceMatrix,
 	)
-	durationMatrix = overrideMeasureValues(
-		input.Stops,
-		input.Starts,
-		input.Ends,
-		len(input.Vehicles),
+	durationMatrix = route.OverrideZeroPoints(
+		points,
 		durationMatrix,
 	)
 
@@ -99,4 +113,43 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func makeFloatMatrix(matrix route.ByIndex, length int) [][]float64 {
+	out := make([][]float64, length)
+	for i := 0; i < length; i++ {
+		out[i] = make([]float64, length)
+		for j := 0; j < length; j++ {
+			out[i][j] = matrix.Cost(i, j)
+		}
+	}
+	return out
+}
+
+func convertToStop(points []route.Point) []route.Stop {
+	stops := make([]route.Stop, len(points))
+	for i, p := range points {
+		stops[i] = route.Stop{
+			ID: fmt.Sprintf("stop-%s", strconv.Itoa(i)),
+			Position: route.Position{
+				Lon: p[1],
+				Lat: p[0],
+			},
+		}
+	}
+	return stops
+}
+
+func convertToPosition(points []route.Point) []route.Position {
+	position := make([]route.Position, len(points))
+	for i, p := range points {
+		if len(p) == 0 {
+			return []route.Position{}
+		}
+		position[i] = route.Position{
+			Lon: p[1],
+			Lat: p[0],
+		}
+	}
+	return position
 }

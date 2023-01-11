@@ -31,9 +31,6 @@ var (
 	// MeasureMatrixMain is the main.go file in the measure-matrix template.
 	//go:embed measure-matrix/main.go
 	MeasureMatrixMain string
-	// MeasureMatrixHelper contains helper functions for the matrix creation.
-	//go:embed measure-matrix/helper.go
-	MeasureMatrixHelper string
 	// MeasureMatrixReadme is the README.md file in the measure-matrix template.
 	//go:embed measure-matrix/README.md
 	MeasureMatrixReadme string
