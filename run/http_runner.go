@@ -113,9 +113,10 @@ func NewHTTPRunner[Input, Option, Solution any](
 
 	// default http server
 	runner.httpServer = &http.Server{
-		Addr:     runnerConfig.Runner.HTTP.Address,
-		ErrorLog: log.New(os.Stderr, "[Nextmv HTTPRunner] ", log.LstdFlags),
-		Handler:  runner,
+		ReadHeaderTimeout: runnerConfig.Runner.HTTP.ReadHeaderTimeout,
+		Addr:              runnerConfig.Runner.HTTP.Address,
+		ErrorLog:          log.New(os.Stderr, "[Nextmv HTTPRunner] ", log.LstdFlags),
+		Handler:           runner,
 	}
 
 	// default handler to IOProducer
