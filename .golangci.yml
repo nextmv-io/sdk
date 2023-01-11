@@ -246,3 +246,8 @@ issues:
     - path: run/http_runner_config\.go
       linters:
         - lll
+    # Deactivate gocyclo for GenericRunner in generic_runner.go
+    - path: run/generic_runner\.go
+      linters:
+        - gocyclo
+      source: ^func \(r \*genericRunner.*$
