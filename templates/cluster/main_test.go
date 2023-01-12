@@ -29,12 +29,6 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Get the solution.
-	got := output[0]
-	if err := json.Unmarshal(b, &got); err != nil {
-		t.Fatal(err)
-	}
-
 	// Get the expected solution.
 	want := Output{}
 	b, err = os.ReadFile("testdata/output.json")
@@ -42,6 +36,12 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := json.Unmarshal(b, &want); err != nil {
+		t.Fatal(err)
+	}
+
+	// Get the solution.
+	got := output[0]
+	if err := json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
