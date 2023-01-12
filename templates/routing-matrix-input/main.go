@@ -2,6 +2,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/route"
@@ -10,7 +11,10 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // This struct describes the expected json input by the runner.
