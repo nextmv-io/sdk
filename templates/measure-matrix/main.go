@@ -87,7 +87,7 @@ func main() {
 	)
 
 	// Create an output for the routing app in the expected format.
-	now := time.Now()
+	now := time.Date(2022, 10, 17, 9, 0, 0, 0, time.UTC)
 	out := output{
 		Stops:    convertToStop(input.Stops),
 		Starts:   convertToPosition(input.Starts),
