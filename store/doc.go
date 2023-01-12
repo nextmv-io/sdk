@@ -125,12 +125,12 @@ The runner receives a handler that specifies the data type and expects a Solver.
 Compile the binary and use the -h flag to see available options to configure a
 runner. You can use command-line flags or environment variables. When using
 environment variables, use all caps and snake case. For example, using the
-command-line flag `-hop.solver.limits.duration` is equivalent to setting the
+command-line flag `-limits.duration` is equivalent to setting the
 environment variable `HOP_SOLVER_LIMITS_DURATION`.
 
 Using the cli runner for example:
 
-	echo 0 | go run main.go -hop.solver.limits.duration 2s
+	echo 0 | go run main.go -limits.duration 2s
 
 Writes this output to stdout:
 

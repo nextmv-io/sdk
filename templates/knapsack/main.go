@@ -2,6 +2,7 @@
 package main
 
 import (
+	"log"
 	"math"
 	"sort"
 	"time"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // A Knapsack holds the most valuable set of items possible while not exceeding

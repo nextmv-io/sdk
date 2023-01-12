@@ -2,12 +2,14 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
-	"github.com/nextmv-io/sdk/store"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -15,7 +17,10 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving the well known knapsack problem.
 func main() {
-	run.Run(solver)
+	err := run.CLI(solver).Run(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // An item has a Value, Weight and Volume. ItemID is optional and can be any
@@ -38,7 +43,25 @@ type input struct {
 	WeightCapacity int    `json:"weight_capacity"`
 }
 
-func solver(input input, opts store.Options) (store.Solver, error) {
+// The Option for the solver.
+type Option struct {
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	Duration time.Duration `json:"duration" default:"10s"`
+}
+
+// Output is the output of the solver.
+type Output struct {
+	Status  string  `json:"status,omitempty"`
+	Runtime string  `json:"runtime,omitempty"`
+	Items   []item  `json:"items,omitempty"`
+	Value   float64 `json:"value,omitempty"`
+}
+
+func solver(input input, opts Option) ([]Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -77,98 +100,61 @@ func solver(input input, opts store.Options) (store.Solver, error) {
 	solveOptions := mip.NewSolveOptions()
 
 	// Limit the solve to a maximum duration
-	if err := solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
+	if err = solveOptions.SetMaximumDuration(opts.Duration); err != nil {
 		return nil, err
 	}
 
 	// Set the relative gap to 0% (highs' default is 5%)
-	if err := solveOptions.SetMIPGapRelative(0); err != nil {
+	if err = solveOptions.SetMIPGapRelative(0); err != nil {
 		return nil, err
 	}
 
 	// Set verbose level to see a more detailed output
 	solveOptions.SetVerbosity(mip.Off)
 
-	// We use a store, and it's corresponding Format to report the solution
-	// Doing this allows us to use the CLI runner in the main function.
-	root := store.New()
-
-	// Add initial solution as nil
-	so := store.NewVar[mip.Solution](root, nil)
-
-	i := 0
-	root = root.Generate(func(s store.Store) store.Generator {
-		return store.Lazy(func() bool {
-			// only run one state transition in which we solve the mip model
-			return i == 0
-		}, func() store.Store {
-			i++
-			// Invoke the solver
-			solution, err := solver.Solve(solveOptions)
-			if err != nil {
-				panic(err)
-			}
-			return s.Apply(so.Set(solution))
-		})
-	}).Validate(func(s store.Store) bool {
-		solution := so.Get(s)
-		if solution == nil {
-			return false
-		}
-		// if the solution has values, accept it as being valid, optionally
-		// write a check to test for actual validity
-		b := solution.HasValues()
-		return b
-	}).Format(format(so, x, input))
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
-	if opts.Limits.Duration == 0 {
-		opts.Limits.Duration = 10 * time.Second
+	solution, err := solver.Solve(solveOptions)
+	if err != nil {
+		return nil, err
 	}
 
-	// We invoke Satisfier which will result in invoking Format and
-	// report the solution
-	return root.Satisfier(opts), nil
+	output, err := format(solution, input, x)
+	if err != nil {
+		return nil, err
+	}
+
+	return []Output{output}, nil
 }
 
-// format returns a function to format the solution output.
 func format(
-	so store.Var[mip.Solution],
-	x model.MultiMap[mip.Bool, item],
+	solution mip.Solution,
 	input input,
-) func(s store.Store) any {
-	return func(s store.Store) any {
-		// get solution from store
-		solution := so.Get(s)
+	x model.MultiMap[mip.Bool, item],
+) (output Output, err error) {
+	output.Status = "infeasible"
+	output.Runtime = solution.RunTime().String()
 
-		report := make(map[string]any)
-
-		report["status"] = "infeasible"
-		report["runtime"] = solution.RunTime().String()
-
-		if solution.HasValues() {
-			if solution.IsOptimal() {
-				report["status"] = "optimal"
-			} else {
-				report["status"] = "suboptimal"
-			}
-
-			report["value"] = solution.ObjectiveValue()
-
-			items := make([]item, 0)
-
-			for _, item := range input.Items {
-				// if the value of x for an item is 1 it means it is in the
-				// knapsack
-				if solution.Value(x.Get(item)) == 1 {
-					items = append(items, item)
-				}
-			}
-			report["items"] = items
+	if solution != nil && solution.HasValues() {
+		if solution.IsOptimal() {
+			output.Status = "optimal"
+		} else {
+			output.Status = "suboptimal"
 		}
-		return report
+
+		output.Value = solution.ObjectiveValue()
+
+		items := make([]item, 0)
+
+		for _, item := range input.Items {
+			// if the value of x for an item is 1 it means it is in the
+			// knapsack
+			if solution.Value(x.Get(item)) == 1 {
+				items = append(items, item)
+			}
+		}
+		output.Items = items
+	} else {
+		return output, errors.New("no solution found")
 	}
+
+	return output, nil
 }
