@@ -225,6 +225,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 			_, err = w.Write([]byte(requestID))
 			if err != nil {
 				handleError(h.httpServer.ErrorLog, async, err, w)
+				wg.Done()
 				return
 			}
 			wg.Done()
