@@ -1,14 +1,11 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/nextmv-io/sdk/store"
 )
 
 func TestTemplate(t *testing.T) {
@@ -23,30 +20,23 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Declare the options.
-	opt := store.DefaultOptions()
-	opt.Limits.Duration = 5 * time.Second
-	opt.Diagram.Expansion.Limit = 1
-	opt.Limits.Solutions = 1
+	opt := ClusterOptions{}
+	opt.Duration = 5 * time.Second
 
 	// Declare the solver.
-	solver, err := solver(input, opt)
+	output, err := solver(input, opt)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Get the solution.
-	last := solver.Last(context.Background())
-	b, err = json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-	got := output{}
+	got := output[0]
 	if err := json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
 	// Get the expected solution.
-	want := output{}
+	want := Output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)
@@ -55,12 +45,12 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got = output{
+	got = Output{
 		Feasible:          got.Feasible,
 		UnassignedIndices: got.UnassignedIndices,
 	}
 
-	want = output{
+	want = Output{
 		Feasible:          want.Feasible,
 		UnassignedIndices: want.UnassignedIndices,
 	}
