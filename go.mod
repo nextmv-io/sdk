@@ -9,4 +9,9 @@ require github.com/nextmv-io/sdk/route/osrm v0.20.9
 require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/twpayne/go-polyline v1.1.1 // indirect
+	github.com/google/uuid v1.3.0
+	github.com/gorilla/schema v1.2.0
+	github.com/itzg/go-flagsfiller v1.9.1
 )
+
+require github.com/iancoleman/strcase v0.2.0 // indirect

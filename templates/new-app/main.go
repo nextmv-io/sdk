@@ -2,6 +2,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/run"
@@ -10,7 +11,10 @@ import (
 
 // run.Run reads input data and solver options to run the solver.
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // input data is parsed to this struct before it is used in the solver func.

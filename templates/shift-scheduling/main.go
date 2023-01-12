@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/model"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // schedulingProblem describes a variant of the "Nurse scheduling problem".

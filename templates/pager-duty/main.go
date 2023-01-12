@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"time"
 
@@ -12,7 +13,10 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // Input for the pager duty scheduling problem. We have

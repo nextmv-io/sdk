@@ -210,18 +210,18 @@ type Options struct {
 	Search struct {
 		// Buffer represents the maximum number of Stores that can be buffered
 		// when generating more Stores.
-		Buffer int
+		Buffer int `usage:"solution buffer (0 = none)" default:"100"`
 	}
 	Limits Limits
 	// Options for random number generation.
 	Random struct {
 		// Seed for generating random numbers.
-		Seed int64 `json:"seed,omitempty"`
+		Seed int64 `json:"seed,omitempty" usage:"random seed"`
 	}
 	// Pool that is used in specific engines.
 	Pool struct {
 		// Maximum Size of the Pool.
-		Size int `json:"size,omitempty"`
+		Size int `json:"size,omitempty" usage:"pool size (only specific engines)"`
 	}
 }
 
@@ -256,12 +256,12 @@ func (o Options) MarshalJSON() ([]byte, error) {
 // options configure the mechanics of using DD.
 type Diagram struct {
 	// Maximum Width of the Decision Diagram.
-	Width int
+	Width int `usage:"diagram width" default:"10"`
 	// Maximum Expansion that can be generated from a Store.
 	Expansion struct {
 		// Limit represents the maximum number of children Stores that can
 		// be generated from a parent.
-		Limit int `json:"limit"`
+		Limit int `json:"limit" usage:"diagram expansion limit" default:"1"`
 	}
 }
 
@@ -277,11 +277,11 @@ func (d Diagram) MarshalJSON() ([]byte, error) {
 // limits are encountered.
 type Limits struct {
 	// Time Duration.
-	Duration time.Duration
-	// Nodes reprent active Stores in the search.
-	Nodes int
+	Duration time.Duration `usage:"time limit, e.g. 10ms"`
+	// Nodes represent active Stores in the search.
+	Nodes int `usage:"node limit"`
 	// Solutions represent operationally valid Stores.
-	Solutions int
+	Solutions int `usage:"solution limit"`
 }
 
 // MarshalJSON Limits.

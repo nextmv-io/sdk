@@ -3,12 +3,14 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"log"
 	"math"
 	"time"
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
-	"github.com/nextmv-io/sdk/store"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -16,7 +18,10 @@ import (
 // of many variables, subject to linear constraints. We demonstrate this by
 // solving a incentive allocation problem.
 func main() {
-	run.Run(solver)
+	err := run.CLI(solver).Run(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // incentiveAllocationProblem describes the needed input data to run the model.
@@ -29,9 +34,9 @@ type incentiveAllocationProblem struct {
 
 // incentive contains a Cost, Effect, and Availability.
 type incentive struct {
+	ID     string `json:"id"`
 	Effect int    `json:"effect"`
 	Cost   int    `json:"cost"`
-	ID     string `json:"id"`
 }
 
 // user represents the user for the problem including its name and a
@@ -50,10 +55,28 @@ type assignments struct {
 	Effect      int    `json:"effect"`
 }
 
+// The Option for the solver.
+type Option struct {
+	// A duration limit of 0 is treated as infinity. For cloud runs you need to
+	// set an explicit duration limit which is why it is currently set to 10s
+	// here in case no duration limit is set. For local runs there is no time
+	// limitation. If you want to make cloud runs for longer than 5 minutes,
+	// please contact: support@nextmv.io
+	Duration time.Duration `json:"duration" default:"10s"`
+}
+
+// Output is the output of the solver.
+type Output struct {
+	Status      string        `json:"status,omitempty"`
+	Runtime     string        `json:"runtime,omitempty"`
+	Assignments []assignments `json:"assignments,omitempty"`
+	Value       float64       `json:"value,omitempty"`
+}
+
 func solver(
 	input incentiveAllocationProblem,
-	opts store.Options,
-) (store.Solver, error) {
+	opts Option,
+) ([]Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -88,7 +111,7 @@ func solver(
 	solveOptions := mip.NewSolveOptions()
 
 	// Limit the solve to a maximum duration.
-	err = solveOptions.SetMaximumDuration(opts.Limits.Duration)
+	err = solveOptions.SetMaximumDuration(opts.Duration)
 	if err != nil {
 		return nil, err
 	}
@@ -100,94 +123,60 @@ func solver(
 	}
 
 	// Set verbose level to see a more detailed output.
-	solveOptions.SetVerbosity(mip.Low)
+	solveOptions.SetVerbosity(mip.Off)
 
-	// We use a store, and it's corresponding Format to report the solution
-	// Doing this allows us to use the CLI runner in the main function.
-	root := store.New()
-
-	// Add initial solution as nil.
-	so := store.NewVar[mip.Solution](root, nil)
-
-	i := 0
-	root = root.Generate(func(s store.Store) store.Generator {
-		return store.Lazy(func() bool {
-			// Only run one state transition in which we solve the mip model.
-			return i == 0
-		}, func() store.Store {
-			i++
-			// Invoke the solver.
-			solution, err := solver.Solve(solveOptions)
-			if err != nil {
-				panic(err)
-			}
-			return s.Apply(so.Set(solution))
-		})
-	}).Validate(func(s store.Store) bool {
-		solution := so.Get(s)
-		if solution == nil {
-			return false
-		}
-		// If the solution has values, accept it as being valid, optionally
-		// write a check to test for actual validity.
-		b := solution.HasValues()
-		return b
-	}).Format(format(so, userIncentive, input))
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
-	if opts.Limits.Duration == 0 {
-		opts.Limits.Duration = 10 * time.Second
+	solution, err := solver.Solve(solveOptions)
+	if err != nil {
+		return nil, err
 	}
 
-	// We invoke Satisfier which will result in invoking Format and
-	// report the solution.
-	return root.Satisfier(opts), nil
+	output, err := format(solution, input, userIncentive)
+	if err != nil {
+		return nil, err
+	}
+
+	return []Output{output}, nil
 }
 
-// format returns a function to format the solution output.
 func format(
-	so store.Var[mip.Solution],
-	userIncentive map[string][]mip.Var,
+	solution mip.Solution,
 	input incentiveAllocationProblem,
-) func(s store.Store) any {
-	return func(s store.Store) any {
-		// Get solution from store.
-		solution := so.Get(s)
+	userIncentive map[string][]mip.Var,
+) (output Output, err error) {
+	output.Status = "infeasible"
+	output.Runtime = solution.RunTime().String()
 
-		report := make(map[string]any)
-		report["status"] = "infeasible"
-		report["runtime"] = solution.RunTime().String()
-
-		if solution.HasValues() {
-			if solution.IsOptimal() {
-				report["status"] = "optimal"
-			} else {
-				report["status"] = "suboptimal"
-			}
-			// We change the output so that it is easier to read.
-			assigned := []assignments{}
-			for i, user := range input.Users {
-				for j := range user.Incentives {
-					if int(math.Round(
-						solution.Value(userIncentive[user.ID][j])),
-					) < 1 {
-						continue
-					}
-					oc := assignments{
-						Cost:        input.Users[i].Incentives[j].Cost,
-						Effect:      input.Users[i].Incentives[j].Effect,
-						User:        user.ID,
-						IncentiveID: input.Users[i].Incentives[j].ID,
-					}
-					assigned = append(assigned, oc)
-				}
-			}
-			report["assignments"] = assigned
-			report["value"] = solution.ObjectiveValue()
+	if solution != nil && solution.HasValues() {
+		if solution.IsOptimal() {
+			output.Status = "optimal"
+		} else {
+			output.Status = "suboptimal"
 		}
-		return report
+
+		output.Value = solution.ObjectiveValue()
+
+		// We change the output so that it is easier to read.
+		assigned := []assignments{}
+		for i, user := range input.Users {
+			for j := range user.Incentives {
+				if int(math.Round(
+					solution.Value(userIncentive[user.ID][j])),
+				) < 1 {
+					continue
+				}
+				oc := assignments{
+					Cost:        input.Users[i].Incentives[j].Cost,
+					Effect:      input.Users[i].Incentives[j].Effect,
+					User:        user.ID,
+					IncentiveID: input.Users[i].Incentives[j].ID,
+				}
+				assigned = append(assigned, oc)
+			}
+		}
+		output.Assignments = assigned
+	} else {
+		return output, errors.New("no solution found")
 	}
+
+	return output, nil
 }

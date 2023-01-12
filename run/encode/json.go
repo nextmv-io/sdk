@@ -7,13 +7,19 @@ import (
 
 // JSON returns a new encoder that writes JSON.
 func JSON() Encoder {
-	return jsonEncoder{}
+	return JSONEncoder{}
 }
 
-type jsonEncoder struct{}
+// JSONEncoder is a Encoder that encodes a struct into a json.
+type JSONEncoder struct{}
 
 // Encode writes the JSON encoding of v to the w stream,
 // followed by a newline character.
-func (j jsonEncoder) Encode(w io.Writer, v any) error {
+func (j JSONEncoder) Encode(w io.Writer, v any) error {
 	return json.NewEncoder(w).Encode(v)
+}
+
+// ContentType returns the content type of the encoder.
+func (j JSONEncoder) ContentType() string {
+	return "application/json"
 }
