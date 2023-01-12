@@ -38,7 +38,7 @@ to solve the problem. To pass a CSV file to the example use the
 input path flag:
 
 	nextmv run local . -- \
-		-hop.runner.input.path ./data.csv.gz \
-		-hop.runner.output.path output.json
+		-runner.input.path ./data.csv.gz \
+		-runner.output.path output.json
 */
 package dataframe
