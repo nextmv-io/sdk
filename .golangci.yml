@@ -18,6 +18,7 @@ linters-settings:
         - github.com/nextmv-io/sdk/route/here
         - github.com/nextmv-io/sdk/route/google
         - github.com/nextmv-io/sdk/route/routingkit
+        - googlemaps.github.io/maps
         - github.com/dgraph-io/ristretto
         - github.com/golang/mock
         - github.com/google/go-cmp
