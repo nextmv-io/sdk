@@ -116,7 +116,6 @@ func NewHTTPRunner[Input, Option, Solution any](
 		ReadHeaderTimeout: runnerConfig.Runner.HTTP.ReadHeaderTimeout,
 		Addr:              runnerConfig.Runner.HTTP.Address,
 		ErrorLog:          log.New(os.Stderr, "[Nextmv HTTPRunner] ", log.LstdFlags),
-		Handler:           runner,
 	}
 
 	// default handler to IOProducer
@@ -172,6 +171,15 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 	context context.Context,
 ) error {
 	httpRunnerConfig := h.Runner.RunnerConfig()
+	handler, err := openAPI[Input, Option, Solution](httpRunnerConfig)
+	if err != nil {
+		return err
+	}
+	sm := http.NewServeMux()
+	sm.Handle("/", h)
+	sm.Handle("/openapi/", handler)
+	h.httpServer.Handler = sm
+
 	if httpRunnerConfig.Runner.HTTP.Certificate != "" ||
 		httpRunnerConfig.Runner.HTTP.Key != "" {
 		return h.httpServer.ListenAndServeTLS(
@@ -179,6 +187,7 @@ func (h *httpRunner[Input, Option, Solution]) Run(
 			httpRunnerConfig.Runner.HTTP.Key,
 		)
 	}
+
 	return h.httpServer.ListenAndServe()
 }
 

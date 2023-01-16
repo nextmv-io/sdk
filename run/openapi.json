@@ -1,0 +1,40 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "This is the nextmv endpoint for published binary XXX",
+        "title": "Swagger Nextmv - OpenAPI 3.0",
+        "termsOfService": "http://nextmv.io/terms-of-use",
+        "contact": {
+            "email": "info@nextmv.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "paths": {},
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "externalDocs": {
+        "description": "Find out more about Nextmv",
+        "url": "http://docs.nextmv.io"
+    },
+    "servers": [
+        {
+            "url": "http://localhost{{.Address}}"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
