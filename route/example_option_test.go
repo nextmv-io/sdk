@@ -1001,7 +1001,8 @@ func ExampleShifts() {
 	//             "lat": 35.039705
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         },
 	//         {
 	//           "id": "Nijō Castle",
@@ -1010,7 +1011,8 @@ func ExampleShifts() {
 	//             "lat": 35.014239
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:05:33Z",
-	//           "estimated_departure": "2020-10-17T09:05:33Z"
+	//           "estimated_departure": "2020-10-17T09:05:33Z",
+	//           "estimated_service": "2020-10-17T09:05:33Z"
 	//         },
 	//         {
 	//           "id": "Kyoto Imperial Palace",
@@ -1019,7 +1021,8 @@ func ExampleShifts() {
 	//             "lat": 35.025431
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:08:31Z",
-	//           "estimated_departure": "2020-10-17T09:08:31Z"
+	//           "estimated_departure": "2020-10-17T09:08:31Z",
+	//           "estimated_service": "2020-10-17T09:08:31Z"
 	//         },
 	//         {
 	//           "id": "Gionmachi",
@@ -1028,7 +1031,8 @@ func ExampleShifts() {
 	//             "lat": 35.002457
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:13:15Z",
-	//           "estimated_departure": "2020-10-17T09:13:15Z"
+	//           "estimated_departure": "2020-10-17T09:13:15Z",
+	//           "estimated_service": "2020-10-17T09:13:15Z"
 	//         },
 	//         {
 	//           "id": "Kiyomizu-dera",
@@ -1037,7 +1041,8 @@ func ExampleShifts() {
 	//             "lat": 34.994857
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:15:15Z",
-	//           "estimated_departure": "2020-10-17T09:15:15Z"
+	//           "estimated_departure": "2020-10-17T09:15:15Z",
+	//           "estimated_service": "2020-10-17T09:15:15Z"
 	//         },
 	//         {
 	//           "id": "Fushimi Inari Taisha",
@@ -1046,7 +1051,8 @@ func ExampleShifts() {
 	//             "lat": 34.967146
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:20:43Z",
-	//           "estimated_departure": "2020-10-17T09:35:43Z"
+	//           "estimated_departure": "2020-10-17T09:35:43Z",
+	//           "estimated_service": "2020-10-17T09:20:43Z"
 	//         }
 	//       ],
 	//       "route_duration": 2143
@@ -1061,7 +1067,8 @@ func ExampleShifts() {
 	//             "lat": 35.017209
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
 	//       "route_duration": 0
@@ -1182,7 +1189,8 @@ func ExampleWindows() {
 	//             "lat": 35.039705
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         },
 	//         {
 	//           "id": "Nijō Castle",
@@ -1191,7 +1199,8 @@ func ExampleWindows() {
 	//             "lat": 35.014239
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:05:33Z",
-	//           "estimated_departure": "2020-10-17T09:05:33Z"
+	//           "estimated_departure": "2020-10-17T09:05:33Z",
+	//           "estimated_service": "2020-10-17T09:05:33Z"
 	//         },
 	//         {
 	//           "id": "Kyoto Imperial Palace",
@@ -1200,7 +1209,8 @@ func ExampleWindows() {
 	//             "lat": 35.025431
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:08:31Z",
-	//           "estimated_departure": "2020-10-17T09:08:31Z"
+	//           "estimated_departure": "2020-10-17T09:08:31Z",
+	//           "estimated_service": "2020-10-17T09:08:31Z"
 	//         },
 	//         {
 	//           "id": "Gionmachi",
@@ -1209,7 +1219,8 @@ func ExampleWindows() {
 	//             "lat": 35.002457
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:13:15Z",
-	//           "estimated_departure": "2020-10-17T09:28:15Z"
+	//           "estimated_departure": "2020-10-17T09:28:15Z",
+	//           "estimated_service": "2020-10-17T09:13:15Z"
 	//         },
 	//         {
 	//           "id": "Kiyomizu-dera",
@@ -1218,7 +1229,8 @@ func ExampleWindows() {
 	//             "lat": 34.994857
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:30:15Z",
-	//           "estimated_departure": "2020-10-17T09:30:15Z"
+	//           "estimated_departure": "2020-10-17T09:30:15Z",
+	//           "estimated_service": "2020-10-17T09:30:15Z"
 	//         },
 	//         {
 	//           "id": "Fushimi Inari Taisha",
@@ -1227,7 +1239,8 @@ func ExampleWindows() {
 	//             "lat": 34.967146
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:35:43Z",
-	//           "estimated_departure": "2020-10-17T09:35:43Z"
+	//           "estimated_departure": "2020-10-17T09:35:43Z",
+	//           "estimated_service": "2020-10-17T09:35:43Z"
 	//         }
 	//       ],
 	//       "route_duration": 2143
@@ -1242,7 +1255,8 @@ func ExampleWindows() {
 	//             "lat": 35.017209
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
 	//       "route_duration": 0
@@ -1368,7 +1382,8 @@ func ExampleMultiWindows() {
 	//             "lat": 35.039705
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         },
 	//         {
 	//           "id": "Nijō Castle",
@@ -1377,7 +1392,8 @@ func ExampleMultiWindows() {
 	//             "lat": 35.014239
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:05:33Z",
-	//           "estimated_departure": "2020-10-17T09:05:33Z"
+	//           "estimated_departure": "2020-10-17T09:05:33Z",
+	//           "estimated_service": "2020-10-17T09:05:33Z"
 	//         },
 	//         {
 	//           "id": "Kyoto Imperial Palace",
@@ -1386,7 +1402,8 @@ func ExampleMultiWindows() {
 	//             "lat": 35.025431
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:08:31Z",
-	//           "estimated_departure": "2020-10-17T09:08:31Z"
+	//           "estimated_departure": "2020-10-17T09:08:31Z",
+	//           "estimated_service": "2020-10-17T09:08:31Z"
 	//         },
 	//         {
 	//           "id": "Gionmachi",
@@ -1395,7 +1412,8 @@ func ExampleMultiWindows() {
 	//             "lat": 35.002457
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:13:15Z",
-	//           "estimated_departure": "2020-10-17T09:28:15Z"
+	//           "estimated_departure": "2020-10-17T09:28:15Z",
+	//           "estimated_service": "2020-10-17T09:13:15Z"
 	//         },
 	//         {
 	//           "id": "Kiyomizu-dera",
@@ -1404,7 +1422,8 @@ func ExampleMultiWindows() {
 	//             "lat": 34.994857
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:30:15Z",
-	//           "estimated_departure": "2020-10-17T09:30:15Z"
+	//           "estimated_departure": "2020-10-17T09:30:15Z",
+	//           "estimated_service": "2020-10-17T09:30:15Z"
 	//         },
 	//         {
 	//           "id": "Fushimi Inari Taisha",
@@ -1413,7 +1432,8 @@ func ExampleMultiWindows() {
 	//             "lat": 34.967146
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:35:43Z",
-	//           "estimated_departure": "2020-10-17T09:35:43Z"
+	//           "estimated_departure": "2020-10-17T09:35:43Z",
+	//           "estimated_service": "2020-10-17T09:35:43Z"
 	//         }
 	//       ],
 	//       "route_duration": 2143
@@ -1428,7 +1448,8 @@ func ExampleMultiWindows() {
 	//             "lat": 35.017209
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
 	//       "route_duration": 0
@@ -2636,7 +2657,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 35.039705
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         },
 	//         {
 	//           "id": "Nijō Castle",
@@ -2645,7 +2667,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 35.014239
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:05:33Z",
-	//           "estimated_departure": "2020-10-17T09:05:33Z"
+	//           "estimated_departure": "2020-10-17T09:05:33Z",
+	//           "estimated_service": "2020-10-17T09:05:33Z"
 	//         },
 	//         {
 	//           "id": "Kyoto Imperial Palace",
@@ -2654,7 +2677,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 35.025431
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:08:31Z",
-	//           "estimated_departure": "2020-10-17T09:08:31Z"
+	//           "estimated_departure": "2020-10-17T09:08:31Z",
+	//           "estimated_service": "2020-10-17T09:08:31Z"
 	//         },
 	//         {
 	//           "id": "Gionmachi",
@@ -2663,7 +2687,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 35.002457
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:13:15Z",
-	//           "estimated_departure": "2020-10-17T09:13:15Z"
+	//           "estimated_departure": "2020-10-17T09:13:15Z",
+	//           "estimated_service": "2020-10-17T09:13:15Z"
 	//         },
 	//         {
 	//           "id": "Kiyomizu-dera",
@@ -2672,7 +2697,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 34.994857
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:15:15Z",
-	//           "estimated_departure": "2020-10-17T09:15:15Z"
+	//           "estimated_departure": "2020-10-17T09:15:15Z",
+	//           "estimated_service": "2020-10-17T09:15:15Z"
 	//         },
 	//         {
 	//           "id": "Fushimi Inari Taisha",
@@ -2681,7 +2707,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 34.967146
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:20:43Z",
-	//           "estimated_departure": "2020-10-17T09:20:43Z"
+	//           "estimated_departure": "2020-10-17T09:20:43Z",
+	//           "estimated_service": "2020-10-17T09:20:43Z"
 	//         }
 	//       ],
 	//       "route_duration": 1243
@@ -2696,7 +2723,8 @@ func ExampleValueFunctionMeasures() {
 	//             "lat": 35.017209
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
 	//       "route_duration": 0
@@ -2840,7 +2868,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 34.967146
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         },
 	//         {
 	//           "id": "Kiyomizu-dera",
@@ -2849,7 +2878,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 34.994857
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:07:49Z",
-	//           "estimated_departure": "2020-10-17T09:07:49Z"
+	//           "estimated_departure": "2020-10-17T09:07:49Z",
+	//           "estimated_service": "2020-10-17T09:07:49Z"
 	//         },
 	//         {
 	//           "id": "Gionmachi",
@@ -2858,7 +2888,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 35.002457
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:10:41Z",
-	//           "estimated_departure": "2020-10-17T09:10:41Z"
+	//           "estimated_departure": "2020-10-17T09:10:41Z",
+	//           "estimated_service": "2020-10-17T09:10:41Z"
 	//         },
 	//         {
 	//           "id": "Kyoto Imperial Palace",
@@ -2867,7 +2898,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 35.025431
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:17:27Z",
-	//           "estimated_departure": "2020-10-17T09:17:27Z"
+	//           "estimated_departure": "2020-10-17T09:17:27Z",
+	//           "estimated_service": "2020-10-17T09:17:27Z"
 	//         },
 	//         {
 	//           "id": "Nijō Castle",
@@ -2876,7 +2908,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 35.014239
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:21:41Z",
-	//           "estimated_departure": "2020-10-17T09:21:41Z"
+	//           "estimated_departure": "2020-10-17T09:21:41Z",
+	//           "estimated_service": "2020-10-17T09:21:41Z"
 	//         },
 	//         {
 	//           "id": "Kinkaku-ji",
@@ -2885,7 +2918,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 35.039705
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:29:37Z",
-	//           "estimated_departure": "2020-10-17T09:29:37Z"
+	//           "estimated_departure": "2020-10-17T09:29:37Z",
+	//           "estimated_service": "2020-10-17T09:29:37Z"
 	//         }
 	//       ],
 	//       "route_duration": 1777
@@ -2900,7 +2934,8 @@ func ExampleTravelTimeMeasures() {
 	//             "lat": 35.017209
 	//           },
 	//           "estimated_arrival": "2020-10-17T09:00:00Z",
-	//           "estimated_departure": "2020-10-17T09:00:00Z"
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
 	//       "route_duration": 0
