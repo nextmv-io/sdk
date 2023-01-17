@@ -47,20 +47,28 @@ func main() {
 }
 
 func solver(input input, opts ClusterOptions) ([]Output, error) {
-	// We start by creating a kmeans model.
-	model, err := kmeans.NewModel(input.Points, input.Clusters)
-	if err != nil {
-		return nil, err
+	// We create a new model with the given points and number of clusters.
+	// We also pass the options to the model to set the maximum weight and
+	// maximum number of points per cluster.
+	maximumPoints := make([]int, input.Clusters)
+	maximumValues := make([]int, input.Clusters)
+	values := make([][]int, input.Clusters)
+
+	for idx := 0; idx < input.Clusters; idx++ {
+		maximumPoints[idx] = input.MaximumPoints
+		maximumValues[idx] = input.MaximumWeight
+		values[idx] = input.Weights
 	}
 
-	// We set the maximum weight and maximum points for each cluster.
-	for _, c := range model.ClusterModels() {
-		c.SetMaximumPoints(input.MaximumPoints)
-
-		_, err = c.SetMaximumSumValue(input.MaximumWeight, input.Weights)
-		if err != nil {
-			return nil, err
-		}
+	// We create a kmeans model using options.
+	model, err := kmeans.NewModel(
+		input.Points,
+		input.Clusters,
+		kmeans.MaximumPoints(maximumPoints),
+		kmeans.MaximumSumValue(maximumValues, values),
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	// We create a solver with the model.
