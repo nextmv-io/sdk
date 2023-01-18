@@ -15,9 +15,10 @@ func NewSolveOptions() SolveOptions {
 func NewModel(
 	points []measure.Point,
 	clusters int,
+	option ...Option,
 ) (Model, error) {
 	connect.Connect(con, &newModel)
-	return newModel(points, clusters)
+	return newModel(points, clusters, option...)
 }
 
 // NewSolver returns a new Solver.
@@ -30,5 +31,5 @@ var (
 	con             = connect.NewConnector("sdk", "KMeans")
 	newSolveOptions func() SolveOptions
 	newSolver       func(Model) (Solver, error)
-	newModel        func([]measure.Point, int) (Model, error)
+	newModel        func([]measure.Point, int, ...Option) (Model, error)
 )
