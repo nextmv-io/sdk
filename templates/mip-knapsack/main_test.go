@@ -20,7 +20,9 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Declare the output.
-	output, err := solver(input, Option{Duration: 5 * time.Second})
+	options := Option{}
+	options.Limits.Duration = 5 * time.Second
+	output, err := solver(input, options)
 	if err != nil {
 		t.Fatal(err)
 	}
