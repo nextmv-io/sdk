@@ -7,12 +7,13 @@ import (
 
 // JSON creates a JSON decoder.
 func JSON() Decoder {
-	return jsonDecoder{}
+	return JSONDecoder{}
 }
 
-type jsonDecoder struct{}
+// JSONDecoder is a Decoder that decodes a json into a struct.
+type JSONDecoder struct{}
 
 // Decode decodes JSON to the data structure v.
-func (j jsonDecoder) Decode(r io.Reader, v any) error {
+func (j JSONDecoder) Decode(r io.Reader, v any) error {
 	return json.NewDecoder(r).Decode(&v)
 }

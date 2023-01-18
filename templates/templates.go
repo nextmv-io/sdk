@@ -18,6 +18,23 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
+	// RoutingMatrixMain is the main.go file in the routing-matrix template.
+	//go:embed routing-matrix-input/main.go
+	RoutingMatrixMain string
+	// RoutingMatrixInput is the input.json file in the routing-matrix template.
+	//go:embed routing-matrix-input/input.json
+	RoutingMatrixInput string
+	// RoutingMatrixReadme is the README.md file in the routing-matrix template.
+	//go:embed routing-matrix-input/README.md
+	RoutingMatrixReadme string
+
+	// MeasureMatrixMain is the main.go file in the measure-matrix template.
+	//go:embed measure-matrix/main.go
+	MeasureMatrixMain string
+	// MeasureMatrixReadme is the README.md file in the measure-matrix template.
+	//go:embed measure-matrix/README.md
+	MeasureMatrixReadme string
+
 	// KnapsackMain is the main.go file in the knapsack template.
 	//go:embed knapsack/main.go
 	KnapsackMain string
@@ -182,4 +199,14 @@ var (
 	// PagerDutyReadme is the README.md file in the pager-duty template.
 	//go:embed pager-duty/README.md
 	PagerDutyReadme string
+
+	// ClusterMain is the main.go file in the cluster template.
+	//go:embed cluster/main.go
+	ClusterMain string
+	// ClusterInput is the input.json file in the cluster template.
+	//go:embed cluster/input.json
+	ClusterInput string
+	// ClusterReadme is the README.md file in the cluster template.
+	//go:embed cluster/README.md
+	ClusterReadme string
 )

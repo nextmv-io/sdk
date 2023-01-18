@@ -13,6 +13,12 @@ linters-settings:
     allowed:
       modules:
         - github.com/nextmv-io/sdk
+        - github.com/nextmv-io/sdk/route
+        - github.com/nextmv-io/sdk/route/osrm
+        - github.com/nextmv-io/sdk/route/here
+        - github.com/nextmv-io/sdk/route/google
+        - github.com/nextmv-io/sdk/route/routingkit
+        - googlemaps.github.io/maps
         - github.com/dgraph-io/ristretto
         - github.com/golang/mock
         - github.com/google/go-cmp
@@ -20,6 +26,9 @@ linters-settings:
         - github.com/nextmv-io/go-routingkit
         - github.com/twpayne/go-polyline
         - googlemaps.github.io/maps
+        - github.com/itzg/go-flagsfiller
+        - github.com/gorilla/schema
+        - github.com/google/uuid
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 10
@@ -162,6 +171,16 @@ issues:
       linters:
         - dupl
 
+    # Complexity in LessClockwise is high due to multiple cases, fine for now.
+    - path: measure/sort\.go
+      linters:
+        - gocyclo
+
+    # Complexity in TestBin is high due to multiple cases, fine for now.
+    - path: measure/bin_test\.go
+      linters:
+        - gocyclo
+
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go
       linters:
@@ -217,3 +236,24 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
+    # Deactivating gocritic because of a gocritic bug that was fixed on October
+    # 6th, but the fix has not yet been released
+    # https://github.com/go-critic/go-critic/pull/1273
+    - path: run/run\.go
+      linters:
+        - gocritic
+      text: newDeref
+    # Deactivate gocyclo for CustomEncoder in run.go
+    - path: run/encoder\.go
+      linters:
+        - gocyclo
+      source: ^func \(g \*genericEncoder.*$
+    # Deactivate line length in http_runner_config.go because of go tags
+    - path: run/http_runner_config\.go
+      linters:
+        - lll
+    # Deactivate gocyclo for GenericRunner in generic_runner.go
+    - path: run/generic_runner\.go
+      linters:
+        - gocyclo
+      source: ^func \(r \*genericRunner.*$

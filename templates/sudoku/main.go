@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"hash/maphash"
+	"log"
 	"time"
 
 	"github.com/nextmv-io/sdk/model"
@@ -12,7 +13,10 @@ import (
 )
 
 func main() {
-	run.Run(solver)
+	err := run.Run(solver)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func solver(input [9][9]int, opts store.Options) (store.Solver, error) {
