@@ -11,7 +11,7 @@ as expected:
 
 ```bash
 nextmv run local . -- -runner.input.path input.json \
-  -runner.output.path output.json -duration 10s
+  -runner.output.path output.json -limits.duration 10s
 ```
 
 A file `output.json` should have been created with a clustering solution
