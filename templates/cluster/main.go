@@ -36,7 +36,9 @@ type Output struct {
 
 // ClusterOptions holds the options for the solver.
 type ClusterOptions struct {
-	Duration time.Duration `json:"duration" default:"10s"`
+	Limits struct {
+		Duration time.Duration `json:"duration" default:"10s"`
+	} `json:"limits"`
 }
 
 func main() {
@@ -81,7 +83,7 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 	// and the measure to use.
 	solveOptions := kmeans.NewSolveOptions().
 		SetMeasure(measure.EuclideanByPoint()).
-		SetMaximumDuration(opts.Duration)
+		SetMaximumDuration(opts.Limits.Duration)
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
