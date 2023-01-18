@@ -50,7 +50,9 @@ type Option struct {
 	// here in case no duration limit is set. For local runs there is no time
 	// limitation. If you want to make cloud runs for longer than 5 minutes,
 	// please contact: support@nextmv.io
-	Duration time.Duration `json:"duration" default:"10s"`
+	Limits struct {
+		Duration time.Duration `json:"duration" default:"10s"`
+	} `json:"limits"`
 }
 
 // Output is the output of the solver.
@@ -100,7 +102,7 @@ func solver(input input, opts Option) ([]Output, error) {
 	solveOptions := mip.NewSolveOptions()
 
 	// Limit the solve to a maximum duration
-	if err = solveOptions.SetMaximumDuration(opts.Duration); err != nil {
+	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
 		return nil, err
 	}
 

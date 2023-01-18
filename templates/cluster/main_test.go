@@ -21,7 +21,7 @@ func TestTemplate(t *testing.T) {
 
 	// Declare the options.
 	opt := ClusterOptions{}
-	opt.Duration = 5 * time.Second
+	opt.Limits.Duration = 5 * time.Second
 
 	// Declare the solver.
 	output, err := solver(input, opt)
