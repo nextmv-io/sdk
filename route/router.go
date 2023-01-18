@@ -113,6 +113,7 @@ type PlannedStop struct {
 	Stop
 	EstimatedArrival   *time.Time `json:"estimated_arrival,omitempty"`
 	EstimatedDeparture *time.Time `json:"estimated_departure,omitempty"`
+	EstimatedService   *time.Time `json:"estimated_service,omitempty"`
 }
 
 // Stop to service in a Vehicle Routing Problem.

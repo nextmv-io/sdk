@@ -8,7 +8,8 @@
           "id": "stop-1",
           "position": { "lon": 13.80583, "lat": 52.51017 },
           "estimated_arrival": "2023-01-10T16:36:51.803624+01:00",
-          "estimated_departure": "2023-01-10T16:36:51.803624+01:00"
+          "estimated_departure": "2023-01-10T16:36:51.803624+01:00",
+          "estimated_service": "2023-01-10T16:36:51.803624+01:00"
         }
       ],
       "route_duration": 0
@@ -20,7 +21,8 @@
           "id": "stop-0",
           "position": { "lon": 13.57843, "lat": 53.21077 },
           "estimated_arrival": "2023-01-10T16:36:51.803624+01:00",
-          "estimated_departure": "2023-01-10T16:36:51.803624+01:00"
+          "estimated_departure": "2023-01-10T16:36:51.803624+01:00",
+          "estimated_service": "2023-01-10T16:36:51.803624+01:00"
         }
       ],
       "route_duration": 0
