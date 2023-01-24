@@ -6,6 +6,19 @@ type ByIndex interface {
 	Cost(from, to int) float64
 }
 
+// DependentByIndex estimates the cost of going from one index to another
+// taking a point in time into account.
+type DependentByIndex interface {
+	Cost(
+		from,
+		to int,
+		times Times,
+		id string,
+		route []int,
+		value float64,
+	) float64
+}
+
 // ByPoint estimates the cost of going from one point to another.
 type ByPoint interface {
 	// Cost estimates the cost of going from one point to another.
@@ -25,4 +38,12 @@ func IsTriangular(m any) bool {
 		return t.Triangular()
 	}
 	return false
+}
+
+// Times holds the estimated time of arrival (ETA), estimated time of when
+// service starts (ETS) and estimated time of departure (ETD).
+type Times struct {
+	EstimatedArrival      []int `json:"estimated_arrival"`
+	EstimatedServiceStart []int `json:"estimated_service_start"`
+	EstimatedDeparture    []int `json:"estimated_departure"`
 }
