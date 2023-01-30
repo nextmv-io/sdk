@@ -3,6 +3,7 @@ package route_test
 import (
 	"fmt"
 
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 )
 
@@ -89,6 +90,31 @@ func ExampleIndexed() {
 	fmt.Println(int(indexed.Cost(0, 1)))
 	// Output:
 	// 3280
+}
+
+func ExampleDependentIndexed() {
+	indexed1 := route.Constant(5)
+	indexed2 := route.Scale(indexed1, 2)
+	costFunc := func(
+		from,
+		to int,
+		times measure.Times,
+		id string,
+		route []int,
+		value float64,
+	) float64 {
+		if from == 0 && to == 1 {
+			return indexed1.Cost(from, to)
+		}
+		return indexed2.Cost(from, to)
+	}
+
+	dependentMeasure := route.DependentIndexed(costFunc)
+	fmt.Println(dependentMeasure.Cost(0, 1, measure.Times{}, "", nil, 0))
+	fmt.Println(dependentMeasure.Cost(1, 0, measure.Times{}, "", nil, 0))
+	// Output:
+	// 5
+	// 10
 }
 
 func ExampleScale() {

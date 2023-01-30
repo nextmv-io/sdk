@@ -13,6 +13,10 @@ type Point = measure.Point
 // ByIndex estimates the cost of going from one index to another.
 type ByIndex = measure.ByIndex
 
+// DependentByIndex is a measure uses a custom cost func to calculate parameter
+// dependent costs for connecting to points by index.
+type DependentByIndex = measure.DependentByIndex
+
 // ByPoint estimates the cost of going from one point to another.
 type ByPoint = measure.ByPoint
 
@@ -91,6 +95,21 @@ func EuclideanByPoint() ByPoint {
 // and wrapping the provided points.
 func Indexed(m ByPoint, points []Point) ByIndex {
 	return measure.Indexed(m, points)
+}
+
+// DependentIndexed is a measure uses a custom cost func to calculate parameter
+// dependent costs for connecting to points by index.
+func DependentIndexed(
+	cost func(
+		from,
+		to int,
+		times measure.Times,
+		id string,
+		route []int,
+		value float64,
+	) float64,
+) DependentByIndex {
+	return measure.DependentIndexed(cost)
 }
 
 // Scale the cost of some other measure by a constant.
