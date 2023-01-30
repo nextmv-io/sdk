@@ -19,7 +19,7 @@ Before you start customizing run the command below to see if everything works as
 expected:
 
 ``` bash
-nextmv run local . -- -runner.input.path data/fleet-tiny.json\
+nextmv sdk run . -- -runner.input.path data/fleet-tiny.json\
   -runner.output.path output.json -limits.duration 10s
 ```
 
