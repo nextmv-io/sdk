@@ -13,7 +13,7 @@ Before you start customizing run the command below to see if everything works as
 expected:
 
 ```bash
-nextmv run local . -- -runner.input.path input.json\
+nextmv sdk run . -- -runner.input.path input.json\
   -runner.output.path output.json -limits.duration 10s
 ```
 
