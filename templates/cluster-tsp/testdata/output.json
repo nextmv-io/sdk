@@ -1,0 +1,157 @@
+{
+  "unassigned": [],
+  "vehicles": [
+    {
+      "id": "vehicle-1",
+      "route": [
+        {
+          "id": "vehicle-1-start",
+          "position": {
+            "lon": -96.659222,
+            "lat": 33.122746
+          },
+          "estimated_arrival": "2021-10-17T09:00:00-06:00",
+          "estimated_departure": "2021-10-17T09:00:00-06:00",
+          "estimated_service": "2021-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "location-5",
+          "position": {
+            "lon": -96.64137458150537,
+            "lat": 33.178801586789376
+          },
+          "estimated_arrival": "2021-10-17T09:10:45-06:00",
+          "estimated_departure": "2021-10-17T09:12:45-06:00",
+          "estimated_service": "2021-10-17T09:10:45-06:00"
+        },
+        {
+          "id": "location-4",
+          "position": {
+            "lon": -96.61356543957307,
+            "lat": 33.20379744909628
+          },
+          "estimated_arrival": "2021-10-17T09:19:05-06:00",
+          "estimated_departure": "2021-10-17T09:21:05-06:00",
+          "estimated_service": "2021-10-17T09:19:05-06:00"
+        },
+        {
+          "id": "location-2",
+          "position": {
+            "lon": -96.54613745932127,
+            "lat": 33.2259142720506
+          },
+          "estimated_arrival": "2021-10-17T09:32:19-06:00",
+          "estimated_departure": "2021-10-17T09:34:19-06:00",
+          "estimated_service": "2021-10-17T09:32:19-06:00"
+        },
+        {
+          "id": "location-3",
+          "position": {
+            "lon": -96.61059803136642,
+            "lat": 33.23528740544529
+          },
+          "estimated_arrival": "2021-10-17T09:44:28-06:00",
+          "estimated_departure": "2021-10-17T09:46:28-06:00",
+          "estimated_service": "2021-10-17T09:44:28-06:00"
+        },
+        {
+          "id": "location-1",
+          "position": {
+            "lon": -96.75038245222623,
+            "lat": 33.20580830033956
+          },
+          "estimated_arrival": "2021-10-17T10:08:49-06:00",
+          "estimated_departure": "2021-10-17T10:10:49-06:00",
+          "estimated_service": "2021-10-17T10:08:49-06:00"
+        },
+        {
+          "id": "vehicle-1-end",
+          "position": {
+            "lon": -96.659222,
+            "lat": 33.122746
+          },
+          "estimated_arrival": "2021-10-17T10:31:43-06:00",
+          "estimated_departure": "2021-10-17T10:31:43-06:00",
+          "estimated_service": "2021-10-17T10:31:43-06:00"
+        }
+      ],
+      "route_duration": 5503
+    },
+    {
+      "id": "vehicle-2",
+      "route": [
+        {
+          "id": "vehicle-2-start",
+          "position": {
+            "lon": -96.659222,
+            "lat": 33.122746
+          },
+          "estimated_arrival": "2021-10-17T09:00:00-06:00",
+          "estimated_departure": "2021-10-17T09:00:00-06:00",
+          "estimated_service": "2021-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "location-7",
+          "position": {
+            "lon": -96.62951544963792,
+            "lat": 33.08670100884261
+          },
+          "estimated_arrival": "2021-10-17T09:08:07-06:00",
+          "estimated_departure": "2021-10-17T09:10:07-06:00",
+          "estimated_service": "2021-10-17T09:08:07-06:00"
+        },
+        {
+          "id": "location-6",
+          "position": {
+            "lon": -96.83157538607735,
+            "lat": 33.02896457334468
+          },
+          "estimated_arrival": "2021-10-17T09:43:17-06:00",
+          "estimated_departure": "2021-10-17T09:45:17-06:00",
+          "estimated_service": "2021-10-17T09:43:17-06:00"
+        },
+        {
+          "id": "location-8",
+          "position": {
+            "lon": -96.86007117348946,
+            "lat": 33.08133590083287
+          },
+          "estimated_arrival": "2021-10-17T09:55:57-06:00",
+          "estimated_departure": "2021-10-17T09:57:57-06:00",
+          "estimated_service": "2021-10-17T09:55:57-06:00"
+        },
+        {
+          "id": "location-9",
+          "position": {
+            "lon": -96.87346076034575,
+            "lat": 33.092841906114394
+          },
+          "estimated_arrival": "2021-10-17T10:00:56-06:00",
+          "estimated_departure": "2021-10-17T10:02:56-06:00",
+          "estimated_service": "2021-10-17T10:00:56-06:00"
+        },
+        {
+          "id": "location-10",
+          "position": {
+            "lon": -96.79586982112724,
+            "lat": 33.10492159118987
+          },
+          "estimated_arrival": "2021-10-17T10:15:11-06:00",
+          "estimated_departure": "2021-10-17T10:17:11-06:00",
+          "estimated_service": "2021-10-17T10:15:11-06:00"
+        },
+        {
+          "id": "vehicle-2-end",
+          "position": {
+            "lon": -96.659222,
+            "lat": 33.122746
+          },
+          "estimated_arrival": "2021-10-17T10:38:39-06:00",
+          "estimated_departure": "2021-10-17T10:38:39-06:00",
+          "estimated_service": "2021-10-17T10:38:39-06:00"
+        }
+      ],
+      "route_duration": 5919
+    }
+  ]
+}

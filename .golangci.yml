@@ -222,6 +222,15 @@ issues:
     - path: templates/sudoku/main\.go
       linters:
         - gocyclo
+    - path: templates/cluster-tsp/helper\.go
+      linters:
+        - gocyclo
+    - path: templates/cluster-tsp/schema\.go
+      linters:
+        - gocyclo
+    - path: templates/cluster-tsp/solver\.go
+      linters:
+        - gocyclo
 
     # TODO: figure out a better way to Marshal to JSON with some sort of error
     # checking.
@@ -236,6 +245,19 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
+      
+    - path: templates/cluster-tsp/schema\.go
+      linters:
+        - unparam
+      text: cloudDuration
+
+    # The linter suggests switching an if-elseif-else statement to use switch.
+    # This is not reasonable right now because the conditions are complex.
+    - path: templates/cluster-tsp/helper\.go
+      linters:
+        - gocritic
+      text: ifElseChain
+
     # Deactivating gocritic because of a gocritic bug that was fixed on October
     # 6th, but the fix has not yet been released
     # https://github.com/go-critic/go-critic/pull/1273
