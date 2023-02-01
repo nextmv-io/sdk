@@ -24,6 +24,7 @@ var solver = func(i input, opts store.Options) (store.Solver, error) {
 	}
 
 	routerInput := i.transform()
+
 	// Creates an evenly sized cluster for every vehicles and creates
 	// compatibility attributes for each stop/vehicle such that every cluster
 	// must be served by 1 vehicle.
