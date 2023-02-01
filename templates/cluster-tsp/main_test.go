@@ -20,7 +20,7 @@ type output struct {
 func TestTemplate(t *testing.T) {
 	// Read the input from the file.
 	input := input{}
-	b, err := os.ReadFile("data/fleet-tiny.json")
+	b, err := os.ReadFile("data/input.json")
 	if err != nil {
 		t.Fatal(err)
 	}

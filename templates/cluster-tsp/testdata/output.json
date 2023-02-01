@@ -1,157 +1,543 @@
 {
-  "unassigned": [],
-  "vehicles": [
+  "version": { "sdk": "v0.20.11" },
+  "options": {
+    "diagram": { "expansion": { "limit": 1 }, "width": 10 },
+    "limits": { "duration": "5s", "nodes": 0, "solutions": 1 },
+    "search": { "buffer": 100 },
+    "sense": "minimize"
+  },
+  "solutions": [
     {
-      "id": "vehicle-1",
-      "route": [
-        {
-          "id": "vehicle-1-start",
-          "position": {
-            "lon": -96.659222,
-            "lat": 33.122746
+      "store": {
+        "unassigned": [
+          {
+            "id": "order-1-dropoff-express",
+            "position": { "lon": -96.7524, "lat": 32.65764 }
           },
-          "estimated_arrival": "2021-10-17T09:00:00-06:00",
-          "estimated_departure": "2021-10-17T09:00:00-06:00",
-          "estimated_service": "2021-10-17T09:00:00-06:00"
+          {
+            "id": "order-32-dropoff",
+            "position": { "lon": -97.02657, "lat": 32.98169 }
+          }
+        ],
+        "vehicles": [
+          {
+            "id": "vehicle-1",
+            "route": [
+              {
+                "id": "vehicle-1-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-6-dropoff",
+                "position": { "lon": -96.85313, "lat": 32.80997 },
+                "estimated_arrival": "2021-06-10T08:02:29Z",
+                "estimated_departure": "2021-06-10T08:04:29Z",
+                "estimated_service": "2021-06-10T08:02:29Z"
+              },
+              {
+                "id": "order-24-dropoff",
+                "position": { "lon": -96.89299, "lat": 32.78629 },
+                "estimated_arrival": "2021-06-10T08:10:49Z",
+                "estimated_departure": "2021-06-10T08:12:49Z",
+                "estimated_service": "2021-06-10T08:10:49Z"
+              },
+              {
+                "id": "order-33-dropoff",
+                "position": { "lon": -96.83755, "lat": 32.72714 },
+                "estimated_arrival": "2021-06-10T08:24:27Z",
+                "estimated_departure": "2021-06-10T08:26:27Z",
+                "estimated_service": "2021-06-10T08:24:27Z"
+              },
+              {
+                "id": "order-2-dropoff",
+                "position": { "lon": -96.82663, "lat": 32.6498 },
+                "estimated_arrival": "2021-06-10T08:38:29Z",
+                "estimated_departure": "2021-06-10T08:40:29Z",
+                "estimated_service": "2021-06-10T08:38:29Z"
+              },
+              {
+                "id": "order-34-dropoff",
+                "position": { "lon": -96.83107, "lat": 32.74498 },
+                "estimated_arrival": "2021-06-10T08:55:12Z",
+                "estimated_departure": "2021-06-10T08:57:12Z",
+                "estimated_service": "2021-06-10T08:55:12Z"
+              },
+              {
+                "id": "order-29-dropoff",
+                "position": { "lon": -96.80497, "lat": 32.76309 },
+                "estimated_arrival": "2021-06-10T09:01:36Z",
+                "estimated_departure": "2021-06-10T09:03:36Z",
+                "estimated_service": "2021-06-10T09:01:36Z"
+              },
+              {
+                "id": "order-30-dropoff-express",
+                "position": { "lon": -96.76166, "lat": 32.76119 },
+                "estimated_arrival": "2021-06-10T09:09:14Z",
+                "estimated_departure": "2021-06-10T09:11:14Z",
+                "estimated_service": "2021-06-10T09:09:14Z"
+              },
+              {
+                "id": "order-35-dropoff-express",
+                "position": { "lon": -96.75898, "lat": 32.81226 },
+                "estimated_arrival": "2021-06-10T09:19:08Z",
+                "estimated_departure": "2021-06-10T09:21:08Z",
+                "estimated_service": "2021-06-10T09:19:08Z"
+              },
+              {
+                "id": "order-54-dropoff-express",
+                "position": { "lon": -96.72232, "lat": 32.81076 },
+                "estimated_arrival": "2021-06-10T09:25:54Z",
+                "estimated_departure": "2021-06-10T09:27:54Z",
+                "estimated_service": "2021-06-10T09:25:54Z"
+              },
+              {
+                "id": "order-10-dropoff",
+                "position": { "lon": -96.69089, "lat": 32.77412 },
+                "estimated_arrival": "2021-06-10T09:34:53Z",
+                "estimated_departure": "2021-06-10T09:36:53Z",
+                "estimated_service": "2021-06-10T09:34:53Z"
+              },
+              {
+                "id": "order-9-dropoff",
+                "position": { "lon": -96.67937, "lat": 32.77418 },
+                "estimated_arrival": "2021-06-10T09:38:23Z",
+                "estimated_departure": "2021-06-10T09:40:23Z",
+                "estimated_service": "2021-06-10T09:38:23Z"
+              },
+              {
+                "id": "order-8-dropoff",
+                "position": { "lon": -96.6335, "lat": 32.7274 },
+                "estimated_arrival": "2021-06-10T09:49:45Z",
+                "estimated_departure": "2021-06-10T09:51:45Z",
+                "estimated_service": "2021-06-10T09:49:45Z"
+              },
+              {
+                "id": "order-7-dropoff",
+                "position": { "lon": -96.58497, "lat": 32.73941 },
+                "estimated_arrival": "2021-06-10T09:58:19Z",
+                "estimated_departure": "2021-06-10T10:00:19Z",
+                "estimated_service": "2021-06-10T09:58:19Z"
+              }
+            ],
+            "route_duration": 7219
+          },
+          {
+            "id": "vehicle-2",
+            "route": [
+              {
+                "id": "vehicle-2-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-5-dropoff-express",
+                "position": { "lon": -96.88486, "lat": 32.81559 },
+                "estimated_arrival": "2021-06-10T08:01:58Z",
+                "estimated_departure": "2021-06-10T08:03:58Z",
+                "estimated_service": "2021-06-10T08:01:58Z"
+              },
+              {
+                "id": "order-19-dropoff",
+                "position": { "lon": -96.91767, "lat": 32.8335 },
+                "estimated_arrival": "2021-06-10T08:09:03Z",
+                "estimated_departure": "2021-06-10T08:11:03Z",
+                "estimated_service": "2021-06-10T08:09:03Z"
+              },
+              {
+                "id": "order-41-dropoff-express",
+                "position": { "lon": -96.98874, "lat": 32.7878 },
+                "estimated_arrival": "2021-06-10T08:22:40Z",
+                "estimated_departure": "2021-06-10T08:24:40Z",
+                "estimated_service": "2021-06-10T08:22:40Z"
+              },
+              {
+                "id": "order-3-dropoff",
+                "position": { "lon": -96.9925, "lat": 32.8922 },
+                "estimated_arrival": "2021-06-10T08:40:48Z",
+                "estimated_departure": "2021-06-10T08:42:48Z",
+                "estimated_service": "2021-06-10T08:40:48Z"
+              },
+              {
+                "id": "order-4-dropoff",
+                "position": { "lon": -96.99433, "lat": 32.89166 },
+                "estimated_arrival": "2021-06-10T08:43:03Z",
+                "estimated_departure": "2021-06-10T08:45:03Z",
+                "estimated_service": "2021-06-10T08:43:03Z"
+              },
+              {
+                "id": "order-31-dropoff",
+                "position": { "lon": -97.07549, "lat": 32.99633 },
+                "estimated_arrival": "2021-06-10T09:04:20Z",
+                "estimated_departure": "2021-06-10T09:06:20Z",
+                "estimated_service": "2021-06-10T09:04:20Z"
+              },
+              {
+                "id": "order-39-dropoff-express",
+                "position": { "lon": -97.11454, "lat": 32.86066 },
+                "estimated_arrival": "2021-06-10T09:27:53Z",
+                "estimated_departure": "2021-06-10T09:29:53Z",
+                "estimated_service": "2021-06-10T09:27:53Z"
+              },
+              {
+                "id": "order-40-dropoff",
+                "position": { "lon": -97.09216, "lat": 32.80261 },
+                "estimated_arrival": "2021-06-10T09:39:18Z",
+                "estimated_departure": "2021-06-10T09:41:18Z",
+                "estimated_service": "2021-06-10T09:39:18Z"
+              },
+              {
+                "id": "order-27-dropoff",
+                "position": { "lon": -97.10771, "lat": 32.73423 },
+                "estimated_arrival": "2021-06-10T09:52:03Z",
+                "estimated_departure": "2021-06-10T09:54:03Z",
+                "estimated_service": "2021-06-10T09:52:03Z"
+              },
+              {
+                "id": "order-28-dropoff",
+                "position": { "lon": -97.11424, "lat": 32.74378 },
+                "estimated_arrival": "2021-06-10T09:55:45Z",
+                "estimated_departure": "2021-06-10T09:57:45Z",
+                "estimated_service": "2021-06-10T09:55:45Z"
+              },
+              {
+                "id": "order-45-dropoff-express",
+                "position": { "lon": -97.24524, "lat": 32.67599 },
+                "estimated_arrival": "2021-06-10T10:17:44Z",
+                "estimated_departure": "2021-06-10T10:19:44Z",
+                "estimated_service": "2021-06-10T10:17:44Z"
+              },
+              {
+                "id": "order-17-dropoff",
+                "position": { "lon": -97.26953, "lat": 32.90896 },
+                "estimated_arrival": "2021-06-10T10:55:51Z",
+                "estimated_departure": "2021-06-10T10:57:51Z",
+                "estimated_service": "2021-06-10T10:55:51Z"
+              },
+              {
+                "id": "order-18-dropoff",
+                "position": { "lon": -97.27819, "lat": 32.87165 },
+                "estimated_arrival": "2021-06-10T11:03:43Z",
+                "estimated_departure": "2021-06-10T11:05:43Z",
+                "estimated_service": "2021-06-10T11:03:43Z"
+              }
+            ],
+            "route_duration": 11143
+          },
+          {
+            "id": "vehicle-3",
+            "route": [
+              {
+                "id": "vehicle-3-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-23-dropoff-express",
+                "position": { "lon": -96.91338, "lat": 32.81572 },
+                "estimated_arrival": "2021-06-10T08:05:28Z",
+                "estimated_departure": "2021-06-10T08:07:28Z",
+                "estimated_service": "2021-06-10T08:05:28Z"
+              },
+              {
+                "id": "order-20-dropoff",
+                "position": { "lon": -96.96781, "lat": 32.81456 },
+                "estimated_arrival": "2021-06-10T08:14:32Z",
+                "estimated_departure": "2021-06-10T08:16:32Z",
+                "estimated_service": "2021-06-10T08:14:32Z"
+              },
+              {
+                "id": "order-16-dropoff",
+                "position": { "lon": -97.00757, "lat": 32.75106 },
+                "estimated_arrival": "2021-06-10T08:27:37Z",
+                "estimated_departure": "2021-06-10T08:29:37Z",
+                "estimated_service": "2021-06-10T08:27:37Z"
+              },
+              {
+                "id": "order-15-dropoff",
+                "position": { "lon": -97.02575, "lat": 32.75759 },
+                "estimated_arrival": "2021-06-10T08:32:11Z",
+                "estimated_departure": "2021-06-10T08:34:11Z",
+                "estimated_service": "2021-06-10T08:32:11Z"
+              },
+              {
+                "id": "order-25-dropoff",
+                "position": { "lon": -97.06819, "lat": 32.78366 },
+                "estimated_arrival": "2021-06-10T08:41:01Z",
+                "estimated_departure": "2021-06-10T08:43:01Z",
+                "estimated_service": "2021-06-10T08:41:01Z"
+              },
+              {
+                "id": "order-26-dropoff",
+                "position": { "lon": -97.07571, "lat": 32.74745 },
+                "estimated_arrival": "2021-06-10T08:48:42Z",
+                "estimated_departure": "2021-06-10T08:50:42Z",
+                "estimated_service": "2021-06-10T08:48:42Z"
+              },
+              {
+                "id": "order-12-dropoff",
+                "position": { "lon": -97.06902, "lat": 32.69165 },
+                "estimated_arrival": "2021-06-10T08:59:22Z",
+                "estimated_departure": "2021-06-10T09:01:22Z",
+                "estimated_service": "2021-06-10T08:59:22Z"
+              },
+              {
+                "id": "order-22-dropoff-express",
+                "position": { "lon": -97.14001, "lat": 32.7049 },
+                "estimated_arrival": "2021-06-10T09:10:49Z",
+                "estimated_departure": "2021-06-10T09:12:49Z",
+                "estimated_service": "2021-06-10T09:10:49Z"
+              },
+              {
+                "id": "order-21-dropoff",
+                "position": { "lon": -97.14119, "lat": 32.6914 },
+                "estimated_arrival": "2021-06-10T09:14:54Z",
+                "estimated_departure": "2021-06-10T09:16:54Z",
+                "estimated_service": "2021-06-10T09:14:54Z"
+              },
+              {
+                "id": "order-11-dropoff",
+                "position": { "lon": -97.09611, "lat": 32.66673 },
+                "estimated_arrival": "2021-06-10T09:23:53Z",
+                "estimated_departure": "2021-06-10T09:25:53Z",
+                "estimated_service": "2021-06-10T09:23:53Z"
+              },
+              {
+                "id": "order-13-dropoff-express",
+                "position": { "lon": -96.9157, "lat": 32.57605 },
+                "estimated_arrival": "2021-06-10T09:53:13Z",
+                "estimated_departure": "2021-06-10T09:55:13Z",
+                "estimated_service": "2021-06-10T09:53:13Z"
+              },
+              {
+                "id": "order-14-dropoff-express",
+                "position": { "lon": -96.83226, "lat": 32.57542 },
+                "estimated_arrival": "2021-06-10T10:06:05Z",
+                "estimated_departure": "2021-06-10T10:08:05Z",
+                "estimated_service": "2021-06-10T10:06:05Z"
+              }
+            ],
+            "route_duration": 7685
+          },
+          {
+            "id": "vehicle-4",
+            "route": [
+              {
+                "id": "vehicle-4-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-38-dropoff",
+                "position": { "lon": -96.84767, "lat": 32.85327 },
+                "estimated_arrival": "2021-06-10T08:07:34Z",
+                "estimated_departure": "2021-06-10T08:09:34Z",
+                "estimated_service": "2021-06-10T08:07:34Z"
+              },
+              {
+                "id": "order-37-dropoff",
+                "position": { "lon": -96.87548, "lat": 32.86909 },
+                "estimated_arrival": "2021-06-10T08:13:55Z",
+                "estimated_departure": "2021-06-10T08:15:55Z",
+                "estimated_service": "2021-06-10T08:13:55Z"
+              },
+              {
+                "id": "order-36-dropoff",
+                "position": { "lon": -96.86107, "lat": 32.86877 },
+                "estimated_arrival": "2021-06-10T08:17:47Z",
+                "estimated_departure": "2021-06-10T08:19:47Z",
+                "estimated_service": "2021-06-10T08:17:47Z"
+              },
+              {
+                "id": "order-48-dropoff",
+                "position": { "lon": -96.99882, "lat": 32.95493 },
+                "estimated_arrival": "2021-06-10T08:42:03Z",
+                "estimated_departure": "2021-06-10T08:44:03Z",
+                "estimated_service": "2021-06-10T08:42:03Z"
+              },
+              {
+                "id": "order-47-dropoff",
+                "position": { "lon": -96.99328, "lat": 32.96625 },
+                "estimated_arrival": "2021-06-10T08:45:56Z",
+                "estimated_departure": "2021-06-10T08:47:56Z",
+                "estimated_service": "2021-06-10T08:45:56Z"
+              }
+            ],
+            "route_duration": 2876
+          },
+          {
+            "id": "vehicle-5",
+            "route": [
+              {
+                "id": "vehicle-5-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-43-dropoff",
+                "position": { "lon": -96.95503, "lat": 32.80223 },
+                "estimated_arrival": "2021-06-10T08:10:48Z",
+                "estimated_departure": "2021-06-10T08:12:48Z",
+                "estimated_service": "2021-06-10T08:10:48Z"
+              },
+              {
+                "id": "order-56-dropoff",
+                "position": { "lon": -96.95654, "lat": 32.85079 },
+                "estimated_arrival": "2021-06-10T08:20:18Z",
+                "estimated_departure": "2021-06-10T08:22:18Z",
+                "estimated_service": "2021-06-10T08:20:18Z"
+              },
+              {
+                "id": "order-55-dropoff",
+                "position": { "lon": -96.97696, "lat": 32.84465 },
+                "estimated_arrival": "2021-06-10T08:25:07Z",
+                "estimated_departure": "2021-06-10T08:27:07Z",
+                "estimated_service": "2021-06-10T08:25:07Z"
+              },
+              {
+                "id": "order-52-dropoff",
+                "position": { "lon": -97.07473, "lat": 32.84717 },
+                "estimated_arrival": "2021-06-10T08:39:48Z",
+                "estimated_departure": "2021-06-10T08:41:48Z",
+                "estimated_service": "2021-06-10T08:39:48Z"
+              },
+              {
+                "id": "order-51-dropoff",
+                "position": { "lon": -97.03959, "lat": 32.81613 },
+                "estimated_arrival": "2021-06-10T08:48:25Z",
+                "estimated_departure": "2021-06-10T08:50:25Z",
+                "estimated_service": "2021-06-10T08:48:25Z"
+              },
+              {
+                "id": "order-58-dropoff",
+                "position": { "lon": -97.04503, "lat": 32.7977 },
+                "estimated_arrival": "2021-06-10T08:53:21Z",
+                "estimated_departure": "2021-06-10T08:55:21Z",
+                "estimated_service": "2021-06-10T08:53:21Z"
+              },
+              {
+                "id": "order-42-dropoff",
+                "position": { "lon": -97.00073, "lat": 32.79869 },
+                "estimated_arrival": "2021-06-10T09:01:06Z",
+                "estimated_departure": "2021-06-10T09:03:06Z",
+                "estimated_service": "2021-06-10T09:01:06Z"
+              },
+              {
+                "id": "order-44-dropoff",
+                "position": { "lon": -96.95133, "lat": 32.75588 },
+                "estimated_arrival": "2021-06-10T09:12:19Z",
+                "estimated_departure": "2021-06-10T09:14:19Z",
+                "estimated_service": "2021-06-10T09:12:19Z"
+              },
+              {
+                "id": "order-57-dropoff",
+                "position": { "lon": -97.05679, "lat": 32.77299 },
+                "estimated_arrival": "2021-06-10T09:28:16Z",
+                "estimated_departure": "2021-06-10T09:30:16Z",
+                "estimated_service": "2021-06-10T09:28:16Z"
+              },
+              {
+                "id": "order-49-dropoff",
+                "position": { "lon": -97.11088, "lat": 32.62739 },
+                "estimated_arrival": "2021-06-10T09:53:50Z",
+                "estimated_departure": "2021-06-10T09:55:50Z",
+                "estimated_service": "2021-06-10T09:53:50Z"
+              },
+              {
+                "id": "order-50-dropoff",
+                "position": { "lon": -97.11645, "lat": 32.64435 },
+                "estimated_arrival": "2021-06-10T09:58:33Z",
+                "estimated_departure": "2021-06-10T10:00:33Z",
+                "estimated_service": "2021-06-10T09:58:33Z"
+              },
+              {
+                "id": "order-46-dropoff",
+                "position": { "lon": -97.17783, "lat": 32.69514 },
+                "estimated_arrival": "2021-06-10T10:11:44Z",
+                "estimated_departure": "2021-06-10T10:13:44Z",
+                "estimated_service": "2021-06-10T10:11:44Z"
+              }
+            ],
+            "route_duration": 8024
+          },
+          {
+            "id": "vehicle-6",
+            "route": [
+              {
+                "id": "vehicle-6-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-53-dropoff",
+                "position": { "lon": -96.74741, "lat": 32.8013 },
+                "estimated_arrival": "2021-06-10T08:16:14Z",
+                "estimated_departure": "2021-06-10T08:18:14Z",
+                "estimated_service": "2021-06-10T08:16:14Z"
+              }
+            ],
+            "route_duration": 1094
+          },
+          {
+            "id": "vehicle-7",
+            "route": [
+              {
+                "id": "vehicle-7-start",
+                "position": { "lon": -96.87215, "lat": 32.80875 },
+                "estimated_arrival": "2021-06-10T08:00:00Z",
+                "estimated_departure": "2021-06-10T08:00:00Z",
+                "estimated_service": "2021-06-10T08:00:00Z"
+              },
+              {
+                "id": "order-59-dropoff-express",
+                "position": { "lon": -96.88061, "lat": 32.67237 },
+                "estimated_arrival": "2021-06-10T08:21:05Z",
+                "estimated_departure": "2021-06-10T08:23:05Z",
+                "estimated_service": "2021-06-10T08:21:05Z"
+              },
+              {
+                "id": "order-60-dropoff",
+                "position": { "lon": -96.89393, "lat": 32.67114 },
+                "estimated_arrival": "2021-06-10T08:24:50Z",
+                "estimated_departure": "2021-06-10T08:26:50Z",
+                "estimated_service": "2021-06-10T08:24:50Z"
+              }
+            ],
+            "route_duration": 1610
+          }
+        ]
+      },
+      "statistics": {
+        "bounds": { "lower": -9223372036854775808, "upper": 657651 },
+        "search": {
+          "generated": 60,
+          "filtered": 0,
+          "expanded": 60,
+          "reduced": 0,
+          "restricted": 60,
+          "deferred": 60,
+          "explored": 0,
+          "solutions": 1
         },
-        {
-          "id": "location-5",
-          "position": {
-            "lon": -96.64137458150537,
-            "lat": 33.178801586789376
-          },
-          "estimated_arrival": "2021-10-17T09:10:45-06:00",
-          "estimated_departure": "2021-10-17T09:12:45-06:00",
-          "estimated_service": "2021-10-17T09:10:45-06:00"
+        "time": {
+          "elapsed": "9.481583ms",
+          "elapsed_seconds": 0.009481583,
+          "start": "2023-02-01T12:36:42.936462+01:00"
         },
-        {
-          "id": "location-4",
-          "position": {
-            "lon": -96.61356543957307,
-            "lat": 33.20379744909628
-          },
-          "estimated_arrival": "2021-10-17T09:19:05-06:00",
-          "estimated_departure": "2021-10-17T09:21:05-06:00",
-          "estimated_service": "2021-10-17T09:19:05-06:00"
-        },
-        {
-          "id": "location-2",
-          "position": {
-            "lon": -96.54613745932127,
-            "lat": 33.2259142720506
-          },
-          "estimated_arrival": "2021-10-17T09:32:19-06:00",
-          "estimated_departure": "2021-10-17T09:34:19-06:00",
-          "estimated_service": "2021-10-17T09:32:19-06:00"
-        },
-        {
-          "id": "location-3",
-          "position": {
-            "lon": -96.61059803136642,
-            "lat": 33.23528740544529
-          },
-          "estimated_arrival": "2021-10-17T09:44:28-06:00",
-          "estimated_departure": "2021-10-17T09:46:28-06:00",
-          "estimated_service": "2021-10-17T09:44:28-06:00"
-        },
-        {
-          "id": "location-1",
-          "position": {
-            "lon": -96.75038245222623,
-            "lat": 33.20580830033956
-          },
-          "estimated_arrival": "2021-10-17T10:08:49-06:00",
-          "estimated_departure": "2021-10-17T10:10:49-06:00",
-          "estimated_service": "2021-10-17T10:08:49-06:00"
-        },
-        {
-          "id": "vehicle-1-end",
-          "position": {
-            "lon": -96.659222,
-            "lat": 33.122746
-          },
-          "estimated_arrival": "2021-10-17T10:31:43-06:00",
-          "estimated_departure": "2021-10-17T10:31:43-06:00",
-          "estimated_service": "2021-10-17T10:31:43-06:00"
-        }
-      ],
-      "route_duration": 5503
-    },
-    {
-      "id": "vehicle-2",
-      "route": [
-        {
-          "id": "vehicle-2-start",
-          "position": {
-            "lon": -96.659222,
-            "lat": 33.122746
-          },
-          "estimated_arrival": "2021-10-17T09:00:00-06:00",
-          "estimated_departure": "2021-10-17T09:00:00-06:00",
-          "estimated_service": "2021-10-17T09:00:00-06:00"
-        },
-        {
-          "id": "location-7",
-          "position": {
-            "lon": -96.62951544963792,
-            "lat": 33.08670100884261
-          },
-          "estimated_arrival": "2021-10-17T09:08:07-06:00",
-          "estimated_departure": "2021-10-17T09:10:07-06:00",
-          "estimated_service": "2021-10-17T09:08:07-06:00"
-        },
-        {
-          "id": "location-6",
-          "position": {
-            "lon": -96.83157538607735,
-            "lat": 33.02896457334468
-          },
-          "estimated_arrival": "2021-10-17T09:43:17-06:00",
-          "estimated_departure": "2021-10-17T09:45:17-06:00",
-          "estimated_service": "2021-10-17T09:43:17-06:00"
-        },
-        {
-          "id": "location-8",
-          "position": {
-            "lon": -96.86007117348946,
-            "lat": 33.08133590083287
-          },
-          "estimated_arrival": "2021-10-17T09:55:57-06:00",
-          "estimated_departure": "2021-10-17T09:57:57-06:00",
-          "estimated_service": "2021-10-17T09:55:57-06:00"
-        },
-        {
-          "id": "location-9",
-          "position": {
-            "lon": -96.87346076034575,
-            "lat": 33.092841906114394
-          },
-          "estimated_arrival": "2021-10-17T10:00:56-06:00",
-          "estimated_departure": "2021-10-17T10:02:56-06:00",
-          "estimated_service": "2021-10-17T10:00:56-06:00"
-        },
-        {
-          "id": "location-10",
-          "position": {
-            "lon": -96.79586982112724,
-            "lat": 33.10492159118987
-          },
-          "estimated_arrival": "2021-10-17T10:15:11-06:00",
-          "estimated_departure": "2021-10-17T10:17:11-06:00",
-          "estimated_service": "2021-10-17T10:15:11-06:00"
-        },
-        {
-          "id": "vehicle-2-end",
-          "position": {
-            "lon": -96.659222,
-            "lat": 33.122746
-          },
-          "estimated_arrival": "2021-10-17T10:38:39-06:00",
-          "estimated_departure": "2021-10-17T10:38:39-06:00",
-          "estimated_service": "2021-10-17T10:38:39-06:00"
-        }
-      ],
-      "route_duration": 5919
+        "value": 657651
+      }
     }
   ]
 }
