@@ -22,12 +22,12 @@ func ExampleByPoint() {
 		panic(err)
 	}
 	cost := byPointDistance.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+		route.Point{7.33745, 52.14758},
+		route.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 7447
+	// 1231
 }
 
 func ExampleDurationByPoint() {
@@ -44,22 +44,22 @@ func ExampleDurationByPoint() {
 		panic(err)
 	}
 	cost := byPointDuration.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+		route.Point{7.33745, 52.14758},
+		route.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 6874
+	// 1137
 }
 
 func ExampleMatrix() {
 	srcs := []route.Point{
-		{-123.1041788, 43.9965908},
-		{-123.1117056, 44.0568198},
+		{7.33745, 52.14758},
+		{7.32486, 52.14280},
 	}
 	dests := []route.Point{
-		{-123.0774532, 44.044393},
-		{-123.0399395, 44.0276874},
+		{7.34979, 52.15149},
+		{7.33293, 52.13893},
 	}
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
 	byIndexDistance, err := routingkit.Matrix(
@@ -76,17 +76,17 @@ func ExampleMatrix() {
 	cost := byIndexDistance.Cost(0, 1)
 	fmt.Println(int(cost))
 	// Output:
-	// 8050
+	// 1313
 }
 
 func ExampleDurationMatrix() {
 	srcs := []route.Point{
-		{-123.1041788, 43.9965908},
-		{-123.1117056, 44.0568198},
+		{7.33745, 52.14758},
+		{7.32486, 52.14280},
 	}
 	dests := []route.Point{
-		{-123.0774532, 44.044393},
-		{-123.0399395, 44.0276874},
+		{7.34979, 52.15149},
+		{7.33293, 52.13893},
 	}
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.2)
 	byIndexDistance, err := routingkit.DurationMatrix(
@@ -103,7 +103,7 @@ func ExampleDurationMatrix() {
 	cost := byIndexDistance.Cost(0, 1)
 	fmt.Println(int(cost))
 	// Output:
-	// 7431
+	// 1212
 }
 
 // The following code example shows how to create your own vehicle profile and
@@ -155,10 +155,10 @@ func Example_customProfile() {
 		panic(err)
 	}
 	cost := m.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+		route.Point{7.33745, 52.14758},
+		route.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 12030
+	// 1989
 }
