@@ -6,7 +6,6 @@ import (
 	"os"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/store"
@@ -30,7 +29,6 @@ func TestTemplate(t *testing.T) {
 
 	// Declare the options.
 	opt := store.DefaultOptions()
-	opt.Limits.Duration = 5 * time.Second
 	opt.Diagram.Expansion.Limit = 1
 	opt.Limits.Solutions = 1
 
