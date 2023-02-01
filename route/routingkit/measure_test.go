@@ -253,7 +253,8 @@ func TestByIndexLoader(t *testing.T) {
 			input: `{"destinations":[[7.31893,52.15924],[7.3563,` +
 				`52.14031]],"osm":"testdata/rk_test.osm.pbf","profile":` +
 				`{"name":"car"},"radius":1000,"sources":[[7.33665,52.14502],` +
-				`[7.33293,52.13893],[7.33745,52.14758],[7.34979,52.15149]],"type":"routingkitDurationMatrix"}`,
+				`[7.33293,52.13893],[7.33745,52.14758],[7.34979,52.15149]],` +
+				`"type":"routingkitDurationMatrix"}`,
 			expectedErr: false,
 			from:        2,
 			to:          0,
