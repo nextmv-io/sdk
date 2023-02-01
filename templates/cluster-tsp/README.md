@@ -1,29 +1,30 @@
-# Nextmv cloud-routing template
+# Nextmv cluster-tsp template
 
-The cloud-routing template sets up a vehicle routing problem (VRP) solver that is
-compatible with our [cloud](https://docs.nextmv.io/cloud/get-started) input
-files. In addition to almost being a drop-in replacement for the cloud endpoint
-it also demonstrates some of the more advanced router options.
+The cluster-tsp template reads a cloud-routing input data format but instead of
+solving a vehicle routing problem directly, it creates a set of clusters in a
+pre-processing step. The number of clusters created match the number of vehicles
+available in the input file, the cluster size is calculated such that points are
+distributed evenly among them.
+Then for each vehicle a TSP is solved. This is achieved by using the Attributes
+option in the routing engine.
 
-The most important files created are `main.go` and several data input files for
-different uses cases: fleet management, delivery, distribution and sourcing. By
-default the workspace file points to `fleet-tiny.json`. In addition there is the
-`schema.go` file that defines needed data structures and the `helper.go` file in
-which helper functions are defined, e.g. for data handling.
+The most important files created are `solver.go` and an input file which
+represents the instance to be solved. In addition there is the `schema.go` file
+that defines needed data structures and the `helper.go` file in which helper
+functions are defined, e.g. for data handling.
 
-`main.go` is the entry point for the VRP solver. The actual configuration can be
-found in the `routing` package of this template. In particular
-`routing/solver.go`.
+`main.go` is the entry point for the solver. The actual configuration can be
+found in `solver.go`.
 
 Before you start customizing run the command below to see if everything works as
 expected:
 
 ``` bash
-nextmv sdk run . -- -runner.input.path data/fleet-tiny.json\
+nextmv sdk run . -- -runner.input.path data/input.json\
   -runner.output.path output.json -limits.duration 10s
 ```
 
-A file `output.json` should have been created with a VRP solution.
+A file `output.json` should have been created with a solution.
 
 ## Next steps
 

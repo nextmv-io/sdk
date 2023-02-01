@@ -12,8 +12,7 @@ default the workspace file points to `fleet-tiny.json`. In addition there is the
 which helper functions are defined, e.g. for data handling.
 
 `main.go` is the entry point for the VRP solver. The actual configuration can be
-found in the `routing` package of this template. In particular
-`routing/solver.go`.
+found in particular `solver.go`.
 
 Before you start customizing run the command below to see if everything works as
 expected:
