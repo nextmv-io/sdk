@@ -117,17 +117,20 @@ func ExampleDurationMatrix() {
 // [osm-docs]: https://wiki.openstreetmap.org/wiki/Way
 // [osm-ways]: https://wiki.openstreetmap.org/wiki/Key:highway
 func Example_customProfile() {
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.1)
+	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
 
 	// Restricts ways to defined OSM way tags.
 	filter := func(id int, tags map[string]string) bool {
-		highway := tags["highway"]
-		success := highway != "motorway"
-		if !success {
-			fmt.Printf("Way %d is not allowed to be used by the custom vehicle.\n", id)
+		// Uses the default filter to filter out ways which are not routable by
+		// a car.
+		if !routingkit.Car().Filter(id, tags) {
+			return false
 		}
-
-		return success
+		// Additionally filter out motorway and trunk (only use small
+		// streets/roads).
+		// Returning true here, should give different costs for the points used
+		// below. The shortest path uses a 'trunk' way.
+		return tags["highway"] != "motorway" && tags["highway"] != "trunk"
 	}
 
 	// Defines a speed per OSM way tag.
@@ -160,10 +163,11 @@ func Example_customProfile() {
 		panic(err)
 	}
 	cost := m.Cost(
-		route.Point{7.33745, 52.14758},
-		route.Point{7.34979, 52.15149},
+
+		route.Point{7.34375, 52.16391},
+		route.Point{7.32165, 52.15834},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 1989
+	// 1229
 }
