@@ -10,10 +10,7 @@ func DependentIndexed(
 	cost func(
 		from,
 		to int,
-		times Times,
-		id string,
-		route []int,
-		value float64,
+		data VehicleData,
 	) float64,
 ) DependentByIndex {
 	return &dependentIndexed{
@@ -21,26 +18,30 @@ func DependentIndexed(
 	}
 }
 
+// VehicleData holds vehicle specific data, including times by index (ETA, ETD
+// and ETS), a vehicle id, the vehicle's route and the solution value for that
+// vehicle.
+type VehicleData struct {
+	Times      Times
+	VehicleID  string
+	Route      []int
+	RouteValue int
+}
+
 type dependentIndexed struct {
 	cost func(
 		from,
 		to int,
-		times Times,
-		id string,
-		route []int,
-		value float64,
+		data VehicleData,
 	) float64
 }
 
 func (b *dependentIndexed) Cost(
 	from,
 	to int,
-	times Times,
-	id string,
-	route []int,
-	value float64,
+	data VehicleData,
 ) float64 {
-	return b.cost(from, to, times, id, route, value)
+	return b.cost(from, to, data)
 }
 
 func (b *dependentIndexed) MarshalJSON() ([]byte, error) {

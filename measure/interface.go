@@ -12,10 +12,7 @@ type DependentByIndex interface {
 	Cost(
 		from,
 		to int,
-		times Times,
-		id string,
-		route []int,
-		value float64,
+		data VehicleData,
 	) float64
 }
 
