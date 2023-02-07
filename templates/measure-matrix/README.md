@@ -15,7 +15,7 @@ Run the command below to see if everything works as
 expected:
 
 ```bash
-nextmv run local .
+nextmv sdk run .
 ```
 
 One file should have been created: `routing-input.json`. This file can be used
