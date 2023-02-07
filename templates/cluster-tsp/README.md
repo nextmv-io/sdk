@@ -1,11 +1,11 @@
 # Nextmv cluster-tsp template
 
-The cluster-tsp template reads a cloud-routing input data format but instead of
+The cluster-tsp template reads a routing input data format but instead of
 solving a vehicle routing problem directly, it creates a set of clusters in a
 pre-processing step. The number of clusters created match the number of vehicles
 available in the input file, the cluster size is calculated such that points are
 distributed evenly among them.
-Then for each vehicle a TSP is solved. This is achieved by using the Attributes
+Then for each vehicle a TSP is solved. This is achieved by using the `Attributes`
 option in the routing engine.
 
 The most important files created are `solver.go` and an input file which
