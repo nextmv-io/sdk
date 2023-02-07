@@ -27,12 +27,12 @@ func main() {
 // change the struct as you see fit. You may need to change some code in
 // `solver` to use the new structure.
 type input struct {
-	Stops      []route.Stop     `json:"stops"`
-	Vehicles   []string         `json:"vehicles"`
-	Starts     []route.Position `json:"starts"`
-	Ends       []route.Position `json:"ends"`
-	Quantities []int            `json:"quantities"`
-	Capacities []int            `json:"capacities"`
+	Stops             []route.Stop     `json:"stops"`
+	Vehicles          []string         `json:"vehicles"`
+	Starts            []route.Position `json:"starts"`
+	Ends              []route.Position `json:"ends"`
+	StopWeight        []int            `json:"stop_weight"`
+	ClusterCapacities []int            `json:"cluster_capacities"`
 }
 
 // solver takes the input and solver options and constructs a routing solver.
@@ -62,10 +62,8 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	router, err := route.NewRouter(
 		i.Stops,
 		i.Vehicles,
-		route.Threads(2),
 		route.Starts(i.Starts),
 		route.Ends(i.Ends),
-		route.Capacity(i.Quantities, i.Capacities),
 		route.Attribute(vehicleAttributes, stopAttributes),
 	)
 	if err != nil {
@@ -99,10 +97,10 @@ func cluster(
 
 	vehicleAttributes := make([]route.Attributes, 0)
 	stopAttributes := make([]route.Attributes, 0)
-	for _, v := range vehicles {
+	for i, v := range vehicles {
 		vehicleAttributes = append(vehicleAttributes, route.Attributes{
 			ID:         v,
-			Attributes: []string{v},
+			Attributes: []string{strconv.Itoa(i)},
 		})
 	}
 
@@ -128,13 +126,13 @@ func clusterSolution(input input) (kmeans.Solution, error) {
 
 	weights := make([]int, len(input.Stops))
 	for i, w := range input.Stops {
-		weights[i] = input.Quantities[i]
+		weights[i] = input.StopWeight[i]
 		points[i] = measure.Point{w.Position.Lat, w.Position.Lon}
 	}
 
 	for idx := 0; idx < len(input.Vehicles); idx++ {
 		maximumPoints[idx] = len(input.Stops) / len(input.Vehicles)
-		maximumValues[idx] = input.Capacities[idx]
+		maximumValues[idx] = input.ClusterCapacities[idx]
 		values[idx] = weights
 	}
 
