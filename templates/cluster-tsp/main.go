@@ -27,12 +27,10 @@ func main() {
 // change the struct as you see fit. You may need to change some code in
 // `solver` to use the new structure.
 type input struct {
-	Stops             []route.Stop     `json:"stops"`
-	Vehicles          []string         `json:"vehicles"`
-	Starts            []route.Position `json:"starts"`
-	Ends              []route.Position `json:"ends"`
-	StopWeight        []int            `json:"stop_weight"`
-	ClusterCapacities []int            `json:"cluster_capacities"`
+	Stops             []route.Stop `json:"stops"`
+	Vehicles          []string     `json:"vehicles"`
+	StopWeight        []int        `json:"stop_weight"`
+	ClusterCapacities []int        `json:"cluster_capacities"`
 }
 
 // solver takes the input and solver options and constructs a routing solver.
@@ -62,8 +60,6 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	router, err := route.NewRouter(
 		i.Stops,
 		i.Vehicles,
-		route.Starts(i.Starts),
-		route.Ends(i.Ends),
 		route.Attribute(vehicleAttributes, stopAttributes),
 	)
 	if err != nil {
