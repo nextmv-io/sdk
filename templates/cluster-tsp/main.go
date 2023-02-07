@@ -47,11 +47,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	// Creates an evenly sized cluster for every vehicles and creates
 	// compatibility attributes for each stop/vehicle such that every cluster
 	// must be served by 1 vehicle.
-	vehicleAttributes, stopAttributes, err := cluster(
-		i,
-		i.Vehicles,
-		i.Stops,
-	)
+	vehicleAttributes, stopAttributes, err := cluster(i)
 	if err != nil {
 		return nil, err
 	}
@@ -81,11 +77,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 }
 
 // Creates a set of big clusters where 1 vehicles serves exactly 1 cluster.
-func cluster(
-	input input,
-	vehicles []string,
-	stops []route.Stop,
-) ([]route.Attributes, []route.Attributes, error) {
+func cluster(input input) ([]route.Attributes, []route.Attributes, error) {
 	solution, err := clusterSolution(input)
 	if err != nil {
 		return nil, nil, err
@@ -93,7 +85,7 @@ func cluster(
 
 	vehicleAttributes := make([]route.Attributes, 0)
 	stopAttributes := make([]route.Attributes, 0)
-	for i, v := range vehicles {
+	for i, v := range input.Vehicles {
 		vehicleAttributes = append(vehicleAttributes, route.Attributes{
 			ID:         v,
 			Attributes: []string{strconv.Itoa(i)},
@@ -106,7 +98,7 @@ func cluster(
 			stopAttributes = append(
 				stopAttributes,
 				route.Attributes{
-					ID:         stops[stopIndex].ID,
+					ID:         input.Stops[stopIndex].ID,
 					Attributes: []string{attr},
 				})
 		}
