@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
@@ -51,10 +50,6 @@ func TestTemplate(t *testing.T) {
 	if err := json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
-
-	file, _ := json.MarshalIndent(got, "", " ")
-
-	_ = ioutil.WriteFile("test.json", file, 0644)
 
 	// Get the expected solution.
 	want := output{}
