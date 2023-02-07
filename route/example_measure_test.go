@@ -98,10 +98,7 @@ func ExampleDependentIndexed() {
 	costFunc := func(
 		from,
 		to int,
-		times measure.Times,
-		id string,
-		route []int,
-		value float64,
+		data measure.VehicleData,
 	) float64 {
 		if from == 0 && to == 1 {
 			return indexed1.Cost(from, to)
@@ -109,9 +106,9 @@ func ExampleDependentIndexed() {
 		return indexed2.Cost(from, to)
 	}
 
-	dependentMeasure := route.DependentIndexed(costFunc)
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.Times{}, "", nil, 0))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.Times{}, "", nil, 0))
+	dependentMeasure := route.DependentIndexed(false, costFunc)
+	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{}))
+	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{}))
 	// Output:
 	// 5
 	// 10

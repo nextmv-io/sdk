@@ -9,6 +9,7 @@ type ByIndex interface {
 // DependentByIndex estimates the cost of going from one index to another
 // taking a point in time into account.
 type DependentByIndex interface {
+	TimeDependent() bool
 	Cost(
 		from,
 		to int,

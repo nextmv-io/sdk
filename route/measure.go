@@ -100,16 +100,14 @@ func Indexed(m ByPoint, points []Point) ByIndex {
 // DependentIndexed is a measure uses a custom cost func to calculate parameter
 // dependent costs for connecting to points by index.
 func DependentIndexed(
+	timeDependent bool,
 	cost func(
 		from,
 		to int,
-		times measure.Times,
-		id string,
-		route []int,
-		value float64,
+		data measure.VehicleData,
 	) float64,
 ) DependentByIndex {
-	return measure.DependentIndexed(cost)
+	return measure.DependentIndexed(timeDependent, cost)
 }
 
 // Scale the cost of some other measure by a constant.

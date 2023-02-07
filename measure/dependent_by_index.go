@@ -7,6 +7,7 @@ import (
 // DependentIndexed is a measure uses a custom cost func to calculate parameter
 // dependent costs for connecting to points by index.
 func DependentIndexed(
+	timeDependent bool,
 	cost func(
 		from,
 		to int,
@@ -14,7 +15,8 @@ func DependentIndexed(
 	) float64,
 ) DependentByIndex {
 	return &dependentIndexed{
-		cost: cost,
+		cost:          cost,
+		timeDependent: timeDependent,
 	}
 }
 
@@ -34,6 +36,7 @@ type dependentIndexed struct {
 		to int,
 		data VehicleData,
 	) float64
+	timeDependent bool
 }
 
 func (b *dependentIndexed) Cost(
@@ -44,11 +47,13 @@ func (b *dependentIndexed) Cost(
 	return b.cost(from, to, data)
 }
 
-func (b *dependentIndexed) MarshalJSON() ([]byte, error) {
-	measures := []map[string]any{}
+func (b *dependentIndexed) TimeDependent() bool {
+	return b.timeDependent
+}
 
+func (b *dependentIndexed) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]any{
-		"measures": measures,
-		"type":     "dependentIndexed",
+		"type":          "dependentIndexed",
+		"timeDependent": b.timeDependent,
 	})
 }
