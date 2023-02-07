@@ -213,19 +213,10 @@ var (
 	// ClusterTspMain is the main.go file in the cluster-tsp template.
 	//go:embed cluster-tsp/main.go
 	ClusterTspMain string
-	// ClusterTspSolver is the solver.go file in the cluster-tsp template.
-	//go:embed cluster-tsp/solver.go
-	ClusterTspSolver string
-	// ClusterTspSchema is the schema.go file in the cluster-tsp template.
-	//go:embed cluster-tsp/schema.go
-	ClusterTspSchema string
-	// ClusterTspHelper is the helper.go file in the cluster-tsp template.
-	//go:embed cluster-tsp/helper.go
-	ClusterTspHelper string
 	// ClusterTspReadme is the README.md file in the cluster-tsp template.
 	//go:embed cluster-tsp/README.md
 	ClusterTspReadme string
 	// ClusterTspInput contains input for the cluster-tsp template.
-	//go:embed cluster-tsp/data/input.json
+	//go:embed cluster-tsp/input.json
 	ClusterTspInput string
 )
