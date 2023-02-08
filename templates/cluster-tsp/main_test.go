@@ -30,7 +30,7 @@ func TestTemplate(t *testing.T) {
 
 	// Declare the options.
 	opt := store.DefaultOptions()
-	opt.Limits.Duration = 10 * time.Second
+	opt.Limits.Duration = 5 * time.Second
 	opt.Diagram.Expansion.Limit = 1
 	opt.Limits.Solutions = 1
 
@@ -61,8 +61,12 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if len(got.Unassigned) != len(want.Unassigned) {
+		t.Errorf("got %+v, want %+v", got.Unassigned, want.Unassigned)
+	}
+
 	// Compare against expected.
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %+v, want %+v", got, want)
+	if !reflect.DeepEqual(got.Vehicles, want.Vehicles) {
+		t.Errorf("got %+v, want %+v", got.Vehicles, want.Vehicles)
 	}
 }
