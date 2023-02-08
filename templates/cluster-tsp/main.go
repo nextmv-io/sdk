@@ -111,8 +111,8 @@ func clusterSolution(input input) (kmeans.Solution, error) {
 	maximumValues := make([]int, len(input.Vehicles))
 	values := make([][]int, len(input.Vehicles))
 	points := make([]measure.Point, len(input.Stops))
-
 	weights := make([]int, len(input.Stops))
+
 	for i, w := range input.Stops {
 		weights[i] = input.StopWeight[i]
 		points[i] = measure.Point{w.Position.Lat, w.Position.Lon}
