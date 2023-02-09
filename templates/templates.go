@@ -209,4 +209,14 @@ var (
 	// ClusterReadme is the README.md file in the cluster template.
 	//go:embed cluster/README.md
 	ClusterReadme string
+
+	// ClusterTspMain is the main.go file in the cluster-tsp template.
+	//go:embed cluster-tsp/main.go
+	ClusterTspMain string
+	// ClusterTspReadme is the README.md file in the cluster-tsp template.
+	//go:embed cluster-tsp/README.md
+	ClusterTspReadme string
+	// ClusterTspInput contains input for the cluster-tsp template.
+	//go:embed cluster-tsp/input.json
+	ClusterTspInput string
 )
