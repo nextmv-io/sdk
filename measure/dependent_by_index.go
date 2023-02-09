@@ -86,6 +86,9 @@ func TimeDependentCostFunc(
 		return m[i].endTime < m[j].endTime
 	})
 	return func(from, to int, data VehicleData) float64 {
+		if data.Index == -1 {
+			return m[0].measure.Cost(from, to)
+		}
 		time := data.Times.EstimatedDeparture[data.Index]
 		for _, measure := range m {
 			if time < measure.endTime {
