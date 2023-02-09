@@ -5,7 +5,6 @@ package sdk
 
 import (
 	_ "embed"
-	"fmt"
 	"runtime/debug"
 	"strings"
 
@@ -21,7 +20,6 @@ var versionFallback string
 var VERSION = getVersion()
 
 func getVersion() string {
-	fmt.Println("getVersion()")
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
 		return versionFallback
@@ -33,16 +31,12 @@ func getVersion() string {
 			continue
 		}
 
-		fmt.Println("sdk version: ", dep.Version)
-
 		// Clean pseudo versions by falling back to the base version.
 		if util.IsPseudoVersion(dep.Version) {
 			base, err := util.GetBaseOfPseudoVersion(dep.Version)
 			if err != nil {
 				panic(err)
 			}
-
-			fmt.Println("base version: ", base)
 
 			return base
 		}
