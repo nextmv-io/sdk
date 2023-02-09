@@ -210,9 +210,16 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 */
-func TravelTimeMeasures(timeMeasures []ByIndex) Option {
+func TravelTimeMeasures[MeasureType any](timeMeasures []MeasureType) Option {
 	connect.Connect(con, &travelTimeMeasuresFunc)
-	return travelTimeMeasuresFunc(timeMeasures)
+	switch x := any(timeMeasures).(type) {
+	case []measure.ByIndex:
+		return travelTimeMeasuresFunc(x)
+	case []measure.DependentByIndex:
+		return travelTimeMeasuresFunc(x)
+	default:
+		panic("measures are not of type ByIndex or DependentByIndex")
+	}
 }
 
 // Attribute sets a compatibility filter for stops and vehicles. It takes two
@@ -403,7 +410,7 @@ var (
 	limitDurationsFunc        func([]float64, bool) Option
 	grouperFunc               func([][]string) Option
 	valueFunctionMeasuresFunc func(any) Option
-	travelTimeMeasuresFunc    func([]ByIndex) Option
+	travelTimeMeasuresFunc    func(any) Option
 	attributeFunc             func([]Attributes, []Attributes) Option
 	threadsFunc               func(int) Option
 	alternatesFunc            func([]Alternate) Option
