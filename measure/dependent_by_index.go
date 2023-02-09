@@ -27,6 +27,7 @@ func DependentIndexed(
 // and ETS), a vehicle id, the vehicle's route and the solution value for that
 // vehicle.
 type VehicleData struct {
+	Index      int
 	Times      Times
 	VehicleID  string
 	Route      []int
@@ -85,7 +86,7 @@ func TimeDependentCostFunc(
 		return m[i].endTime < m[j].endTime
 	})
 	return func(from, to int, data VehicleData) float64 {
-		time := data.Times.EstimatedDeparture[from]
+		time := data.Times.EstimatedDeparture[data.Index]
 		for _, measure := range m {
 			if time < measure.endTime {
 				return measure.measure.Cost(from, to)

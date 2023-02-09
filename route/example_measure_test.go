@@ -129,11 +129,13 @@ func ExampleTimeDependentIndexed() {
 		measure.TimeDependentCostFunc(measures, times),
 	)
 	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
+		Index: 0,
 		Times: measure.Times{
 			EstimatedDeparture: []int{int(endTime1.Unix()), int(endTime1.Unix())},
 		},
 	}))
 	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{
+		Index: 1,
 		Times: measure.Times{
 			EstimatedDeparture: []int{int(endTime2.Unix()), int(endTime2.Unix())},
 		},
