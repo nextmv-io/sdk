@@ -4,6 +4,7 @@ import (
 	"math/rand"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -181,9 +182,18 @@ func Grouper(groups [][]string) Option {
 // the `Update()` function. In the `Update()` function you can request a
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
-func ValueFunctionMeasures(valueFunctionMeasures []ByIndex) Option {
+func ValueFunctionMeasures[MeasureType any](
+	valueFunctionMeasures []MeasureType,
+) Option {
 	connect.Connect(con, &valueFunctionMeasuresFunc)
-	return valueFunctionMeasuresFunc(valueFunctionMeasures)
+	switch x := any(valueFunctionMeasures).(type) {
+	case []measure.ByIndex:
+		return valueFunctionMeasuresFunc(x)
+	case []measure.DependentByIndex:
+		return valueFunctionMeasuresFunc(x)
+	default:
+		panic("measures are not of type ByIndex or DependentByIndex")
+	}
 }
 
 /*
@@ -392,7 +402,7 @@ var (
 	limitDistancesFunc        func([]float64, bool) Option
 	limitDurationsFunc        func([]float64, bool) Option
 	grouperFunc               func([][]string) Option
-	valueFunctionMeasuresFunc func([]ByIndex) Option
+	valueFunctionMeasuresFunc func(any) Option
 	travelTimeMeasuresFunc    func([]ByIndex) Option
 	attributeFunc             func([]Attributes, []Attributes) Option
 	threadsFunc               func(int) Option
