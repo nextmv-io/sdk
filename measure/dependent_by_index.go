@@ -89,12 +89,15 @@ func TimeDependentCostFunc(
 		if data.Index == -1 {
 			return m[0].measure.Cost(from, to)
 		}
-		time := data.Times.EstimatedDeparture[data.Index]
+		t := data.Times.EstimatedDeparture[data.Index]
 		for _, measure := range m {
-			if time < measure.endTime {
+			if t < measure.endTime {
 				return measure.measure.Cost(from, to)
 			}
 		}
-		panic(fmt.Sprintf("no measure for time '%d' was provided", time))
+		panic(fmt.Sprintf(
+			"no measure for time '%s' was provided",
+			time.Unix(int64(t), 0).Format(time.RFC3339)),
+		)
 	}
 }
