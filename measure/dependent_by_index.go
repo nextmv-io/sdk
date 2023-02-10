@@ -70,11 +70,22 @@ type byIndexAndTime struct {
 	endTime int
 }
 
-// TimeDependentCostFunc returns a new TimeDependentCostFunc.
-func TimeDependentCostFunc(
+// TimeDependentMeasures is an interface to handle time dependent measures. It
+// implements a Cost function that takes time into account to calculate costs.
+type TimeDependentMeasures interface {
+	Cost() func(from, to int, data VehicleData) float64
+}
+
+type timeDependentMeasures struct {
+	measures []byIndexAndTime
+}
+
+// NewTimeDependentMeasures returns a new NewTimeDependentMeasures which
+// implements a cost function.
+func NewTimeDependentMeasures(
 	measures []ByIndex,
 	endTimes []time.Time,
-) func(from, to int, data VehicleData) float64 {
+) TimeDependentMeasures {
 	m := make([]byIndexAndTime, len(measures))
 	for i := range measures {
 		m[i] = byIndexAndTime{
@@ -85,19 +96,28 @@ func TimeDependentCostFunc(
 	sort.SliceStable(m, func(i, j int) bool {
 		return m[i].endTime < m[j].endTime
 	})
+
+	return timeDependentMeasures{measures: m}
+}
+
+func (t timeDependentMeasures) Cost() func(
+	from,
+	to int,
+	data VehicleData,
+) float64 {
 	return func(from, to int, data VehicleData) float64 {
 		if data.Index == -1 {
-			return m[0].measure.Cost(from, to)
+			return t.measures[0].measure.Cost(from, to)
 		}
-		t := data.Times.EstimatedDeparture[data.Index]
-		for _, measure := range m {
-			if t < measure.endTime {
+		etd := data.Times.EstimatedDeparture[data.Index]
+		for _, measure := range t.measures {
+			if etd < measure.endTime {
 				return measure.measure.Cost(from, to)
 			}
 		}
 		panic(fmt.Sprintf(
 			"no measure for time '%s' was provided",
-			time.Unix(int64(t), 0).Format(time.RFC3339)),
+			time.Unix(int64(etd), 0).Format(time.RFC3339)),
 		)
 	}
 }
