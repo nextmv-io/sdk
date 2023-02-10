@@ -70,13 +70,14 @@ type byIndexAndTime struct {
 	endTime int
 }
 
-// TimeDependentMeasures is an interface to handle time dependent measures. It
-// implements a Cost function that takes time into account to calculate costs.
-type TimeDependentMeasures interface {
+// TimeDependentMeasuresClient is an interface to handle time dependent
+// measures. It implements a Cost function that takes time into account to
+// calculate costs.
+type TimeDependentMeasuresClient interface {
 	Cost() func(from, to int, data VehicleData) float64
 }
 
-type timeDependentMeasures struct {
+type client struct {
 	measures []byIndexAndTime
 }
 
@@ -85,7 +86,7 @@ type timeDependentMeasures struct {
 func NewTimeDependentMeasures(
 	measures []ByIndex,
 	endTimes []time.Time,
-) TimeDependentMeasures {
+) TimeDependentMeasuresClient {
 	m := make([]byIndexAndTime, len(measures))
 	for i := range measures {
 		m[i] = byIndexAndTime{
@@ -97,20 +98,20 @@ func NewTimeDependentMeasures(
 		return m[i].endTime < m[j].endTime
 	})
 
-	return timeDependentMeasures{measures: m}
+	return client{measures: m}
 }
 
-func (t timeDependentMeasures) Cost() func(
+func (c client) Cost() func(
 	from,
 	to int,
 	data VehicleData,
 ) float64 {
 	return func(from, to int, data VehicleData) float64 {
 		if data.Index == -1 {
-			return t.measures[0].measure.Cost(from, to)
+			return c.measures[0].measure.Cost(from, to)
 		}
 		etd := data.Times.EstimatedDeparture[data.Index]
-		for _, measure := range t.measures {
+		for _, measure := range c.measures {
 			if etd < measure.endTime {
 				return measure.measure.Cost(from, to)
 			}

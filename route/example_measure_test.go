@@ -94,28 +94,6 @@ func ExampleIndexed() {
 }
 
 func ExampleDependentIndexed() {
-	indexed1 := route.Constant(5)
-	indexed2 := route.Scale(indexed1, 2)
-	costFunc := func(
-		from,
-		to int,
-		data measure.VehicleData,
-	) float64 {
-		if from == 0 && to == 1 {
-			return indexed1.Cost(from, to)
-		}
-		return indexed2.Cost(from, to)
-	}
-
-	dependentMeasure := route.DependentIndexed(false, costFunc)
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{}))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{}))
-	// Output:
-	// 5
-	// 10
-}
-
-func ExampleTimeDependentIndexed() {
 	indexed1 := route.Constant(1000)
 	indexed2 := route.Scale(indexed1, 2)
 	measures := []measure.ByIndex{indexed1, indexed2}
@@ -124,9 +102,10 @@ func ExampleTimeDependentIndexed() {
 	times := []time.Time{t.Add(1000 * time.Second), t.Add(2000 * time.Second)}
 	endTime1 := t.Add(500 * time.Second)
 	endTime2 := t.Add(1500 * time.Second)
+	c := measure.NewTimeDependentMeasures(measures, times)
 	dependentMeasure := route.DependentIndexed(
 		true,
-		measure.TimeDependentCostFunc(measures, times),
+		c.Cost(),
 	)
 	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
 		Index: 0,
