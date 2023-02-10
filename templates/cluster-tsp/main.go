@@ -119,7 +119,7 @@ func clusterSolution(input input) (kmeans.Solution, error) {
 	}
 
 	for idx := 0; idx < len(input.Vehicles); idx++ {
-		maximumPoints[idx] = len(input.Stops) / len(input.Vehicles)
+		maximumPoints[idx] = (len(input.Stops) / len(input.Vehicles)) + 1
 		maximumValues[idx] = input.ClusterCapacities[idx]
 		values[idx] = weights
 	}
