@@ -19,7 +19,6 @@ func GetBaseOfPseudoVersion(version string) (string, error) {
 		return "", fmt.Errorf("version %s is not a pseudo version", version)
 	}
 	crop := version[:len(version)-30]
-	_ = crop
 	// Decrement the patch part by one.
 	regex := regexp.MustCompile(`\d+$`)
 	patch := regex.FindString(crop)
