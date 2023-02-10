@@ -102,7 +102,7 @@ func ExampleDependentIndexed() {
 	times := []time.Time{t.Add(1000 * time.Second), t.Add(2000 * time.Second)}
 	endTime1 := t.Add(500 * time.Second)
 	endTime2 := t.Add(1500 * time.Second)
-	c := measure.NewTimeDependentMeasures(measures, times)
+	c := measure.NewTimeDependentMeasuresClient(measures, times)
 	dependentMeasure := route.DependentIndexed(
 		true,
 		c.Cost(),

@@ -81,9 +81,9 @@ type client struct {
 	measures []byIndexAndTime
 }
 
-// NewTimeDependentMeasures returns a new NewTimeDependentMeasures which
-// implements a cost function.
-func NewTimeDependentMeasures(
+// NewTimeDependentMeasuresClient returns a new NewTimeDependentMeasuresClient
+// which implements a cost function.
+func NewTimeDependentMeasuresClient(
 	measures []ByIndex,
 	endTimes []time.Time,
 ) TimeDependentMeasuresClient {
