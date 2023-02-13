@@ -7,8 +7,6 @@ import (
 	_ "embed"
 	"runtime/debug"
 	"strings"
-
-	"github.com/nextmv-io/sdk/util"
 )
 
 // This will be needed for examples and tests within this repo only.
@@ -29,16 +27,6 @@ func getVersion() string {
 		// We only care about this repo being used as a dependency.
 		if !strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
 			continue
-		}
-
-		// Clean pseudo versions by falling back to the base version.
-		if util.IsPseudoVersion(dep.Version) {
-			base, err := util.GetBaseOfPseudoVersion(dep.Version)
-			if err != nil {
-				panic(err)
-			}
-
-			return base
 		}
 
 		return dep.Version
