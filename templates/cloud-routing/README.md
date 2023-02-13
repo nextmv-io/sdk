@@ -12,14 +12,13 @@ default the workspace file points to `fleet-tiny.json`. In addition there is the
 which helper functions are defined, e.g. for data handling.
 
 `main.go` is the entry point for the VRP solver. The actual configuration can be
-found in the `routing` package of this template. In particular
-`routing/solver.go`.
+found in `solver.go`.
 
 Before you start customizing run the command below to see if everything works as
 expected:
 
 ``` bash
-nextmv run local . -- -runner.input.path data/fleet-tiny.json\
+nextmv sdk run . -- -runner.input.path data/fleet-tiny.json\
   -runner.output.path output.json -limits.duration 10s
 ```
 

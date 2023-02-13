@@ -162,8 +162,8 @@ var solver = func(i input, opts store.Options) (store.Solver, error) {
 	// longer solver run times here. For local runs there is no time limitation.
 	// If you want to make cloud runs for longer than 5 minutes, please contact:
 	// support@nextmv.io
-	if opts.Limits.Duration == 0 {
-		opts.Limits.Duration = 10 * time.Second
+	if options.Limits.Duration == 0 {
+		options.Limits.Duration = 10 * time.Second
 	}
 
 	return router.Solver(options)
