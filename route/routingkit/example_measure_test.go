@@ -12,7 +12,7 @@ func ExampleByPoint() {
 	carProfile := routingkit.Car()
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
 	byPointDistance, err := routingkit.ByPoint(
-		"testdata/maryland.osm.pbf",
+		"testdata/rk_test.osm.pbf",
 		1000,
 		1<<30,
 		carProfile,
@@ -22,19 +22,19 @@ func ExampleByPoint() {
 		panic(err)
 	}
 	cost := byPointDistance.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+		route.Point{7.33745, 52.14758},
+		route.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 7447
+	// 1225
 }
 
 func ExampleDurationByPoint() {
 	carProfile := routingkit.Car()
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.2)
 	byPointDuration, err := routingkit.DurationByPoint(
-		"testdata/maryland.osm.pbf",
+		"testdata/rk_test.osm.pbf",
 		1000,
 		1<<30,
 		carProfile,
@@ -44,26 +44,26 @@ func ExampleDurationByPoint() {
 		panic(err)
 	}
 	cost := byPointDuration.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+		route.Point{7.33745, 52.14758},
+		route.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 6874
+	// 187
 }
 
 func ExampleMatrix() {
 	srcs := []route.Point{
-		{-123.1041788, 43.9965908},
-		{-123.1117056, 44.0568198},
+		{7.33745, 52.14758},
+		{7.32486, 52.14280},
 	}
 	dests := []route.Point{
-		{-123.0774532, 44.044393},
-		{-123.0399395, 44.0276874},
+		{7.34979, 52.15149},
+		{7.33293, 52.13893},
 	}
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
 	byIndexDistance, err := routingkit.Matrix(
-		"testdata/maryland.osm.pbf",
+		"testdata/rk_test.osm.pbf",
 		1000,
 		srcs,
 		dests,
@@ -76,21 +76,21 @@ func ExampleMatrix() {
 	cost := byIndexDistance.Cost(0, 1)
 	fmt.Println(int(cost))
 	// Output:
-	// 8050
+	// 1219
 }
 
 func ExampleDurationMatrix() {
 	srcs := []route.Point{
-		{-123.1041788, 43.9965908},
-		{-123.1117056, 44.0568198},
+		{7.33745, 52.14758},
+		{7.32486, 52.14280},
 	}
 	dests := []route.Point{
-		{-123.0774532, 44.044393},
-		{-123.0399395, 44.0276874},
+		{7.34979, 52.15149},
+		{7.33293, 52.13893},
 	}
 	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.2)
 	byIndexDistance, err := routingkit.DurationMatrix(
-		"testdata/maryland.osm.pbf",
+		"testdata/rk_test.osm.pbf",
 		1000,
 		srcs,
 		dests,
@@ -103,7 +103,7 @@ func ExampleDurationMatrix() {
 	cost := byIndexDistance.Cost(0, 1)
 	fmt.Println(int(cost))
 	// Output:
-	// 7431
+	// 215
 }
 
 // The following code example shows how to create your own vehicle profile and
@@ -111,18 +111,26 @@ func ExampleDurationMatrix() {
 // on the tags present. In this example the speed is fixed to a single value
 // (defined in `customVehicleSpeedMapper`). Furthermore, only ways are allowed
 // to be used by the `customVehicle` which have the highway tag and its value
-// is motorway (defined in `customVehicleTagMapFilter`). Please refer to the
+// is not motorway (defined in `customVehicleTagMapFilter`). Please refer to the
 // OpenStreetMaps [documentation on ways][osm-docs] to learn more about [tags
 // and their values][osm-ways].
 // [osm-docs]: https://wiki.openstreetmap.org/wiki/Way
 // [osm-ways]: https://wiki.openstreetmap.org/wiki/Key:highway
 func Example_customProfile() {
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 2.1)
+	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
 
 	// Restricts ways to defined OSM way tags.
 	filter := func(id int, tags map[string]string) bool {
-		highway := tags["highway"]
-		return highway == "motorway"
+		// Uses the default filter to filter out ways which are not routable by
+		// a car.
+		if !routingkit.Car().Filter(id, tags) {
+			return false
+		}
+		// Additionally filter out motorway and trunk (only use small
+		// streets/roads).
+		// Returning true here, should give different costs for the points used
+		// below. The shortest path uses a 'trunk' way.
+		return tags["highway"] != "motorway" && tags["highway"] != "trunk"
 	}
 
 	// Defines a speed per OSM way tag.
@@ -145,7 +153,7 @@ func Example_customProfile() {
 
 	// Defines a routingkit measure using the custom profile.
 	m, err := routingkit.DurationByPoint(
-		"testdata/maryland.osm.pbf",
+		"testdata/rk_test.osm.pbf",
 		1000,
 		1<<30,
 		p,
@@ -155,10 +163,11 @@ func Example_customProfile() {
 		panic(err)
 	}
 	cost := m.Cost(
-		route.Point{-123.1041788, 43.9965908},
-		route.Point{-123.0774532, 44.044393},
+
+		route.Point{7.34375, 52.16391},
+		route.Point{7.32165, 52.15834},
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 12030
+	// 1229
 }
