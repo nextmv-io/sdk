@@ -7,6 +7,8 @@ import (
 	_ "embed"
 	"runtime/debug"
 	"strings"
+
+	"github.com/nextmv-io/sdk/util"
 )
 
 // This will be needed for examples and tests within this repo only.
@@ -29,13 +31,20 @@ func getVersion() string {
 			continue
 		}
 
-		// If reference to this module was replaced, use fallback.
-		if dep.Replace != nil {
-			return versionFallback
+		// Clean pseudo versions by falling back to the base version.
+		if util.IsPseudoVersion(dep.Version) {
+			base, err := util.GetBaseOfPseudoVersion(dep.Version)
+			if err != nil {
+				panic(err)
+			}
+
+			return base
 		}
 
 		return dep.Version
 	}
 
+	// This should never happen. If it does, it means that the SDK is not being
+	// used as a dependency. However, we are apparently being invoked.
 	return versionFallback
 }
