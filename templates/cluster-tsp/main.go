@@ -3,6 +3,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"strconv"
 	"time"
 
@@ -119,7 +120,9 @@ func clusterSolution(input input) (kmeans.Solution, error) {
 	}
 
 	for idx := 0; idx < len(input.Vehicles); idx++ {
-		maximumPoints[idx] = (len(input.Stops) / len(input.Vehicles)) + 1
+		maximumPoints[idx] = int(
+			math.Ceil(float64(len(input.Stops)) / float64(len(input.Vehicles))),
+		)
 		maximumValues[idx] = input.ClusterCapacities[idx]
 		values[idx] = weights
 	}
