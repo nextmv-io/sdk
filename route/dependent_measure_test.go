@@ -15,12 +15,28 @@ func ExampleDependentIndexed() {
 	indexed2 := route.Scale(indexed1, 2)
 	measures := []measure.ByIndex{indexed1, indexed2}
 
-	endTimes := []time.Time{t.Add(2000 * time.Second), t.Add(5000 * time.Second)}
+	endTimes := []time.Time{
+		t.Add(2000 * time.Second),
+		t.Add(5000 * time.Second),
+	}
+
+	byIndex := make([]route.ByIndexAndTime, len(measures))
+	for i, m := range measures {
+		byIndex[i] = route.ByIndexAndTime{
+			Measure: m,
+			EndTime: int(endTimes[i].Unix()),
+		}
+	}
+
 	etds := []int{
 		int(t.Add(500 * time.Second).Unix()),
 		int(t.Add(3000 * time.Second).Unix()),
 	}
-	c := route.NewTimeDependentMeasuresClient(measures, endTimes, measures[0])
+
+	c, err := route.NewTimeDependentMeasuresClient(byIndex, measures[0])
+	if err != nil {
+		panic(err)
+	}
 	dependentMeasure := c.DependentByIndex()
 	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
 		Index: 0,
@@ -51,11 +67,24 @@ func TestDependentIndexed(te *testing.T) {
 		t.Add(175 * time.Second),
 		t.Add(5000 * time.Second),
 	}
+
+	byIndex := make([]route.ByIndexAndTime, len(measures))
+	for i, m := range measures {
+		byIndex[i] = route.ByIndexAndTime{
+			Measure: m,
+			EndTime: int(endTimes[i].Unix()),
+		}
+	}
+
 	etds := []int{
 		int(t.Add(100 * time.Second).Unix()),
 		int(t.Add(3000 * time.Second).Unix()),
 	}
-	c := route.NewTimeDependentMeasuresClient(measures, endTimes, measures[0])
+
+	c, err := route.NewTimeDependentMeasuresClient(byIndex, measures[0])
+	if err != nil {
+		te.Errorf(err.Error())
+	}
 	dependentMeasure := c.DependentByIndex()
 
 	// The ETD is selected by index (here: 0) and because of short time ranges
