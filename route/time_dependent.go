@@ -36,6 +36,8 @@ type client struct {
 
 // NewTimeDependentMeasuresClient returns a new NewTimeDependentMeasuresClient
 // which implements a cost function.
+// It takes byIndexAndTime measures, where each measure is given with an endTime
+// (exclusive) up until the measure will be used and a fallback measure.
 func NewTimeDependentMeasuresClient(
 	measures []ByIndexAndTime,
 	fallback ByIndex,
@@ -133,9 +135,10 @@ func WithFullCache(startTime time.Time) ClientOption {
 	return func(c *client) {
 		time := int(startTime.Unix())
 		for _, measure := range c.measures {
-			for i := time; i < measure.EndTime+1; i++ {
+			for i := time; i < measure.EndTime; i++ {
 				c.cache[i] = &measure
 			}
+			time = measure.EndTime
 		}
 	}
 }
