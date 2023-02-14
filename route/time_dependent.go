@@ -111,18 +111,18 @@ func (c *client) interpolate(
 	rawDriveTime := measure.measure.Cost(from, to)
 	interpolatedDriveTime := partialFactor * rawDriveTime
 	driveEnd := startTime + int(interpolatedDriveTime)
-	if driveEnd <= measure.endTime || measure.endTime == model.MaxInt {
+	if driveEnd < measure.endTime || measure.endTime == model.MaxInt {
 		return prevIncurredCosts + interpolatedDriveTime
 	}
-	newPartial := float64(measure.endTime-startTime) /
+	newPartialFactor := float64(measure.endTime-startTime) /
 		float64(driveEnd-startTime)
-	newCosts := prevIncurredCosts + newPartial*interpolatedDriveTime
+	newCosts := prevIncurredCosts + newPartialFactor*interpolatedDriveTime
 	return c.interpolate(
 		from,
 		to,
-		measure.endTime+1,
+		measure.endTime,
 		newCosts,
-		1-newPartial,
+		partialFactor-newPartialFactor,
 	)
 }
 
