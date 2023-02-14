@@ -2,9 +2,7 @@ package route_test
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 )
 
@@ -91,37 +89,6 @@ func ExampleIndexed() {
 	fmt.Println(int(indexed.Cost(0, 1)))
 	// Output:
 	// 3280
-}
-
-func ExampleDependentIndexed() {
-	indexed1 := route.Constant(1000)
-	indexed2 := route.Scale(indexed1, 2)
-	measures := []measure.ByIndex{indexed1, indexed2}
-
-	t := time.Now()
-	times := []time.Time{t.Add(1000 * time.Second), t.Add(2000 * time.Second)}
-	endTime1 := t.Add(500 * time.Second)
-	endTime2 := t.Add(1500 * time.Second)
-	c := measure.NewTimeDependentMeasuresClient(measures, times)
-	dependentMeasure := route.DependentIndexed(
-		true,
-		c.Cost(),
-	)
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
-		Index: 0,
-		Times: measure.Times{
-			EstimatedDeparture: []int{int(endTime1.Unix()), int(endTime1.Unix())},
-		},
-	}))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{
-		Index: 1,
-		Times: measure.Times{
-			EstimatedDeparture: []int{int(endTime2.Unix()), int(endTime2.Unix())},
-		},
-	}))
-	// Output:
-	// 1000
-	// 2000
 }
 
 func ExampleScale() {

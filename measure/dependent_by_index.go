@@ -2,9 +2,6 @@ package measure
 
 import (
 	"encoding/json"
-	"fmt"
-	"sort"
-	"time"
 )
 
 // DependentIndexed is a measure uses a custom cost func to calculate parameter
@@ -60,65 +57,4 @@ func (b *dependentIndexed) MarshalJSON() ([]byte, error) {
 		"type":          "dependentIndexed",
 		"timeDependent": b.timeDependent,
 	})
-}
-
-// ByIndexAndTime holds a measure and an endTime up until this measure is to be
-// used. ByIndexAndTime is to be used with NewTimeDependentMeasure which a slice
-// of ByIndexAndTime.
-type byIndexAndTime struct {
-	measure ByIndex
-	endTime int
-}
-
-// TimeDependentMeasuresClient is an interface to handle time dependent
-// measures. It implements a Cost function that takes time into account to
-// calculate costs.
-type TimeDependentMeasuresClient interface {
-	Cost() func(from, to int, data VehicleData) float64
-}
-
-type client struct {
-	measures []byIndexAndTime
-}
-
-// NewTimeDependentMeasuresClient returns a new NewTimeDependentMeasuresClient
-// which implements a cost function.
-func NewTimeDependentMeasuresClient(
-	measures []ByIndex,
-	endTimes []time.Time,
-) TimeDependentMeasuresClient {
-	m := make([]byIndexAndTime, len(measures))
-	for i := range measures {
-		m[i] = byIndexAndTime{
-			measure: measures[i],
-			endTime: int(endTimes[i].Unix()),
-		}
-	}
-	sort.SliceStable(m, func(i, j int) bool {
-		return m[i].endTime < m[j].endTime
-	})
-
-	return client{measures: m}
-}
-
-func (c client) Cost() func(
-	from,
-	to int,
-	data VehicleData,
-) float64 {
-	return func(from, to int, data VehicleData) float64 {
-		if data.Index == -1 {
-			return c.measures[0].measure.Cost(from, to)
-		}
-		etd := data.Times.EstimatedDeparture[data.Index]
-		for _, measure := range c.measures {
-			if etd < measure.endTime {
-				return measure.measure.Cost(from, to)
-			}
-		}
-		panic(fmt.Sprintf(
-			"no measure for time '%s' was provided",
-			time.Unix(int64(etd), 0).Format(time.RFC3339)),
-		)
-	}
 }
