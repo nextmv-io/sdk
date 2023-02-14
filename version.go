@@ -5,10 +5,9 @@ package sdk
 
 import (
 	_ "embed"
+	"os"
 	"runtime/debug"
 	"strings"
-
-	"github.com/nextmv-io/sdk/util"
 )
 
 // This will be needed for examples and tests within this repo only.
@@ -20,8 +19,15 @@ var versionFallback string
 var VERSION = getVersion()
 
 func getVersion() string {
+	// If an override version is set, use it.
+	if v := os.Getenv("NEXTMV_SDK_OVERRIDE_VERSION"); v != "" {
+		return v
+	}
+
+	// Get version from module dependency.
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
+		// Just return the fallback version.
 		return versionFallback
 	}
 
@@ -31,20 +37,11 @@ func getVersion() string {
 			continue
 		}
 
-		// Clean pseudo versions by falling back to the base version.
-		if util.IsPseudoVersion(dep.Version) {
-			base, err := util.GetBaseOfPseudoVersion(dep.Version)
-			if err != nil {
-				panic(err)
-			}
-
-			return base
-		}
-
 		return dep.Version
 	}
 
-	// This should never happen. If it does, it means that the SDK is not being
-	// used as a dependency. However, we are apparently being invoked.
+	// This should never happen. If it does, it means that the SDK was used on
+	// its own and not as a dependency. In that case, we fallback to the version
+	// in the VERSION file.
 	return versionFallback
 }
