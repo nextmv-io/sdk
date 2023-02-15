@@ -9,8 +9,8 @@ import (
 	"github.com/nextmv-io/sdk/model"
 )
 
-// ByIndexAndTime holds a measure and an endTime (exclusive) up until this
-// measure is to be used. ByIndexAndTime is to be used with
+// ByIndexAndTime holds a Measure and an EndTime (exclusive) up until this
+// measure is to be used as a Unix timestamp. ByIndexAndTime is to be used with
 // NewTimeDependentMeasure which a slice of ByIndexAndTime.
 type ByIndexAndTime struct {
 	Measure ByIndex
@@ -133,12 +133,16 @@ func (c *client) DependentByIndex() measure.DependentByIndex {
 // byIndexAndTime measure. Otherwise this cache will be built on the fly.
 func WithFullCache(startTime time.Time) ClientOption {
 	return func(c *client) {
-		time := int(startTime.Unix())
-		for _, measure := range c.measures {
-			for i := time; i < measure.EndTime; i++ {
-				c.cache[i] = &measure
-			}
-			time = measure.EndTime
+		cacheTimes(startTime, c)
+	}
+}
+
+func cacheTimes(startTime time.Time, c *client) {
+	time := int(startTime.Unix())
+	for _, measure := range c.measures {
+		for i := time; i < measure.EndTime; i++ {
+			c.cache[i] = &measure
 		}
+		time = measure.EndTime
 	}
 }

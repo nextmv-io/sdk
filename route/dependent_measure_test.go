@@ -1,4 +1,4 @@
-package route_test
+package route
 
 import (
 	"fmt"
@@ -6,13 +6,12 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/route"
 )
 
 func ExampleDependentIndexed() {
 	t := time.Now()
-	indexed1 := route.Constant(1000)
-	indexed2 := route.Scale(indexed1, 2)
+	indexed1 := Constant(1000)
+	indexed2 := Scale(indexed1, 2)
 	measures := []measure.ByIndex{indexed1, indexed2}
 
 	endTimes := []time.Time{
@@ -20,9 +19,9 @@ func ExampleDependentIndexed() {
 		t.Add(5000 * time.Second),
 	}
 
-	byIndex := make([]route.ByIndexAndTime, len(measures))
+	byIndex := make([]ByIndexAndTime, len(measures))
 	for i, m := range measures {
-		byIndex[i] = route.ByIndexAndTime{
+		byIndex[i] = ByIndexAndTime{
 			Measure: m,
 			EndTime: int(endTimes[i].Unix()),
 		}
@@ -33,7 +32,7 @@ func ExampleDependentIndexed() {
 		int(t.Add(3000 * time.Second).Unix()),
 	}
 
-	c, err := route.NewTimeDependentMeasuresClient(byIndex, measures[0])
+	c, err := NewTimeDependentMeasuresClient(byIndex, measures[0])
 	if err != nil {
 		panic(err)
 	}
@@ -57,9 +56,9 @@ func ExampleDependentIndexed() {
 
 func TestDependentIndexed(te *testing.T) {
 	t := time.Now()
-	indexed1 := route.Constant(100)
-	indexed2 := route.Scale(indexed1, 2)
-	indexed3 := route.Scale(indexed2, 2)
+	indexed1 := Constant(100)
+	indexed2 := Scale(indexed1, 2)
+	indexed3 := Scale(indexed2, 2)
 	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
 
 	endTimes := []time.Time{
@@ -68,9 +67,9 @@ func TestDependentIndexed(te *testing.T) {
 		t.Add(5000 * time.Second),
 	}
 
-	byIndex := make([]route.ByIndexAndTime, len(measures))
+	byIndex := make([]ByIndexAndTime, len(measures))
 	for i, m := range measures {
-		byIndex[i] = route.ByIndexAndTime{
+		byIndex[i] = ByIndexAndTime{
 			Measure: m,
 			EndTime: int(endTimes[i].Unix()),
 		}
@@ -81,7 +80,7 @@ func TestDependentIndexed(te *testing.T) {
 		int(t.Add(3000 * time.Second).Unix()),
 	}
 
-	c, err := route.NewTimeDependentMeasuresClient(byIndex, measures[0])
+	c, err := NewTimeDependentMeasuresClient(byIndex, measures[0])
 	if err != nil {
 		te.Errorf(err.Error())
 	}
@@ -117,5 +116,69 @@ func TestDependentIndexed(te *testing.T) {
 
 	if got2 != want2 {
 		te.Errorf("overlapping dependent measure, got:%f, want:%f", got2, want2)
+	}
+}
+
+func TestCache(t *testing.T) {
+	startTime := time.Now()
+	indexed1 := Constant(100)
+	indexed2 := Scale(indexed1, 2)
+	indexed3 := Scale(indexed2, 2)
+	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
+
+	endTimes := []time.Time{
+		startTime.Add(5 * time.Second),
+		startTime.Add(10 * time.Second),
+		startTime.Add(15 * time.Second),
+	}
+
+	byIndex := make([]ByIndexAndTime, len(measures))
+	for i, m := range measures {
+		byIndex[i] = ByIndexAndTime{
+			Measure: m,
+			EndTime: int(endTimes[i].Unix()),
+		}
+	}
+
+	c := client{
+		measures:        byIndex,
+		fallbackMeasure: byIndex[0],
+		cache:           make(map[int]*ByIndexAndTime),
+	}
+
+	cacheTimes(startTime, &c)
+	want := 15
+	if len(c.cache) != want {
+		t.Errorf("cached items, got:%d, want:%d", len(c.cache), want)
+	}
+
+	for k, v := range c.cache {
+		if k < 5 {
+			if v != &c.measures[0] {
+				t.Errorf(
+					"caches measure is not correct, got:%d, want:%d", v,
+					&c.measures[0],
+				)
+			}
+			continue
+		}
+		if k < 10 {
+			if v != &c.measures[1] {
+				t.Errorf(
+					"caches measure is not correct, got:%d, want:%d", v,
+					&c.measures[1],
+				)
+			}
+			continue
+		}
+		if k < 15 {
+			if v != &c.measures[2] {
+				t.Errorf(
+					"caches measure is not correct, got:%d, want:%d", v,
+					&c.measures[2],
+				)
+			}
+			continue
+		}
 	}
 }
