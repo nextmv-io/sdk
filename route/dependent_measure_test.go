@@ -1,11 +1,14 @@
 package route
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/nextmv-io/sdk/measure"
+	"github.com/nextmv-io/sdk/store"
 )
 
 func ExampleDependentIndexed() {
@@ -54,37 +57,8 @@ func ExampleDependentIndexed() {
 	// 2000
 }
 
-func TestDependentIndexed(te *testing.T) {
-	t := time.Now()
-	indexed1 := Constant(100)
-	indexed2 := Scale(indexed1, 2)
-	indexed3 := Scale(indexed2, 2)
-	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
-
-	endTimes := []time.Time{
-		t.Add(150 * time.Second),
-		t.Add(175 * time.Second),
-		t.Add(5000 * time.Second),
-	}
-
-	byIndex := make([]ByIndexAndTime, len(measures))
-	for i, m := range measures {
-		byIndex[i] = ByIndexAndTime{
-			Measure: m,
-			EndTime: int(endTimes[i].Unix()),
-		}
-	}
-
-	etds := []int{
-		int(t.Add(100 * time.Second).Unix()),
-		int(t.Add(3000 * time.Second).Unix()),
-	}
-
-	c, err := NewTimeDependentMeasuresClient(byIndex, measures[0])
-	if err != nil {
-		te.Errorf(err.Error())
-	}
-	dependentMeasure := c.DependentByIndex()
+func TestDependentIndexed(t *testing.T) {
+	etds, dependentMeasure := dependentMeasures(t)
 
 	// The ETD is selected by index (here: 0) and because of short time ranges
 	// by end times the costs are calculated of 3 measures.
@@ -100,7 +74,7 @@ func TestDependentIndexed(te *testing.T) {
 	})
 
 	if got1 != want1 {
-		te.Errorf("overlapping dependent measure, got:%f, want:%f", got1, want1)
+		t.Errorf("overlapping dependent measure, got:%f, want:%f", got1, want1)
 	}
 
 	// The ETD selected is a late start so that only the third measure is needed
@@ -115,8 +89,109 @@ func TestDependentIndexed(te *testing.T) {
 	})
 
 	if got2 != want2 {
-		te.Errorf("overlapping dependent measure, got:%f, want:%f", got2, want2)
+		t.Errorf("overlapping dependent measure, got:%f, want:%f", got2, want2)
 	}
+}
+
+func dependentMeasures(t *testing.T) ([]int, measure.DependentByIndex) {
+	startTime := time.Now()
+	indexed1 := Constant(100)
+	indexed2 := Scale(indexed1, 2)
+	indexed3 := Scale(indexed2, 2)
+	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
+
+	endTimes := []time.Time{
+		startTime.Add(150 * time.Second),
+		startTime.Add(175 * time.Second),
+		startTime.Add(5000 * time.Second),
+	}
+
+	byIndex := make([]ByIndexAndTime, len(measures))
+	for i, m := range measures {
+		byIndex[i] = ByIndexAndTime{
+			Measure: m,
+			EndTime: int(endTimes[i].Unix()),
+		}
+	}
+
+	etds := []int{
+		int(startTime.Add(100 * time.Second).Unix()),
+		int(startTime.Add(3000 * time.Second).Unix()),
+	}
+
+	c, err := NewTimeDependentMeasuresClient(byIndex, measures[0])
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	dependentMeasure := c.DependentByIndex()
+
+	return etds, dependentMeasure
+}
+
+func TestValueFuncOption(t *testing.T) {
+	stops := []Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	_, dependentMeasure := dependentMeasures(t)
+	dependentMeasures := make([]DependentByIndex, len(vehicles))
+	for i := 0; i < len(vehicles); i++ {
+		dependentMeasures[i] = dependentMeasure
+	}
+
+	// Declare the router and its solver.
+	router, err := NewRouter(
+		stops,
+		vehicles,
+		Threads(1),
+		ValueFunctionMeasures(dependentMeasures),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(b)
 }
 
 func TestCache(t *testing.T) {
