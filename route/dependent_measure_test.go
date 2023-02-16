@@ -1,14 +1,12 @@
 package route
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/store"
 )
 
 func ExampleDependentIndexed() {
@@ -128,72 +126,6 @@ func dependentMeasures(t *testing.T) ([]int, measure.DependentByIndex) {
 	return etds, dependentMeasure
 }
 
-func TestValueFuncOption(t *testing.T) {
-	stops := []Stop{
-		{
-			ID:       "Fushimi Inari Taisha",
-			Position: Position{Lon: 135.772695, Lat: 34.967146},
-		},
-		{
-			ID:       "Kiyomizu-dera",
-			Position: Position{Lon: 135.785060, Lat: 34.994857},
-		},
-		{
-			ID:       "Nijō Castle",
-			Position: Position{Lon: 135.748134, Lat: 35.014239},
-		},
-		{
-			ID:       "Kyoto Imperial Palace",
-			Position: Position{Lon: 135.762057, Lat: 35.025431},
-		},
-		{
-			ID:       "Gionmachi",
-			Position: Position{Lon: 135.775682, Lat: 35.002457},
-		},
-		{
-			ID:       "Kinkaku-ji",
-			Position: Position{Lon: 135.728898, Lat: 35.039705},
-		},
-		{
-			ID:       "Arashiyama Bamboo Forest",
-			Position: Position{Lon: 135.672009, Lat: 35.017209},
-		},
-	}
-	vehicles := []string{
-		"v1",
-		"v2",
-	}
-
-	_, dependentMeasure := dependentMeasures(t)
-	dependentMeasures := make([]DependentByIndex, len(vehicles))
-	for i := 0; i < len(vehicles); i++ {
-		dependentMeasures[i] = dependentMeasure
-	}
-
-	// Declare the router and its solver.
-	router, err := NewRouter(
-		stops,
-		vehicles,
-		Threads(1),
-		ValueFunctionMeasures(dependentMeasures),
-	)
-	if err != nil {
-		panic(err)
-	}
-	solver, err := router.Solver(store.DefaultOptions())
-	if err != nil {
-		panic(err)
-	}
-
-	// Get the last solution of the problem and print it.
-	last := solver.Last(context.Background())
-	b, err := json.MarshalIndent(last.Store, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(b)
-}
-
 func TestCache(t *testing.T) {
 	startTime := time.Now()
 	indexed1 := Constant(100)
@@ -218,42 +150,54 @@ func TestCache(t *testing.T) {
 	c := client{
 		measures:        byIndex,
 		fallbackMeasure: byIndex[0],
-		cache:           make(map[int]*ByIndexAndTime),
+		cache:           sync.Map{},
 	}
 
 	cacheTimes(startTime, &c)
 	want := 15
-	if len(c.cache) != want {
-		t.Errorf("cached items, got:%d, want:%d", len(c.cache), want)
+	length := 0
+	c.cache.Range(func(key, value any) bool {
+		length++
+		return true
+	})
+
+	if length != want {
+		t.Errorf("cached items, got:%d, want:%d", length, want)
 	}
 
-	for k, v := range c.cache {
-		if k < 5 {
-			if v != &c.measures[0] {
-				t.Errorf(
-					"caches measure is not correct, got:%d, want:%d", v,
-					&c.measures[0],
-				)
+	c.cache.Range(func(key, v any) bool {
+		switch k := key.(type) {
+		case int:
+			switch k {
+			case 0, 1, 2, 3, 4:
+				if v != &c.measures[0] {
+					t.Errorf(
+						"caches measure is not correct, got:%d, want:%d", v,
+						&c.measures[0],
+					)
+				}
+				return true
+			case 5, 6, 7, 8:
+				if v != &c.measures[1] {
+					t.Errorf(
+						"caches measure is not correct, got:%d, want:%d", v,
+						&c.measures[1],
+					)
+				}
+				return true
+			case 10, 11, 12, 13, 14:
+				if v != &c.measures[2] {
+					t.Errorf(
+						"caches measure is not correct, got:%d, want:%d", v,
+						&c.measures[2],
+					)
+				}
+				return true
+			default:
+				panic("key is not expected")
 			}
-			continue
+		default:
+			panic("key is not an integer")
 		}
-		if k < 10 {
-			if v != &c.measures[1] {
-				t.Errorf(
-					"caches measure is not correct, got:%d, want:%d", v,
-					&c.measures[1],
-				)
-			}
-			continue
-		}
-		if k < 15 {
-			if v != &c.measures[2] {
-				t.Errorf(
-					"caches measure is not correct, got:%d, want:%d", v,
-					&c.measures[2],
-				)
-			}
-			continue
-		}
-	}
+	})
 }

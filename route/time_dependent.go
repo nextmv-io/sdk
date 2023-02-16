@@ -3,6 +3,7 @@ package route
 import (
 	"errors"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/nextmv-io/sdk/measure"
@@ -31,7 +32,7 @@ type TimeDependentMeasuresClient interface {
 type client struct {
 	measures        []ByIndexAndTime
 	fallbackMeasure ByIndexAndTime
-	cache           map[int]*ByIndexAndTime
+	cache           sync.Map
 }
 
 // NewTimeDependentMeasuresClient returns a new NewTimeDependentMeasuresClient
@@ -60,7 +61,7 @@ func NewTimeDependentMeasuresClient(
 			Measure: fallback,
 			EndTime: model.MaxInt,
 		},
-		cache: map[int]*ByIndexAndTime{},
+		cache: sync.Map{},
 	}
 
 	for _, opt := range opts {
@@ -76,11 +77,12 @@ func (c *client) Cost() func(
 	data measure.VehicleData,
 ) float64 {
 	return func(from, to int, data measure.VehicleData) float64 {
-		if data.Index == -1 {
+		if data.Index == -1 || data.Times.EstimatedDeparture == nil {
 			return c.fallbackMeasure.Measure.Cost(from, to)
 		}
 		etd := data.Times.EstimatedDeparture[data.Index]
-		return c.interpolate(from, to, etd, 0, 1)
+		cost := c.interpolate(from, to, etd, 0, 1)
+		return cost
 	}
 }
 
@@ -93,13 +95,13 @@ func (c *client) interpolate(
 ) float64 {
 	// Use default measure and look for a better one afterwards
 	measure := c.fallbackMeasure
-	if m, ok := c.cache[startTime]; ok {
-		measure = *m
+	if m, ok := c.cache.Load(startTime); ok {
+		measure = m.(ByIndexAndTime)
 	} else {
 		for _, m := range c.measures {
 			if startTime < m.EndTime {
 				measure = m
-				c.cache[startTime] = &m
+				c.cache.Store(startTime, m)
 				break
 			}
 		}
@@ -141,7 +143,7 @@ func cacheTimes(startTime time.Time, c *client) {
 	time := int(startTime.Unix())
 	for _, measure := range c.measures {
 		for i := time; i < measure.EndTime; i++ {
-			c.cache[i] = &measure
+			c.cache.Store(i, measure)
 		}
 		time = measure.EndTime
 	}
