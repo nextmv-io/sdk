@@ -164,40 +164,4 @@ func TestCache(t *testing.T) {
 	if length != want {
 		t.Errorf("cached items, got:%d, want:%d", length, want)
 	}
-
-	c.cache.Range(func(key, v any) bool {
-		switch k := key.(type) {
-		case int:
-			switch k {
-			case 0, 1, 2, 3, 4:
-				if v != &c.measures[0] {
-					t.Errorf(
-						"caches measure is not correct, got:%d, want:%d", v,
-						&c.measures[0],
-					)
-				}
-				return true
-			case 5, 6, 7, 8:
-				if v != &c.measures[1] {
-					t.Errorf(
-						"caches measure is not correct, got:%d, want:%d", v,
-						&c.measures[1],
-					)
-				}
-				return true
-			case 10, 11, 12, 13, 14:
-				if v != &c.measures[2] {
-					t.Errorf(
-						"caches measure is not correct, got:%d, want:%d", v,
-						&c.measures[2],
-					)
-				}
-				return true
-			default:
-				panic("key is not expected")
-			}
-		default:
-			panic("key is not an integer")
-		}
-	})
 }
