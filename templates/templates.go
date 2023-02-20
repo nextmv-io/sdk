@@ -219,4 +219,14 @@ var (
 	// ClusterTspInput contains input for the cluster-tsp template.
 	//go:embed cluster-tsp/input.json
 	ClusterTspInput string
+
+	// TimeDependentMain is the main.go file in the routing template.
+	//go:embed time-dependent-measure/main.go
+	TimeDependentMain string
+	// TimeDependentInput is the input.json file in the routing template.
+	//go:embed time-dependent-measure/input.json
+	TimeDependentInput string
+	// TimeDependentReadme is the README.md file in the routing template.
+	//go:embed time-dependent-measure/README.md
+	TimeDependentReadme string
 )

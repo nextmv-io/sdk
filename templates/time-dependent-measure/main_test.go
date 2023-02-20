@@ -51,9 +51,6 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	file, _ := json.MarshalIndent(got, "", " ")
-	_ = os.WriteFile("test.json", file, 0644)
-
 	// Get the expected solution.
 	want := output{}
 	b, err = os.ReadFile("testdata/output.json")
