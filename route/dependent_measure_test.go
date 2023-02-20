@@ -1,59 +1,12 @@
 package route
 
 import (
-	"fmt"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/nextmv-io/sdk/measure"
 )
-
-func ExampleDependentIndexed() {
-	t := time.Now()
-	indexed1 := Constant(1000)
-	indexed2 := Scale(indexed1, 2)
-	measures := []measure.ByIndex{indexed1, indexed2}
-
-	endTimes := []time.Time{
-		t.Add(2000 * time.Second),
-		t.Add(5000 * time.Second),
-	}
-
-	byIndex := make([]ByIndexAndTime, len(measures))
-	for i, m := range measures {
-		byIndex[i] = ByIndexAndTime{
-			Measure: m,
-			EndTime: int(endTimes[i].Unix()),
-		}
-	}
-
-	etds := []int{
-		int(t.Add(500 * time.Second).Unix()),
-		int(t.Add(3000 * time.Second).Unix()),
-	}
-
-	c, err := NewTimeDependentMeasuresClient(byIndex, measures[0])
-	if err != nil {
-		panic(err)
-	}
-	dependentMeasure := c.DependentByIndex()
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
-		Index: 0,
-		Times: measure.Times{
-			EstimatedDeparture: etds,
-		},
-	}))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{
-		Index: 1,
-		Times: measure.Times{
-			EstimatedDeparture: etds,
-		},
-	}))
-	// Output:
-	// 1000
-	// 2000
-}
 
 func TestDependentIndexed(t *testing.T) {
 	etds, dependentMeasure := dependentMeasures(t)
