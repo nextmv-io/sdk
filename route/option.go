@@ -182,11 +182,11 @@ func Grouper(groups [][]string) Option {
 // the `Update()` function. In the `Update()` function you can request a
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
-func ValueFunctionMeasures(
-	valueFunctionMeasures any,
+func ValueFunctionMeasures[MeasureType any](
+	valueFunctionMeasures []MeasureType,
 ) Option {
 	connect.Connect(con, &valueFunctionMeasuresFunc)
-	switch x := valueFunctionMeasures.(type) {
+	switch x := any(valueFunctionMeasures).(type) {
 	case []measure.ByIndex:
 		return valueFunctionMeasuresFunc(x)
 	case []measure.DependentByIndex:
@@ -210,9 +210,9 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 */
-func TravelTimeMeasures(timeMeasures any) Option {
+func TravelTimeMeasures[MeasureType any](timeMeasures []MeasureType) Option {
 	connect.Connect(con, &travelTimeMeasuresFunc)
-	switch x := timeMeasures.(type) {
+	switch x := any(timeMeasures).(type) {
 	case []measure.ByIndex:
 		return travelTimeMeasuresFunc(x)
 	case []measure.DependentByIndex:
