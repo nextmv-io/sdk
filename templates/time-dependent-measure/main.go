@@ -28,6 +28,8 @@ type input struct {
 	Stops    []route.Stop       `json:"stops"`
 	Vehicles []string           `json:"vehicles"`
 	Shifts   []route.TimeWindow `json:"shifts"`
+	Starts   []route.Position   `json:"starts"`
+	Ends     []route.Position   `json:"ends"`
 }
 
 // solver takes the input and solver options and constructs a routing solver.
@@ -48,17 +50,20 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 		}
 	}
 	m1 := measure.Indexed(measure.HaversineByPoint(), points)
+	m1 = measure.Override(m1, measure.Constant(0), func(from, to int) bool {
+		return from > len(points)-1 || to > len(points)-1
+	})
 	m2 := measure.Scale(m1, 2)
 
 	byIndexAndTime := make([]route.ByIndexAndTime, 2)
 	for _, t := range i.Shifts {
 		byIndexAndTime[0] = route.ByIndexAndTime{
 			Measure: m1,
-			EndTime: int(t.Start.Add(5 * time.Minute).Unix()),
+			EndTime: int(t.Start.Add(30 * time.Second).Unix()),
 		}
 		byIndexAndTime[1] = route.ByIndexAndTime{
 			Measure: m2,
-			EndTime: int(t.Start.Add(15 * time.Minute).Unix()),
+			EndTime: int(t.Start.Add(60 * time.Second).Unix()),
 		}
 	}
 	dependentMeasure, err := route.NewTimeDependentMeasuresClient(

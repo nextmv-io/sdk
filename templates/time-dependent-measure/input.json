@@ -56,34 +56,6 @@
         "lon": -74.040685,
         "lat": 4.687558
       }
-    },
-    {
-      "id": "Resting Place 1",
-      "position": {
-        "lon": -74.047,
-        "lat": 4.69014
-      }
-    },
-    {
-      "id": "Resting Place 2",
-      "position": {
-        "lon": -74.0485,
-        "lat": 4.69017
-      }
-    },
-    {
-      "id": "Resting Place 3",
-      "position": {
-        "lon": -74.049,
-        "lat": 4.69012
-      }
-    },
-    {
-      "id": "Resting Place 4",
-      "position": {
-        "lon": -74.048,
-        "lat": 4.69015
-      }
     }
   ],
   "shifts": [
