@@ -60,6 +60,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	// until (exclusive) to use it.
 	byIndexAndTime := make([][]route.ByIndexAndTime, len(i.Shifts))
 	for shiftIndex, t := range i.Shifts {
+		byIndexAndTime[shiftIndex] = make([]route.ByIndexAndTime, 2)
 		byIndexAndTime[shiftIndex][0] = route.ByIndexAndTime{
 			Measure: m1,
 			EndTime: int(t.Start.Add(30 * time.Second).Unix()),
