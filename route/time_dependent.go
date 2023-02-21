@@ -4,7 +4,6 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -31,7 +30,7 @@ func NewTimeDependentMeasure(
 	startTime int,
 	measures []ByIndexAndTime,
 	fallback ByIndex,
-) (measure.DependentByIndex, error) {
+) (DependentByIndex, error) {
 	measuresCopy := make([]ByIndexAndTime, len(measures))
 	copy(measuresCopy, measures)
 	sort.SliceStable(measuresCopy, func(i, j int) bool {
@@ -62,9 +61,9 @@ func NewTimeDependentMeasure(
 func (c *client) cost() func(
 	from,
 	to int,
-	data *measure.VehicleData,
+	data *VehicleData,
 ) float64 {
-	return func(from, to int, data *measure.VehicleData) float64 {
+	return func(from, to int, data *VehicleData) float64 {
 		if data.Index == -1 || data.Times.EstimatedDeparture == nil {
 			return c.fallbackMeasure.Measure.Cost(from, to)
 		}
