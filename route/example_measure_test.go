@@ -117,18 +117,17 @@ func ExampleDependentIndexed() {
 		int(t.Add(3000 * time.Second).Unix()),
 	}
 
-	c, err := route.NewTimeDependentMeasuresClient(byIndex, measures[0])
+	dependentMeasure, err := route.NewTimeDependentMeasure(byIndex, measures[0])
 	if err != nil {
 		panic(err)
 	}
-	dependentMeasure := c.DependentByIndex()
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
+	fmt.Println(dependentMeasure.Cost(0, 1, &measure.VehicleData{
 		Index: 0,
 		Times: measure.Times{
 			EstimatedDeparture: etds,
 		},
 	}))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{
+	fmt.Println(dependentMeasure.Cost(1, 0, &measure.VehicleData{
 		Index: 1,
 		Times: measure.Times{
 			EstimatedDeparture: etds,

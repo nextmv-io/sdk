@@ -21,11 +21,11 @@ type ByIndexAndTime struct {
 // ClientOption can pass options to be used with a TimeDependentMeasure client.
 type ClientOption func(*client)
 
-// TimeDependentMeasuresClient is an interface to handle time dependent
+// TimeDependentMeasure is an interface to handle time dependent
 // measures. It implements a Cost function that takes time into account to
 // calculate costs.
-type TimeDependentMeasuresClient interface {
-	Cost() func(from, to int, data measure.VehicleData) float64
+type TimeDependentMeasure interface {
+	Cost() func(from, to int, data *measure.VehicleData) float64
 	DependentByIndex() measure.DependentByIndex
 }
 
@@ -35,17 +35,19 @@ type client struct {
 	cache           sync.Map
 }
 
-// NewTimeDependentMeasuresClient returns a new NewTimeDependentMeasuresClient
+// NewTimeDependentMeasure returns a new NewTimeDependentMeasure
 // which implements a cost function.
 // It takes byIndexAndTime measures, where each measure is given with an endTime
 // (exclusive) up until the measure will be used and a fallback measure.
-func NewTimeDependentMeasuresClient(
+func NewTimeDependentMeasure(
 	measures []ByIndexAndTime,
 	fallback ByIndex,
 	opts ...ClientOption,
-) (TimeDependentMeasuresClient, error) {
-	sort.SliceStable(measures, func(i, j int) bool {
-		return measures[i].EndTime < measures[j].EndTime
+) (measure.DependentByIndex, error) {
+	var measuresCopy []ByIndexAndTime
+	copy(measuresCopy, measures)
+	sort.SliceStable(measuresCopy, func(i, j int) bool {
+		return measuresCopy[i].EndTime < measuresCopy[j].EndTime
 	})
 
 	if fallback == nil {
@@ -53,7 +55,7 @@ func NewTimeDependentMeasuresClient(
 	}
 
 	c := &client{
-		measures: measures,
+		measures: measuresCopy,
 		// The fallback measure will also be used if we are getting a very late
 		// ETA for the last stop. To achieve this we max out the time.Time
 		// endTime as int.
@@ -68,15 +70,15 @@ func NewTimeDependentMeasuresClient(
 		opt(c)
 	}
 
-	return c, nil
+	return DependentIndexed(true, c.Cost()), nil
 }
 
 func (c *client) Cost() func(
 	from,
 	to int,
-	data measure.VehicleData,
+	data *measure.VehicleData,
 ) float64 {
-	return func(from, to int, data measure.VehicleData) float64 {
+	return func(from, to int, data *measure.VehicleData) float64 {
 		if data.Index == -1 || data.Times.EstimatedDeparture == nil {
 			return c.fallbackMeasure.Measure.Cost(from, to)
 		}
@@ -125,10 +127,6 @@ func (c *client) interpolate(
 		newCosts,
 		partialFactor-newPartialFactor,
 	)
-}
-
-func (c *client) DependentByIndex() measure.DependentByIndex {
-	return DependentIndexed(true, c.Cost())
 }
 
 // WithFullCache creates a full cache up front for each second in the

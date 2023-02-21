@@ -4,7 +4,6 @@ import (
 	"math/rand"
 
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 )
 
@@ -183,17 +182,27 @@ func Grouper(groups [][]string) Option {
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 func ValueFunctionMeasures(
-	valueFunctionMeasures any,
+	valueFunctionMeasures []ByIndex,
 ) Option {
 	connect.Connect(con, &valueFunctionMeasuresFunc)
-	switch x := valueFunctionMeasures.(type) {
-	case []measure.ByIndex:
-		return valueFunctionMeasuresFunc(x)
-	case []measure.DependentByIndex:
-		return valueFunctionMeasuresFunc(x)
-	default:
-		panic("measures are not of type ByIndex or DependentByIndex")
-	}
+	return valueFunctionMeasuresFunc(valueFunctionMeasures)
+}
+
+// ValueFunctionDependentMeasures sets custom dependent measures for every
+// vehicle to calculate the overall solution costs, and should be indexed as
+// such. If no custom measures are provided, a default haversine measure will be
+// used to calculate costs (distances) between stops.
+// Note that if your value function measures do represent time and you are using
+// the window option with wait times, in order to see those wait times reflected
+// in your value function, you will have to override the value function by using
+// the `Update()` function. In the `Update()` function you can request a
+// `TimeTracker` from the `state` and use it to get access to time information
+// the route.
+func ValueFunctionDependentMeasures(
+	valueFunctionMeasures []DependentByIndex,
+) Option {
+	connect.Connect(con, &valueFunctionMeasuresFunc)
+	return valueFunctionDependentMeasuresFunc(valueFunctionMeasures)
 }
 
 /*
@@ -210,16 +219,29 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 */
-func TravelTimeMeasures(timeMeasures any) Option {
+func TravelTimeMeasures(timeMeasures []ByIndex) Option {
 	connect.Connect(con, &travelTimeMeasuresFunc)
-	switch x := timeMeasures.(type) {
-	case []measure.ByIndex:
-		return travelTimeMeasuresFunc(x)
-	case []measure.DependentByIndex:
-		return travelTimeMeasuresFunc(x)
-	default:
-		panic("measures are not of type ByIndex or DependentByIndex")
-	}
+	return travelTimeMeasuresFunc(timeMeasures)
+}
+
+/*
+TravelTimeDependentMeasures sets custom dependent time measures for every
+vehicle, and should be indexed as such. If no custom time measures are provided,
+a default time measure will be used, based on haversine using a velocity of
+10 m/s if no custom velocities are given using the Velocities option.
+Time measures are used to:
+  - calculate travel time in the Window option and check if time windows are
+    met.
+  - calculated route duration, the estimated time of arrival and departure at
+    stops.
+
+PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
+account for any service times. To account for services times please use the
+Services option.
+*/
+func TravelTimeDependentMeasures(timeMeasures []DependentByIndex) Option {
+	connect.Connect(con, &travelTimeMeasuresFunc)
+	return travelTimeDependentMeasuresFunc(timeMeasures)
 }
 
 // Attribute sets a compatibility filter for stops and vehicles. It takes two
@@ -391,34 +413,36 @@ func Filter(compatible func(vehicle, location int) bool) Option {
 }
 
 var (
-	con                       = connect.NewConnector("sdk", "Route")
-	startsFunc                func([]Position) Option
-	endsFunc                  func([]Position) Option
-	capacityFunc              func([]int, []int) Option
-	initializationCostsFunc   func([]float64) Option
-	precedenceFunc            func([]Job) Option
-	servicesFunc              func([]Service) Option
-	shiftsFunc                func([]TimeWindow) Option
-	windowsFunc               func([]Window) Option
-	multiWindowsFunc          func([][]TimeWindow, []int) Option
-	unassignedFunc            func([]int) Option
-	backlogsFunc              func([]Backlog) Option
-	minimizeFunc              func() Option
-	maximizeFunc              func() Option
-	limitsFunc                func([]Limit, bool) Option
-	limitDistancesFunc        func([]float64, bool) Option
-	limitDurationsFunc        func([]float64, bool) Option
-	grouperFunc               func([][]string) Option
-	valueFunctionMeasuresFunc func(any) Option
-	travelTimeMeasuresFunc    func(any) Option
-	attributeFunc             func([]Attributes, []Attributes) Option
-	threadsFunc               func(int) Option
-	alternatesFunc            func([]Alternate) Option
-	velocitiesFunc            func([]float64) Option
-	serviceGroupsFunc         func([]ServiceGroup) Option
-	selectorFunc              func(func(PartialPlan) model.Domain) Option
-	updateFunc                func(VehicleUpdater, PlanUpdater) Option
-	filterWithRouteFunc       func(
+	con                                = connect.NewConnector("sdk", "Route")
+	startsFunc                         func([]Position) Option
+	endsFunc                           func([]Position) Option
+	capacityFunc                       func([]int, []int) Option
+	initializationCostsFunc            func([]float64) Option
+	precedenceFunc                     func([]Job) Option
+	servicesFunc                       func([]Service) Option
+	shiftsFunc                         func([]TimeWindow) Option
+	windowsFunc                        func([]Window) Option
+	multiWindowsFunc                   func([][]TimeWindow, []int) Option
+	unassignedFunc                     func([]int) Option
+	backlogsFunc                       func([]Backlog) Option
+	minimizeFunc                       func() Option
+	maximizeFunc                       func() Option
+	limitsFunc                         func([]Limit, bool) Option
+	limitDistancesFunc                 func([]float64, bool) Option
+	limitDurationsFunc                 func([]float64, bool) Option
+	grouperFunc                        func([][]string) Option
+	valueFunctionMeasuresFunc          func([]ByIndex) Option
+	valueFunctionDependentMeasuresFunc func([]DependentByIndex) Option
+	travelTimeMeasuresFunc             func([]ByIndex) Option
+	travelTimeDependentMeasuresFunc    func([]DependentByIndex) Option
+	attributeFunc                      func([]Attributes, []Attributes) Option
+	threadsFunc                        func(int) Option
+	alternatesFunc                     func([]Alternate) Option
+	velocitiesFunc                     func([]float64) Option
+	serviceGroupsFunc                  func([]ServiceGroup) Option
+	selectorFunc                       func(func(PartialPlan) model.Domain) Option
+	updateFunc                         func(VehicleUpdater, PlanUpdater) Option
+	filterWithRouteFunc                func(
 		func(model.Domain, model.Domain, [][]int) model.Domain,
 	) Option
 	sorterFunc func(

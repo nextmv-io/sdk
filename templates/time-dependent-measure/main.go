@@ -71,7 +71,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	}
 
 	// Create a time dependent measure client.
-	dependentMeasure, err := route.NewTimeDependentMeasuresClient(
+	dependentMeasure, err := route.NewTimeDependentMeasure(
 		byIndexAndTime,
 		m1,
 	)
@@ -83,7 +83,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	// ValueFunctionMeasures option.
 	dependentMeasures := make([]measure.DependentByIndex, len(i.Vehicles))
 	for i := range i.Vehicles {
-		dependentMeasures[i] = dependentMeasure.DependentByIndex()
+		dependentMeasures[i] = dependentMeasure
 	}
 
 	// Define base router.
@@ -91,7 +91,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 		i.Stops,
 		i.Vehicles,
 		route.Shifts(i.Shifts),
-		route.ValueFunctionMeasures(dependentMeasures),
+		route.ValueFunctionDependentMeasures(dependentMeasures),
 	)
 	if err != nil {
 		return nil, err

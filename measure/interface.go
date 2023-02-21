@@ -13,7 +13,7 @@ type DependentByIndex interface {
 	Cost(
 		from,
 		to int,
-		data VehicleData,
+		data *VehicleData,
 	) float64
 }
 

@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 )
 
-// DependentIndexed is a measure uses a custom cost func to calculate parameter
-// dependent costs for connecting to points by index.
+// DependentIndexed is a measure that uses a custom cost function to calculate
+// parameter dependent costs for connecting two points by index.
 func DependentIndexed(
 	timeDependent bool,
 	cost func(
 		from,
 		to int,
-		data VehicleData,
+		data *VehicleData,
 	) float64,
 ) DependentByIndex {
 	return &dependentIndexed{
@@ -24,10 +24,10 @@ func DependentIndexed(
 // and ETS), a vehicle id, the vehicle's route and the solution value for that
 // vehicle.
 type VehicleData struct {
-	Index      int
-	Times      Times
 	VehicleID  string
+	Times      Times
 	Route      []int
+	Index      int
 	RouteValue int
 }
 
@@ -35,7 +35,7 @@ type dependentIndexed struct {
 	cost func(
 		from,
 		to int,
-		data VehicleData,
+		data *VehicleData,
 	) float64
 	timeDependent bool
 }
@@ -43,7 +43,7 @@ type dependentIndexed struct {
 func (b *dependentIndexed) Cost(
 	from,
 	to int,
-	data VehicleData,
+	data *VehicleData,
 ) float64 {
 	return b.cost(from, to, data)
 }
