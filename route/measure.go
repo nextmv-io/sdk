@@ -33,6 +33,15 @@ type DurationGroups = measure.DurationGroups
 // attached to them.
 type DurationGroup = measure.DurationGroup
 
+// Times holds the estimated time of arrival (ETA), estimated time of when
+// service starts (ETS) and estimated time of departure (ETD).
+type Times = measure.Times
+
+// VehicleData holds vehicle specific data, including times by index (ETA, ETD
+// and ETS), a vehicle id, the vehicle's route and the solution value for that
+// vehicle.
+type VehicleData = measure.VehicleData
+
 // Bin is a measure that selects from a slice of indexed measures. Logic
 // defined in the selector function determines which measure is used in the
 // cost calculation.

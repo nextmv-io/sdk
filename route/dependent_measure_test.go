@@ -3,8 +3,6 @@ package route
 import (
 	"testing"
 	"time"
-
-	"github.com/nextmv-io/sdk/measure"
 )
 
 func TestDependentIndexed(t *testing.T) {
@@ -16,9 +14,9 @@ func TestDependentIndexed(t *testing.T) {
 	// Second: 25% of the second measure -> 25
 	// Third: 25% of the third measure -> 100
 	want1 := 175.0
-	got1 := dependentMeasure.Cost(0, 1, &measure.VehicleData{
+	got1 := dependentMeasure.Cost(0, 1, &VehicleData{
 		Index: 0,
-		Times: measure.Times{
+		Times: Times{
 			EstimatedDeparture: etds,
 		},
 	})
@@ -31,9 +29,9 @@ func TestDependentIndexed(t *testing.T) {
 	// to calculate the costs:
 	// 100% of the third measure --> 400
 	want2 := 400.0
-	got2 := dependentMeasure.Cost(1, 0, &measure.VehicleData{
+	got2 := dependentMeasure.Cost(1, 0, &VehicleData{
 		Index: 1,
-		Times: measure.Times{
+		Times: Times{
 			EstimatedDeparture: etds,
 		},
 	})
@@ -43,12 +41,12 @@ func TestDependentIndexed(t *testing.T) {
 	}
 }
 
-func dependentMeasures(t *testing.T) ([]int, measure.DependentByIndex) {
+func dependentMeasures(t *testing.T) ([]int, DependentByIndex) {
 	startTime := time.Now()
 	indexed1 := Constant(100)
 	indexed2 := Scale(indexed1, 2)
 	indexed3 := Scale(indexed2, 2)
-	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
+	measures := []ByIndex{indexed1, indexed2, indexed3}
 
 	endTimes := []time.Time{
 		startTime.Add(150 * time.Second),
@@ -86,7 +84,7 @@ func TestCache(t *testing.T) {
 	indexed1 := Constant(100)
 	indexed2 := Scale(indexed1, 2)
 	indexed3 := Scale(indexed2, 2)
-	measures := []measure.ByIndex{indexed1, indexed2, indexed3}
+	measures := []ByIndex{indexed1, indexed2, indexed3}
 
 	endTimes := []time.Time{
 		startTime.Add(5 * time.Second),
