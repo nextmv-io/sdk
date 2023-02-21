@@ -25,7 +25,7 @@ type ClientOption func(*client)
 // measures. It implements a Cost function that takes time into account to
 // calculate costs.
 type TimeDependentMeasure interface {
-	Cost() func(from, to int, data measure.VehicleData) float64
+	Cost() func(from, to int, data *measure.VehicleData) float64
 	DependentByIndex() measure.DependentByIndex
 }
 
@@ -44,7 +44,7 @@ func NewTimeDependentMeasure(
 	fallback ByIndex,
 	opts ...ClientOption,
 ) (measure.DependentByIndex, error) {
-	var measuresCopy []ByIndexAndTime
+	measuresCopy := make([]ByIndexAndTime, len(measures))
 	copy(measuresCopy, measures)
 	sort.SliceStable(measuresCopy, func(i, j int) bool {
 		return measuresCopy[i].EndTime < measuresCopy[j].EndTime
@@ -76,9 +76,9 @@ func NewTimeDependentMeasure(
 func (c *client) Cost() func(
 	from,
 	to int,
-	data measure.VehicleData,
+	data *measure.VehicleData,
 ) float64 {
-	return func(from, to int, data measure.VehicleData) float64 {
+	return func(from, to int, data *measure.VehicleData) float64 {
 		if data.Index == -1 || data.Times.EstimatedDeparture == nil {
 			return c.fallbackMeasure.Measure.Cost(from, to)
 		}

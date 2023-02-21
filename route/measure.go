@@ -104,7 +104,7 @@ func DependentIndexed(
 	cost func(
 		from,
 		to int,
-		data measure.VehicleData,
+		data *measure.VehicleData,
 	) float64,
 ) DependentByIndex {
 	return measure.DependentIndexed(timeDependent, cost)

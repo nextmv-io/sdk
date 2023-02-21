@@ -17,7 +17,7 @@ func TestDependentIndexed(t *testing.T) {
 	// Second: 25% of the second measure -> 25
 	// Third: 25% of the third measure -> 100
 	want1 := 175.0
-	got1 := dependentMeasure.Cost(0, 1, measure.VehicleData{
+	got1 := dependentMeasure.Cost(0, 1, &measure.VehicleData{
 		Index: 0,
 		Times: measure.Times{
 			EstimatedDeparture: etds,
@@ -32,7 +32,7 @@ func TestDependentIndexed(t *testing.T) {
 	// to calculate the costs:
 	// 100% of the third measure --> 400
 	want2 := 400.0
-	got2 := dependentMeasure.Cost(1, 0, measure.VehicleData{
+	got2 := dependentMeasure.Cost(1, 0, &measure.VehicleData{
 		Index: 1,
 		Times: measure.Times{
 			EstimatedDeparture: etds,

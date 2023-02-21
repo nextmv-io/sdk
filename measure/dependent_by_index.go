@@ -11,7 +11,7 @@ func DependentIndexed(
 	cost func(
 		from,
 		to int,
-		data VehicleData,
+		data *VehicleData,
 	) float64,
 ) DependentByIndex {
 	return &dependentIndexed{
@@ -35,7 +35,7 @@ type dependentIndexed struct {
 	cost func(
 		from,
 		to int,
-		data VehicleData,
+		data *VehicleData,
 	) float64
 	timeDependent bool
 }
@@ -43,7 +43,7 @@ type dependentIndexed struct {
 func (b *dependentIndexed) Cost(
 	from,
 	to int,
-	data VehicleData,
+	data *VehicleData,
 ) float64 {
 	return b.cost(from, to, data)
 }

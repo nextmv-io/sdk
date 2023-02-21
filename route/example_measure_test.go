@@ -121,13 +121,13 @@ func ExampleDependentIndexed() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(dependentMeasure.Cost(0, 1, measure.VehicleData{
+	fmt.Println(dependentMeasure.Cost(0, 1, &measure.VehicleData{
 		Index: 0,
 		Times: measure.Times{
 			EstimatedDeparture: etds,
 		},
 	}))
-	fmt.Println(dependentMeasure.Cost(1, 0, measure.VehicleData{
+	fmt.Println(dependentMeasure.Cost(1, 0, &measure.VehicleData{
 		Index: 1,
 		Times: measure.Times{
 			EstimatedDeparture: etds,
