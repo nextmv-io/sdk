@@ -43,7 +43,8 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	// it is advisable from a security point of view to add strong
 	// input validations before passing the data to the solver.
 
-	points := make([]measure.Point, len(i.Stops))
+	// Create two measures with different costs.
+	points := make([]measure.Point, len(i.Stops)+2*len(i.Vehicles))
 	for i, s := range i.Stops {
 		points[i] = measure.Point{
 			s.Position.Lon, s.Position.Lat,
@@ -55,6 +56,8 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	})
 	m2 := measure.Scale(m1, 2)
 
+	// Create a byIndexAndTime to combine each measure with an end time for up
+	// until (exclusive) to use it.
 	byIndexAndTime := make([]route.ByIndexAndTime, 2)
 	for _, t := range i.Shifts {
 		byIndexAndTime[0] = route.ByIndexAndTime{
@@ -66,6 +69,8 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 			EndTime: int(t.Start.Add(60 * time.Second).Unix()),
 		}
 	}
+
+	// Create a time dependent client.
 	dependentMeasure, err := route.NewTimeDependentMeasuresClient(
 		byIndexAndTime,
 		m1,
@@ -74,6 +79,8 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 		panic("could not create dependent measure client")
 	}
 
+	// Use the time dependent measures for each vehicle to adhere to the
+	// ValueFunctionMeasures option.
 	dependentMeasures := make([]measure.DependentByIndex, len(i.Vehicles))
 	for i := range i.Vehicles {
 		dependentMeasures[i] = dependentMeasure.DependentByIndex()
