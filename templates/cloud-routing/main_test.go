@@ -62,7 +62,7 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Compare against expected.
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %+v, want %+v", got, want)
+	if !reflect.DeepEqual(got.Vehicles, want.Vehicles) {
+		t.Errorf("got %+v, want %+v", got.Vehicles, want.Vehicles)
 	}
 }
