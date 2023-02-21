@@ -201,7 +201,7 @@ func ValueFunctionMeasures(
 func ValueFunctionDependentMeasures(
 	valueFunctionMeasures []DependentByIndex,
 ) Option {
-	connect.Connect(con, &valueFunctionMeasuresFunc)
+	connect.Connect(con, &valueFunctionDependentMeasuresFunc)
 	return valueFunctionDependentMeasuresFunc(valueFunctionMeasures)
 }
 
@@ -240,7 +240,7 @@ account for any service times. To account for services times please use the
 Services option.
 */
 func TravelTimeDependentMeasures(timeMeasures []DependentByIndex) Option {
-	connect.Connect(con, &travelTimeMeasuresFunc)
+	connect.Connect(con, &travelTimeDependentMeasuresFunc)
 	return travelTimeDependentMeasuresFunc(timeMeasures)
 }
 
