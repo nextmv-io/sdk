@@ -21,14 +21,6 @@ type ByIndexAndTime struct {
 // ClientOption can pass options to be used with a TimeDependentMeasure client.
 type ClientOption func(*client)
 
-// TimeDependentMeasure is an interface to handle time dependent
-// measures. It implements a Cost function that takes time into account to
-// calculate costs.
-type TimeDependentMeasure interface {
-	Cost() func(from, to int, data *measure.VehicleData) float64
-	DependentByIndex() measure.DependentByIndex
-}
-
 type client struct {
 	measures        []ByIndexAndTime
 	fallbackMeasure ByIndexAndTime
