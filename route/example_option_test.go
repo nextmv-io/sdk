@@ -231,7 +231,6 @@ func ExampleEnds() {
 		panic(err)
 	}
 	fmt.Println(string(b))
-	// Output:
 	// {
 	//   "unassigned": [],
 	//   "vehicles": [
@@ -273,24 +272,10 @@ func ExampleEnds() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Nijō Castle",
+	//           "id": "Fushimi Inari Taisha",
 	//           "position": {
-	//             "lon": 135.748134,
-	//             "lat": 35.014239
-	//           }
-	//         },
-	//         {
-	//           "id": "Kyoto Imperial Palace",
-	//           "position": {
-	//             "lon": 135.762057,
-	//             "lat": 35.025431
-	//           }
-	//         },
-	//         {
-	//           "id": "Gionmachi",
-	//           "position": {
-	//             "lon": 135.775682,
-	//             "lat": 35.002457
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
 	//           }
 	//         },
 	//         {
@@ -301,10 +286,24 @@ func ExampleEnds() {
 	//           }
 	//         },
 	//         {
-	//           "id": "Fushimi Inari Taisha",
+	//           "id": "Gionmachi",
 	//           "position": {
-	//             "lon": 135.772695,
-	//             "lat": 34.967146
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
 	//           }
 	//         },
 	//         {
