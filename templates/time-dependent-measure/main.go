@@ -70,7 +70,7 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 		}
 	}
 
-	// Create a time dependent client.
+	// Create a time dependent measure client.
 	dependentMeasure, err := route.NewTimeDependentMeasuresClient(
 		byIndexAndTime,
 		m1,
