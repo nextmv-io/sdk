@@ -117,7 +117,11 @@ func ExampleDependentIndexed() {
 		int(t.Add(3000 * time.Second).Unix()),
 	}
 
-	dependentMeasure, err := route.NewTimeDependentMeasure(byIndex, measures[0])
+	dependentMeasure, err := route.NewTimeDependentMeasure(
+		int(t.Unix()),
+		byIndex,
+		measures[0],
+	)
 	if err != nil {
 		panic(err)
 	}

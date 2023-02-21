@@ -1,7 +1,6 @@
 package route
 
 import (
-	"sync"
 	"testing"
 	"time"
 
@@ -70,7 +69,11 @@ func dependentMeasures(t *testing.T) ([]int, measure.DependentByIndex) {
 		int(startTime.Add(3000 * time.Second).Unix()),
 	}
 
-	dependentMeasure, err := NewTimeDependentMeasure(byIndex, measures[0])
+	dependentMeasure, err := NewTimeDependentMeasure(
+		int(startTime.Unix()),
+		byIndex,
+		measures[0],
+	)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
@@ -102,16 +105,12 @@ func TestCache(t *testing.T) {
 	c := client{
 		measures:        byIndex,
 		fallbackMeasure: byIndex[0],
-		cache:           sync.Map{},
+		cache:           make(map[int]ByIndexAndTime),
 	}
 
-	cacheTimes(startTime, &c)
+	cacheTimes(int(startTime.Unix()), &c)
 	want := 15
-	length := 0
-	c.cache.Range(func(key, value any) bool {
-		length++
-		return true
-	})
+	length := len(c.cache)
 
 	if length != want {
 		t.Errorf("cached items, got:%d, want:%d", length, want)

@@ -58,32 +58,32 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 
 	// Create a byIndexAndTime to combine each measure with an end time for up
 	// until (exclusive) to use it.
-	byIndexAndTime := make([]route.ByIndexAndTime, 2)
-	for _, t := range i.Shifts {
-		byIndexAndTime[0] = route.ByIndexAndTime{
+	byIndexAndTime := make([][]route.ByIndexAndTime, len(i.Shifts))
+	for shiftIndex, t := range i.Shifts {
+		byIndexAndTime[shiftIndex][0] = route.ByIndexAndTime{
 			Measure: m1,
 			EndTime: int(t.Start.Add(30 * time.Second).Unix()),
 		}
-		byIndexAndTime[1] = route.ByIndexAndTime{
+		byIndexAndTime[shiftIndex][1] = route.ByIndexAndTime{
 			Measure: m2,
 			EndTime: int(t.Start.Add(60 * time.Second).Unix()),
 		}
 	}
 
-	// Create a time dependent measure client.
-	dependentMeasure, err := route.NewTimeDependentMeasure(
-		byIndexAndTime,
-		m1,
-	)
-	if err != nil {
-		panic("could not create dependent measure client")
-	}
-
 	// Use the time dependent measures for each vehicle to adhere to the
 	// ValueFunctionMeasures option.
 	dependentMeasures := make([]measure.DependentByIndex, len(i.Vehicles))
-	for i := range i.Vehicles {
-		dependentMeasures[i] = dependentMeasure
+	for index := range i.Vehicles {
+		// Create a time dependent measure client.
+		dependentMeasure, err := route.NewTimeDependentMeasure(
+			int(i.Shifts[index].Start.Unix()),
+			byIndexAndTime[index],
+			m1,
+		)
+		if err != nil {
+			panic("could not create dependent measure client")
+		}
+		dependentMeasures[index] = dependentMeasure
 	}
 
 	// Define base router.

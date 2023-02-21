@@ -3,8 +3,6 @@ package route
 import (
 	"errors"
 	"sort"
-	"sync"
-	"time"
 
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
@@ -18,23 +16,21 @@ type ByIndexAndTime struct {
 	EndTime int
 }
 
-// ClientOption can pass options to be used with a TimeDependentMeasure client.
-type ClientOption func(*client)
-
 type client struct {
 	measures        []ByIndexAndTime
 	fallbackMeasure ByIndexAndTime
-	cache           sync.Map
+	cache           map[int]ByIndexAndTime
 }
 
 // NewTimeDependentMeasure returns a new NewTimeDependentMeasure
 // which implements a cost function.
-// It takes byIndexAndTime measures, where each measure is given with an endTime
-// (exclusive) up until the measure will be used and a fallback measure.
+// It takes a startTime (e.g. vehicle start) byIndexAndTime measures, where each
+// measure is given with an endTime (exclusive) up until the measure will be
+// used and a fallback measure.
 func NewTimeDependentMeasure(
+	startTime int,
 	measures []ByIndexAndTime,
 	fallback ByIndex,
-	opts ...ClientOption,
 ) (measure.DependentByIndex, error) {
 	measuresCopy := make([]ByIndexAndTime, len(measures))
 	copy(measuresCopy, measures)
@@ -55,17 +51,15 @@ func NewTimeDependentMeasure(
 			Measure: fallback,
 			EndTime: model.MaxInt,
 		},
-		cache: sync.Map{},
+		cache: make(map[int]ByIndexAndTime),
 	}
 
-	for _, opt := range opts {
-		opt(c)
-	}
+	cacheTimes(startTime, c)
 
-	return DependentIndexed(true, c.Cost()), nil
+	return DependentIndexed(true, c.cost()), nil
 }
 
-func (c *client) Cost() func(
+func (c *client) cost() func(
 	from,
 	to int,
 	data *measure.VehicleData,
@@ -89,16 +83,8 @@ func (c *client) interpolate(
 ) float64 {
 	// Use default measure and look for a better one afterwards
 	measure := c.fallbackMeasure
-	if m, ok := c.cache.Load(startTime); ok {
-		measure = m.(ByIndexAndTime)
-	} else {
-		for _, m := range c.measures {
-			if startTime < m.EndTime {
-				measure = m
-				c.cache.Store(startTime, m)
-				break
-			}
-		}
+	if m, ok := c.cache[startTime]; ok {
+		measure = m
 	}
 
 	// Get the drive costs for current measure. The new total costs depend on
@@ -121,20 +107,13 @@ func (c *client) interpolate(
 	)
 }
 
-// WithFullCache creates a full cache up front for each second in the
-// byIndexAndTime measure. Otherwise this cache will be built on the fly.
-func WithFullCache(startTime time.Time) ClientOption {
-	return func(c *client) {
-		cacheTimes(startTime, c)
-	}
-}
-
-func cacheTimes(startTime time.Time, c *client) {
-	time := int(startTime.Unix())
+func cacheTimes(startTime int, c *client) {
+	counter := 0
 	for _, measure := range c.measures {
-		for i := time; i < measure.EndTime; i++ {
-			c.cache.Store(i, measure)
+		for i := startTime; i < measure.EndTime; i++ {
+			c.cache[i] = measure
+			counter++
 		}
-		time = measure.EndTime
+		startTime = measure.EndTime
 	}
 }
