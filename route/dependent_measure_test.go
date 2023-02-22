@@ -80,39 +80,3 @@ func dependentMeasures(t *testing.T) ([]int, route.DependentByIndex) {
 
 	return etds, dependentMeasure
 }
-
-// func TestCache(t *testing.T) {
-// 	startTime := time.Now()
-// 	indexed1 := route.Constant(100)
-// 	indexed2 := route.Scale(indexed1, 2)
-// 	indexed3 := route.Scale(indexed2, 2)
-// 	measures := []route.ByIndex{indexed1, indexed2, indexed3}
-
-// 	endTimes := []time.Time{
-// 		startTime.Add(5 * time.Second),
-// 		startTime.Add(10 * time.Second),
-// 		startTime.Add(15 * time.Second),
-// 	}
-
-// 	byIndex := make([]route.ByIndexAndTime, len(measures))
-// 	for i, m := range measures {
-// 		byIndex[i] = route.ByIndexAndTime{
-// 			Measure: m,
-// 			EndTime: int(endTimes[i].Unix()),
-// 		}
-// 	}
-
-// 	c := client{
-// 		measures:        byIndex,
-// 		fallbackMeasure: byIndex[0],
-// 		cache:           make(map[int]ByIndexAndTime),
-// 	}
-
-// 	cacheTimes(int(startTime.Unix()), &c)
-// 	want := 15
-// 	length := len(c.cache)
-
-// 	if length != want {
-// 		t.Errorf("cached items, got:%d, want:%d", length, want)
-// 	}
-// }
