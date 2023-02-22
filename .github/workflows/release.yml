@@ -1,0 +1,38 @@
+# Creates the GH release entry
+name: release
+on:
+  push:
+    tags:
+      # Run on every proper semver tag
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # Create the GH release
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Releasing version ${{ github.ref_name }}"
+          gh release create -R nextmv-io/sdk "route/routingkit/${{ github.ref_name }}" \
+            --target develop \
+            --title "route/routingkit ${{ github.ref_name }}" \
+            --notes "Release of route/routingkit at ${{ github.ref_name }}"
+          gh release create -R nextmv-io/sdk "route/here/${{ github.ref_name }}" \
+            --target develop \
+            --title "route/here ${{ github.ref_name }}" \
+            --notes "Release of route/here at ${{ github.ref_name }}"
+          gh release create -R nextmv-io/sdk "route/osrm/${{ github.ref_name }}" \
+            --target develop \
+            --title "route/osrm ${{ github.ref_name }}" \
+            --notes "Release of route/osrm at ${{ github.ref_name }}"
+          gh release create -R nextmv-io/sdk "route/google/${{ github.ref_name }}" \
+            --target develop \
+            --title "route/google ${{ github.ref_name }}" \
+            --notes "Release of route/google at ${{ github.ref_name }}"
+          gh release create -R nextmv-io/sdk ${{ github.ref_name }} \
+            --target develop \
+            --generate-notes
