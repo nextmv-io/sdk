@@ -18,7 +18,7 @@ type ByIndexAndTime struct {
 type client struct {
 	measures        []ByIndexAndTime
 	fallbackMeasure ByIndexAndTime
-	cache           map[int]*ByIndexAndTime
+	cache           map[int]ByIndexAndTime
 }
 
 // NewTimeDependentMeasure returns a new NewTimeDependentMeasure
@@ -50,7 +50,7 @@ func NewTimeDependentMeasure(
 			Measure: fallback,
 			EndTime: model.MaxInt,
 		},
-		cache: make(map[int]*ByIndexAndTime),
+		cache: make(map[int]ByIndexAndTime),
 	}
 
 	cacheTimes(startTime, c)
@@ -83,7 +83,7 @@ func (c *client) interpolate(
 	// Use default measure and look for a better one afterwards
 	measure := c.fallbackMeasure
 	if m, ok := c.cache[startTime]; ok {
-		measure = *m
+		measure = m
 	}
 
 	// Get the drive costs for current measure. The new total costs depend on
@@ -110,7 +110,7 @@ func cacheTimes(startTime int, c *client) {
 	counter := 0
 	for _, measure := range c.measures {
 		for i := startTime; i < measure.EndTime; i++ {
-			c.cache[i] = &measure
+			c.cache[i] = measure
 			counter++
 		}
 		startTime = measure.EndTime
