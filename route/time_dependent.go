@@ -107,11 +107,9 @@ func (c *client) interpolate(
 }
 
 func cacheTimes(startTime int, c *client) {
-	counter := 0
 	for _, measure := range c.measures {
 		for i := startTime; i < measure.EndTime; i++ {
 			c.cache[i] = measure
-			counter++
 		}
 		startTime = measure.EndTime
 	}
