@@ -5,7 +5,10 @@ import (
 )
 
 // DependentIndexed is a measure that uses a custom cost function to calculate
-// parameter dependent costs for connecting two points by index.
+// parameter dependent costs for connecting two points by index. If the measures
+// are time dependent all future stops in the sequence will be fully
+// recalculated. Otherwise there will be a constant shift to achieve better
+// performance.
 func DependentIndexed(
 	timeDependent bool,
 	cost func(

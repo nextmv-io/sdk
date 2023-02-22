@@ -28,8 +28,6 @@ type input struct {
 	Stops    []route.Stop       `json:"stops"`
 	Vehicles []string           `json:"vehicles"`
 	Shifts   []route.TimeWindow `json:"shifts"`
-	Starts   []route.Position   `json:"starts"`
-	Ends     []route.Position   `json:"ends"`
 }
 
 // solver takes the input and solver options and constructs a routing solver.
