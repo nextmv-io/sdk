@@ -18,21 +18,21 @@ jobs:
         run: |
           echo "Releasing version ${{ github.ref_name }}"
           gh release create -R nextmv-io/sdk "route/routingkit/${{ github.ref_name }}" \
-            --target develop \
+            --verify-tag \
             --title "route/routingkit ${{ github.ref_name }}" \
             --notes "Release of route/routingkit at ${{ github.ref_name }}"
           gh release create -R nextmv-io/sdk "route/here/${{ github.ref_name }}" \
-            --target develop \
+            --verify-tag
             --title "route/here ${{ github.ref_name }}" \
             --notes "Release of route/here at ${{ github.ref_name }}"
           gh release create -R nextmv-io/sdk "route/osrm/${{ github.ref_name }}" \
-            --target develop \
+            --verify-tag
             --title "route/osrm ${{ github.ref_name }}" \
             --notes "Release of route/osrm at ${{ github.ref_name }}"
           gh release create -R nextmv-io/sdk "route/google/${{ github.ref_name }}" \
-            --target develop \
+            --verify-tag
             --title "route/google ${{ github.ref_name }}" \
             --notes "Release of route/google at ${{ github.ref_name }}"
           gh release create -R nextmv-io/sdk ${{ github.ref_name }} \
-            --target develop \
+            --verify-tag
             --generate-notes
