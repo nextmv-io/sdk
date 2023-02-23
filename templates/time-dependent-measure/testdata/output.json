@@ -1,0 +1,68 @@
+{
+  "unassigned": [],
+  "vehicles": [
+    {
+      "id": "v1",
+      "route": [
+        {
+          "id": "North East",
+          "position": { "lon": -74.041242, "lat": 4.692397 },
+          "estimated_arrival": "2020-10-17T09:00:00-06:00",
+          "estimated_departure": "2020-10-17T09:00:00-06:00",
+          "estimated_service": "2020-10-17T09:00:00-06:00"
+        },
+        {
+          "id": "North",
+          "position": { "lon": -74.044215, "lat": 4.693907 },
+          "estimated_arrival": "2020-10-17T09:00:37-06:00",
+          "estimated_departure": "2020-10-17T09:00:37-06:00",
+          "estimated_service": "2020-10-17T09:00:37-06:00"
+        },
+        {
+          "id": "North West",
+          "position": { "lon": -74.046988, "lat": 4.692952 },
+          "estimated_arrival": "2020-10-17T09:01:10-06:00",
+          "estimated_departure": "2020-10-17T09:01:10-06:00",
+          "estimated_service": "2020-10-17T09:01:10-06:00"
+        },
+        {
+          "id": "West",
+          "position": { "lon": -74.04866, "lat": 4.69018 },
+          "estimated_arrival": "2020-10-17T09:01:46-06:00",
+          "estimated_departure": "2020-10-17T09:01:46-06:00",
+          "estimated_service": "2020-10-17T09:01:46-06:00"
+        },
+        {
+          "id": "South West",
+          "position": { "lon": -74.047572, "lat": 4.687877 },
+          "estimated_arrival": "2020-10-17T09:02:14-06:00",
+          "estimated_departure": "2020-10-17T09:02:14-06:00",
+          "estimated_service": "2020-10-17T09:02:14-06:00"
+        },
+        {
+          "id": "South",
+          "position": { "lon": -74.044219, "lat": 4.686293 },
+          "estimated_arrival": "2020-10-17T09:02:55-06:00",
+          "estimated_departure": "2020-10-17T09:02:55-06:00",
+          "estimated_service": "2020-10-17T09:02:55-06:00"
+        },
+        {
+          "id": "South East",
+          "position": { "lon": -74.040685, "lat": 4.687558 },
+          "estimated_arrival": "2020-10-17T09:03:37-06:00",
+          "estimated_departure": "2020-10-17T09:03:37-06:00",
+          "estimated_service": "2020-10-17T09:03:37-06:00"
+        },
+        {
+          "id": "East",
+          "position": { "lon": -74.039745, "lat": 4.689886 },
+          "estimated_arrival": "2020-10-17T09:04:05-06:00",
+          "estimated_departure": "2020-10-17T09:04:05-06:00",
+          "estimated_service": "2020-10-17T09:04:05-06:00"
+        }
+      ],
+      "route_duration": 245
+    },
+    { "id": "v2", "route": [], "route_duration": 0 }
+  ]
+}
