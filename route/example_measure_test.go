@@ -2,6 +2,7 @@ package route_test
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nextmv-io/sdk/route"
 )
@@ -89,6 +90,55 @@ func ExampleIndexed() {
 	fmt.Println(int(indexed.Cost(0, 1)))
 	// Output:
 	// 3280
+}
+
+func ExampleDependentIndexed() {
+	t := time.Now()
+	indexed1 := route.Constant(1000)
+	indexed2 := route.Scale(indexed1, 2)
+	measures := []route.ByIndex{indexed1, indexed2}
+
+	endTimes := []time.Time{
+		t.Add(2000 * time.Second),
+		t.Add(5000 * time.Second),
+	}
+
+	byIndex := make([]route.ByIndexAndTime, len(measures))
+	for i, m := range measures {
+		byIndex[i] = route.ByIndexAndTime{
+			Measure: m,
+			EndTime: int(endTimes[i].Unix()),
+		}
+	}
+
+	etds := []int{
+		int(t.Add(500 * time.Second).Unix()),
+		int(t.Add(3000 * time.Second).Unix()),
+	}
+
+	dependentMeasure, err := route.NewTimeDependentMeasure(
+		int(t.Unix()),
+		byIndex,
+		measures[0],
+	)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(dependentMeasure.Cost(0, 1, &route.VehicleData{
+		Index: 0,
+		Times: route.Times{
+			EstimatedDeparture: etds,
+		},
+	}))
+	fmt.Println(dependentMeasure.Cost(1, 0, &route.VehicleData{
+		Index: 1,
+		Times: route.Times{
+			EstimatedDeparture: etds,
+		},
+	}))
+	// Output:
+	// 1000
+	// 2000
 }
 
 func ExampleScale() {
