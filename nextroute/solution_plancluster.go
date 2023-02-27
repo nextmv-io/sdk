@@ -32,6 +32,6 @@ type SolutionPlanClusters []SolutionPlanCluster
 
 // SelectRandom selects n random clusters from the slice of clusters.
 func (s SolutionPlanClusters) SelectRandom(n int) SolutionPlanClusters {
-	connect.Connect(con, &selectRandomSolutionPlanClusters)
-	return selectRandomSolutionPlanClusters(s, n)
+	connect.Connect(con, &selectRandom)
+	return selectRandom(s, n)
 }

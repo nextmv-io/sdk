@@ -96,7 +96,7 @@ var (
 		string,
 		float64,
 	) VehicleFromToExpression
-	selectRandomSolutionPlanClusters func(
+	selectRandom func(
 		SolutionPlanClusters,
 		int,
 	) SolutionPlanClusters
