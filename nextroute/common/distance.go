@@ -1,3 +1,4 @@
+// Package common contains common types and functions.
 package common
 
 // DistanceUnit is the unit of distance.
