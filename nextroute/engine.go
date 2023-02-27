@@ -100,4 +100,9 @@ var (
 		SolutionPlanClusters,
 		int,
 	) SolutionPlanClusters
+
+	newSolver func(
+		Solution,
+		SolverOptions,
+	) (Solver, error)
 )
