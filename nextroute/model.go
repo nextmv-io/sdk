@@ -9,11 +9,9 @@ import (
 )
 
 // NewModel creates a new model. The model is used to define a routing problem.
-func NewModel(
-	options ...ModelOption,
-) (Model, error) {
+func NewModel() (Model, error) {
 	connect.Connect(con, &newModel)
-	return newModel(options...)
+	return newModel()
 }
 
 // Model defines routing problem.
@@ -65,15 +63,12 @@ type Model interface {
 	) ModelPlanSingleStop
 	NewStop(
 		location common.Location,
-		options ...StopOption,
 	) (ModelStop, error)
-
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
 		travelDuration TravelDurationExpression,
 		processDuration DurationExpression,
-		options ...VehicleTypeOption,
 	) (ModelVehicleType, error)
 	// NumberOfStops returns the number of stops in the model.
 	NumberOfStops() int
@@ -89,6 +84,26 @@ type Model interface {
 	// Random returns a random number generator.
 	Random() *rand.Rand
 
+	// SetDistanceUnit sets the distance unit of the model.
+	SetDistanceUnit(
+		distanceUnit common.DistanceUnit,
+	)
+	// SetDurationUnit sets the duration unit of the model.
+	SetDurationUnit(
+		durationUnit time.Duration,
+	)
+	// SetEpoch sets the epoch of the model. The epoch is used to convert
+	// time.Time to float64 and vice versa. All float64 values are relative
+	// to the epoch.
+	SetEpoch(
+		epoch time.Time,
+	)
+	// SetRandom sets the random number generator of the model.
+	SetRandom(
+		random *rand.Rand,
+	)
+	// SetSeed sets the seed of the random number generator of the model.
+	SetSeed(seed int64)
 	// Stops returns all stops of the model.
 	Stops() ModelStops
 	// Stop returns the stop with the specified index.
@@ -101,139 +116,4 @@ type Model interface {
 	VehicleTypes() ModelVehicleTypes
 	// VehicleType returns the vehicle type with the specified index.
 	VehicleType(index int) ModelVehicleType
-}
-
-// ModelOption is a function that configures a model.
-type ModelOption func(m Model) error
-
-func DistanceUnit(
-	distanceUnit common.DistanceUnit,
-) ModelOption {
-	connect.Connect(con, &distanceUnitModelOption)
-	return distanceUnitModelOption(distanceUnit)
-}
-
-// DurationUnit is a model option to set the duration unit.
-func DurationUnit(
-	durationUnit time.Duration,
-) ModelOption {
-	connect.Connect(con, &durationUnitModelOption)
-	return durationUnitModelOption(durationUnit)
-}
-
-// TimeFormat is a model option to set the time format.
-func TimeFormat(
-	timeFormat string,
-) ModelOption {
-	connect.Connect(con, &timeFormatModelOption)
-	return timeFormatModelOption(timeFormat)
-}
-
-// Epoch is a model option to set the epoch.
-func Epoch(
-	epoch time.Time,
-) ModelOption {
-	connect.Connect(con, &epochModelOption)
-	return epochModelOption(epoch)
-}
-
-// NewVehicleType is a model option to create a new vehicle type.
-func NewVehicleType(
-	travelDuration TravelDurationExpression,
-	processDuration DurationExpression,
-	options ...VehicleTypeOption,
-) ModelOption {
-	connect.Connect(con, &newVehicleTypeModelOption)
-	return newVehicleTypeModelOption(
-		travelDuration,
-		processDuration,
-		options...,
-	)
-}
-
-// NewPlanSingleStops is a model option to create new plan single stops from
-// locations.
-func NewPlanSingleStops(
-	locations common.Locations,
-	options ...StopOption,
-) ModelOption {
-	connect.Connect(con, &newPlanSingleStopsModelOption)
-	return newPlanSingleStopsModelOption(
-		locations,
-		options...,
-	)
-}
-
-// MinimizeTravelDuration is a model option to minimize the travel duration.
-func MinimizeTravelDuration(factor float64) ModelOption {
-	connect.Connect(con, &minimizeTravelDurationModelOption)
-	return minimizeTravelDurationModelOption(factor)
-}
-
-// MinimizeUnplannedStops is a model option to minimize the unplanned stops.
-func MinimizeUnplannedStops(
-	factor float64,
-	costs StopExpression,
-) ModelOption {
-	connect.Connect(con, &minimizeUnplannedStopsModelOption)
-	return minimizeUnplannedStopsModelOption(
-		factor,
-		costs,
-	)
-}
-
-// MinimizeVehicleCost is a model option to minimize the vehicle cost.
-func MinimizeVehicleCost(
-	factor float64,
-	costs VehicleTypeExpression,
-) ModelOption {
-	connect.Connect(con, &minimizeVehicleCost)
-	return minimizeVehicleCost(
-		factor,
-		costs,
-	)
-}
-
-// ConstrainStopsPerVehicleType is a model option to constrain the stops per
-// vehicle type.
-func ConstrainStopsPerVehicleType(
-	maximumStops VehicleTypeExpression,
-) ModelOption {
-	connect.Connect(con, &constrainStopsPerVehicleTypeModelOption)
-	return constrainStopsPerVehicleTypeModelOption(
-		maximumStops,
-	)
-}
-
-// ConstrainVehicleCompactness is a model option to constrain the vehicle
-// compactness.
-func ConstrainVehicleCompactness(
-	limit StopExpression,
-) ModelOption {
-	connect.Connect(con, &constrainVehicleCompactnessModelOption)
-	return constrainVehicleCompactnessModelOption(
-		limit,
-	)
-}
-
-// Random is a model option to set the random number generator.
-func Random(random *rand.Rand) ModelOption {
-	connect.Connect(con, &randomModelOption)
-	return randomModelOption(random)
-}
-
-// Seed is a model option to set the random number generator seed.
-func Seed(seed int64) ModelOption {
-	connect.Connect(con, &seedModelOption)
-	return seedModelOption(
-		seed,
-	)
-}
-
-// AddConstraint is a model option to add a constraint.
-func AddConstraint(constraint ModelConstraint) ModelOption {
-	connect.Connect(con, &addConstraintModelOption)
-	return addConstraintModelOption(
-		constraint,
-	)
 }

@@ -3,7 +3,6 @@ package nextroute
 import (
 	"time"
 
-	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
@@ -11,7 +10,7 @@ import (
 type ModelStop interface {
 	// Data returns the arbitrary data associated with the stop. Can be set
 	// using the StopData StopOption.
-	Data() interface{}
+	Data() any
 
 	// Index returns the index of the stop.
 	Index() int
@@ -31,39 +30,13 @@ type ModelStop interface {
 	// the EarliestStart StopOption or using SetEarliestStart.
 	EarliestStartValue() float64
 
+	// SetData sets the arbitrary data associated with the stop.
+	SetData(data any)
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(time time.Time)
+	// SetName sets the name of the stop.
+	SetName(name string)
 }
 
 // ModelStops is a slice of stops.
 type ModelStops []ModelStop
-
-// StopOption is an option for a stop. Can be used in the factory method of
-// a stop Model.NewStop.
-type StopOption func(ModelStop) error
-
-// StopData is an option for a stop. Can be used in the factory method of
-// a stop Model.NewStop. The data is arbitrary data associated with the
-// stop.
-func StopData(
-	data any,
-) StopOption {
-	connect.Connect(con, &stopDataStopOption)
-	return stopDataStopOption(data)
-}
-
-// EarliestStart is an option for a stop. Can be used in the factory method of
-// a stop Model.NewStop. The earliest start time is the earliest time at which
-// the stop can be started.
-func EarliestStart(earliestStart time.Time) StopOption {
-	connect.Connect(con, &earliestStartStopOption)
-	return earliestStartStopOption(earliestStart)
-}
-
-// Name is an option for a stop. Can be used in the factory method of a stop
-// Model.NewStop. The name is the name of the stop and is used for debugging
-// and reporting.
-func Name(name string) StopOption {
-	connect.Connect(con, &nameStopOption)
-	return nameStopOption(name)
-}

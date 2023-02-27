@@ -2,7 +2,6 @@
 package nextroute
 
 import (
-	"math/rand"
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
@@ -12,59 +11,6 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
-	addConstraintModelOption func(
-		ModelConstraint,
-	) ModelOption
-	constrainStopsPerVehicleTypeModelOption func(
-		VehicleTypeExpression,
-	) ModelOption
-	constrainVehicleCompactnessModelOption func(
-		StopExpression,
-	) ModelOption
-	distanceUnitModelOption func(
-		common.DistanceUnit,
-	) ModelOption
-	durationUnitModelOption func(
-		time.Duration,
-	) ModelOption
-	epochModelOption func(
-		time.Time,
-	) ModelOption
-	minimizeTravelDurationModelOption func(
-		float64,
-	) ModelOption
-	minimizeUnplannedStopsModelOption func(
-		float64,
-		StopExpression,
-	) ModelOption
-	minimizeVehicleCost func(
-		float64,
-		VehicleTypeExpression,
-	) ModelOption
-	newPlanSingleStopsModelOption func(
-		common.Locations,
-		...StopOption,
-	) ModelOption
-	newVehicleTypeModelOption func(
-		TravelDurationExpression,
-		DurationExpression,
-		...VehicleTypeOption,
-	) ModelOption
-	randomModelOption func(
-		*rand.Rand,
-	) ModelOption
-	seedModelOption func(
-		int64,
-	) ModelOption
-	timeFormatModelOption func(
-		string,
-	) ModelOption
-	earliestStartStopOption func(
-		time.Time,
-	) StopOption
-	nameStopOption func(
-		string,
-	) StopOption
 	newCompactnessConstraint func(
 		StopExpression,
 	) (CompactnessConstraint, error)
@@ -103,9 +49,7 @@ var (
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
-	newModel func(
-		...ModelOption,
-	) (Model, error)
+	newModel               func() (Model, error)
 	newNoStopPositionsHint func() StopPositionsHint
 	newOperatorExpression  func(
 		ModelExpression,
@@ -156,10 +100,4 @@ var (
 		SolutionPlanClusters,
 		int,
 	) SolutionPlanClusters
-	stopDataStopOption func(
-		any,
-	) StopOption
-	vehicleTypeDataVehicleTypeOption func(
-		any,
-	) VehicleTypeOption
 )
