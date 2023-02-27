@@ -38,7 +38,11 @@ func WithinTolerance(a, b, tolerance float64) bool {
 
 // DurationValue returns the value of a duration in the given time unit.
 // Will panic if the time unit is zero.
-func DurationValue(distance Distance, speed Speed, timeUnit time.Duration) float64 {
+func DurationValue(
+	distance Distance,
+	speed Speed,
+	timeUnit time.Duration,
+) float64 {
 	if timeUnit.Seconds() == 0 {
 		panic(
 			fmt.Errorf(
