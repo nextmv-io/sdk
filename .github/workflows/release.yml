@@ -16,23 +16,27 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Releasing version ${{ github.ref_name }}"
+          echo "Releasing version ${{ github.ref_name }} of route/routingkit"
           gh release create -R nextmv-io/sdk "route/routingkit/${{ github.ref_name }}" \
             --verify-tag \
             --title "route/routingkit ${{ github.ref_name }}" \
             --notes "Release of route/routingkit at ${{ github.ref_name }}"
+          echo "Releasing version ${{ github.ref_name }} of route/here"
           gh release create -R nextmv-io/sdk "route/here/${{ github.ref_name }}" \
-            --verify-tag
+            --verify-tag \
             --title "route/here ${{ github.ref_name }}" \
             --notes "Release of route/here at ${{ github.ref_name }}"
+          echo "Releasing version ${{ github.ref_name }} of route/osrm"
           gh release create -R nextmv-io/sdk "route/osrm/${{ github.ref_name }}" \
-            --verify-tag
+            --verify-tag \
             --title "route/osrm ${{ github.ref_name }}" \
             --notes "Release of route/osrm at ${{ github.ref_name }}"
+          echo "Releasing version ${{ github.ref_name }} of route/google"
           gh release create -R nextmv-io/sdk "route/google/${{ github.ref_name }}" \
-            --verify-tag
+            --verify-tag \
             --title "route/google ${{ github.ref_name }}" \
             --notes "Release of route/google at ${{ github.ref_name }}"
+          echo "Releasing version ${{ github.ref_name }} of SDK itself"
           gh release create -R nextmv-io/sdk ${{ github.ref_name }} \
-            --verify-tag
+            --verify-tag \
             --generate-notes
