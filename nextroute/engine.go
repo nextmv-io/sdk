@@ -1,54 +1,165 @@
 // Package nextroute is a package
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"math/rand"
+	"time"
 
-// Input is the input to a model.
-type Input struct {
-	Name string `json:"name"`
-}
-
-// Model is the input to a solver.
-type Model struct {}
-
-// ModelOptions configure the model.
-type ModelOptions struct {}
-
-// SolverOptions configure the solver.
-type SolverOptions struct {}
-
-// SolveOptions configure a run of a solver, e.g. runtime or gap.
-type SolveOptions struct {}
-
-// EngineOptions configure the engine.
-type EngineOptions struct {
-	ModelOptions
-	SolverOptions
-	SolveOptions
-}
-
-// Solver is able to solve a Model.
-type Solver interface {
-    Solve(SolveOptions) ([]Solution, error)
-}
-
-// Solution is the result of invoking Solve() on a Solver.
-type Solution struct {}
-
-// NewModel creates a new model.
-func NewModel(input Input, modelOptions ModelOptions) (Model, error) {
-    connect.Connect(con, &newModelFunc)
-	return newModelFunc(input, modelOptions)
-}
-
-// NewSolver creates a new solver.
-func NewSolver(model Model, solverOptions SolverOptions) (Solver, error) {
-    connect.Connect(con, &newSolverFunc)
-	return newSolverFunc(model, solverOptions)
-}
+	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/common"
+)
 
 var (
-	con           = connect.NewConnector("sdk", "Nextroute")
-	newSolverFunc func(Model, SolverOptions) (Solver, error)
-	newModelFunc  func(Input, ModelOptions) (Model, error)
+	con = connect.NewConnector("sdk", "NextRoute")
+
+	addConstraintModelOption func(
+		ModelConstraint,
+	) ModelOption
+	constrainStopsPerVehicleTypeModelOption func(
+		VehicleTypeExpression,
+	) ModelOption
+	constrainVehicleCompactnessModelOption func(
+		StopExpression,
+	) ModelOption
+	distanceUnitModelOption func(
+		common.DistanceUnit,
+	) ModelOption
+	durationUnitModelOption func(
+		time.Duration,
+	) ModelOption
+	epochModelOption func(
+		time.Time,
+	) ModelOption
+	minimizeTravelDurationModelOption func(
+		float64,
+	) ModelOption
+	minimizeUnplannedStopsModelOption func(
+		float64,
+		StopExpression,
+	) ModelOption
+	minimizeVehicleCost func(
+		float64,
+		VehicleTypeExpression,
+	) ModelOption
+	newPlanSingleStopsModelOption func(
+		common.Locations,
+		...StopOption,
+	) ModelOption
+	newVehicleTypeModelOption func(
+		TravelDurationExpression,
+		DurationExpression,
+		...VehicleTypeOption,
+	) ModelOption
+	randomModelOption func(
+		*rand.Rand,
+	) ModelOption
+	seedModelOption func(
+		int64,
+	) ModelOption
+	timeFormatModelOption func(
+		string,
+	) ModelOption
+	earliestStartStopOption func(
+		time.Time,
+	) StopOption
+	nameStopOption func(
+		string,
+	) StopOption
+	newCompactnessConstraint func(
+		StopExpression,
+	) (CompactnessConstraint, error)
+	newConstantDurationExpression func(
+		string,
+		time.Duration,
+	) DurationExpression
+	newConstantExpression func(
+		string,
+		float64,
+	) ConstantExpression
+	newDurationExpression func(
+		ModelExpression,
+		time.Duration,
+	) DurationExpression
+	newEmptyMove          func() Move
+	newFromStopExpression func(
+		string,
+		float64,
+	) FromStopExpression
+	newFromToExpression func(
+		string,
+		float64,
+	) FromToExpression
+	newHaversineExpression func(
+		bool,
+	) DistanceExpression
+	newInwardnessConstraint func() (InwardnessConstraint, error)
+	newLatestEndConstraint  func(
+		StopExpression,
+	) (LatestEndConstraint, error)
+	newMaximumConstraint func(
+		StopExpression,
+		VehicleTypeExpression,
+	) (MaximumConstraint, error)
+	newMaximumStopsConstraint func(
+		VehicleTypeExpression,
+	) (MaximumStopsConstraint, error)
+	newModel func(
+		...ModelOption,
+	) (Model, error)
+	newNoStopPositionsHint func() StopPositionsHint
+	newOperatorExpression  func(
+		ModelExpression,
+		ModelExpression,
+		BinaryFunction,
+	) BinaryExpression
+	newSkipVehiclePositionsHint func(
+		bool,
+	) StopPositionsHint
+	newStopExpression func(
+		string,
+		float64,
+	) StopExpression
+	newSolution func(
+		Model,
+	) (Solution, error)
+	newSumExpression func(
+		ModelExpressions,
+	) SumExpression
+	newTermExpression func(
+		float64,
+		ModelExpression,
+	) TermExpression
+	newTravelDurationExpression func(
+		DistanceExpression,
+		common.Speed,
+	) TravelDurationExpression
+	newTravelDurationObjective func(
+		float64,
+	) TravelDurationObjective
+	newUnPlannedObjective func(
+		float64,
+		StopExpression,
+	) UnPlannedObjective
+	newVehiclesObjective func(
+		float64,
+		VehicleTypeExpression,
+	) VehiclesObjective
+	newVehicleTypeExpression func(
+		string,
+		float64,
+	) VehicleTypeExpression
+	newVehicleTypeFromToExpression func(
+		string,
+		float64,
+	) VehicleFromToExpression
+	selectRandomSolutionPlanClusters func(
+		SolutionPlanClusters,
+		int,
+	) SolutionPlanClusters
+	stopDataStopOption func(
+		any,
+	) StopOption
+	vehicleTypeDataVehicleTypeOption func(
+		any,
+	) VehicleTypeOption
 )

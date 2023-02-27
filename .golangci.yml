@@ -193,6 +193,11 @@ issues:
         - tagliatelle
       text: measure
 
+    # Complex nested block nesting is fine for now.
+    - path: alns/solver\.go
+      linters:
+        - nestif
+
     # Please note that other Go modules have issues that are ignored but are
     # not listed here. The reason is that linting must be done standing on the
     # Go module and excluding issues here uses relative paths. That means that
