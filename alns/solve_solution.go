@@ -1,6 +1,6 @@
 package alns
 
-type baseSolution[T any] interface {
+type BaseSolution[T any] interface {
 	// Copy returns a copy of the solution which must be of type T the
 	// `derived` type. This copy must be a deep copy.
 	Copy() T
@@ -12,6 +12,6 @@ type baseSolution[T any] interface {
 // Solution is a solution to a problem. It defines the minimum interface
 // that a solution must implement to be used in Adaptive Local Neighborhood
 // Search.
-type Solution[S baseSolution[S]] interface {
-	baseSolution[S]
+type Solution[S BaseSolution[S]] interface {
+	BaseSolution[S]
 }
