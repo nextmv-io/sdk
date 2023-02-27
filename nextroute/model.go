@@ -85,23 +85,15 @@ type Model interface {
 	Random() *rand.Rand
 
 	// SetDistanceUnit sets the distance unit of the model.
-	SetDistanceUnit(
-		distanceUnit common.DistanceUnit,
-	)
+	SetDistanceUnit(distanceUnit common.DistanceUnit)
 	// SetDurationUnit sets the duration unit of the model.
-	SetDurationUnit(
-		durationUnit time.Duration,
-	)
+	SetDurationUnit(durationUnit time.Duration)
 	// SetEpoch sets the epoch of the model. The epoch is used to convert
 	// time.Time to float64 and vice versa. All float64 values are relative
 	// to the epoch.
-	SetEpoch(
-		epoch time.Time,
-	)
+	SetEpoch(epoch time.Time)
 	// SetRandom sets the random number generator of the model.
-	SetRandom(
-		random *rand.Rand,
-	)
+	SetRandom(random *rand.Rand)
 	// SetSeed sets the seed of the random number generator of the model.
 	SetSeed(seed int64)
 	// Stops returns all stops of the model.
