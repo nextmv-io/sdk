@@ -78,6 +78,12 @@ type SolutionStop interface {
 	// is returned.
 	NextIndex() int
 
+	// ObjectiveValue returns the value of the objective for the stop. The
+	// objective value of a stop is set by the ObjectiveDataUpdater.Update
+	// method of the objective. If the objective is not set on the stop,
+	// nil is returned. If the stop is unplanned, the objective value has no
+	// semantic meaning.
+	ObjectiveValue(objective ModelObjective) any
 	// PlanCluster returns the SolutionPlanCluster that the stop is part of.
 	PlanCluster() SolutionPlanCluster
 	// Previous returns the previous stop the vehicle visited before the stop.
