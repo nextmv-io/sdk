@@ -19,7 +19,7 @@ type SolutionStop interface {
 	// method of the constraint. If the constraint is not set on the stop,
 	// nil is returned. If the stop is unplanned, the constraint value has no
 	// semantic meaning.
-	ConstraintValue(constraint ModelConstraint) interface{}
+	ConstraintValue(constraint ModelConstraint) any
 	// CumulativeTravelDurationValue returns the cumulative travel duration of
 	// the stop as a float64. The cumulative travel duration is the sum of the
 	// travel durations of all stops that are visited before the stop. If the

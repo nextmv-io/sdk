@@ -32,9 +32,12 @@ type Location interface {
 // Locations is a slice of Location.
 type Locations []Location
 
+// Unique returns a new slice of Locations with unique locations.
 func (l Locations) Unique() Locations {
 	unique := make(map[string]Location)
 	for _, location := range l {
+		// TODO: in Go 1.20 we don't need to use fmt.Sprintf here.
+		// This can simply become unique[location] = struct{}{}
 		unique[fmt.Sprintf("%v", location)] = location
 	}
 	result := make(Locations, 0, len(unique))

@@ -1,3 +1,4 @@
+// Package common contains common types and functions.
 package common
 
 // DistanceUnit is the unit of distance.
@@ -32,11 +33,15 @@ const (
 	Miles
 )
 
-const factorMetersToKilometers = 0.001
-const factorMetersToMiles = 0.000621371
+const (
+	factorMetersToKilometers = 0.001
+	factorMetersToMiles      = 0.000621371
+)
 
-const factorKilometersToMeters = 1000
-const factorMilesToMeters = 1609.34
+const (
+	factorKilometersToMeters = 1000
+	factorMilesToMeters      = 1609.34
+)
 
 // Distance is the interface for a distance.
 type Distance interface {
