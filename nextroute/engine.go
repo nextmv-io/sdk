@@ -38,6 +38,7 @@ var (
 	newHaversineExpression func(
 		bool,
 	) DistanceExpression
+	newAttributesConstraint func() (AttributesConstraint, error)
 	newInwardnessConstraint func() (InwardnessConstraint, error)
 	newLatestEndConstraint  func(
 		StopExpression,
