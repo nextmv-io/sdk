@@ -84,6 +84,7 @@ var (
 		float64,
 		StopExpression,
 	) UnPlannedObjective
+	newSolverFactory     func() SolverFactory
 	newVehiclesObjective func(
 		float64,
 		VehicleTypeExpression,
