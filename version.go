@@ -27,7 +27,8 @@ func getVersion() string {
 	// Get version from module dependency.
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
-		// Just return the fallback version.
+		// If this happens, we're not running in a module context. We default to
+		// returning the fallback version.
 		return versionFallback
 	}
 
@@ -40,8 +41,9 @@ func getVersion() string {
 		return dep.Version
 	}
 
-	// This should never happen. If it does, it means that the SDK was used on
-	// its own and not as a dependency. In that case, we fallback to the version
-	// in the VERSION file.
-	return versionFallback
+	// If this happens, we're running in a module in which sdk is not a
+	// dependency. In this case, we expect the NEXTMV_SDK_OVERRIDE_VERSION to be
+	// set. Thus, this is unexpected. So, return a string that helps us find the
+	// way back here.
+	return "no-overridden-version-found"
 }
