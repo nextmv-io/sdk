@@ -17,6 +17,30 @@ func Filter[T any](v []T, f func(T) bool) []T {
 	return r
 }
 
+// Unique is a universal duplicate removal function for type instances in
+// a slice that implement the comparable interface.
+func Unique[T comparable](s []T) []T {
+	inResult := make(map[T]bool)
+	var result []T
+	for _, str := range s {
+		if _, ok := inResult[str]; !ok {
+			inResult[str] = true
+			result = append(result, str)
+		}
+	}
+	return result
+}
+
+// FindIndex returns the first index i satisfying predicate(s[i]),
+func FindIndex[E any](s []E, predicate func(E) bool) int {
+	for i, v := range s {
+		if predicate(v) {
+			return i
+		}
+	}
+	return -1
+}
+
 // DefensiveCopy returns a defensive copy of a slice.
 func DefensiveCopy[T any](v []T) []T {
 	c := make([]T, len(v))

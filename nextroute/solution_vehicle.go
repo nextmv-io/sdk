@@ -8,9 +8,14 @@ import (
 
 // SolutionVehicle is a vehicle in a solution.
 type SolutionVehicle interface {
-	// AddAtEnd creates a move that adds the given plan cluster to the vehicle
-	// at the end of the vehicle's route.
-	AddAtEnd(SolutionPlanCluster) Move
+	// AddAfterFirst creates a move that adds the given plan cluster to the
+	// vehicle after the first solution stop of the vehicle. The move is
+	// not necessarily executable, Move.IsExecutable.
+	AddAfterFirst(SolutionPlanCluster) Move
+	// AddBeforeLast creates a move that adds the given plan cluster to the
+	// vehicle before the last solution stop of the vehicle. The move is
+	// not necessarily executable, Move.IsExecutable.
+	AddBeforeLast(SolutionPlanCluster) Move
 
 	// BestMove returns the best move for the given solution plan cluster on
 	// the invoking vehicle. The best move is the move that has the lowest

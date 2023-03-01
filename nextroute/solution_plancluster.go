@@ -7,6 +7,15 @@ import (
 // SolutionPlanCluster is a cluster of stops that are planned to be visited by
 // a vehicle.
 type SolutionPlanCluster interface {
+	// AddAfterFirst creates a move that adds the invoking stop after the first
+	// stop of the given vehicle. The move is not necessarily executable,
+	// Move.IsExecutable.
+	AddAfterFirst(vehicle SolutionVehicle) Move
+	// AddBeforeLast creates a move that adds the invoking stop before the last
+	// stop of the given vehicle. The move is not necessarily executable,
+	// Move.IsExecutable. Will panic if the invoking stop is already planned.
+	AddBeforeLast(vehicle SolutionVehicle) Move
+
 	// IsPlanned returns true if the cluster is planned.
 	IsPlanned() bool
 
