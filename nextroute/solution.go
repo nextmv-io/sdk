@@ -40,8 +40,6 @@ type Solution interface {
 		planPositionsHint StopPositionsHint,
 	)
 
-	// Marshal returns the JSON representation of the solution.
-	Marshal() ([]byte, error)
 	// Model returns the model of the solution.
 	Model() Model
 
@@ -72,13 +70,10 @@ type Solution interface {
 
 	// Vehicles returns the vehicles of the solution.
 	Vehicles() SolutionVehicles
+
+	// ToJsonSolution converts the solution to a JSON solution.
+	ToJsonSolution() JsonSolution
 }
 
 // Solutions is a slice of solutions.
 type Solutions []Solution
-
-// Marshaller is a marshaller for a solution.
-type Marshaller interface {
-	// Marshal marshals the solution. The solution is marshaled to JSON.
-	Marshal(s Solution) ([]byte, error)
-}
