@@ -27,19 +27,12 @@ type Solution interface {
 	// is not executable, Move.IsExecutable.
 	BestMove(SolutionPlanCluster) Move
 
-	// ConstraintScore returns the constraint score of the solution. The
-	// constraint score is the sum of the constraint scores. A constraint score
-	// is zero if the constraint is not violated. Only soft constraints are
-	// considered. Hard constraints are not considered as they should have a
-	// zero score by definition.
-	ConstraintScore() float64
-
 	// EstimateDeltaScore estimates the delta score of the solution if the given
 	// stop positions are moved. The delta score is the difference between the
 	// score of the solution before the move and the score of the solution after
 	// the move. The delta score is an estimate as the score of the solution
 	// after the move is not calculated but estimated. The estimate is based on
-	// ModelConstraint.EstimateDeltaScore and ModelObjective.EstimateDeltaScore.
+	// ModelObjective.EstimateDeltaScore.
 	EstimateDeltaScore(
 		stopPositions StopPositions,
 	) (deltaScore float64,

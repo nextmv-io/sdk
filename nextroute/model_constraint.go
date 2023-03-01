@@ -17,28 +17,28 @@ type ConstraintDataUpdater interface {
 	Update(s SolutionStop) Copier
 }
 
+// RegisteredModelExpressions is the interface that exposes the expressions
+// that should be registered with the model.
+type RegisteredModelExpressions interface {
+	// ModelExpressions registers the expressions that are registered with the
+	// model.
+	ModelExpressions() ModelExpressions
+}
+
 // ModelConstraint is the interface that all constraints must implement.
 // Constraints are used to estimate if a move is allowed and can be used to
 // check if a solution is valid after a move is executed or plan clusters have
 // been unplanned.
 type ModelConstraint interface {
-	// CanBeViolated returns true if the constraint can be violated. If the
-	// constraint can not be violated no solutions can be created that violate
-	// the constraint.
-	CanBeViolated() bool
-	// CanNotBeViolated returns true if the constraint can not be violated. See
-	// CanBeViolated for more information.
-	CanNotBeViolated() bool
+	RegisteredModelExpressions
 	// CheckedAt returns when the constraint should be checked. A constraint can
 	// be checked at each stop, each vehicle or each solution. If the constraint
 	// is never checked it relies on its estimate of allowed moves to be
-	// correct.
+	// correct. Estimates are only used when planning plan-clusters so if
+	// un-planning plan clusters can result in a solution that violates the
+	// constraint then the constraint must be checked at each solution or stop
+	// or vehicle.
 	CheckedAt() CheckedAt
-	// ConstraintViolationToScore converts a constraint violation to a score.
-	// A score is a positive number that is added to the solution score if the
-	// constraint is violated. The violation is multiplied by the factor plus
-	// offset if violation is greater than zero otherwise zero is returned.
-	ConstraintViolationToScore(violation float64) float64
 
 	// DoesStopHaveViolations returns true if the stop violates the constraint.
 	// The stop is not allowed to be nil. The stop must be part of the solution.
@@ -54,40 +54,22 @@ type ModelConstraint interface {
 	// called if CheckedAt returns AtEachSolution.
 	DoesSolutionHaveViolations(solution Solution) bool
 
-	// EstimateDeltaScore estimates the delta score if the stop is moved to the
-	// new position described in stopPositions. The stopPositions is not
-	// allowed to be nil. Should be a pure function.
-	EstimateDeltaScore(
+	// EstimateIsViolated estimates if the solution is changed by the given
+	// new positions described in stopPositions if it will be violated or not.
+	// The stopPositions is not  allowed to be nil. Should be a pure function,
+	// i.e. not change any state of the constraint. The stopPositionsHint can
+	// The stopPositionsHint can be used to speed up the estimation of the
+	// constraint violation.
+	EstimateIsViolated(
 		stopPositions StopPositions,
-	) (estimateDeltaScore float64, stopPositionsHint StopPositionsHint)
+	) (isViolated bool, stopPositionsHint StopPositionsHint)
 
-	// Factor returns the factor that is used to convert a constraint violation
-	// to a score.
-	Factor() float64
-
-	// Index returns the index of the constraint. The index is unique for each
-	// constraint. The index is used to identify the constraint in the
-	// solution.
+	// Index returns the index of the constraint. The index should be
+	// unique for each constraint.
 	Index() int
-
-	// ModelExpressions returns the expressions that are used by the constraint
-	// whose values are defined by the solution. The solution will calculate
-	// the values and cumulative values of the expressions for each stop. These
-	// values can be used to implement the constraint.
-	ModelExpressions() ModelExpressions
 
 	// Name returns the name of the constraint.
 	Name() string
-
-	// Offset returns the offset that is used to convert a constraint violation
-	// to a score.
-	Offset() float64
-
-	// Score returns the score of the constraint violation. The score
-	// is a positive number that is added to the solution score if the
-	// constraint is violated. The violation is multiplied by the factor plus
-	// offset if violation is greater than zero otherwise zero is returned.
-	Score(solution Solution) float64
 }
 
 // ModelConstraints is a slice of ModelConstraint.

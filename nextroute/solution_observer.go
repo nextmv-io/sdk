@@ -23,16 +23,16 @@ type SolutionObserver interface {
 		constraint ModelConstraint,
 		feasible bool,
 	)
-	// OnEstimateDeltaConstraintScore is called when the delta constraint score
-	// is going to be estimated.
-	OnEstimateDeltaConstraintScore(
+	// OnEstimateIsViolated is called when the delta constraint is going to be
+	// estimated if it will be violated
+	OnEstimateIsViolated(
 		constraint ModelConstraint,
 	)
-	// OnEstimatedDeltaConstraintScore is called when the delta constraint score
+	// OnEstimatedIsViolated is called when the delta constraint score
 	// has been estimated.
-	OnEstimatedDeltaConstraintScore(
+	OnEstimatedIsViolated(
 		constraint ModelConstraint,
-		estimate float64,
+		isViolated bool,
 		planPositionsHint StopPositionsHint,
 	)
 	// OnEstimateDeltaObjectiveScore is called when the delta objective score is
