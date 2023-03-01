@@ -27,6 +27,10 @@ type LatestEndConstraint interface {
 	// SetOnEnd sets the latest end of a stop to the latest time a stop can
 	// end at the location of the stop. This is the default.
 	SetOnEnd()
+
+	EstimateDeltaValue(visitPositions StopPositions) float64
+
+	Value(solution Solution) float64
 }
 
 // NewLatestEndConstraint creates a new latest end constraint. The constraint
