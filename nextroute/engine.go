@@ -43,6 +43,11 @@ var (
 	newLatestEndConstraint  func(
 		StopExpression,
 	) (LatestEndConstraint, error)
+
+	newLatestStartConstraint func(
+		StopExpression,
+	) (LatestStartConstraint, error)
+
 	newMaximumConstraint func(
 		StopExpression,
 		VehicleTypeExpression,

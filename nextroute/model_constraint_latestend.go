@@ -6,31 +6,14 @@ import (
 
 // LatestEndConstraint is a constraint that limits the latest end of a stop.
 // The latest end of a stop is the latest time a stop can end at the location
-// of the stop. If SetOnStart() is called, the latest end of a stop is the
-// latest time a stop can start at the location of the stop.
+// of the stop.
 type LatestEndConstraint interface {
 	ModelConstraint
+	ModelObjective
 
-	// LatestEnd returns the latest end expression which defines the latest
+	// Latest returns the latest end expression which defines the latest
 	// end of a stop.
-	LatestEnd() StopExpression
-
-	// OnEnd returns true if the latest end of a stop is the latest time a
-	// stop can end at the location of the stop. If OnEnd() returns false,
-	// the latest end of a stop is the latest time a stop can start at the
-	// location of the stop.
-	OnEnd() bool
-
-	// SetOnStart sets the latest end of a stop to the latest time a stop can
-	// start at the location of the stop.
-	SetOnStart()
-	// SetOnEnd sets the latest end of a stop to the latest time a stop can
-	// end at the location of the stop. This is the default.
-	SetOnEnd()
-
-	EstimateDeltaValue(visitPositions StopPositions) float64
-
-	Value(solution Solution) float64
+	Latest() StopExpression
 }
 
 // NewLatestEndConstraint creates a new latest end constraint. The constraint
