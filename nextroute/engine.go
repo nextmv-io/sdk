@@ -50,9 +50,12 @@ var (
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
-	newModel               func() (Model, error)
-	newNoStopPositionsHint func() StopPositionsHint
-	newOperatorExpression  func(
+	newModel                func() (Model, error)
+	newModelConstraintIndex func() int
+	newModelExpressionIndex func() int
+	newModelObjectiveIndex  func() int
+	newNoStopPositionsHint  func() StopPositionsHint
+	newOperatorExpression   func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,

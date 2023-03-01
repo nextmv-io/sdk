@@ -2,7 +2,7 @@ package nextroute
 
 import (
 	"fmt"
-	"sync/atomic"
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // ModelExpression is an expression that can be used in a model to define
@@ -66,9 +66,10 @@ func DeltaValue(
 	return newValue1 + newValue2 - currentValue
 }
 
-var expressionIndex uint32
-
-// NextExpressionIndex returns the next unique expression index.
-func NextExpressionIndex() int {
-	return int(atomic.AddUint32(&expressionIndex, 1) - 1)
+// NewModelExpressionIndex returns the next unique expression index.
+// This function can be used to create a unique index for a custom
+// expression.
+func NewModelExpressionIndex() int {
+	connect.Connect(con, &newModelExpressionIndex)
+	return newModelExpressionIndex()
 }
