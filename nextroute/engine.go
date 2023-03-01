@@ -78,16 +78,12 @@ var (
 		DistanceExpression,
 		common.Speed,
 	) TravelDurationExpression
-	newTravelDurationObjective func(
-		float64,
-	) TravelDurationObjective
-	newUnPlannedObjective func(
-		float64,
+	newTravelDurationObjective func() TravelDurationObjective
+	newUnPlannedObjective      func(
 		StopExpression,
 	) UnPlannedObjective
 	newSolverFactory     func() SolverFactory
 	newVehiclesObjective func(
-		float64,
 		VehicleTypeExpression,
 	) VehiclesObjective
 	newVehicleTypeExpression func(
