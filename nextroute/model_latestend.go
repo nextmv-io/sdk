@@ -14,6 +14,9 @@ type LatestEnd interface {
 	// Latest returns the latest end expression which defines the latest
 	// end of a stop.
 	Latest() StopExpression
+
+	// Lateness returns the lateness of a stop. The lateness is the difference
+	Lateness(stop SolutionStop) float64
 }
 
 // NewLatestEnd creates a new latest end construct. The latest end of a stop is
