@@ -52,17 +52,36 @@ type StopDefaults struct {
 
 // Vehicle represents a vehicle.
 type Vehicle struct {
-	Capacity any             `json:"capacity,omitempty"`
-	Start    *route.Position `json:"start,omitempty"`
-	End      *route.Position `json:"end,omitempty"`
-	Speed    *float64        `json:"speed,omitempty"`
-	ID       string          `json:"id,omitempty"`
+	Capacity                any             `json:"capacity,omitempty"`
+	Start                   *route.Position `json:"start,omitempty"`
+	End                     *route.Position `json:"end,omitempty"`
+	Speed                   *float64        `json:"speed,omitempty"`
+	ID                      string          `json:"id,omitempty"`
+	ShiftStart              *time.Time      `json:"shift_start,omitempty"`
+	ShiftEnd                *time.Time      `json:"shift_end,omitempty"`
+	CompatibilityAttributes []string        `json:"compatibility_attributes,omitempty"`
+	MaxStops                *int            `json:"max_stops,omitempty"`
+	MaxDistance             *int            `json:"max_distance,omitempty"`
+	MaxDuration             *int            `json:"max_duration,omitempty"`
+	StopDurationMultiplier  *float64        `json:"stop_duration_multiplier,omitempty"`
+	Backlog                 []string        `json:"backlog,omitempty"`
+	AlternateStops          []string        `json:"alternate_stops,omitempty"`
+	InitializationCost      int             `json:"initialization_cost,omitempty"`
 }
 
 // Stop represents a stop.
 type Stop struct {
-	Quantity          any            `json:"quantity,omitempty"`
-	UnassignedPenalty *int           `json:"unassigned_penalty,omitempty"`
-	ID                string         `json:"id,omitempty"`
-	Position          route.Position `json:"position,omitempty"`
+	Precedes                any            `json:"precedes,omitempty"`
+	Quantity                any            `json:"quantity,omitempty"`
+	Succeeds                any            `json:"succeeds,omitempty"`
+	TargetTime              *time.Time     `json:"target_time,omitempty"`
+	HardWindow              *[]time.Time   `json:"hard_window,omitempty"`
+	MaxWait                 *int           `json:"max_wait,omitempty"`
+	StopDuration            *int           `json:"stop_duration,omitempty"`
+	UnassignedPenalty       *int           `json:"unassigned_penalty,omitempty"`
+	EarlinessPenalty        *float64       `json:"earliness_penalty,omitempty"`
+	LatenessPenalty         *float64       `json:"lateness_penalty,omitempty"`
+	CompatibilityAttributes *[]string      `json:"compatibility_attributes"`
+	ID                      string         `json:"id,omitempty"`
+	Position                route.Position `json:"position,omitempty"`
 }
