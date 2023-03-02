@@ -3,6 +3,7 @@ package nextroute
 import (
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 // NewSolution creates a new solution. The solution is created from the given
@@ -54,6 +55,9 @@ type Solution interface {
 
 	// Vehicles returns the vehicles of the solution.
 	Vehicles() SolutionVehicles
+
+	// ToJsonSolution converts the solution to a JSON solution.
+	ToJsonSolution() schema.JsonSolution
 }
 
 // Solutions is a slice of solutions.
