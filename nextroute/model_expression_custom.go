@@ -1,6 +1,9 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/common"
+)
 
 // NewConstantExpression returns an expression that always returns the same
 // value.
@@ -70,6 +73,17 @@ func NewVehicleTypeFromToExpression(
 ) VehicleFromToExpression {
 	connect.Connect(con, &newVehicleTypeFromToExpression)
 	return newVehicleTypeFromToExpression(name, defaultValue)
+}
+
+// NewDistanceExpression turns a model expression into a distance expression.
+// The parameter unit is the unit of the model expression.
+func NewDistanceExpression(
+	name string,
+	modelExpression ModelExpression,
+	unit common.DistanceUnit,
+) DistanceExpression {
+	connect.Connect(con, &newDistanceExpression)
+	return newDistanceExpression(name, modelExpression, unit)
 }
 
 // ConstantExpression is an expression that always returns the same value.

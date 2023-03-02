@@ -16,6 +16,12 @@ type ModelVehicle interface {
 	// Last returns the last stop of the vehicle.
 	Last() ModelStop
 
+	// Name returns the name of the vehicle.
+	Name() string
+
+	// SetName sets the name of the vehicle.
+	SetName(string)
+
 	// Start returns the start time of the vehicle.
 	Start() time.Time
 }
