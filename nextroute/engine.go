@@ -40,13 +40,13 @@ var (
 	) DistanceExpression
 	newAttributesConstraint func() (AttributesConstraint, error)
 	newInwardnessConstraint func() (InwardnessConstraint, error)
-	newLatestEndConstraint  func(
+	newLatestEnd            func(
 		StopExpression,
-	) (LatestEndConstraint, error)
+	) (LatestEnd, error)
 
-	newLatestStartConstraint func(
+	newLatestStart func(
 		StopExpression,
-	) (LatestStartConstraint, error)
+	) (LatestStart, error)
 
 	newMaximumConstraint func(
 		StopExpression,
