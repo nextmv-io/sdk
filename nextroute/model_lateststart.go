@@ -8,6 +8,7 @@ import (
 // as an objective. The latest start of a stop is the latest time a stop can
 // start at the location of the stop.
 type LatestStart interface {
+	ConstraintReporter
 	ModelConstraint
 	ModelObjective
 
