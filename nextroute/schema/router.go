@@ -1,8 +1,8 @@
 package schema
 
 import (
-	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/nextmv-io/sdk/route"
 )
@@ -34,7 +34,7 @@ type RouterInput struct {
 }
 
 // TODO: Conversion is currently incomplete. We need to handle the following:
-// - Defaults (optional: collapse same values back to defaults)
+// - Defaults (we should probably ignore them)
 // - InitializationCosts
 // - Precedences
 // - Windows
@@ -42,67 +42,112 @@ type RouterInput struct {
 // - Backlogs
 // - VehicleAttributes
 // - StopAttributes
+// - Groups
+// - ServiceTimes
+// - AlternateStops
+// - Limits
+// - DurationLimits
+// - DistanceLimits
+// - ServiceGroups
 
 // RouterToNextRoute transforms router input to nextroute input.
-func RouterToNextRoute(routerInput any) Input {
-	internalInput := internalizeRouterInput(routerInput)
+func RouterToNextRoute(routerInput RouterInput) Input {
+	// Convert stop defaults
+	stopDefaults := StopDefaults{}
+	if anyAndAllEqual(routerInput.Penalties) {
+		stopDefaults.UnassignedPenalty = &routerInput.Penalties[0]
+	}
+	if anyAndAllEqual(routerInput.Quantities) {
+		stopDefaults.Quantity = &routerInput.Quantities[0]
+	}
+	if anyAndAllEqual(routerInput.Windows) {
+		stopDefaults.HardWindow = &[]time.Time{
+			routerInput.Windows[0].TimeWindow.Start,
+			routerInput.Windows[0].TimeWindow.End,
+		}
+		stopDefaults.MaxWait = &routerInput.Windows[0].MaxWait
+	}
+	if anyAndAllEqual(routerInput.ServiceTimes) {
+		stopDefaults.StopDuration = &routerInput.ServiceTimes[0].Duration
+	}
+	if anyAndAllEqual(routerInput.StopAttributes) {
+		stopDefaults.CompatibilityAttributes = &routerInput.StopAttributes[0].Attributes
+	}
+
+	// Convert vehicle defaults
+	vehicleDefaults := VehicleDefaults{}
+	if anyAndAllEqual(routerInput.Capacities) {
+		vehicleDefaults.Capacity = &routerInput.Capacities[0]
+	}
+	if anyAndAllEqual(routerInput.Starts) {
+		vehicleDefaults.Start = &routerInput.Starts[0]
+	}
+	if anyAndAllEqual(routerInput.Ends) {
+		vehicleDefaults.End = &routerInput.Ends[0]
+	}
+	if anyAndAllEqual(routerInput.Velocities) {
+		vehicleDefaults.Speed = &routerInput.Velocities[0]
+	}
+	if anyAndAllEqual(routerInput.Shifts) {
+		vehicleDefaults.ShiftStart = &routerInput.Shifts[0].Start
+		vehicleDefaults.ShiftEnd = &routerInput.Shifts[0].End
+	}
+	if anyAndAllEqual(routerInput.VehicleAttributes) {
+		vehicleDefaults.CompatibilityAttributes = routerInput.VehicleAttributes[0].Attributes
+	}
+
+	defaults := Defaults{
+		Stops:    &stopDefaults,
+		Vehicles: &vehicleDefaults,
+	}
 
 	// Convert vehicles
-	vehicles := make([]Vehicle, len(internalInput.Vehicles))
-	for i, v := range internalInput.Vehicles {
+	vehicles := make([]Vehicle, len(routerInput.Vehicles))
+	for i, v := range routerInput.Vehicles {
 		vehicles[i] = Vehicle{
 			ID:       v,
-			Capacity: internalInput.Capacities[i],
+			Capacity: routerInput.Capacities[i],
 			Start: &route.Position{
-				Lon: internalInput.Starts[i].Lon,
-				Lat: internalInput.Starts[i].Lat,
+				Lon: routerInput.Starts[i].Lon,
+				Lat: routerInput.Starts[i].Lat,
 			},
 			End: &route.Position{
-				Lon: internalInput.Ends[i].Lon,
-				Lat: internalInput.Ends[i].Lat,
+				Lon: routerInput.Ends[i].Lon,
+				Lat: routerInput.Ends[i].Lat,
 			},
-			Speed: &internalInput.Velocities[i],
+			Speed: &routerInput.Velocities[i],
 		}
 	}
 
 	// Convert stops
-	stops := make([]Stop, len(internalInput.Stops))
-	for i, s := range internalInput.Stops {
+	stops := make([]Stop, len(routerInput.Stops))
+	for i, s := range routerInput.Stops {
 		stops[i] = Stop{
 			ID: s.ID,
 			Position: route.Position{
 				Lon: s.Position.Lon,
 				Lat: s.Position.Lat,
 			},
-			Quantity:          &internalInput.Quantities[i],
-			UnassignedPenalty: &internalInput.Penalties[i],
+			Quantity:          &routerInput.Quantities[i],
+			UnassignedPenalty: &routerInput.Penalties[i],
 		}
 	}
 
 	return Input{
 		Vehicles: vehicles,
 		Stops:    stops,
+		Defaults: &defaults,
 	}
 }
 
-func internalizeRouterInput(routerInput any) RouterInput {
-	var internalInput RouterInput
-	// Get Stops element via reflection
-	stops, err := getField[route.Stop](routerInput, "Stops")
-	if err != nil {
-		panic(err)
+func anyAndAllEqual[T any](v []T) bool {
+	if len(v) == 0 {
+		return false
 	}
-	internalInput.Stops = stops
-	// TODO: internalize via reflection
-	return internalInput
-}
-
-// getField returns the field with the given name as the provided type.
-func getField[T any](v any, field string) ([]T, error) {
-	r := reflect.ValueOf(v)
-	f := reflect.Indirect(r).FieldByName(field)
-	if !f.IsValid() {
-		return nil, fmt.Errorf("no such field: %s in %v", field, v)
+	for i := 1; i < len(v); i++ {
+		if !reflect.DeepEqual(v[i], v[0]) {
+			return false
+		}
 	}
-	return f.Interface().([]T), nil
+	return true
 }
