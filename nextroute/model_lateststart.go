@@ -15,6 +15,9 @@ type LatestStart interface {
 	// Latest returns the latest start expression which defines the latest
 	// start of a stop.
 	Latest() StopExpression
+
+	// Lateness returns the lateness of a stop. The lateness is the difference
+	Lateness(stop SolutionStop) float64
 }
 
 // NewLatestStart creates a construct that can be added to the model as a
