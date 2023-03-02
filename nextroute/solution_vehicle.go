@@ -59,8 +59,8 @@ type SolutionVehicle interface {
 	// in the factory method of the vehicle Solution.NewVehicle.
 	StartTime() time.Time
 
-	// VehicleType returns the vehicle type of the vehicle.
-	VehicleType() ModelVehicleType
+	// ModelVehicle returns the modeled vehicle type of the vehicle.
+	ModelVehicle() ModelVehicle
 }
 
 // SolutionVehicles is a slice of solution vehicles.

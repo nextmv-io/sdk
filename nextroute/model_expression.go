@@ -43,23 +43,23 @@ func DeltaValue(
 		panic(fmt.Sprintf("stop %s is not planned", stop))
 	}
 
-	vehicle := stop.Vehicle().VehicleType()
+	vehicleType := stop.Vehicle().ModelVehicle().VehicleType()
 	fromStop := stop.ModelStop()
 	candidateStop := candidate.ModelStop()
 	toStop := stop.Next().ModelStop()
 
 	currentValue := expression.Value(
-		vehicle,
+		vehicleType,
 		fromStop,
 		toStop,
 	)
-	newValue1 := vehicle.TravelDurationExpression().Value(
-		vehicle,
+	newValue1 := vehicleType.TravelDurationExpression().Value(
+		vehicleType,
 		fromStop,
 		candidateStop,
 	)
-	newValue2 := vehicle.TravelDurationExpression().Value(
-		vehicle,
+	newValue2 := vehicleType.TravelDurationExpression().Value(
+		vehicleType,
 		candidateStop,
 		toStop,
 	)

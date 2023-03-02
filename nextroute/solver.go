@@ -40,10 +40,8 @@ type SolverOptions struct {
 
 // SolverFactory is the interface for a solver-factory.
 type SolverFactory interface {
-	// NewSolver creates a new solver and will analyze the solution to find
-	// the best solver-options. The returned solver will use the best
-	// solver-options found.
-	NewSolver(solution Solution) (Solver, error)
+	// NewSolver creates a new solver.
+	NewSolver(model Model) (Solver, error)
 }
 
 func NewSolverFactory() SolverFactory {

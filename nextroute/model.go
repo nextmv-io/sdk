@@ -66,6 +66,14 @@ type Model interface {
 	// NewStop creates a new stop. The stop is used to create plan clusters.
 	NewStop(location common.Location) (ModelStop, error)
 
+	// NewVehicle creates a new vehicle. The vehicle is used to create
+	// solutions.
+	NewVehicle(
+		vehicleType ModelVehicleType,
+		start time.Time,
+		first ModelStop,
+		last ModelStop,
+	) (ModelVehicle, error)
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
@@ -113,9 +121,11 @@ type Model interface {
 	// TimeFormat returns the time format used for reporting.
 	TimeFormat() string
 
+	// Vehicles returns all vehicles of the model.
+	Vehicles() ModelVehicles
 	// VehicleTypes returns all vehicle types of the model.
 	VehicleTypes() ModelVehicleTypes
 
-	// VehicleType returns the vehicle type with the specified index.
-	VehicleType(index int) ModelVehicleType
+	// Vehicle returns the vehicle with the specified index.
+	Vehicle(index int) ModelVehicle
 }

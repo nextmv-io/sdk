@@ -6,7 +6,7 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
-// ModelStop is a stop to be routed.
+// ModelStop is a stop to be assigned to a vehicle.
 type ModelStop interface {
 	// Data returns the arbitrary data associated with the stop. Can be set
 	// using the StopData StopOption.

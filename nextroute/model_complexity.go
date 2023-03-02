@@ -30,11 +30,11 @@ const (
 
 var costNames = map[Cost]string{
 	Constant:           `O(1)`,
-	LinearVehicle:      `O(Vehicle)`,
+	LinearVehicle:      `O(ModelVehicle)`,
 	LinearStop:         `O(Stop)`,
-	QuadraticVehicle:   `O(Vehicle^2)`,
+	QuadraticVehicle:   `O(ModelVehicle^2)`,
 	QuadraticStop:      `O(Stop^2)`,
-	ExponentialVehicle: `O(2^Vehicle`,
+	ExponentialVehicle: `O(2^ModelVehicle`,
 	ExponentialStop:    `O(2^Stop)`,
 	CrazyExpensive:     `O(no)`,
 }

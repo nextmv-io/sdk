@@ -42,7 +42,7 @@ func (checkViolation CheckedAt) String() string {
 	case AtEachStop:
 		return "Each Stop"
 	case AtEachVehicle:
-		return "Each Vehicle"
+		return "Each ModelVehicle"
 	case AtEachSolution:
 		return "Each Solution"
 	case Never:

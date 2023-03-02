@@ -1,15 +1,13 @@
 package nextroute
 
 import (
-	"time"
-
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 )
 
 // NewSolution creates a new solution. The solution is created from the given
-// model. The solution is empty and has no vehicles. Vehicles can be added to
-// the solution using the NewVehicle() method.
+// model. The solution starts with all plan clusters unplanned. Once a solution
+// has been created the model can no longer be changed, it becomes immutable.
 func NewSolution(
 	m Model,
 ) (Solution, error) {
@@ -42,20 +40,6 @@ type Solution interface {
 
 	// Model returns the model of the solution.
 	Model() Model
-
-	// NewVehicle creates a new vehicle for the solution. The vehicle is added
-	// to the solution. The vehicle is created from the given vehicle tye, start
-	// time, start stop and end stop. The start time is the time the vehicle
-	// starts at the start stop. The start stop is the stop the vehicle starts
-	// at. The end stop is the stop the vehicle ends at. The start stop and end
-	// stop must be part of the model. The start time must be after the start
-	// time of the model.
-	NewVehicle(
-		vehicle ModelVehicleType,
-		startTime time.Time,
-		startStop ModelStop,
-		endStop ModelStop,
-	) (SolutionVehicle, error)
 
 	// ObjectiveValue returns the objective value of the solution. The objective
 	// value is the sum of the objective values defined in Model.Objective.
