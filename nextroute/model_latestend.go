@@ -8,6 +8,7 @@ import (
 // as an objective. The latest end of a stop is the latest time a stop can end
 // at the location of the stop.
 type LatestEnd interface {
+	ConstraintReporter
 	ModelConstraint
 	ModelObjective
 

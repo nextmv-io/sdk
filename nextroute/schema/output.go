@@ -34,12 +34,13 @@ type JsonModelStop struct {
 
 type JsonStop struct {
 	OutputStop
-	Arrival          time.Time             `json:"arrival"`
-	EarliestStart    time.Time             `json:"earliest_start"`
-	Start            time.Time             `json:"start"`
-	End              time.Time             `json:"end"`
-	ExpressionValues []JsonExpressionValue `json:"expression_values"`
-	ConstraintValues []JsonConstraintValue `json:"constraint_values"`
+	Arrival           time.Time             `json:"arrival"`
+	EarliestStart     time.Time             `json:"earliest_start"`
+	Start             time.Time             `json:"start"`
+	End               time.Time             `json:"end"`
+	ExpressionValues  []JsonExpressionValue `json:"expression_values"`
+	ConstraintValues  []JsonConstraintValue `json:"constraint_values"`
+	ConstraintReports []map[string]any      `json:"constraint_reports"`
 	JsonModelStop
 	Position       int           `json:"position"`
 	TravelDuration time.Duration `json:"travel_duration"`

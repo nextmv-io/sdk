@@ -1,11 +1,17 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+)
 
 // Copier is the interface that all objects that can be copied must implement.
 type Copier interface {
 	// Copy returns a copy of the object.
 	Copy() Copier
+}
+
+type ConstraintReporter interface {
+	ReportConstraint(SolutionStop) map[string]any
 }
 
 // ConstraintDataUpdater is the interface than can be used by a constraint if
