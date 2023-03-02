@@ -1,4 +1,4 @@
-package nextroute
+package schema
 
 import "time"
 
