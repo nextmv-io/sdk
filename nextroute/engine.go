@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
@@ -86,6 +87,12 @@ var (
 		DistanceExpression,
 		common.Speed,
 	) TravelDurationExpression
+	newMeasureByIndexExpression func(
+		measure.ByIndex,
+	) ModelExpression
+	newMeasureByPointExpression func(
+		measure.ByPoint,
+	) ModelExpression
 	newTravelDurationObjective func() TravelDurationObjective
 	newUnPlannedObjective      func(
 		StopExpression,
