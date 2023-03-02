@@ -23,6 +23,11 @@ var (
 		string,
 		float64,
 	) ConstantExpression
+	newDistanceExpression func(
+		string,
+		ModelExpression,
+		common.DistanceUnit,
+	) DistanceExpression
 	newDurationExpression func(
 		ModelExpression,
 		time.Duration,
@@ -44,11 +49,9 @@ var (
 	newLatestEnd            func(
 		StopExpression,
 	) (LatestEnd, error)
-
 	newLatestStart func(
 		StopExpression,
 	) (LatestStart, error)
-
 	newMaximumConstraint func(
 		StopExpression,
 		VehicleTypeExpression,
@@ -56,6 +59,12 @@ var (
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
+	newMeasureByIndexExpression func(
+		measure.ByIndex,
+	) ModelExpression
+	newMeasureByPointExpression func(
+		measure.ByPoint,
+	) ModelExpression
 	newModel                func() (Model, error)
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
@@ -87,12 +96,6 @@ var (
 		DistanceExpression,
 		common.Speed,
 	) TravelDurationExpression
-	newMeasureByIndexExpression func(
-		measure.ByIndex,
-	) ModelExpression
-	newMeasureByPointExpression func(
-		measure.ByPoint,
-	) ModelExpression
 	newTravelDurationObjective func() TravelDurationObjective
 	newUnPlannedObjective      func(
 		StopExpression,
