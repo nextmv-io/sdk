@@ -36,6 +36,7 @@ type JsonStop struct {
 	End              time.Time             `json:"end"`
 	ExpressionValues []JsonExpressionValue `json:"expression_values"`
 	ConstraintValues []JsonConstraintValue `json:"constraint_values"`
+	ConstraintReports []map[string]any      `json:"constraint_reports"`
 	JsonModelStop
 	Position       int           `json:"position"`
 	TravelDuration time.Duration `json:"travel_duration"`
