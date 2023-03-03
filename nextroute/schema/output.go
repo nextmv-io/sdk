@@ -1,12 +1,20 @@
 package schema
 
-import "time"
+import (
+	"time"
+)
 
 type JsonSolution struct {
-	Epoch     time.Time       `json:"epoch"`
-	Unplanned []JsonModelStop `json:"unplanned"`
-	Vehicles  []JsonVehicle   `json:"vehicles"`
-	Objective JsonObjective   `json:"objective"`
+	Epoch       time.Time              `json:"epoch"`
+	Unplanned   []JsonModelStop        `json:"unplanned"`
+	Vehicles    []JsonVehicle          `json:"vehicles"`
+	Progression []JsonObjectiveElapsed `json:"progression"`
+	Objective   JsonObjective          `json:"objective"`
+}
+
+type JsonObjectiveElapsed struct {
+	ElapsedSeconds float64 `json:"elapsed_seconds"`
+	Value          float64 `json:"value"`
 }
 
 type JsonObjective struct {
@@ -30,12 +38,12 @@ type JsonModelStop struct {
 }
 
 type JsonStop struct {
-	Arrival          time.Time             `json:"arrival"`
-	EarliestStart    time.Time             `json:"earliest_start"`
-	Start            time.Time             `json:"start"`
-	End              time.Time             `json:"end"`
-	ExpressionValues []JsonExpressionValue `json:"expression_values"`
-	ConstraintValues []JsonConstraintValue `json:"constraint_values"`
+	Arrival           time.Time             `json:"arrival"`
+	EarliestStart     time.Time             `json:"earliest_start"`
+	Start             time.Time             `json:"start"`
+	End               time.Time             `json:"end"`
+	ExpressionValues  []JsonExpressionValue `json:"expression_values"`
+	ConstraintValues  []JsonConstraintValue `json:"constraint_values"`
 	ConstraintReports []map[string]any      `json:"constraint_reports"`
 	JsonModelStop
 	Position       int           `json:"position"`

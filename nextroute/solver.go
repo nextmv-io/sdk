@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 type SolveOptions struct {
@@ -22,6 +23,9 @@ type Solver interface {
 	SolverOptions() SolverOptions
 
 	SetStartSolution(solution Solution)
+
+	// Progression returns the progression of the solver.
+	Progression() []schema.JsonObjectiveElapsed
 }
 
 type IntParameterOptions struct {
