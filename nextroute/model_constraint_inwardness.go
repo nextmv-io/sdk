@@ -9,6 +9,7 @@ import (
 // centroid is closer to the plan cluster than the centroid of any other
 // vehicle.
 type InwardnessConstraint interface {
+	ConstraintDataUpdater
 	ModelConstraint
 }
 

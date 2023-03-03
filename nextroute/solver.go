@@ -20,6 +20,8 @@ type Solver interface {
 	// They can be used to create a new solver and changes will have no effect
 	// on this invoked solver.
 	SolverOptions() SolverOptions
+
+	SetStartSolution(solution Solution)
 }
 
 type IntParameterOptions struct {

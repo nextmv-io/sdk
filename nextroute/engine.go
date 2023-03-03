@@ -12,9 +12,6 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
-	newCompactnessConstraint func(
-		StopExpression,
-	) (CompactnessConstraint, error)
 	newConstantDurationExpression func(
 		string,
 		time.Duration,
