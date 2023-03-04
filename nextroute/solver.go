@@ -1,6 +1,7 @@
 package nextroute
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
@@ -8,7 +9,7 @@ import (
 )
 
 type RestartPolicy interface {
-	RestartSolution(Solution) Solution
+	RestartSolution(*rand.Rand, Solution) Solution
 	RestartIterations() int
 }
 
@@ -16,14 +17,14 @@ type randomRestartPolicy struct {
 	iterations int
 }
 
-func (r *randomRestartPolicy) RestartSolution(s Solution) Solution {
+func (r *randomRestartPolicy) RestartSolution(random *rand.Rand, s Solution) Solution {
 	solution := s.Copy()
 
 	vehicles := solution.Vehicles()
 
 	unplannedPlanClusters := solution.UnplannedPlanClusters()
 
-	s.Model().Random().Shuffle(len(unplannedPlanClusters), func(i, j int) {
+	random.Shuffle(len(unplannedPlanClusters), func(i, j int) {
 		unplannedPlanClusters[i], unplannedPlanClusters[j] = unplannedPlanClusters[j], unplannedPlanClusters[i]
 	})
 
