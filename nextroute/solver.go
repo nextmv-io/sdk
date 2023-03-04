@@ -7,6 +7,70 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
+type RestartPolicy interface {
+	RestartSolution(Solution) Solution
+	RestartIterations() int
+}
+
+type randomRestartPolicy struct {
+	iterations int
+}
+
+func (r *randomRestartPolicy) RestartSolution(s Solution) Solution {
+	solution := s.Copy()
+
+	vehicles := solution.Vehicles()
+
+	unplannedPlanClusters := solution.UnplannedPlanClusters()
+
+	s.Model().Random().Shuffle(len(unplannedPlanClusters), func(i, j int) {
+		unplannedPlanClusters[i], unplannedPlanClusters[j] = unplannedPlanClusters[j], unplannedPlanClusters[i]
+	})
+
+	for _, vehicle := range vehicles {
+		for idx, unplannedPlanCluster := range unplannedPlanClusters {
+			if !unplannedPlanCluster.IsPlanned() {
+				move := vehicle.BestMove(unplannedPlanCluster)
+				if move.IsExecutable() {
+					result, err := move.Execute()
+					if err != nil {
+						panic(err)
+					}
+					if result {
+						unplannedPlanClusters = append(
+							unplannedPlanClusters[:idx],
+							unplannedPlanClusters[idx+1:]...,
+						)
+						break
+					}
+				}
+			}
+		}
+	}
+	for _, unplannedPlanCluster := range unplannedPlanClusters {
+		if !unplannedPlanCluster.IsPlanned() {
+			move := solution.BestMove(unplannedPlanCluster)
+			if move.IsExecutable() {
+				_, err := move.Execute()
+				if err != nil {
+					panic(err)
+				}
+			}
+		}
+	}
+	return solution
+}
+
+func (r *randomRestartPolicy) RestartIterations() int {
+	return r.iterations
+}
+
+func NewRandomRestartPolicy(iterations int) RestartPolicy {
+	return &randomRestartPolicy{
+		iterations: iterations,
+	}
+}
+
 type SolveOptions struct {
 	Iterations      int           `json:"iterations"  usage:"number of iterations"`
 	MaximumDuration time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
@@ -23,6 +87,8 @@ type Solver interface {
 	SolverOptions() SolverOptions
 
 	SetStartSolution(solution Solution)
+
+	SetRestartPolicy(restartPolicy RestartPolicy)
 
 	// Progression returns the progression of the solver.
 	Progression() []schema.JsonObjectiveElapsed
