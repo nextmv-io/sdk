@@ -73,8 +73,9 @@ func NewRandomRestartPolicy(iterations int) RestartPolicy {
 }
 
 type SolveOptions struct {
-	Iterations      int           `json:"iterations"  usage:"number of iterations"`
-	MaximumDuration time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
+	Iterations        int           `json:"iterations"  usage:"number of iterations"`
+	MaximumDuration   time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
+	RestartIterations int           `json:"restart_iterations"  usage:"number of iterations before restart"`
 }
 
 // Solver is the interface for a solver.
