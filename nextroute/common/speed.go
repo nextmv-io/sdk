@@ -39,12 +39,9 @@ func NewMilesPerHour() SpeedUnit {
 	}
 }
 
-// NewMetersPerSecond returns a new speed unit of meters per second.
-func NewMetersPerSecond() SpeedUnit {
-	return &speedUnitImpl{
-		distanceUnit: Meters,
-		duration:     time.Second,
-	}
+var MetersPerSecond = &speedUnitImpl{
+	distanceUnit: Meters,
+	duration:     time.Second,
 }
 
 // NewSpeedUnit returns a new speed unit.
