@@ -15,6 +15,7 @@ type Input struct {
 	StopGroups     [][]string           `json:"stop_groups,omitempty"`
 	AlternateStops []Stop               `json:"alternate_stops,omitempty"`
 	DurationGroups []route.ServiceGroup `json:"duration_groups,omitempty"`
+	DurationMatrix [][]float64          `json:"duration_matrix,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.

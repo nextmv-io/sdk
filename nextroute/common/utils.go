@@ -74,7 +74,7 @@ func DurationValue(
 			),
 		)
 	}
-	seconds := distance.Value(Meters) / speed.Value(NewMetersPerSecond())
+	seconds := distance.Value(Meters) / speed.Value(MetersPerSecond)
 
 	return seconds / timeUnit.Seconds()
 }

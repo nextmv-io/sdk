@@ -6,10 +6,9 @@ type DistanceUnit int
 
 // NewDistance returns a new distance.
 func NewDistance(
-	distance float64,
+	meters float64,
 	unit DistanceUnit,
 ) Distance {
-	meters := distance
 	switch unit {
 	case Kilometers:
 		meters *= factorKilometersToMeters

@@ -64,7 +64,10 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) handleCPUProfile(
 		if err := pprof.StartCPUProfile(f); err != nil {
 			return deferFunc, err
 		}
-		defer pprof.StopCPUProfile()
+		deferFunc = func() error {
+			pprof.StopCPUProfile()
+			return f.Close()
+		}
 	}
 	return deferFunc, nil
 }
