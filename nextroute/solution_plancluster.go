@@ -2,6 +2,7 @@ package nextroute
 
 import (
 	"github.com/nextmv-io/sdk/connect"
+	"math/rand"
 )
 
 // SolutionPlanCluster is a cluster of stops that are planned to be visited by
@@ -25,6 +26,9 @@ type SolutionPlanCluster interface {
 
 	// Solution returns the solution this cluster is part of.
 	Solution() Solution
+	// SolutionStop returns the solution stop for the given model stop.
+	// Will panic if the stop is not part of the cluster.
+	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionStops returns the solution stops in this cluster.
 	SolutionStops() SolutionStops
 
@@ -40,7 +44,7 @@ type SolutionPlanCluster interface {
 type SolutionPlanClusters []SolutionPlanCluster
 
 // SelectRandom selects n random clusters from the slice of clusters.
-func (s SolutionPlanClusters) SelectRandom(n int) SolutionPlanClusters {
+func (s SolutionPlanClusters) SelectRandom(random rand.Rand, n int) SolutionPlanClusters {
 	connect.Connect(con, &selectRandom)
-	return selectRandom(s, n)
+	return selectRandom(random, s, n)
 }

@@ -49,6 +49,12 @@ type Solution interface {
 	// PlannedPlanClusters returns the solution plan clusters that are planned.
 	PlannedPlanClusters() SolutionPlanClusters
 
+	// SolutionPlanCluster returns the solution plan cluster for the given
+	// model plan cluster.
+	SolutionPlanCluster(planCluster ModelPlanCluster) SolutionPlanCluster
+	// SolutionStop returns the solution stop for the given model stop.
+	SolutionStop(stop ModelStop) SolutionStop
+
 	// UnplannedPlanClusters returns the solution plan clusters that are not
 	// planned.
 	UnplannedPlanClusters() SolutionPlanClusters

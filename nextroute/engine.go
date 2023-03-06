@@ -2,6 +2,7 @@
 package nextroute
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
@@ -110,6 +111,7 @@ var (
 		float64,
 	) VehicleFromToExpression
 	selectRandom func(
+		rand.Rand,
 		SolutionPlanClusters,
 		int,
 	) SolutionPlanClusters
@@ -118,4 +120,8 @@ var (
 		Solution,
 		SolverOptions,
 	) (Solver, error)
+
+	newMetaSolver func(
+		Solution,
+	) (MetaSolver, error)
 )

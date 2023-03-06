@@ -12,6 +12,9 @@ type ModelStop interface {
 	// using the StopData StopOption.
 	Data() any
 
+	// HasPlanCluster returns true if the stop belongs to a plan cluster.
+	HasPlanCluster() bool
+
 	// Index returns the index of the stop.
 	Index() int
 
@@ -29,6 +32,11 @@ type ModelStop interface {
 	// both possibly set at the construction of the Model. Can be set using
 	// the EarliestStart StopOption or using SetEarliestStart.
 	EarliestStartValue() float64
+
+	// PlanCluster returns the plan cluster of the stop. A stop belongs to at
+	// most one plan cluster. Can be nil if the stop is not part of a plan
+	// cluster.
+	PlanCluster() ModelPlanCluster
 
 	// SetData sets the arbitrary data associated with the stop.
 	SetData(data any)
