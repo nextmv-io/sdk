@@ -77,6 +77,7 @@ type SolveOptions struct {
 	MaximumDuration   time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
 	RestartIterations int           `json:"restart_iterations"  usage:"number of iterations before restart"`
 	Seed              int64         `json:"seed"  usage:"seed for random generator"`
+	Threads           int           `json:"threads"  usage:"number of threads"`
 }
 
 // Solver is the interface for a solver.
