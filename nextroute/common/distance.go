@@ -16,7 +16,7 @@ func NewDistance(
 		meters *= factorMilesToMeters
 	}
 
-	return &distanceImpl{
+	return Distance{
 		meters: meters,
 		unit:   unit,
 	}
@@ -42,18 +42,12 @@ const (
 	factorMilesToMeters      = 1609.34
 )
 
-// Distance is the interface for a distance.
-type Distance interface {
-	// Value returns the distance in the specified unit.
-	Value(unit DistanceUnit) float64
-}
-
-type distanceImpl struct {
+type Distance struct {
 	meters float64
 	unit   DistanceUnit
 }
 
-func (d *distanceImpl) Value(unit DistanceUnit) float64 {
+func (d Distance) Value(unit DistanceUnit) float64 {
 	returnValue := d.meters
 	switch unit {
 	case Kilometers:

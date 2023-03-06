@@ -17,16 +17,10 @@ func NewLocation(
 	if latitude < -90 || latitude > 90 {
 		panic("latitude must be between -90 and 90")
 	}
-	return &locationImpl{
+	return Location{
 		longitude: longitude,
 		latitude:  latitude,
 	}
-}
-
-// Location represents a location on the earth.
-type Location interface {
-	Longitude() float64
-	Latitude() float64
 }
 
 // Locations is a slice of Location.
@@ -47,12 +41,13 @@ func (l Locations) Unique() Locations {
 	return result
 }
 
-type locationImpl struct {
+// Location represents a location on the earth.
+type Location struct {
 	longitude float64
 	latitude  float64
 }
 
-func (l *locationImpl) String() string {
+func (l Location) String() string {
 	return fmt.Sprintf(
 		"{lat: %v,lon: %v}",
 		l.latitude,
@@ -60,10 +55,10 @@ func (l *locationImpl) String() string {
 	)
 }
 
-func (l *locationImpl) Longitude() float64 {
+func (l Location) Longitude() float64 {
 	return l.longitude
 }
 
-func (l *locationImpl) Latitude() float64 {
+func (l Location) Latitude() float64 {
 	return l.latitude
 }
