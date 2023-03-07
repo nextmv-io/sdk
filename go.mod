@@ -4,7 +4,7 @@ go 1.19
 
 replace github.com/nextmv-io/sdk/route/osrm => ./route/osrm
 
-require github.com/nextmv-io/sdk/route/osrm v0.20.9
+require github.com/nextmv-io/sdk/route/osrm v0.21.1
 
 require (
 	github.com/google/uuid v1.3.0
