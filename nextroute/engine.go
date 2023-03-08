@@ -121,7 +121,7 @@ var (
 		SolverOptions,
 	) (Solver, error)
 
-	newMetaSolver func(
-		Solution,
-	) (MetaSolver, error)
+	newParallelSolver func(
+		Solutions,
+	) (ParallelSolver, error)
 )
