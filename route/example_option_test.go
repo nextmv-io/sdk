@@ -3589,7 +3589,8 @@ func ExampleInitializationCosts() {
 	//     {
 	//       "id": "v1",
 	//       "route": [],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     },
 	//     {
 	//       "id": "v2",
