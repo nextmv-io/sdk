@@ -104,7 +104,8 @@ func ExampleStarts() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 664
+	//       "route_duration": 664,
+	//       "route_distance": 6637
 	//     },
 	//     {
 	//       "id": "v2",
@@ -152,7 +153,8 @@ func ExampleStarts() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1085
+	//       "route_duration": 1085,
+	//       "route_distance": 10849
 	//     }
 	//   ]
 	// }
@@ -260,7 +262,8 @@ func ExampleEnds() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 664
+	//       "route_duration": 664,
+	//       "route_distance": 6637
 	//     },
 	//     {
 	//       "id": "v2",
@@ -315,7 +318,8 @@ func ExampleEnds() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1484
+	//       "route_duration": 1484,
+	//       "route_distance": 14830
 	//     }
 	//   ]
 	// }
@@ -440,7 +444,8 @@ func ExampleCapacity() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1116
+	//       "route_duration": 1116,
+	//       "route_distance": 11154
 	//     },
 	//     {
 	//       "id": "v2",
@@ -481,7 +486,8 @@ func ExampleCapacity() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 908
+	//       "route_duration": 908,
+	//       "route_distance": 9082
 	//     }
 	//   ]
 	// }
@@ -605,7 +611,8 @@ func ExamplePrecedence() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1517
+	//       "route_duration": 1517,
+	//       "route_distance": 15159
 	//     },
 	//     {
 	//       "id": "v2",
@@ -618,7 +625,8 @@ func ExamplePrecedence() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -747,7 +755,8 @@ func ExampleUnassigned() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 795
+	//       "route_duration": 795,
+	//       "route_distance": 7944
 	//     },
 	//     {
 	//       "id": "v2",
@@ -760,7 +769,8 @@ func ExampleUnassigned() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -888,7 +898,8 @@ func ExampleServices() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 2143
+	//       "route_duration": 2143,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -901,7 +912,8 @@ func ExampleServices() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 900
+	//       "route_duration": 900,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -1055,7 +1067,8 @@ func ExampleShifts() {
 	//           "estimated_service": "2020-10-17T09:20:43Z"
 	//         }
 	//       ],
-	//       "route_duration": 2143
+	//       "route_duration": 2143,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -1071,7 +1084,8 @@ func ExampleShifts() {
 	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -1243,7 +1257,8 @@ func ExampleWindows() {
 	//           "estimated_service": "2020-10-17T09:35:43Z"
 	//         }
 	//       ],
-	//       "route_duration": 2143
+	//       "route_duration": 2143,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -1259,7 +1274,8 @@ func ExampleWindows() {
 	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -1436,7 +1452,8 @@ func ExampleMultiWindows() {
 	//           "estimated_service": "2020-10-17T09:35:43Z"
 	//         }
 	//       ],
-	//       "route_duration": 2143
+	//       "route_duration": 2143,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -1452,7 +1469,8 @@ func ExampleMultiWindows() {
 	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -1571,7 +1589,8 @@ func ExampleBacklogs() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -1584,7 +1603,8 @@ func ExampleBacklogs() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -1702,7 +1722,8 @@ func ExampleMinimize() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1818
+	//       "route_duration": 1818,
+	//       "route_distance": 18177
 	//     }
 	//   ]
 	// }
@@ -1820,7 +1841,8 @@ func ExampleMaximize() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 4569
+	//       "route_duration": 4569,
+	//       "route_distance": 45701
 	//     }
 	//   ]
 	// }
@@ -1962,7 +1984,8 @@ func ExampleServiceGroups() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 2418
+	//       "route_duration": 2418,
+	//       "route_distance": 18177
 	//     },
 	//     {
 	//       "id": "v2",
@@ -1975,7 +1998,8 @@ func ExampleServiceGroups() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -2104,7 +2128,8 @@ func ExampleLimits() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2117,7 +2142,8 @@ func ExampleLimits() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -2231,7 +2257,8 @@ func ExampleLimitDurations() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 909
+	//       "route_duration": 909,
+	//       "route_distance": 9087
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2251,7 +2278,8 @@ func ExampleLimitDurations() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 575
+	//       "route_duration": 575,
+	//       "route_distance": 5752
 	//     }
 	//   ]
 	// }
@@ -2365,7 +2393,8 @@ func ExampleLimitDistances() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 909
+	//       "route_duration": 909,
+	//       "route_distance": 9087
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2385,7 +2414,8 @@ func ExampleLimitDistances() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 575
+	//       "route_duration": 575,
+	//       "route_distance": 5752
 	//     }
 	//   ]
 	// }
@@ -2503,7 +2533,8 @@ func ExampleGrouper() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1639
+	//       "route_duration": 1639,
+	//       "route_distance": 16392
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2516,7 +2547,8 @@ func ExampleGrouper() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -2711,7 +2743,8 @@ func ExampleValueFunctionMeasures() {
 	//           "estimated_service": "2020-10-17T09:20:43Z"
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2727,7 +2760,8 @@ func ExampleValueFunctionMeasures() {
 	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -2922,7 +2956,8 @@ func ExampleTravelTimeMeasures() {
 	//           "estimated_service": "2020-10-17T09:29:37Z"
 	//         }
 	//       ],
-	//       "route_duration": 1777
+	//       "route_duration": 1777,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -2938,7 +2973,8 @@ func ExampleTravelTimeMeasures() {
 	//           "estimated_service": "2020-10-17T09:00:00Z"
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -3073,7 +3109,8 @@ func ExampleAttribute() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 909
+	//       "route_duration": 909,
+	//       "route_distance": 9087
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3093,7 +3130,8 @@ func ExampleAttribute() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 575
+	//       "route_duration": 575,
+	//       "route_distance": 5752
 	//     }
 	//   ]
 	// }
@@ -3205,7 +3243,8 @@ func ExampleThreads() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3218,7 +3257,8 @@ func ExampleThreads() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -3330,7 +3370,8 @@ func ExampleAlternates() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1189
+	//       "route_duration": 1189,
+	//       "route_distance": 11879
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3343,7 +3384,8 @@ func ExampleAlternates() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -3457,7 +3499,8 @@ func ExampleVelocities() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 2485
+	//       "route_duration": 2485,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3470,7 +3513,8 @@ func ExampleVelocities() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -3600,7 +3644,8 @@ func ExampleInitializationCosts() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1818
+	//       "route_duration": 1818,
+	//       "route_distance": 18177
 	//     }
 	//   ]
 	// }
@@ -3693,7 +3738,8 @@ func ExampleSorter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3741,7 +3787,8 @@ func ExampleSorter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     }
 	//   ]
 	// }
@@ -3858,7 +3905,8 @@ func ExampleConstraint() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 448
+	//       "route_duration": 448,
+	//       "route_distance": 4481
 	//     },
 	//     {
 	//       "id": "v2",
@@ -3892,7 +3940,8 @@ func ExampleConstraint() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1086
+	//       "route_duration": 1086,
+	//       "route_distance": 10857
 	//     }
 	//   ]
 	// }
@@ -4023,7 +4072,8 @@ func ExampleFilterWithRoute() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 448
+	//       "route_duration": 448,
+	//       "route_distance": 4481
 	//     },
 	//     {
 	//       "id": "v2",
@@ -4050,7 +4100,8 @@ func ExampleFilterWithRoute() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 511
+	//       "route_duration": 511,
+	//       "route_distance": 5105
 	//     }
 	//   ]
 	// }
@@ -4188,7 +4239,8 @@ func ExampleSelector() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -4201,7 +4253,8 @@ func ExampleSelector() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -4301,7 +4354,8 @@ func ExampleFilter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 575
+	//       "route_duration": 575,
+	//       "route_distance": 5752
 	//     },
 	//     {
 	//       "id": "v2",
@@ -4342,7 +4396,8 @@ func ExampleFilter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 909
+	//       "route_duration": 909,
+	//       "route_distance": 9087
 	//     }
 	//   ]
 	// }
@@ -4522,7 +4577,8 @@ func ExampleUpdate() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     },
 	//     {
 	//       "id": "v2",
@@ -4570,7 +4626,8 @@ func ExampleUpdate() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     }
 	//   ]
 	// }
