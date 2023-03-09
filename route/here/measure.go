@@ -95,12 +95,14 @@ func NewClient(apiKey string, opts ...ClientOption) Client {
 }
 
 func cleanPoints(points []route.Point) []route.Point {
-	for i, p := range points {
+	cleanPoints := make([]route.Point, len(points))
+	copy(cleanPoints, points)
+	for i, p := range cleanPoints {
 		if len(p) == 2 && p[0] == 0 && p[1] == 0 {
-			points[i] = route.Point{}
+			cleanPoints[i] = route.Point{}
 		}
 	}
-	return points
+	return cleanPoints
 }
 
 // DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
