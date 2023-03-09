@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"time"
 )
 
@@ -77,4 +78,87 @@ func DurationValue(
 	seconds := distance.Value(Meters) / speed.Value(MetersPerSecond)
 
 	return seconds / timeUnit.Seconds()
+}
+
+func RandomElements[T any](
+	source *rand.Rand,
+	elements []T,
+	n int,
+) []T {
+	if source == nil {
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+
+	if n <= 0 {
+		return []T{}
+	}
+	if n >= len(elements) {
+		return elements
+	}
+	result := make([]T, 0, n)
+	indicesUsed := make(map[int]bool, 0)
+	for i := 0; i < n; i++ {
+		index := RandomIndex(
+			source,
+			len(elements),
+			indicesUsed,
+		)
+		result = append(result, elements[index])
+	}
+
+	return result
+}
+
+// RandomElementIndices returns a slice of n random element indices from the
+// given slice. If n is greater than the length of the slice, all indices are
+// returned. If n is less than or equal to zero, an empty slice is returned.
+// If source is nil, a new source is created using the current time.
+func RandomElementIndices[T any](
+	source *rand.Rand,
+	elements []T,
+	n int,
+) []int {
+	if source == nil {
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+
+	if n <= 0 {
+		return []int{}
+	}
+	if n >= len(elements) {
+		result := make([]int, n)
+		for i := 0; i < n; i++ {
+			result[n] = i
+		}
+		return result
+	}
+	result := make([]int, 0, n)
+	indicesUsed := make(map[int]bool, 0)
+	for i := 0; i < n; i++ {
+		index := RandomIndex(
+			source,
+			len(elements),
+			indicesUsed,
+		)
+		result = append(result, index)
+	}
+
+	return result
+}
+
+// RandomIndex returns a random index from the given size. If the index has
+// already been used, a new index is generated. If source is nil, a new source
+// is created using the current time.
+func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
+	if source == nil {
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+
+	for {
+		index := source.Intn(size)
+		if used, ok := indicesUsed[index]; !ok || !used {
+			indicesUsed[index] = true
+			return index
+		}
+	}
 }

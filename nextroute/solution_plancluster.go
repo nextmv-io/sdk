@@ -1,10 +1,5 @@
 package nextroute
 
-import (
-	"github.com/nextmv-io/sdk/connect"
-	"math/rand"
-)
-
 // SolutionPlanCluster is a cluster of stops that are planned to be visited by
 // a vehicle.
 type SolutionPlanCluster interface {
@@ -42,9 +37,3 @@ type SolutionPlanCluster interface {
 
 // SolutionPlanClusters is a slice of SolutionPlanCluster.
 type SolutionPlanClusters []SolutionPlanCluster
-
-// SelectRandom selects n random clusters from the slice of clusters.
-func (s SolutionPlanClusters) SelectRandom(random rand.Rand, n int) SolutionPlanClusters {
-	connect.Connect(con, &selectRandom)
-	return selectRandom(random, s, n)
-}

@@ -110,11 +110,6 @@ var (
 		string,
 		float64,
 	) VehicleFromToExpression
-	selectRandom func(
-		rand.Rand,
-		SolutionPlanClusters,
-		int,
-	) SolutionPlanClusters
 
 	newSolver func(
 		Solution,
@@ -124,4 +119,9 @@ var (
 	newParallelSolver func(
 		Solutions,
 	) (ParallelSolver, error)
+
+	newSolutionPlanClusterCollection func(
+		*rand.Rand,
+		SolutionPlanClusters,
+	) SolutionPlanClusterCollection
 )
