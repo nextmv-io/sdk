@@ -1,0 +1,62 @@
+{
+  "vehicles": ["v1", "v2"],
+  "velocities": [1.0, 1.0],
+  "unique_points": [
+    {
+      "lon": -74.04866,
+      "lat": 4.69018
+    },
+    {
+      "lon": -74.044215,
+      "lat": 4.693907
+    },
+    {
+      "lon": -74.039745,
+      "lat": 4.689886
+    },
+    {
+      "lon": -74.044219,
+      "lat": 4.686293
+    }
+  ],
+  "unique_matrix": [
+    [1.0, 2.0, 3.0, 4.0],
+    [5.0, 6.0, 7.0, 8.0],
+    [8.0, 7.0, 6.0, 5.0],
+    [4.0, 3.0, 2.0, 1.0]
+  ],
+  "stops": [
+    {
+      "id": "West",
+      "reference": 0
+    },
+    {
+      "id": "North",
+      "reference": 1
+    },
+    {
+      "id": "East",
+      "reference": 2
+    },
+    {
+      "id": "South",
+      "reference": 3
+    },
+    {
+      "id": "North East",
+      "reference": 0
+    },
+    {
+      "id": "South West",
+      "reference": 1
+    },
+    {
+      "id": "North West",
+      "reference": 2
+    },
+    {
+      "id": "South East",
+      "reference": 3
+    }
+  ]
+}
