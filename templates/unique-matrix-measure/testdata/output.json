@@ -5,45 +5,41 @@
       "id": "v1",
       "route": [
         {
-          "id": "South West",
-          "position": { "lon": -74.044215, "lat": 4.693907 }
-        },
-        {
           "id": "North East",
-          "position": { "lon": -74.04866, "lat": 4.69018 }
+          "position": { "lon": -74.244215, "lat": 4.693907 }
         },
         {
-          "id": "West",
-          "position": { "lon": -74.04866, "lat": 4.69018 }
-        },
-        {
-          "id": "North West",
-          "position": { "lon": -74.039745, "lat": 4.689886 }
+          "id": "South West",
+          "position": { "lon": -74.139745, "lat": 4.589886 }
         },
         {
           "id": "South East",
-          "position": { "lon": -74.044219, "lat": 4.686293 }
+          "position": { "lon": -74.444219, "lat": 4.386293 }
+        },
+        {
+          "id": "North West",
+          "position": { "lon": -74.344219, "lat": 4.386293 }
+        },
+        {
+          "id": "North",
+          "position": { "lon": -74.139745, "lat": 4.589886 }
         },
         {
           "id": "South",
-          "position": { "lon": -74.044219, "lat": 4.686293 }
+          "position": { "lon": -74.444219, "lat": 4.386293 }
         },
         {
           "id": "East",
-          "position": { "lon": -74.039745, "lat": 4.689886 }
-        }
-      ],
-      "route_duration": 291
-    },
-    {
-      "id": "v2",
-      "route": [
+          "position": { "lon": -74.344219, "lat": 4.386293 }
+        },
         {
-          "id": "North",
-          "position": { "lon": -74.044215, "lat": 4.693907 }
+          "id": "West",
+          "position": { "lon": -74.244215, "lat": 4.693907 }
         }
       ],
-      "route_duration": 0
-    }
+      "route_duration": 18783
+    },
+    { "id": "v2", "route": [], "route_duration": 0 },
+    { "id": "v3", "route": [], "route_duration": 0 }
   ]
 }

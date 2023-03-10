@@ -142,8 +142,8 @@ func checkInput(i input) {
 func joinStops(i input, matrixSize int) []stop {
 	joinedStops := make([]stop, matrixSize)
 	// Set default reference to -1.
-	for _, s := range joinedStops {
-		s.Reference = -1
+	for index := range joinedStops {
+		joinedStops[index].Reference = -1
 	}
 
 	// Copy stops to slice.
@@ -152,14 +152,14 @@ func joinStops(i input, matrixSize int) []stop {
 	// Fill joined stops alternating with Starts if applicable.
 	if len(i.Starts) > 0 {
 		for index := len(i.Stops); index < matrixSize; index += 2 {
-			joinedStops[index] = i.Starts[index-len(i.Stops)]
+			joinedStops[index] = i.Starts[(index-len(i.Stops))/2]
 		}
 	}
 
 	// Fill joined stops alternating with Ends if applicable.
-	if len(i.Stops) > 0 {
+	if len(i.Ends) > 0 {
 		for index := len(i.Stops) + 1; index < matrixSize; index += 2 {
-			joinedStops[index] = i.Starts[index-len(i.Stops)-1]
+			joinedStops[index] = i.Ends[(index-len(i.Stops)-1)/2]
 		}
 	}
 	return joinedStops
