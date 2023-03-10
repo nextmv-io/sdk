@@ -32,6 +32,8 @@ type stop struct {
 type input struct {
 	Stops        []stop           `json:"stops"`
 	Vehicles     []string         `json:"vehicles"`
+	Starts       []stop           `json:"starts"`
+	Ends         []stop           `json:"ends"`
 	UniquePoints []route.Position `json:"unique_points"`
 	UniqueMatrix [][]float64      `json:"unique_matrix"`
 }
@@ -54,31 +56,26 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 	// has start/end locations for each vehicle incorporated. In this example we
 	// do not use any start/end locations.
 	// We go over each stop in each row of the full matrix and lookup it's stop
-	// references to access the cost from the reduced size matrix
-	fullMatrix := make([][]float64, len(i.Stops)+2*len(i.Vehicles))
+	// references to access the cost from the reduced size matrix.
+	matrixSize := len(i.Stops) + 2*len(i.Vehicles)
+	fullMatrix := make([][]float64, matrixSize)
+
+	// Make all stops, starts and ends accessible from one slice.
+	joinedStops := joinStops(i, matrixSize)
+
 	for stopIndex1 := range fullMatrix {
 		// Create an row filled with 0.
-		fullMatrix[stopIndex1] = make([]float64, len(i.Stops)+2*len(i.Vehicles))
-
-		// We handle vehicle start/ends that do not exist here.
-		if stopIndex1 > len(i.Stops)-1 {
-			// Continue to fill the last rows with 0.
-			continue
-		}
+		fullMatrix[stopIndex1] = make([]float64, matrixSize)
 
 		// Get first reference index.
-		refIndex1 := i.Stops[stopIndex1].Reference
+		refIndex1 := joinedStops[stopIndex1].Reference
 		for stopIndex2 := range fullMatrix[stopIndex1] {
-			// Handle vehicle start/end
-			if stopIndex2 > len(i.Stops)-1 {
-				// We can break here because all rows are fully filled with 0.
-				break
-			}
-
 			// Get second reference index and look up costs.
-			refIndex2 := i.Stops[stopIndex2].Reference
-			cost := i.UniqueMatrix[refIndex1][refIndex2]
-			fullMatrix[stopIndex1][stopIndex2] = cost
+			refIndex2 := joinedStops[stopIndex2].Reference
+			if refIndex1 != -1 && refIndex2 != -1 {
+				cost := i.UniqueMatrix[refIndex1][refIndex2]
+				fullMatrix[stopIndex1][stopIndex2] = cost
+			}
 		}
 	}
 
@@ -132,4 +129,38 @@ func checkInput(i input) {
 			panic("matrix rows size must match unique points size")
 		}
 	}
+
+	if len(i.Starts) > 0 && len(i.Starts) != len(i.Vehicles) {
+		panic("if starts are given they must match the number of vehicles")
+	}
+
+	if len(i.Ends) > 0 && len(i.Ends) != len(i.Vehicles) {
+		panic("if ends are given they must match the number of vehicles")
+	}
+}
+
+func joinStops(i input, matrixSize int) []stop {
+	joinedStops := make([]stop, matrixSize)
+	// Set default reference to -1.
+	for _, s := range joinedStops {
+		s.Reference = -1
+	}
+
+	// Copy stops to slice.
+	copy(joinedStops, i.Stops)
+
+	// Fill joined stops alternating with Starts if applicable.
+	if len(i.Starts) > 0 {
+		for index := len(i.Stops); index < matrixSize; index += 2 {
+			joinedStops[index] = i.Starts[index-len(i.Stops)]
+		}
+	}
+
+	// Fill joined stops alternating with Ends if applicable.
+	if len(i.Stops) > 0 {
+		for index := len(i.Stops) + 1; index < matrixSize; index += 2 {
+			joinedStops[index] = i.Starts[index-len(i.Stops)-1]
+		}
+	}
+	return joinedStops
 }
