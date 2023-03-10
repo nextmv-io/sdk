@@ -32,7 +32,7 @@ func Unique[T comparable](s []T) []T {
 	return result
 }
 
-// FindIndex returns the first index i satisfying predicate(s[i]),
+// FindIndex returns the first index i satisfying predicate(s[i]).
 func FindIndex[E any](s []E, predicate func(E) bool) int {
 	for i, v := range s {
 		if predicate(v) {

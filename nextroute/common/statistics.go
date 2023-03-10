@@ -22,7 +22,7 @@ type Statistics struct {
 	MidHinge           float64
 }
 
-// returns the median assuming data is sorted
+// returns the median assuming data is sorted.
 func median(data []float64) (float64, error) {
 	length := len(data)
 
@@ -35,6 +35,7 @@ func median(data []float64) (float64, error) {
 	return data[length/2], nil
 }
 
+// NewStatistics creates a new statistics object.
 func NewStatistics[T any](v []T, f func(T) float64) Statistics {
 	statistics := Statistics{
 		Maximum: -math.MaxFloat64,
@@ -86,7 +87,7 @@ func NewStatistics[T any](v []T, f func(T) float64) Statistics {
 
 	squaredDifferenceSum := 0.0
 
-	for idx, _ := range v {
+	for idx := range v {
 		difference := values[idx] - statistics.Average
 		squaredDifferenceSum += difference * difference
 	}

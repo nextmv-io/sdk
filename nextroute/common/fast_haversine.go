@@ -2,6 +2,7 @@ package common
 
 import "math"
 
+// NewFastHaversine returns a new FastHaversine.
 func NewFastHaversine(lat float64) FastHaversine {
 	const RE = 6378.137          // equatorial radius
 	const FE = 1 / 298.257223563 // flattening
@@ -9,9 +10,9 @@ func NewFastHaversine(lat float64) FastHaversine {
 	const E2 = FE * (2 - FE)
 	const RAD = math.Pi / 180
 	const m = RAD * RE * 1000
-	var coslat = math.Cos(lat * RAD)
-	var w2 = 1 / (1 - E2*(1-coslat*coslat))
-	var w = math.Sqrt(w2)
+	coslat := math.Cos(lat * RAD)
+	w2 := 1 / (1 - E2*(1-coslat*coslat))
+	w := math.Sqrt(w2)
 
 	return FastHaversine{
 		kx: m * w * coslat,        // based on normal radius of curvature
@@ -19,6 +20,7 @@ func NewFastHaversine(lat float64) FastHaversine {
 	}
 }
 
+// FastHaversine is a fast approximation of the haversine distance.
 type FastHaversine struct {
 	kx float64
 	ky float64
@@ -34,8 +36,9 @@ func wrap(deg float64) float64 {
 	return deg
 }
 
+// Distance returns the distance between two locations in meters.
 func (f FastHaversine) Distance(from, to Location) float64 {
-	var dx = wrap(from.Longitude()-to.Longitude()) * f.kx
-	var dy = (from.Latitude() - to.Latitude()) * f.ky
+	dx := wrap(from.Longitude()-to.Longitude()) * f.kx
+	dy := (from.Latitude() - to.Latitude()) * f.ky
 	return math.Sqrt(dx*dx + dy*dy)
 }
