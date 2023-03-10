@@ -8,6 +8,14 @@ import (
 
 // ModelStop is a stop to be assigned to a vehicle.
 type ModelStop interface {
+	// ClosestStops returns a slice containing the closest stops to the
+	// invoking stop. The slice is sorted by increasing distance to the
+	// location. The slice first stop is the stop itself. The distance used
+	// is the common.Haversine distance between the stops. All the stops
+	// in the model are used in the slice. Slice with similar distance are
+	// sorted by their index (increasing).
+	ClosestStops() ModelStops
+
 	// Data returns the arbitrary data associated with the stop. Can be set
 	// using the StopData StopOption.
 	Data() any

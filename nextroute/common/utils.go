@@ -80,6 +80,26 @@ func DurationValue(
 	return seconds / timeUnit.Seconds()
 }
 
+// RandomElement returns a random element from the given slice. If the slice is
+// empty, panic is raised. If source is nil, a new source is created using the
+// current time.
+func RandomElement[T any](
+	source *rand.Rand,
+	elements []T,
+) T {
+	if len(elements) == 0 {
+		panic(fmt.Errorf("cannot select random element from empty slice"))
+	}
+	if source == nil {
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+	return elements[source.Intn(len(elements))]
+}
+
+// RandomElements returns a slice of n random elements from the
+// given slice. If n is greater than the length of the slice, all elements are
+// returned. If n is less than or equal to zero, an empty slice is returned.
+// If source is nil, a new source is created using the current time.
 func RandomElements[T any](
 	source *rand.Rand,
 	elements []T,
