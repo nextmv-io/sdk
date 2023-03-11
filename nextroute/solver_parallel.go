@@ -15,6 +15,7 @@ type ParallelSolveOptions struct {
 // run multiple solver in parallel and return the best solution. The parallel
 // solver will stop when the maximum duration is reached.
 type ParallelSolver interface {
+	Progressioner
 	Solve(solveOptions ParallelSolveOptions) (Solution, error)
 }
 

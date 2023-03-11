@@ -80,6 +80,7 @@ type SolveOptions struct {
 
 // Solver is the interface for a solver.
 type Solver interface {
+	Progressioner
 	// Solve solves the problem usint the solve-options.
 	Solve(solveOptions SolveOptions) (Solution, error)
 	// SolverOptions returns the solver-options used to create the solver. The
@@ -91,7 +92,9 @@ type Solver interface {
 	SetStartSolution(solution Solution)
 
 	SetRestartPolicy(restartPolicy RestartPolicy)
+}
 
+type Progressioner interface {
 	// Progression returns the progression of the solver.
 	Progression() []schema.JsonObjectiveElapsed
 }
