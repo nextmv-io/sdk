@@ -8,6 +8,10 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
+type solveStart string
+
+const SolveStart solveStart = "start"
+
 type SolveOptions struct {
 	Iterations        int           `json:"iterations"  usage:"number of iterations"`
 	MaximumDuration   time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
