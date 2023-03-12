@@ -7,7 +7,13 @@ import (
 	"reflect"
 	"runtime"
 	"runtime/pprof"
+	"time"
 )
+
+type runStart string
+
+// RunStart is the key for the start time of the run.
+const RunStart runStart = "start"
 
 // GenericRunner creates a new runner from the given components.
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
@@ -102,8 +108,10 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution],
 }
 
 func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
-	context context.Context,
+	ctx context.Context,
 ) (retErr error) {
+	start := time.Now()
+	ctx = context.WithValue(ctx, RunStart, start)
 	// handle CPU profile
 	deferFuncCPU, retErr := r.handleCPUProfile(r.runnerConfig)
 	if retErr != nil {
@@ -117,13 +125,13 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 		}
 	}()
 	// get IO
-	ioData, retErr := r.IOProducer(context, r.runnerConfig)
+	ioData, retErr := r.IOProducer(ctx, r.runnerConfig)
 	if retErr != nil {
 		return retErr
 	}
 
 	// decode input
-	decodedInput, retErr := r.InputDecoder(context, ioData.Input())
+	decodedInput, retErr := r.InputDecoder(ctx, ioData.Input())
 	if retErr != nil {
 		return retErr
 	}
@@ -131,7 +139,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	// use options configured in runner via flags and environment variables
 	decodedOption := r.flagParsedOption
 	// decode option if provided
-	tempOption, err := r.OptionDecoder(context, ioData.Option())
+	tempOption, err := r.OptionDecoder(ctx, ioData.Option())
 	if err != nil {
 		return err
 	}
@@ -147,7 +155,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	go func() {
 		defer close(solutions)
 		defer close(errs)
-		retErr = r.Algorithm(context, decodedInput, decodedOption, solutions)
+		retErr = r.Algorithm(ctx, decodedInput, decodedOption, solutions)
 		if retErr != nil {
 			errs <- retErr
 			return
@@ -156,7 +164,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 
 	// encode solutions
 	retErr = r.Encoder.Encode(
-		context, solutions, ioData.Writer(), r.runnerConfig, decodedOption,
+		ctx, solutions, ioData.Writer(), r.runnerConfig, decodedOption,
 	)
 	if retErr != nil {
 		return retErr
