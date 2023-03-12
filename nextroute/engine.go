@@ -117,7 +117,7 @@ var (
 	) (Solver, error)
 
 	newParallelSolver func(
-		Solutions,
+		Model,
 	) (ParallelSolver, error)
 
 	newSolutionPlanClusterCollection func(

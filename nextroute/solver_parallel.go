@@ -22,8 +22,8 @@ type ParallelSolver interface {
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.
 func NewParallelSolver(
-	solutions Solutions,
+	model Model,
 ) (ParallelSolver, error) {
 	connect.Connect(con, &newParallelSolver)
-	return newParallelSolver(solutions)
+	return newParallelSolver(model)
 }
