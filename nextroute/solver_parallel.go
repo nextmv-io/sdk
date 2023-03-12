@@ -1,6 +1,7 @@
 package nextroute
 
 import (
+	"context"
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
@@ -16,7 +17,7 @@ type ParallelSolveOptions struct {
 // solver will stop when the maximum duration is reached.
 type ParallelSolver interface {
 	Progressioner
-	Solve(solveOptions ParallelSolveOptions) (Solution, error)
+	Solve(ctx context.Context, solveOptions ParallelSolveOptions) (Solution, error)
 }
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.

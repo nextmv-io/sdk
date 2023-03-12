@@ -1,6 +1,10 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"context"
+
+	"github.com/nextmv-io/sdk/connect"
+)
 
 // NewEmptyMove returns a new empty move. An empty move is a move that does not
 // change the solution and it is not executable.
@@ -17,7 +21,7 @@ type Move interface {
 	// move is not successful if it did not result in a change in the
 	// solution without violating any hard constraints. A move can be
 	// marked executable even if it is not successful in executing.
-	Execute() (bool, error)
+	Execute(context.Context) (bool, error)
 
 	// IsExecutable returns true if the move is executable, false if the
 	// move is not executable. A move is executable if the estimates believe

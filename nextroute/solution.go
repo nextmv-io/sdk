@@ -1,6 +1,8 @@
 package nextroute
 
 import (
+	"context"
+
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/schema"
@@ -24,7 +26,7 @@ type Solution interface {
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan cluster, a move is returned which
 	// is not executable, Move.IsExecutable.
-	BestMove(SolutionPlanCluster) Move
+	BestMove(context.Context, SolutionPlanCluster) Move
 
 	// EstimateDeltaScore estimates the delta score of the solution if the given
 	// stop positions are moved. The delta score is the difference between the

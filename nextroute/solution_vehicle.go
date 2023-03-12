@@ -1,6 +1,7 @@
 package nextroute
 
 import (
+	"context"
 	"time"
 
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -21,7 +22,7 @@ type SolutionVehicle interface {
 	// the invoking vehicle. The best move is the move that has the lowest
 	// score. If there are no moves available for the given solution plan
 	// cluster, a move is returned which is not executable, Move.IsExecutable.
-	BestMove(SolutionPlanCluster) Move
+	BestMove(context.Context, SolutionPlanCluster) Move
 
 	// Centroid returns the centroid of the vehicle. The centroid is the
 	// average location of all stops in the vehicle excluding the start and
