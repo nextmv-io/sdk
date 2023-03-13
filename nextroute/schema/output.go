@@ -2,19 +2,16 @@ package schema
 
 import (
 	"time"
+
+	"github.com/nextmv-io/sdk/alns"
 )
 
 type JsonSolution struct {
-	Epoch       time.Time              `json:"epoch"`
-	Unplanned   []JsonModelStop        `json:"unplanned"`
-	Vehicles    []JsonVehicle          `json:"vehicles"`
-	Progression []JsonObjectiveElapsed `json:"progression"`
-	Objective   JsonObjective          `json:"objective"`
-}
-
-type JsonObjectiveElapsed struct {
-	ElapsedSeconds float64 `json:"elapsed_seconds"`
-	Value          float64 `json:"value"`
+	Epoch       time.Time               `json:"epoch"`
+	Unplanned   []JsonModelStop         `json:"unplanned"`
+	Vehicles    []JsonVehicle           `json:"vehicles"`
+	Progression []alns.ProgressionEntry `json:"progression"`
+	Objective   JsonObjective           `json:"objective"`
 }
 
 type JsonObjective struct {

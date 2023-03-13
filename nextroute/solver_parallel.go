@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 )
 
@@ -17,7 +18,7 @@ type ParallelSolveOptions struct {
 // run multiple solver in parallel and return the best solution. The parallel
 // solver will stop when the maximum duration is reached.
 type ParallelSolver interface {
-	Progressioner
+	alns.Progressioner
 	Solve(ctx context.Context, solveOptions ParallelSolveOptions) (Solution, error)
 }
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 type SolveOptions struct {
@@ -16,7 +16,7 @@ type SolveOptions struct {
 
 // Solver is the interface for a solver.
 type Solver interface {
-	Progressioner
+	alns.Progressioner
 	// Solve solves the problem usint the solve-options.
 	Solve(ctx context.Context, solveOptions SolveOptions) (Solution, error)
 	// SolverOptions returns the solver-options used to create the solver. The
@@ -26,11 +26,6 @@ type Solver interface {
 	SolverOptions() SolverOptions
 
 	SetStartSolution(solution Solution)
-}
-
-type Progressioner interface {
-	// Progression returns the progression of the solver.
-	Progression() []schema.JsonObjectiveElapsed
 }
 
 type IntParameterOptions struct {
