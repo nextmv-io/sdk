@@ -26,6 +26,9 @@ type ModelVehicleType interface {
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
 	TravelDurationExpression() ModelExpression
+
+	// Vehicles returns the vehicles of this vehicle type.
+	Vehicles() ModelVehicles
 }
 
 // ModelVehicleTypes is a slice of vehicle types.

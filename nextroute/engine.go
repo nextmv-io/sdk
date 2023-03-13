@@ -124,4 +124,8 @@ var (
 		*rand.Rand,
 		SolutionPlanClusters,
 	) SolutionPlanClusterCollection
+
+	newPerformanceObserver func(
+		Model,
+	) PerformanceObserver
 )
