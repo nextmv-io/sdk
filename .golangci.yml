@@ -222,13 +222,7 @@ issues:
     - path: templates/sudoku/main\.go
       linters:
         - gocyclo
-    - path: templates/cluster-tsp/helper\.go
-      linters:
-        - gocyclo
-    - path: templates/cluster-tsp/schema\.go
-      linters:
-        - gocyclo
-    - path: templates/cluster-tsp/solver\.go
+    - path: templates/unique-matrix-measure/main\.go
       linters:
         - gocyclo
 
