@@ -5,6 +5,10 @@
       "id": "v1",
       "route": [
         {
+          "id": "v1-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
           "id": "North East",
           "position": { "lon": -74.244215, "lat": 4.693907 }
         },
@@ -35,11 +39,41 @@
         {
           "id": "West",
           "position": { "lon": -74.244215, "lat": 4.693907 }
+        },
+        {
+          "id": "v1-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
         }
       ],
-      "route_duration": 18783
+      "route_duration": 23617
     },
-    { "id": "v2", "route": [], "route_duration": 0 },
-    { "id": "v3", "route": [], "route_duration": 0 }
+    {
+      "id": "v2",
+      "route": [
+        {
+          "id": "v2-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
+          "id": "v2-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        }
+      ],
+      "route_duration": 0
+    },
+    {
+      "id": "v3",
+      "route": [
+        {
+          "id": "v3-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
+          "id": "v3-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        }
+      ],
+      "route_duration": 0
+    }
   ]
 }

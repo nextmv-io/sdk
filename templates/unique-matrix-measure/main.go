@@ -96,10 +96,22 @@ func solver(i input, opts store.Options) (store.Solver, error) {
 		}
 	}
 
+	starts := make([]route.Position, len(i.Starts))
+	for stopIndex, s := range i.Starts {
+		starts[stopIndex] = i.UniquePoints[s.Reference]
+	}
+
+	ends := make([]route.Position, len(i.Ends))
+	for stopIndex, s := range i.Ends {
+		ends[stopIndex] = i.UniquePoints[s.Reference]
+	}
+
 	// Define base router.
 	router, err := route.NewRouter(
 		stops,
 		i.Vehicles,
+		route.Starts(starts),
+		route.Ends(ends),
 		route.ValueFunctionMeasures(byIndexMeasures),
 	)
 	if err != nil {
