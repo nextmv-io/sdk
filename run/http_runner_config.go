@@ -10,7 +10,7 @@ type HTTPRunnerConfig struct {
 	Runner struct {
 		Log    *log.Logger
 		Output struct {
-			Solutions string `default:"all" usage:"Return all or last solution"`
+			Solutions string `default:"last" usage:"Return all or last solution"`
 			Quiet     bool   `default:"false" usage:"Do not return statistics"`
 		}
 		HTTP struct {
