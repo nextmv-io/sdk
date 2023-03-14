@@ -45,7 +45,8 @@
           "position": { "lon": -74.04866, "lat": 4.79018 }
         }
       ],
-      "route_duration": 13631
+      "route_duration": 13631,
+      "route_distance": 136305
     },
     {
       "id": "v2",
@@ -59,7 +60,8 @@
           "position": { "lon": -74.04866, "lat": 4.79018 }
         }
       ],
-      "route_duration": 0
+      "route_duration": 0,
+      "route_distance": 0
     },
     {
       "id": "v3",
@@ -73,7 +75,8 @@
           "position": { "lon": -74.04866, "lat": 4.79018 }
         }
       ],
-      "route_duration": 0
+      "route_duration": 0,
+      "route_distance": 0
     }
   ]
 }
