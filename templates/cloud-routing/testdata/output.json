@@ -75,7 +75,8 @@
           "estimated_service": "2021-10-17T10:31:43-06:00"
         }
       ],
-      "route_duration": 5503
+      "route_duration": 5503,
+      "route_distance": 49020
     },
     {
       "id": "vehicle-2",
@@ -151,7 +152,8 @@
           "estimated_service": "2021-10-17T10:38:39-06:00"
         }
       ],
-      "route_duration": 5919
+      "route_duration": 5919,
+      "route_distance": 53182
     }
   ]
 }

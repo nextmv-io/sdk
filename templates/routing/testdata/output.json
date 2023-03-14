@@ -75,7 +75,8 @@
           "estimated_service": "2020-10-17T09:51:13-06:00"
         }
       ],
-      "route_duration": 3073
+      "route_duration": 3073,
+      "route_distance": 2377
     },
     {
       "id": "v2",
@@ -151,7 +152,8 @@
           "estimated_service": "2020-10-17T10:00:18-06:00"
         }
       ],
-      "route_duration": 3618
+      "route_duration": 3618,
+      "route_distance": 1911
     }
   ]
 }
