@@ -32,6 +32,29 @@ func Unique[T comparable](s []T) []T {
 	return result
 }
 
+// GroupBy groups the elements of a slice by a key function.
+func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
+	inResult := make(map[K]bool)
+	result := make(map[K][]T)
+	for _, instance := range s {
+		key := f(instance)
+		if _, ok := inResult[key]; !ok {
+			result[key] = make([]T, 0)
+		}
+		result[key] = append(result[key], instance)
+	}
+	return result
+}
+
+// Map maps a slice of type T to a slice of type R using the function f.
+func Map[T any, R any](v []T, f func(T) R) []R {
+	var r []R
+	for _, x := range v {
+		r = append(r, f(x))
+	}
+	return r
+}
+
 // FindIndex returns the first index i satisfying predicate(s[i]).
 func FindIndex[E any](s []E, predicate func(E) bool) int {
 	for i, v := range s {

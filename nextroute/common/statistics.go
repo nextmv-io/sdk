@@ -22,6 +22,36 @@ type Statistics struct {
 	MidHinge           float64
 }
 
+func (s Statistics) Report() string {
+	return fmt.Sprintf(
+		"Count                       : %d\n"+
+			"Sum                         : %f\n"+
+			"Average                     : %f\n"+
+			"Maximum                     : %f\n"+
+			"Minimum                     : %f\n"+
+			"Standard Deviation          : %f\n"+
+			"Quartile 1                  : %f\n"+
+			"Quartile 2                  : %f\n"+
+			"Quartile 3                  : %f\n"+
+			"Inter Quartile Range        : %f\n"+
+			"IQR fence                   : [%f, %f]\n"+
+			"Mid Hinge                   : %f\n",
+		int(s.Count),
+		s.Sum,
+		s.Average,
+		s.Maximum,
+		s.Minimum,
+		s.StandardDeviation,
+		s.Quartile1,
+		s.Quartile2,
+		s.Quartile3,
+		s.InterQuartileRange,
+		s.Quartile1-1.5*s.InterQuartileRange,
+		s.Quartile3+1.5*s.InterQuartileRange,
+		s.MidHinge,
+	)
+}
+
 // returns the median assuming data is sorted.
 func median(data []float64) (float64, error) {
 	length := len(data)

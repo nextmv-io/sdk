@@ -1,6 +1,8 @@
 // Package common contains common types and functions.
 package common
 
+import "fmt"
+
 // DistanceUnit is the unit of distance.
 type DistanceUnit int
 
@@ -41,6 +43,18 @@ const (
 	factorKilometersToMeters = 1000
 	factorMilesToMeters      = 1609.34
 )
+
+func (d DistanceUnit) String() string {
+	switch d {
+	case Kilometers:
+		return "kilometers"
+	case Meters:
+		return "meters"
+	case Miles:
+		return "miles"
+	}
+	return fmt.Sprintf("unknown distance unit %v", int(d))
+}
 
 type Distance struct {
 	meters float64

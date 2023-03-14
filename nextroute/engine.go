@@ -128,4 +128,12 @@ var (
 	newPerformanceObserver func(
 		Model,
 	) PerformanceObserver
+
+	newModelStatistics func(
+		Model,
+	) ModelStatistics
+
+	newVehicleStatistics func(
+		ModelVehicle,
+	) VehicleStatistics
 )

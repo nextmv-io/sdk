@@ -12,8 +12,6 @@ type PerformanceObserver interface {
 
 	Duration() time.Duration
 
-	Marshal() ([]byte, error)
-
 	Report() string
 }
 
