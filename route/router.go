@@ -97,6 +97,7 @@ type PlannedVehicle struct {
 	ID            string        `json:"id"`
 	Route         []PlannedStop `json:"route"`
 	RouteDuration int           `json:"route_duration"`
+	RouteDistance int           `json:"route_distance"`
 }
 
 // PlannedStop describes a stop as part of a Vehicle's route of solution
