@@ -98,6 +98,16 @@ type SolutionStop interface {
 	// the stop itself is returned.
 	PreviousIndex() int
 
+	// Slack returns the slack of the stop as a time.Duration. Slack is defined
+	// as the duration you can start the invoking stop later without
+	// postponing the last stop of the vehicle. If the stop is unplanned,
+	// the slack has no semantic meaning. Slack is a consequence of the
+	// earliest start of stops, if no earliest start is set, the slack is
+	// always zero.
+	Slack() time.Duration
+	// SlackValue returns the slack of the stop as a float64.
+	SlackValue() float64
+
 	// Vehicle returns the SolutionVehicle that visits the stop. If the stop
 	// is unplanned, the vehicle has no semantic meaning and a panic will be
 	// raised.

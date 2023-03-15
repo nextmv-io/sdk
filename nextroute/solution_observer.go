@@ -66,4 +66,7 @@ type SolutionObserved interface {
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
 	AddSolutionObserver(observer SolutionObserver)
+
+	// SolutionObservers returns the solution observers.
+	SolutionObservers() SolutionObservers
 }

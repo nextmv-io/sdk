@@ -35,6 +35,7 @@ type JsonModelStop struct {
 }
 
 type JsonStop struct {
+	Slack             time.Duration         `json:"slack"`
 	Arrival           time.Time             `json:"arrival"`
 	EarliestStart     time.Time             `json:"earliest_start"`
 	Start             time.Time             `json:"start"`

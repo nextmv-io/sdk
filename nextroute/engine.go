@@ -54,6 +54,19 @@ var (
 		StopExpression,
 		VehicleTypeExpression,
 	) (MaximumConstraint, error)
+	newVehicleTypeDurationExpression func(
+		string,
+		time.Duration,
+	) VehicleTypeDurationExpression
+
+	newMaximumDurationConstraint func(
+		VehicleTypeDurationExpression,
+	) (MaximumDurationConstraint, error)
+
+	newMaximumTravelDurationConstraint func(
+		VehicleTypeDurationExpression,
+	) (MaximumTravelDurationConstraint, error)
+
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)

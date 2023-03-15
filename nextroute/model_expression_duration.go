@@ -25,6 +25,15 @@ func NewTravelDurationExpression(
 	return newTravelDurationExpression(distanceExpression, speed)
 }
 
+// NewVehicleTypeDurationExpression creates a new duration expression.
+func NewVehicleTypeDurationExpression(
+	name string,
+	duration time.Duration,
+) VehicleTypeDurationExpression {
+	connect.Connect(con, &newVehicleTypeDurationExpression)
+	return newVehicleTypeDurationExpression(name, duration)
+}
+
 // NewConstantDurationExpression creates a new constant duration expression.
 func NewConstantDurationExpression(
 	name string,
@@ -32,6 +41,14 @@ func NewConstantDurationExpression(
 ) DurationExpression {
 	connect.Connect(con, &newConstantDurationExpression)
 	return newConstantDurationExpression(name, duration)
+}
+
+type VehicleTypeDurationExpression interface {
+	ModelExpression
+	// Duration returns the duration for the given vehicle type
+	Duration(ModelVehicleType) time.Duration
+	// SetDuration sets the duration for the given vehicle type.
+	SetDuration(ModelVehicleType, time.Duration)
 }
 
 // DurationExpression is an expression that returns a duration.
