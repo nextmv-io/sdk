@@ -39,9 +39,12 @@ type IntParameterOptions struct {
 }
 
 type SolverOptions struct {
-	Unplan  IntParameterOptions `json:"unplan"  usage:"unplan parameter"`
-	Plan    IntParameterOptions `json:"plan"  usage:"plan parameter"`
-	Restart IntParameterOptions `json:"restart"  usage:"restart parameter"`
+	Unplan                 IntParameterOptions `json:"unplan"  usage:"unplan parameter"`
+	Plan                   IntParameterOptions `json:"plan"  usage:"plan parameter"`
+	Restart                IntParameterOptions `json:"restart"  usage:"restart parameter"`
+	OneIslandNumberOfStops int                 `json:"one_island_number_of_stops"  usage:"number of stops for one island"`
+	ChanceUnplanIsland     float64             `json:"chance_unplan_island"  usage:"chance unplan island"`
+	ChanceUnplanVehicle    float64             `json:"chance_unplan_vehicle"  usage:"chance unplan vehicle"`
 }
 
 // SolverFactory is the interface for a solver-factory.
