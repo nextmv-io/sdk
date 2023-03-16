@@ -202,7 +202,7 @@ func (i *input) transform() routerInput {
 	vehicleAttributes := make([]route.Attributes, 0)
 	stopAttributes := make([]route.Attributes, 0)
 	stopGroups := make([][]string, len(i.StopGroups))
-	windows := make([]route.Window, len(i.Stops))
+	windows := make([]route.Window, 0)
 	starts := make([]route.Position, len(i.Vehicles))
 	ends := make([]route.Position, len(i.Vehicles))
 	shifts := make([]route.TimeWindow, 0)
@@ -265,13 +265,13 @@ func (i *input) transform() routerInput {
 			quantities[kind][s] = quant
 		}
 		if len(*stop.HardWindow) > 0 {
-			windows[s] = route.Window{
+			windows = append(windows, route.Window{
 				MaxWait: *stop.MaxWait,
 				TimeWindow: route.TimeWindow{
 					Start: (*stop.HardWindow)[0],
 					End:   (*stop.HardWindow)[1],
 				},
-			}
+			})
 		}
 
 		for _, p := range stop.precedes {

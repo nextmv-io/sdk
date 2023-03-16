@@ -1,0 +1,82 @@
+{
+  "unassigned": [],
+  "vehicles": [
+    {
+      "id": "v1",
+      "route": [
+        {
+          "id": "v1-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
+          "id": "South West",
+          "position": { "lon": -74.139745, "lat": 4.589886 }
+        },
+        {
+          "id": "North",
+          "position": { "lon": -74.139745, "lat": 4.589886 }
+        },
+        {
+          "id": "South East",
+          "position": { "lon": -74.444219, "lat": 4.386293 }
+        },
+        {
+          "id": "South",
+          "position": { "lon": -74.444219, "lat": 4.386293 }
+        },
+        {
+          "id": "North West",
+          "position": { "lon": -74.344219, "lat": 4.386293 }
+        },
+        {
+          "id": "East",
+          "position": { "lon": -74.344219, "lat": 4.386293 }
+        },
+        {
+          "id": "North East",
+          "position": { "lon": -74.244215, "lat": 4.693907 }
+        },
+        {
+          "id": "West",
+          "position": { "lon": -74.244215, "lat": 4.693907 }
+        },
+        {
+          "id": "v1-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        }
+      ],
+      "route_duration": 13631,
+      "route_distance": 136305
+    },
+    {
+      "id": "v2",
+      "route": [
+        {
+          "id": "v2-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
+          "id": "v2-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        }
+      ],
+      "route_duration": 0,
+      "route_distance": 0
+    },
+    {
+      "id": "v3",
+      "route": [
+        {
+          "id": "v3-start",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        },
+        {
+          "id": "v3-end",
+          "position": { "lon": -74.04866, "lat": 4.79018 }
+        }
+      ],
+      "route_duration": 0,
+      "route_distance": 0
+    }
+  ]
+}
