@@ -2822,7 +2822,6 @@ func ExampleTravelDistanceMeasures() {
 	// Haversine measure and override cost of going to/from an empty
 	// point.
 	m := route.Indexed(route.HaversineByPoint(), points)
-	m = route.Scale(m, 10)
 	m = route.Override(
 		m,
 		route.Constant(0),
@@ -2832,7 +2831,7 @@ func ExampleTravelDistanceMeasures() {
 	)
 
 	for v := range vehicles {
-		measures[v] = m
+		measures[v] = route.Scale(m, 10)
 	}
 
 	// Declare the router and its solver.
@@ -2925,7 +2924,7 @@ func ExampleTravelDistanceMeasures() {
 	//           "estimated_service": "2020-10-17T09:20:43Z"
 	//         }
 	//       ],
-	//       "route_duration": 1243,
+	//       "route_duration": 124286,
 	//       "route_distance": 12425
 	//     },
 	//     {
