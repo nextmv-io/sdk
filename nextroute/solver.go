@@ -1,7 +1,6 @@
 package nextroute
 
 import (
-	"context"
 	"time"
 
 	"github.com/nextmv-io/sdk/alns"
@@ -17,15 +16,12 @@ type SolveOptions struct {
 // Solver is the interface for a solver.
 type Solver interface {
 	alns.Progressioner
-	// Solve solves the problem usint the solve-options.
-	Solve(ctx context.Context, solveOptions SolveOptions) (Solution, error)
+	alns.Solver[Solution, SolveOptions]
 	// SolverOptions returns the solver-options used to create the solver. The
 	// returned options are a copy of the options used to create the solver.
 	// They can be used to create a new solver and changes will have no effect
 	// on this invoked solver.
 	SolverOptions() SolverOptions
-
-	SetStartSolution(solution Solution)
 }
 
 type IntParameterOptions struct {

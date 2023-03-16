@@ -62,3 +62,7 @@ func (l Location) Longitude() float64 {
 func (l Location) Latitude() float64 {
 	return l.latitude
 }
+
+func (l Location) Equals(other Location) bool {
+	return l.longitude == other.longitude && l.latitude == other.latitude
+}

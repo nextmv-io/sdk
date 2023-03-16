@@ -1,7 +1,6 @@
 package nextroute
 
 import (
-	"context"
 	"time"
 
 	"github.com/nextmv-io/sdk/alns"
@@ -21,7 +20,7 @@ type ParallelSolveOptions struct {
 // solver will stop when the maximum duration is reached.
 type ParallelSolver interface {
 	alns.Progressioner
-	Solve(ctx context.Context, solveOptions ParallelSolveOptions) (Solution, error)
+	alns.Solver[Solution, ParallelSolveOptions]
 }
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.

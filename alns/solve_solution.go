@@ -2,6 +2,7 @@
 package alns
 
 import (
+	"context"
 	"math/rand"
 )
 
@@ -18,6 +19,22 @@ type Solution[T any] interface {
 
 	// Random returns the random number generator used by the solution.
 	Random() *rand.Rand
+}
+
+type Solutions[T any] <-chan T
+
+func (solutions Solutions[T]) Last() T {
+	var solution T
+	for s := range solutions {
+		solution = s
+	}
+	return solution
+}
+
+type Solver[T Solution[T], Options any] interface {
+	// Solve starts the solving process using the given options. It returns the
+	// solutions as a channel.
+	Solve(context.Context, Options, ...T) (Solutions[T], error)
 }
 
 type Progressioner interface {
