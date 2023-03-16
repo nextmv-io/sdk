@@ -2857,75 +2857,74 @@ func ExampleTravelDistanceMeasures() {
 	}
 	fmt.Println(string(b))
 	// Output:
-	//
-	//	{
-	//	  "unassigned": [],
-	//	  "vehicles": [
-	//	    {
-	//	      "id": "v1",
-	//	      "route": [
-	//	        {
-	//	          "id": "Kinkaku-ji",
-	//	          "position": {
-	//	            "lon": 135.728898,
-	//	            "lat": 35.039705
-	//	          }
-	//	        },
-	//	        {
-	//	          "id": "Nijō Castle",
-	//	          "position": {
-	//	            "lon": 135.748134,
-	//	            "lat": 35.014239
-	//	          }
-	//	        },
-	//	        {
-	//	          "id": "Kyoto Imperial Palace",
-	//	          "position": {
-	//	            "lon": 135.762057,
-	//	            "lat": 35.025431
-	//	          }
-	//	        },
-	//	        {
-	//	          "id": "Gionmachi",
-	//	          "position": {
-	//	            "lon": 135.775682,
-	//	            "lat": 35.002457
-	//	          }
-	//	        },
-	//	        {
-	//	          "id": "Kiyomizu-dera",
-	//	          "position": {
-	//	            "lon": 135.78506,
-	//	            "lat": 34.994857
-	//	          }
-	//	        },
-	//	        {
-	//	          "id": "Fushimi Inari Taisha",
-	//	          "position": {
-	//	            "lon": 135.772695,
-	//	            "lat": 34.967146
-	//	          }
-	//	        }
-	//	      ],
-	//	      "route_duration": 1243,
-	//	      "route_distance": 124283
-	//	    },
-	//	    {
-	//	      "id": "v2",
-	//	      "route": [
-	//	        {
-	//	          "id": "Arashiyama Bamboo Forest",
-	//	          "position": {
-	//	            "lon": 135.672009,
-	//	            "lat": 35.017209
-	//	          }
-	//	        }
-	//	      ],
-	//	      "route_duration": 0,
-	//	      "route_distance": 0
-	//	    }
-	//	  ]
-	//	}
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           }
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           }
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           }
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           }
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           }
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 1243,
+	//       "route_distance": 124283
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           }
+	//         }
+	//       ],
+	//       "route_duration": 0,
+	//       "route_distance": 0
+	//     }
+	//   ]
+	// }
 }
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
