@@ -244,6 +244,17 @@ func TravelTimeDependentMeasures(timeMeasures []DependentByIndex) Option {
 	return travelTimeDependentMeasuresFunc(timeMeasures)
 }
 
+// TravelDistanceMeasures sets custom distance measures for every vehicle to
+// calculate the travel distance, and should be indexed as such. If no
+// distance measures are provided, a default haversine measure will be used to
+// calculate distances between stops.
+func TravelDistanceMeasures(
+	travelDistanceMeasures []ByIndex,
+) Option {
+	connect.Connect(con, &travelDistanceMeasuresFunc)
+	return travelDistanceMeasuresFunc(travelDistanceMeasures)
+}
+
 // Attribute sets a compatibility filter for stops and vehicles. It takes two
 // arguments, vehicles and stops which define a slice of compatibility
 // attributes for stops and vehicles. Stops that are not provided are compatible
@@ -435,6 +446,7 @@ var (
 	valueFunctionDependentMeasuresFunc func([]DependentByIndex) Option
 	travelTimeMeasuresFunc             func([]ByIndex) Option
 	travelTimeDependentMeasuresFunc    func([]DependentByIndex) Option
+	travelDistanceMeasuresFunc         func([]ByIndex) Option
 	attributeFunc                      func([]Attributes, []Attributes) Option
 	threadsFunc                        func(int) Option
 	alternatesFunc                     func([]Alternate) Option

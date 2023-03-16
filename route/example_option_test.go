@@ -2767,6 +2767,188 @@ func ExampleValueFunctionMeasures() {
 	// }
 }
 
+// Create routes to visit seven landmarks in Kyoto using custom distance
+// measures.
+func ExampleTravelDistanceMeasures() {
+	// Define stops and vehicles.
+	stops := []route.Stop{
+		{
+			ID:       "Fushimi Inari Taisha",
+			Position: route.Position{Lon: 135.772695, Lat: 34.967146},
+		},
+		{
+			ID:       "Kiyomizu-dera",
+			Position: route.Position{Lon: 135.785060, Lat: 34.994857},
+		},
+		{
+			ID:       "Nijō Castle",
+			Position: route.Position{Lon: 135.748134, Lat: 35.014239},
+		},
+		{
+			ID:       "Kyoto Imperial Palace",
+			Position: route.Position{Lon: 135.762057, Lat: 35.025431},
+		},
+		{
+			ID:       "Gionmachi",
+			Position: route.Position{Lon: 135.775682, Lat: 35.002457},
+		},
+		{
+			ID:       "Kinkaku-ji",
+			Position: route.Position{Lon: 135.728898, Lat: 35.039705},
+		},
+		{
+			ID:       "Arashiyama Bamboo Forest",
+			Position: route.Position{Lon: 135.672009, Lat: 35.017209},
+		},
+	}
+	vehicles := []string{
+		"v1",
+		"v2",
+	}
+
+	count := len(stops)
+	points := make([]route.Point, count+2*len(vehicles))
+	for s, stop := range stops {
+		point := route.Point{
+			stop.Position.Lon,
+			stop.Position.Lat,
+		}
+
+		points[s] = point
+	}
+
+	measures := make([]route.ByIndex, len(vehicles))
+
+	// Haversine measure and override cost of going to/from an empty
+	// point.
+	m := route.Indexed(route.HaversineByPoint(), points)
+	m = route.Scale(m, 10)
+	m = route.Override(
+		m,
+		route.Constant(0),
+		func(from, to int) bool {
+			return points[from] == nil || points[to] == nil
+		},
+	)
+
+	for v := range vehicles {
+		measures[v] = m
+	}
+
+	// Declare the router and its solver.
+	router, err := route.NewRouter(
+		stops,
+		vehicles,
+		route.TravelDistanceMeasures(measures),
+		route.Threads(1),
+	)
+	if err != nil {
+		panic(err)
+	}
+	solver, err := router.Solver(store.DefaultOptions())
+	if err != nil {
+		panic(err)
+	}
+
+	// Get the last solution of the problem and print it.
+	last := solver.Last(context.Background())
+	b, err := json.MarshalIndent(last.Store, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
+	// Output:
+	// {
+	//   "unassigned": [],
+	//   "vehicles": [
+	//     {
+	//       "id": "v1",
+	//       "route": [
+	//         {
+	//           "id": "Kinkaku-ji",
+	//           "position": {
+	//             "lon": 135.728898,
+	//             "lat": 35.039705
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:00:00Z",
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
+	//         },
+	//         {
+	//           "id": "Nijō Castle",
+	//           "position": {
+	//             "lon": 135.748134,
+	//             "lat": 35.014239
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:05:33Z",
+	//           "estimated_departure": "2020-10-17T09:05:33Z",
+	//           "estimated_service": "2020-10-17T09:05:33Z"
+	//         },
+	//         {
+	//           "id": "Kyoto Imperial Palace",
+	//           "position": {
+	//             "lon": 135.762057,
+	//             "lat": 35.025431
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:08:31Z",
+	//           "estimated_departure": "2020-10-17T09:08:31Z",
+	//           "estimated_service": "2020-10-17T09:08:31Z"
+	//         },
+	//         {
+	//           "id": "Gionmachi",
+	//           "position": {
+	//             "lon": 135.775682,
+	//             "lat": 35.002457
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:13:15Z",
+	//           "estimated_departure": "2020-10-17T09:13:15Z",
+	//           "estimated_service": "2020-10-17T09:13:15Z"
+	//         },
+	//         {
+	//           "id": "Kiyomizu-dera",
+	//           "position": {
+	//             "lon": 135.78506,
+	//             "lat": 34.994857
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:15:15Z",
+	//           "estimated_departure": "2020-10-17T09:15:15Z",
+	//           "estimated_service": "2020-10-17T09:15:15Z"
+	//         },
+	//         {
+	//           "id": "Fushimi Inari Taisha",
+	//           "position": {
+	//             "lon": 135.772695,
+	//             "lat": 34.967146
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:20:43Z",
+	//           "estimated_departure": "2020-10-17T09:20:43Z",
+	//           "estimated_service": "2020-10-17T09:20:43Z"
+	//         }
+	//       ],
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
+	//     },
+	//     {
+	//       "id": "v2",
+	//       "route": [
+	//         {
+	//           "id": "Arashiyama Bamboo Forest",
+	//           "position": {
+	//             "lon": 135.672009,
+	//             "lat": 35.017209
+	//           },
+	//           "estimated_arrival": "2020-10-17T09:00:00Z",
+	//           "estimated_departure": "2020-10-17T09:00:00Z",
+	//           "estimated_service": "2020-10-17T09:00:00Z"
+	//         }
+	//       ],
+	//       "route_duration": 0,
+	//       "route_distance": 0
+	//     }
+	//   ]
+	// }
+}
+
 // Create routes to visit seven landmarks in Kyoto using two vehicles with
 // shifts. Each vehicle has a travel time measure.
 func ExampleTravelTimeMeasures() {
