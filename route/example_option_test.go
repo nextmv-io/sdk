@@ -161,8 +161,8 @@ func ExampleStarts() {
 }
 
 // Create routes to visit seven landmarks in Kyoto using two vehicles. The
-// vehicles have starting and ending locations. Vehicle v1 starts at a point
-// with no ending being set. Vehicle v2 starts and ends at the same geographical
+// vehicles have starting and ending locations. ModelVehicle v1 starts at a point
+// with no ending being set. ModelVehicle v2 starts and ends at the same geographical
 // position. Endings could also be set as a standalone option.
 func ExampleEnds() {
 	// Define stops and vehicles.
