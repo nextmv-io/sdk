@@ -69,7 +69,7 @@ type Model interface {
 	// NewPlanSingleStop creates a new plan single stop. A plan single stop
 	// is a plan cluster of a single stop. A plan cluster is a collection of
 	// stops which are always planned and unplanned as a single entity.
-	NewPlanSingleStop(stop ModelStop) ModelPlanSingleStop
+	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
 
 	// NewStop creates a new stop. The stop is used to create plan clusters.
 	NewStop(location common.Location) (ModelStop, error)

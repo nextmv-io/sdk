@@ -64,6 +64,13 @@ type Move interface {
 	// using Solution.Score after the move has been executed.
 	Value() float64
 
+	// ValueSeen returns the number of times the value of this move has been
+	// seen by the estimates. A tie-breaker is a mechanism used to resolve
+	// situations where multiple moves have the same value. In cases where the
+	// same value is seen multiple times, a tie-breaker is applied to ensure
+	// that each option has an equal chance of being selected.
+	ValueSeen() int
+
 	// Vehicle returns the vehicle, if known, that is affected by the move. If
 	// not known, nil is returned.
 	Vehicle() SolutionVehicle

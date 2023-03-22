@@ -39,9 +39,7 @@ var (
 		string,
 		float64,
 	) FromToExpression
-	newHaversineExpression func(
-		bool,
-	) DistanceExpression
+	newHaversineExpression  func() DistanceExpression
 	newAttributesConstraint func() (AttributesConstraint, error)
 	newInwardnessConstraint func() (InwardnessConstraint, error)
 	newLatestEnd            func(
