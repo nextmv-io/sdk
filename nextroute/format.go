@@ -1,32 +1,31 @@
 package nextroute
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/route"
 )
 
-// The JSONFormat interface is used to create custom JSON output.
-type JSONFormat interface {
-	ToJSON(Solution) ([]byte, error)
+// The Formatter interface is used to create custom JSON output.
+type Formatter interface {
+	ToOutput(Solution) any
 }
 
 // NewDefaultFormatter returns a default JSONFormatter to output solutions in
 // our default way.
-func NewDefaultFormatter() JSONFormat {
+func NewDefaultFormatter() Formatter {
 	return &defaultFormatter{}
 }
 
 type defaultFormatter struct{}
 
-func (f *defaultFormatter) ToJSON(s Solution) ([]byte, error) {
+func (f *defaultFormatter) ToOutput(s Solution) any {
 	// Process solutions of vehicles.
-	states := s.Vehicles()
-	vehicles := make([]VehicleOutput, len(states))
-	for v, state := range states {
-		vehicles[v] = output(state, v)
+	solutionVehicles := s.Vehicles()
+	vehicles := make([]VehicleOutput, len(solutionVehicles))
+	for v, state := range solutionVehicles {
+		vehicles[v] = output(state)
 	}
 
 	// Process unassigned stops.
@@ -48,19 +47,19 @@ func (f *defaultFormatter) ToJSON(s Solution) ([]byte, error) {
 		"vehicles":   vehicles,
 	}
 
-	return json.Marshal(v)
+	return v
 }
 
 // output constructs the output state of a vehicle.
-func output(v SolutionVehicle, index int) VehicleOutput {
+func output(v SolutionVehicle) VehicleOutput {
 	solutionRoute := v.SolutionStops()
 	ID := v.ModelVehicle().Name()
 
 	stops := make([]stopOutput, len(solutionRoute))
-	data := v.ModelVehicle().VehicleType().Data().(schema.Input)
-	hasShiftStart := data.Vehicles[index].ShiftStart != nil
-	hasStart := data.Vehicles[index].Start != nil
-	hasEnd := data.Vehicles[index].End != nil
+	data := v.ModelVehicle().VehicleType().Data().(schema.Vehicle)
+	hasShiftStart := data.ShiftStart != nil
+	hasStart := data.Start != nil
+	hasEnd := data.End != nil
 
 	// Prepare output route stops
 	for i := 0; i < len(solutionRoute); i++ {
@@ -69,11 +68,11 @@ func output(v SolutionVehicle, index int) VehicleOutput {
 		switch i {
 		case 0:
 			if hasStart {
-				stop = makeStop(ID, true, data.Vehicles[index].Start)
+				stop = makeStop(ID, true, data.Start)
 			}
 		case len(solutionRoute) - 1:
 			if hasEnd {
-				stop = makeStop(ID, false, data.Vehicles[index].End)
+				stop = makeStop(ID, false, data.End)
 			}
 		default:
 			stop = route.Stop{
