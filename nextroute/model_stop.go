@@ -48,6 +48,7 @@ type ModelStop interface {
 
 	// SetData sets the arbitrary data associated with the stop.
 	SetData(data any)
+
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(time time.Time)
 	// SetName sets the name of the stop.
