@@ -1,0 +1,95 @@
+{
+  "vehicles": ["v1", "v2", "v3"],
+  "velocities": [1.0, 1.0],
+  "unique_points": [
+    {
+      "lon": -74.04866,
+      "lat": 4.79018
+    },
+    {
+      "lon": -74.244215,
+      "lat": 4.693907
+    },
+    {
+      "lon": -74.139745,
+      "lat": 4.589886
+    },
+    {
+      "lon": -74.344219,
+      "lat": 4.386293
+    },
+    {
+      "lon": -74.444219,
+      "lat": 4.386293
+    }
+  ],
+  "unique_matrix": [
+    [0, 2.0, 3.0, 4.0, 4.5],
+    [5.0, 0, 7.0, 8.0, 8.5],
+    [8.0, 7.0, 0, 5.0, 4.5],
+    [4.0, 3.0, 2.0, 0, 0.5],
+    [4.0, 3.0, 2.0, 1.0, 0]
+  ],
+  "stops": [
+    {
+      "id": "West",
+      "reference": 1
+    },
+    {
+      "id": "North",
+      "reference": 2
+    },
+    {
+      "id": "East",
+      "reference": 3
+    },
+    {
+      "id": "South",
+      "reference": 4
+    },
+    {
+      "id": "North East",
+      "reference": 1
+    },
+    {
+      "id": "South West",
+      "reference": 2
+    },
+    {
+      "id": "North West",
+      "reference": 3
+    },
+    {
+      "id": "South East",
+      "reference": 4
+    }
+  ],
+  "starts": [
+    {
+      "id": "depot",
+      "reference": 0
+    },
+    {
+      "id": "depot",
+      "reference": 0
+    },
+    {
+      "id": "depot",
+      "reference": 0
+    }
+  ],
+  "ends": [
+    {
+      "id": "depot",
+      "reference": 0
+    },
+    {
+      "id": "depot",
+      "reference": 0
+    },
+    {
+      "id": "depot",
+      "reference": 0
+    }
+  ]
+}

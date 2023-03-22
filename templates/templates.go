@@ -229,4 +229,14 @@ var (
 	// TimeDependentReadme is the README.md file in the routing template.
 	//go:embed time-dependent-measure/README.md
 	TimeDependentReadme string
+
+	// UniqueMatrixMain is the main.go file in the routing template.
+	//go:embed unique-matrix-measure/main.go
+	UniqueMatrixMain string
+	// UniqueMatrixInput is the input.json file in the routing template.
+	//go:embed unique-matrix-measure/input.json
+	UniqueMatrixInput string
+	// UniqueMatrixReadme is the README.md file in the routing template.
+	//go:embed unique-matrix-measure/README.md
+	UniqueMatrixReadme string
 )

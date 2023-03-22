@@ -41,7 +41,7 @@ func IsTriangular(m any) bool {
 // Times holds the estimated time of arrival (ETA), estimated time of when
 // service starts (ETS) and estimated time of departure (ETD).
 type Times struct {
-	EstimatedArrival      []int `json:"estimated_arrival"`
-	EstimatedServiceStart []int `json:"estimated_service_start"`
-	EstimatedDeparture    []int `json:"estimated_departure"`
+	EstimatedArrival      []int `json:"estimated_arrival,omitempty"`
+	EstimatedServiceStart []int `json:"estimated_service_start,omitempty"`
+	EstimatedDeparture    []int `json:"estimated_departure,omitempty"`
 }

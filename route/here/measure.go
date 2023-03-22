@@ -94,6 +94,17 @@ func NewClient(apiKey string, opts ...ClientOption) Client {
 	return c
 }
 
+func cleanPoints(points []route.Point) []route.Point {
+	cleanPoints := make([]route.Point, len(points))
+	copy(cleanPoints, points)
+	for i, p := range cleanPoints {
+		if len(p) == 2 && p[0] == 0 && p[1] == 0 {
+			cleanPoints[i] = route.Point{}
+		}
+	}
+	return cleanPoints
+}
+
 // DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 // if there are more than 500 points given.
 func (c *client) DistanceMatrix(
@@ -101,6 +112,7 @@ func (c *client) DistanceMatrix(
 	points []route.Point,
 	opts ...MatrixOption,
 ) (route.ByIndex, error) {
+	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		distances, _, err := c.fetchMatricesAsync(ctx, points, true, false, opts)
 		return distances, err
@@ -116,6 +128,7 @@ func (c *client) DurationMatrix(
 	points []route.Point,
 	opts ...MatrixOption,
 ) (route.ByIndex, error) {
+	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		_, durations, err := c.fetchMatricesAsync(
 			ctx, points, false, true, opts)
@@ -132,6 +145,7 @@ func (c *client) DistanceDurationMatrices(
 	points []route.Point,
 	opts ...MatrixOption,
 ) (distances, durations route.ByIndex, err error) {
+	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		return c.fetchMatricesAsync(ctx, points, true, true, opts)
 	}
