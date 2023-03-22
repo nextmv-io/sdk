@@ -6,16 +6,26 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// NewEmptyMove returns a new empty move. An empty move is a move that does not
+// NewNotExecutableMove returns a new empty move. An empty move is a move that does not
 // change the solution and it is not executable.
-func NewEmptyMove() Move {
-	connect.Connect(con, &newEmptyMove)
-	return newEmptyMove()
+func NewNotExecutableMove() Move {
+	connect.Connect(con, &newNotExecutableMove)
+	return newNotExecutableMove()
 }
 
 // Move is a move in a solution. A move is a change in the solution that can be
 // executed. A move can be executed if it is executable.
 type Move interface {
+	// AfterStop returns the stop after which the first to be planned stop
+	// is supposed to be planned. The first to be planned stop is the first
+	// stop in the stop positions which is the first stop in the cluster.
+	AfterStop() SolutionStop
+
+	// BeforeStop returns the stop before which the last to be planned stop
+	// is supposed to be planned. The last to be planned stop is the last
+	// stop in the stop positions which is the last stop in the cluster.
+	BeforeStop() SolutionStop
+
 	// Execute executes the move. Returns true if the move was executed
 	// successfully, false if the move was not executed successfully. A
 	// move is not successful if it did not result in a change in the
@@ -28,6 +38,11 @@ type Move interface {
 	// the move will result in a change in the solution without violating
 	// any hard constraints.
 	IsExecutable() bool
+
+	// IsImprovement returns true if the move is executable and the move
+	// has a value less than zero, false if the move is not executable or
+	// the move has a value of zero or greater than zero.
+	IsImprovement() bool
 
 	// PlanCluster returns the plan cluster that is affected by the move.
 	PlanCluster() SolutionPlanCluster
@@ -48,6 +63,10 @@ type Move interface {
 	// the actual score of the solution after the move should be retrieved
 	// using Solution.Score after the move has been executed.
 	Value() float64
+
+	// Vehicle returns the vehicle, if known, that is affected by the move. If
+	// not known, nil is returned.
+	Vehicle() SolutionVehicle
 }
 
 // StopPosition is the definition of the change in the solution for a
@@ -58,6 +77,9 @@ type Move interface {
 // unplanned set to the planned set by positioning it directly before the
 // BeforeStop.
 type StopPosition interface {
+	// AfterStop returns the stop after which Stop will be inserted.
+	AfterStop() SolutionStop
+
 	// BeforeStop returns the stop which is already part of the solution.
 	BeforeStop() SolutionStop
 	// Stop returns the stop which is not yet part of the solution.

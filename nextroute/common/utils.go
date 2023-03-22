@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sync"
 	"time"
 )
 
@@ -63,6 +64,49 @@ func FindIndex[E any](s []E, predicate func(E) bool) int {
 		}
 	}
 	return -1
+}
+
+// AllTrue returns true if all the given predicate evaluations are true.
+func AllTrue[E any](s []E, predicate func(E) bool) bool {
+	return All(s, true, predicate)
+}
+
+// AllFalse returns true if all the given predicate evaluations is false.
+func AllFalse[E any](s []E, predicate func(E) bool) bool {
+	return All(s, false, predicate)
+}
+
+// All returns true if all the given predicate evaluations evaluate to
+// condition.
+func All[E any](s []E, condition bool, predicate func(E) bool) bool {
+	for _, v := range s {
+		if predicate(v) != condition {
+			return false
+		}
+	}
+	return true
+}
+
+// HasTrue returns true if any of the given predicate evaluations evaluate to
+// true.
+func HasTrue[E any](s []E, predicate func(E) bool) bool {
+	return Has(s, true, predicate)
+}
+
+// HasFalse returns true if any of the given predicate evaluations evaluate to
+// false.
+func HasFalse[E any](s []E, predicate func(E) bool) bool {
+	return Has(s, false, predicate)
+}
+
+// Has returns true if any of the given predicate evaluations is condition.
+func Has[E any](s []E, condition bool, predicate func(E) bool) bool {
+	for _, v := range s {
+		if predicate(v) == condition {
+			return true
+		}
+	}
+	return false
 }
 
 // DefensiveCopy returns a defensive copy of a slice.
@@ -203,5 +247,24 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 			indicesUsed[index] = true
 			return index
 		}
+	}
+}
+
+// Lazy is a function that returns a value of type T. The value is only
+// calculated once, and the result is cached for subsequent calls.
+type Lazy[T any] func() T
+
+// DefineLazy returns a Lazy[T] that will call the given function to
+// calculate the value. The value is only calculated once, and the result
+// is cached for subsequent calls.
+func DefineLazy[T any](f func() T) Lazy[T] {
+	var value T
+	var once sync.Once
+	return func() T {
+		once.Do(func() {
+			value = f()
+			f = nil
+		})
+		return value
 	}
 }

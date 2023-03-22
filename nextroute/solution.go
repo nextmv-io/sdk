@@ -28,19 +28,6 @@ type Solution interface {
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanCluster) Move
 
-	// EstimateDeltaScore estimates the delta score of the solution if the given
-	// stop positions are moved. The delta score is the difference between the
-	// score of the solution before the move and the score of the solution after
-	// the move. The delta score is an estimate as the score of the solution
-	// after the move is not calculated but estimated. The estimate is based on
-	// ModelObjective.EstimateDeltaScore.
-	EstimateDeltaScore(
-		stopPositions StopPositions,
-	) (deltaScore float64,
-		feasible bool,
-		planPositionsHint StopPositionsHint,
-	)
-
 	// Model returns the model of the solution.
 	Model() Model
 
@@ -56,6 +43,8 @@ type Solution interface {
 	SolutionPlanCluster(planCluster ModelPlanCluster) SolutionPlanCluster
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
+	// SolutionVehicle returns the solution vehicle for the given model vehicle.
+	SolutionVehicle(vehicle ModelVehicle) SolutionVehicle
 
 	// UnplannedPlanClusters returns the solution plan clusters that are not
 	// planned.

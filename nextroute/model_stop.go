@@ -8,6 +8,8 @@ import (
 
 // ModelStop is a stop to be assigned to a vehicle.
 type ModelStop interface {
+	ModelData
+
 	// ClosestStops returns a slice containing the closest stops to the
 	// invoking stop. The slice is sorted by increasing distance to the
 	// location. The slice first stop is the stop itself. The distance used
@@ -15,10 +17,6 @@ type ModelStop interface {
 	// in the model are used in the slice. Slice with similar distance are
 	// sorted by their index (increasing).
 	ClosestStops() ModelStops
-
-	// Data returns the arbitrary data associated with the stop. Can be set
-	// using the StopData StopOption.
-	Data() any
 
 	// HasPlanCluster returns true if the stop belongs to a plan cluster.
 	HasPlanCluster() bool
@@ -46,8 +44,6 @@ type ModelStop interface {
 	// cluster.
 	PlanCluster() ModelPlanCluster
 
-	// SetData sets the arbitrary data associated with the stop.
-	SetData(data any)
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(time time.Time)
 	// SetName sets the name of the stop.

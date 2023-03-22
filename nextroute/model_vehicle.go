@@ -4,6 +4,8 @@ import "time"
 
 // ModelVehicle is a vehicle in the model. A vehicle is a sequence of stops.
 type ModelVehicle interface {
+	ModelData
+
 	// First returns the first stop of the vehicle.
 	First() ModelStop
 

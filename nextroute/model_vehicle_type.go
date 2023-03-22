@@ -5,10 +5,8 @@ package nextroute
 // that are used to calculate the travel and process duration of a stop
 // assignment to a vehicle of this type.
 type ModelVehicleType interface {
-	// Data returns the arbitrary data associated with the vehicle type. Can be
-	// set using the VehicleTypeData VehicleTypeOption in the factory method
-	// Model.NewVehicleType.
-	Data() any
+	ModelData
+
 	// Index returns the index of the vehicle type.
 	Index() int
 
@@ -20,8 +18,6 @@ type ModelVehicleType interface {
 	// Model.NewVehicleType.
 	ProcessDurationExpression() DurationExpression
 
-	// SetData sets the arbitrary data associated with the vehicle type.
-	SetData(data any)
 	// TravelDurationExpression returns the travel duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.

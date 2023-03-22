@@ -14,6 +14,12 @@ type ConstraintReporter interface {
 	ReportConstraint(SolutionStop) map[string]any
 }
 
+// Locker is an interface for locking a constraint.
+type Locker interface {
+	// Lock locks the constraint on locking a model.
+	Lock(model Model)
+}
+
 // ConstraintDataUpdater is the interface than can be used by a constraint if
 // it wants to store data with each stop in a solution.
 type ConstraintDataUpdater interface {
@@ -93,9 +99,7 @@ type ModelConstraint interface {
 	// i.e. not change any state of the constraint. The stopPositionsHint can
 	// The stopPositionsHint can be used to speed up the estimation of the
 	// constraint violation.
-	EstimateIsViolated(
-		stopPositions StopPositions,
-	) (isViolated bool, stopPositionsHint StopPositionsHint)
+	EstimateIsViolated(Move) (isViolated bool, stopPositionsHint StopPositionsHint)
 
 	// Index returns the index of the constraint. The index should be
 	// unique for each constraint.

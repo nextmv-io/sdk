@@ -19,8 +19,8 @@ type ModelObjective interface {
 	RegisteredModelExpressions
 
 	// EstimateDeltaValue returns the estimated change in the score if the given
-	// visit positions are changed.
-	EstimateDeltaValue(visitPositions StopPositions) float64
+	// move would be executed.
+	EstimateDeltaValue(move Move) float64
 
 	// Index returns the index of the objective. The index is unique for each
 	// objective. The index is used to identify the objective in the

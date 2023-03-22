@@ -41,6 +41,21 @@ func (l Locations) Unique() Locations {
 	return result
 }
 
+// Centroid returns the centroid of the locations. If locations is empty, the
+// centroid will be (0, 0).
+func (l Locations) Centroid() Location {
+	if len(l) == 0 {
+		return NewLocation(0, 0)
+	}
+	lat := 0.0
+	lon := 0.0
+	for _, location := range l {
+		lat += location.latitude
+		lon += location.longitude
+	}
+	return NewLocation(lon/float64(len(l)), lat/float64(len(l)))
+}
+
 // Location represents a location on the earth.
 type Location struct {
 	longitude float64

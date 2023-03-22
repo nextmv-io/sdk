@@ -9,14 +9,11 @@ import (
 
 // SolutionVehicle is a vehicle in a solution.
 type SolutionVehicle interface {
-	// AddAfterFirst creates a move that adds the given plan cluster to the
+	// FirstMove creates a move that adds the given plan cluster to the
 	// vehicle after the first solution stop of the vehicle. The move is
-	// not necessarily executable, Move.IsExecutable.
-	AddAfterFirst(SolutionPlanCluster) Move
-	// AddBeforeLast creates a move that adds the given plan cluster to the
-	// vehicle before the last solution stop of the vehicle. The move is
-	// not necessarily executable, Move.IsExecutable.
-	AddBeforeLast(SolutionPlanCluster) Move
+	// first feasible move after the first solution stop based on the
+	// estimates of the constraint, this move is not necessarily executable.
+	FirstMove(SolutionPlanCluster) Move
 
 	// BestMove returns the best move for the given solution plan cluster on
 	// the invoking vehicle. The best move is the move that has the lowest

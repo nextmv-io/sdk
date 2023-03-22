@@ -30,7 +30,7 @@ var (
 		ModelExpression,
 		time.Duration,
 	) DurationExpression
-	newEmptyMove          func() Move
+	newNotExecutableMove  func() Move
 	newFromStopExpression func(
 		string,
 		float64,
@@ -80,13 +80,13 @@ var (
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
 	newModelObjectiveIndex  func() int
-	newNoStopPositionsHint  func() StopPositionsHint
+	noPositionsHint         func() StopPositionsHint
 	newOperatorExpression   func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,
 	) BinaryExpression
-	newSkipVehiclePositionsHint func(
+	skipVehiclePositionsHint func(
 		bool,
 	) StopPositionsHint
 	newStopExpression func(
