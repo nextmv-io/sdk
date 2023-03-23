@@ -13,10 +13,16 @@ type ModelVehicleType interface {
 	// Model returns the model of the vehicle type.
 	Model() Model
 
+	// Name returns the name of the vehicle.
+	Name() string
+
 	// ProcessDurationExpression returns the process duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
 	ProcessDurationExpression() DurationExpression
+
+	// SetName sets the name of the vehicle.
+	SetName(string)
 
 	// TravelDurationExpression returns the travel duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type

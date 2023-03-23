@@ -27,6 +27,9 @@ type ModelStop interface {
 	// Location returns the location of the stop.
 	Location() common.Location
 
+	// Model returns the model of the stop.
+	Model() Model
+
 	// Name returns the name of the stop.
 	Name() string
 
