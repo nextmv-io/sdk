@@ -133,6 +133,8 @@ var (
 		Model,
 	) (ParallelSolver, error)
 
+	newDefaultFormatter func() Formatter
+
 	newSolutionPlanClusterCollection func(
 		*rand.Rand,
 		SolutionPlanClusters,
