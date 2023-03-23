@@ -10,11 +10,12 @@ type Copier interface {
 	Copy() Copier
 }
 
+// ConstraintReporter is an interface used to report back constraints.
 type ConstraintReporter interface {
 	ReportConstraint(SolutionStop) map[string]any
 }
 
-// ConstraintDataUpdater is the interface than can be used by a constraint if
+// ConstraintDataUpdater is the interface that can be used by a constraint if
 // it wants to store data with each stop in a solution.
 type ConstraintDataUpdater interface {
 	// UpdateConstraintData is called when a stop is added to a solution.

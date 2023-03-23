@@ -1,8 +1,9 @@
 package nextroute
 
 import (
-	"github.com/nextmv-io/sdk/connect"
 	"time"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // PerformanceObserver is an interface that is used to observe the performance
@@ -15,6 +16,7 @@ type PerformanceObserver interface {
 	Report() string
 }
 
+// NewPerformanceObserver returns a new performance observer.
 func NewPerformanceObserver(model Model) PerformanceObserver {
 	connect.Connect(con, &newPerformanceObserver)
 	return newPerformanceObserver(model)
