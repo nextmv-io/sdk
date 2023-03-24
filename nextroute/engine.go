@@ -43,15 +43,23 @@ var (
 	newAttributesConstraint func() (AttributesConstraint, error)
 	newInwardnessConstraint func() (InwardnessConstraint, error)
 	newLatestEnd            func(
-		StopExpression,
+		StopTimeExpression,
 	) (LatestEnd, error)
 	newLatestStart func(
-		StopExpression,
+		StopTimeExpression,
 	) (LatestStart, error)
 	newMaximumConstraint func(
 		StopExpression,
 		VehicleTypeExpression,
 	) (MaximumConstraint, error)
+	newTimeExpression func(
+		ModelExpression,
+		time.Time,
+	) TimeExpression
+	newStopTimeExpression func(
+		string,
+		time.Time,
+	) StopTimeExpression
 	newStopDurationExpression func(
 		string,
 		time.Duration,

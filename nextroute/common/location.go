@@ -20,6 +20,7 @@ func NewLocation(
 	return Location{
 		longitude: longitude,
 		latitude:  latitude,
+		valid:     true,
 	}
 }
 
@@ -60,6 +61,7 @@ func (l Locations) Centroid() Location {
 type Location struct {
 	longitude float64
 	latitude  float64
+	valid     bool
 }
 
 func (l Location) String() string {
@@ -80,4 +82,8 @@ func (l Location) Latitude() float64 {
 
 func (l Location) Equals(other Location) bool {
 	return l.longitude == other.longitude && l.latitude == other.latitude
+}
+
+func (l Location) IsValid() bool {
+	return l.valid
 }

@@ -12,9 +12,9 @@ type LatestEnd interface {
 	ModelConstraint
 	ModelObjective
 
-	// Latest returns the latest end expression which defines the latest
+	// Latest returns the latest end time expression which defines the latest
 	// end of a stop.
-	Latest() StopExpression
+	Latest() StopTimeExpression
 
 	// Lateness returns the lateness of a stop. The lateness is the difference
 	Lateness(stop SolutionStop) float64
@@ -24,7 +24,7 @@ type LatestEnd interface {
 // the latest time a stop can end at the location of the stop. The LatestEnd
 // can be added to the model as a constraint or as an objective.
 func NewLatestEnd(
-	latestEnd StopExpression,
+	latestEnd StopTimeExpression,
 ) (LatestEnd, error) {
 	connect.Connect(con, &newLatestEnd)
 	return newLatestEnd(latestEnd)

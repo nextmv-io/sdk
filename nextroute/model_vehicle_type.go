@@ -24,10 +24,10 @@ type ModelVehicleType interface {
 	// SetName sets the name of the vehicle.
 	SetName(string)
 
-	// TravelDurationExpression returns the travel duration expression of the
+	// TravelDurationExpression returns the duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
-	TravelDurationExpression() TravelDurationExpression
+	TravelDurationExpression() DurationExpression
 
 	// Vehicles returns the vehicles of this vehicle type.
 	Vehicles() ModelVehicles

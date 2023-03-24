@@ -46,9 +46,6 @@ func (cost Cost) String() string {
 
 // Complexity is the interface for constraints that have a complexity.
 type Complexity interface {
-	// CheckCost returns the cost of the Check function.
-	CheckCost() Cost
-
 	// EstimationCost returns the cost of the Estimation function.
 	EstimationCost() Cost
 }

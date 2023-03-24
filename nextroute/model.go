@@ -64,7 +64,6 @@ type Model interface {
 	// collection of stops which are always planned and unplanned as a
 	// single entity. In this case they have to be planned as a sequence on
 	// the same vehicle.
-
 	NewPlanSequence(stops ModelStops) (ModelPlanSequence, error)
 	// NewPlanSingleStop creates a new plan single stop. A plan single stop
 	// is a plan cluster of a single stop. A plan cluster is a collection of
@@ -85,7 +84,7 @@ type Model interface {
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
-		travelDuration TravelDurationExpression,
+		travelDuration DurationExpression,
 		processDuration DurationExpression,
 	) (ModelVehicleType, error)
 

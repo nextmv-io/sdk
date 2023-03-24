@@ -14,7 +14,7 @@ type LatestStart interface {
 
 	// Latest returns the latest start expression which defines the latest
 	// start of a stop.
-	Latest() StopExpression
+	Latest() StopTimeExpression
 
 	// Lateness returns the lateness of a stop. The lateness is the difference
 	Lateness(stop SolutionStop) float64
@@ -24,7 +24,7 @@ type LatestStart interface {
 // constraint or as an objective. The latest start of a stop is the latest time
 // a stop can start at the location of the stop.
 func NewLatestStart(
-	latest StopExpression,
+	latest StopTimeExpression,
 ) (LatestStart, error) {
 	connect.Connect(con, &newLatestStart)
 	return newLatestStart(latest)

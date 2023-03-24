@@ -14,7 +14,9 @@ type ConstraintReporter interface {
 	ReportConstraint(SolutionStop) map[string]any
 }
 
-// Locker is an interface for locking a constraint.
+// Locker is an interface for locking a constraint. This interface is called
+// when the model is locked. The constraint can use this to initialize data
+// structures that are used to check the constraint.
 type Locker interface {
 	// Lock locks the constraint on locking a model.
 	Lock(model Model)
@@ -39,19 +41,12 @@ type RegisteredModelExpressions interface {
 	ModelExpressions() ModelExpressions
 }
 
-// ComputationalEffort is the interface that can be implemented by a constraint
-// to indicate the computational effort of checking the constraint.
-type ComputationalEffort interface {
-	ComputationalEffortForCheck() Cost
-}
-
 // SolutionStopViolationCheck is the interface that will be invoked on every
 // update of a planned solution stop. The method DoesStopHaveViolations will be
 // called to check if the stop violates the constraint. If the method returns
 // true the solution will not be accepted. If un-planning can result in a
 // violation of the constraint one of the violation checks must be implemented.
 type SolutionStopViolationCheck interface {
-	ComputationalEffort
 	// DoesStopHaveViolations returns true if the stop violates the constraint.
 	// The stop is not allowed to be nil. The stop must be part of the solution.
 	// This method is only called if CheckedAt returns AtEachStop.
@@ -65,7 +60,6 @@ type SolutionStopViolationCheck interface {
 // If un-planning can result in a violation of the constraint one of the
 // violation checks must be implemented.
 type SolutionVehicleViolationCheck interface {
-	ComputationalEffort
 	// DoesVehicleHaveViolations returns true if the vehicle violates the
 	// constraint. The vehicle is not allowed to be nil. The vehicle must be
 	// part of the solution. This method is only called if CheckedAt returns
@@ -80,7 +74,6 @@ type SolutionVehicleViolationCheck interface {
 // If un-planning can result in a violation of the constraint one of the
 // violation checks must be implemented.
 type SolutionViolationCheck interface {
-	ComputationalEffort
 	// DoesSolutionHaveViolations returns true if the solution violates the
 	// constraint. The solution is not allowed to be nil. This method is only
 	// called if CheckedAt returns AtEachSolution.

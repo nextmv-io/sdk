@@ -8,6 +8,10 @@ import (
 // Haversine formula. Haversine is a good approximation for short
 // distances (up to a few hundred kilometers).
 func Haversine(from, to Location) Distance {
+	if !from.valid || !to.valid {
+		return NewDistance(0, Meters)
+	}
+
 	x1 := degreesToRadian(from.Longitude())
 	y1 := degreesToRadian(from.Latitude())
 	x2 := degreesToRadian(to.Longitude())

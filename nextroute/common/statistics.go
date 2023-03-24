@@ -59,7 +59,7 @@ func median(data []float64) (float64, error) {
 	if length == 0 {
 		return math.NaN(), fmt.Errorf("no data")
 	} else if length%2 == 0 {
-		return (data[length/2-1] + data[length/2+1]) / 2.0, nil
+		return (data[length/2-1] + data[length/2]) / 2.0, nil
 	}
 
 	return data[length/2], nil
@@ -68,8 +68,10 @@ func median(data []float64) (float64, error) {
 // NewStatistics creates a new statistics object.
 func NewStatistics[T any](v []T, f func(T) float64) Statistics {
 	statistics := Statistics{
-		Maximum: -math.MaxFloat64,
-		Minimum: math.MaxFloat64,
+		Maximum:      -math.MaxFloat64,
+		MaximumIndex: -1,
+		Minimum:      math.MaxFloat64,
+		MinimumIndex: -1,
 	}
 	length := len(v)
 
