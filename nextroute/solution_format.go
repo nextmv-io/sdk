@@ -10,15 +10,15 @@ type Formatter interface {
 	ToOutput(Solution) any
 }
 
-// NewDefaultFormatter creates a new NewDefaultFormatter.
-func NewDefaultFormatter() Formatter {
+// NewBasicFormatter creates a new NewBasicFormatter.
+func NewBasicFormatter() Formatter {
 	connect.Connect(con, &newDefaultFormatter)
 	return newDefaultFormatter()
 }
 
-// NewExtensiveFormatter creates a NewExtensiveFormatter which outputs
+// NewVerboseFormatter creates a NewVerboseFormatter which outputs
 // additional solution information.
-func NewExtensiveFormatter(p []alns.ProgressionEntry) Formatter {
+func NewVerboseFormatter(p []alns.ProgressionEntry) Formatter {
 	connect.Connect(con, &newExtensiveFormatter)
 	return newExtensiveFormatter(p)
 }
