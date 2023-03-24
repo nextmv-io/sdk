@@ -134,8 +134,8 @@ var (
 		Model,
 	) (ParallelSolver, error)
 
-	newDefaultFormatter   func() Formatter
-	newExtensiveFormatter func([]alns.ProgressionEntry) Formatter
+	newBasicFormatter   func() Formatter
+	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
 
 	newSolutionPlanClusterCollection func(
 		*rand.Rand,

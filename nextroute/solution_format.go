@@ -12,13 +12,13 @@ type Formatter interface {
 
 // NewBasicFormatter creates a new NewBasicFormatter.
 func NewBasicFormatter() Formatter {
-	connect.Connect(con, &newDefaultFormatter)
-	return newDefaultFormatter()
+	connect.Connect(con, &newBasicFormatter)
+	return newBasicFormatter()
 }
 
 // NewVerboseFormatter creates a NewVerboseFormatter which outputs
 // additional solution information.
 func NewVerboseFormatter(p []alns.ProgressionEntry) Formatter {
-	connect.Connect(con, &newExtensiveFormatter)
-	return newExtensiveFormatter(p)
+	connect.Connect(con, &newVerboseFormatter)
+	return newVerboseFormatter(p)
 }
