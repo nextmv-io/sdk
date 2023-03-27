@@ -121,8 +121,9 @@ var (
 	newUnPlannedObjective      func(
 		StopExpression,
 	) UnPlannedObjective
-	newSolverFactory     func() SolverFactory
-	newVehiclesObjective func(
+	newExpressionObjective func(ModelExpression) ExpressionObjective
+	newSolverFactory       func() SolverFactory
+	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
 	newVehicleTypeExpression func(
