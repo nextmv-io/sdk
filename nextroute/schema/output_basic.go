@@ -6,6 +6,13 @@ import (
 	"github.com/nextmv-io/sdk/route"
 )
 
+// JSONBasicSolution represents a solutions as JSON.
+type JSONBasicSolution struct {
+	Unassigned []route.Stop    `json:"unassigned"`
+	Vehicles   []VehicleOutput `json:"vehicles"`
+	Objective  JSONObjective   `json:"objective"`
+}
+
 // VehicleOutput holds the solution of the ModelVehicle Routing Problem.
 type VehicleOutput struct {
 	ID            string       `json:"id"`
