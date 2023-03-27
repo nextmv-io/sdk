@@ -41,6 +41,9 @@ type ModelObjectiveSum interface {
 	// Add adds an objective to the sum.
 	Add(factor float64, objective ModelObjective) error
 
+	// Model returns the model that the objective belongs to.
+	Model() Model
+
 	// ModelObjectives returns the model objectives that are part of the sum.
 	ModelObjectives() ModelObjectives
 }

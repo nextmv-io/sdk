@@ -26,9 +26,22 @@ type SolutionVehicle interface {
 	// end stops.
 	Centroid() common.Location
 
-	// EndTime returns the end time of the vehicle. The end time is the time
+	// Duration returns the duration of the vehicle. The duration is the
+	// time the vehicle is on the road. The duration is the time between
+	// the start time and the end time.
+	Duration() time.Duration
+	// DurationValue returns the duration value of the vehicle. The duration
+	// value is the value of the duration of the vehicle. The duration value
+	// is the value in model duration units.
+	DurationValue() float64
+
+	// End returns the end time of the vehicle. The end time is the time
 	// the vehicle ends at the end stop.
-	EndTime() time.Time
+	End() time.Time
+	// EndValue returns the end value of the vehicle. The end value is the
+	// value of the end of the last stop. The end value is the value in
+	// model duration units since the model epoch.
+	EndValue() float64
 
 	// First returns the first stop of the vehicle. The first stop is the
 	// start stop.
@@ -52,10 +65,14 @@ type SolutionVehicle interface {
 	// SolutionStops returns the stops in the vehicle. The start and end
 	// stops are included in the returned stops.
 	SolutionStops() SolutionStops
-	// StartTime returns the start time of the vehicle. The start time is
+	// Start returns the start time of the vehicle. The start time is
 	// the time the vehicle starts at the start stop, it has been set
 	// in the factory method of the vehicle Solution.NewVehicle.
-	StartTime() time.Time
+	Start() time.Time
+	// StartValue returns the start value of the vehicle. The start value
+	// is the value of the start of the first stop. The start value is
+	// the value in model duration units since the model epoch.
+	StartValue() float64
 
 	// ModelVehicle returns the modeled vehicle type of the vehicle.
 	ModelVehicle() ModelVehicle
