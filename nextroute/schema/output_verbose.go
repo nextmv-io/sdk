@@ -6,59 +6,68 @@ import (
 	"github.com/nextmv-io/sdk/alns"
 )
 
-type JsonSolution struct {
+// JSONSolution represents a solutions as JSON.
+type JSONSolution struct {
 	Epoch       time.Time               `json:"epoch"`
-	Unplanned   []JsonModelStop         `json:"unplanned"`
-	Vehicles    []JsonVehicle           `json:"vehicles"`
+	Unplanned   []JSONModelStop         `json:"unplanned"`
+	Vehicles    []JSONVehicle           `json:"vehicles"`
 	Progression []alns.ProgressionEntry `json:"progression"`
-	Objective   JsonObjective           `json:"objective"`
+	Objective   JSONObjective           `json:"objective"`
 }
 
-type JsonObjective struct {
+// JSONObjective represents an objective as JSON.
+type JSONObjective struct {
 	Name       string          `json:"name"`
-	Objectives []JsonObjective `json:"objectives"`
+	Objectives []JSONObjective `json:"objectives"`
 	Value      float64         `json:"value"`
 }
 
-type JsonVehicle struct {
+// JSONVehicle represents a vehicle as JSON.
+type JSONVehicle struct {
 	Start time.Time  `json:"start"`
 	End   time.Time  `json:"end"`
 	Name  string     `json:"name"`
-	Stops []JsonStop `json:"stops"`
+	Stops []JSONStop `json:"stops"`
 	Index int        `json:"index"`
 }
 
-type JsonModelStop struct {
+// JSONModelStop represents a model stop as JSON.
+type JSONModelStop struct {
 	Name     string       `json:"name"`
-	Location JsonLocation `json:"location"`
+	Location JSONLocation `json:"location"`
 	Index    int          `json:"index"`
 }
 
-type JsonStop struct {
+// JSONStop represents a stop as JSON.
+type JSONStop struct {
 	Slack             time.Duration         `json:"slack"`
 	Arrival           time.Time             `json:"arrival"`
 	EarliestStart     time.Time             `json:"earliest_start"`
 	Start             time.Time             `json:"start"`
 	End               time.Time             `json:"end"`
-	ExpressionValues  []JsonExpressionValue `json:"expression_values"`
-	ConstraintValues  []JsonConstraintValue `json:"constraint_values"`
+	ExpressionValues  []JSONExpressionValue `json:"expression_values"`
+	ConstraintValues  []JSONConstraintValue `json:"constraint_values"`
 	ConstraintReports []map[string]any      `json:"constraint_reports"`
-	JsonModelStop
+	JSONModelStop
 	Position       int           `json:"position"`
 	TravelDuration time.Duration `json:"travel_duration"`
 }
-type JsonExpressionValue struct {
+
+// JSONExpressionValue represents an expression value as JSON.
+type JSONExpressionValue struct {
 	Name       string  `json:"name"`
 	Value      float64 `json:"value"`
 	Cumulative float64 `json:"cumulative"`
 }
 
-type JsonConstraintValue struct {
+// JSONConstraintValue represents a value of a constraint.
+type JSONConstraintValue struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }
 
-type JsonLocation struct {
+// JSONLocation represents a location as JSON.
+type JSONLocation struct {
 	Lat float64 `json:"lat"`
 	Lon float64 `json:"lon"`
 }

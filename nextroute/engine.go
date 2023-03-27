@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -132,6 +133,9 @@ var (
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
+
+	newBasicFormatter   func() Formatter
+	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
 
 	newSolutionPlanClusterCollection func(
 		*rand.Rand,

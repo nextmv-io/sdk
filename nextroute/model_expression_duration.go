@@ -43,6 +43,8 @@ func NewConstantDurationExpression(
 	return newConstantDurationExpression(name, duration)
 }
 
+// VehicleTypeDurationExpression is an expression for that returns or sets the
+// duration for a given vehicle.
 type VehicleTypeDurationExpression interface {
 	ModelExpression
 	// Duration returns the duration for the given vehicle type

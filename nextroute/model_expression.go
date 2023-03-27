@@ -2,6 +2,7 @@ package nextroute
 
 import (
 	"fmt"
+
 	"github.com/nextmv-io/sdk/connect"
 )
 

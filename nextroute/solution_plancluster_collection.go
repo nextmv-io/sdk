@@ -1,8 +1,9 @@
 package nextroute
 
 import (
-	"github.com/nextmv-io/sdk/connect"
 	"math/rand"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // SolutionPlanClusterCollection is a collection of solution plan clusters.
@@ -17,6 +18,8 @@ type SolutionPlanClusterCollection interface {
 	Size() int
 }
 
+// NewSolutionPlanClusterCollection creates a new solution plan cluster
+// collection.
 func NewSolutionPlanClusterCollection(
 	source *rand.Rand,
 	planClusters SolutionPlanClusters,

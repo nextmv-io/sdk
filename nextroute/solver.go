@@ -7,6 +7,7 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
+// SolveOptions represents options for solving a problem.
 type SolveOptions struct {
 	Iterations        int           `json:"iterations"  usage:"number of iterations"`
 	MaximumDuration   time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
@@ -24,6 +25,7 @@ type Solver interface {
 	SolverOptions() SolverOptions
 }
 
+// IntParameterOptions represents integer parameter options.
 type IntParameterOptions struct {
 	StartValue               int  `json:"start_value"  usage:"start value"`
 	DeltaAfterIterations     int  `json:"delta_after_iterations"  usage:"delta after each iterations"`
@@ -34,6 +36,7 @@ type IntParameterOptions struct {
 	Zigzag                   bool `json:"zigzag"  usage:"zigzag between min and max value lik a jig saw"`
 }
 
+// SolverOptions represents solver options.
 type SolverOptions struct {
 	Unplan  IntParameterOptions `json:"unplan"  usage:"unplan parameter"`
 	Plan    IntParameterOptions `json:"plan"  usage:"plan parameter"`
@@ -46,11 +49,13 @@ type SolverFactory interface {
 	NewSolver(model Model) (Solver, error)
 }
 
+// NewSolverFactory creates a new solver factory.
 func NewSolverFactory() SolverFactory {
 	connect.Connect(con, &newSolverFactory)
 	return newSolverFactory()
 }
 
+// NewSolver creates a new solver.
 func NewSolver(
 	solution Solution,
 	options SolverOptions,
