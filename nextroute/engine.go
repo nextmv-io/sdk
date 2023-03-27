@@ -126,7 +126,7 @@ var (
 	) VehicleFromToExpression
 
 	newSolver func(
-		Solution,
+		Model,
 		SolverOptions,
 	) (Solver, error)
 

@@ -57,9 +57,9 @@ func NewSolverFactory() SolverFactory {
 
 // NewSolver creates a new solver.
 func NewSolver(
-	solution Solution,
+	model Model,
 	options SolverOptions,
 ) (Solver, error) {
 	connect.Connect(con, &newSolver)
-	return newSolver(solution, options)
+	return newSolver(model, options)
 }
