@@ -7,6 +7,7 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
+// ParallelSolveOptions are the options for the parallel solver.
 type ParallelSolveOptions struct {
 	MaximumDuration      time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
 	MaximumParallelRuns  int           `json:"maximum_parallel_runs"  usage:"maximum number of parallel runs, -1 implies using all available resources"`

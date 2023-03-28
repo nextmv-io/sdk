@@ -7,6 +7,25 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
+// NewSolverFactory creates a new SolverFactory. A SolverFactory can be used to
+// create a new solver.
+func NewSolverFactory() SolverFactory {
+	connect.Connect(con, &newSolverFactory)
+	return newSolverFactory()
+}
+
+// NewSolver creates a new solver. The solver can be used to solve a solution.
+// The solution passed to the solver is the starting point of the solver. The
+// solver will try to improve the solution.
+func NewSolver(
+	solution Solution,
+	options SolverOptions,
+) (Solver, error) {
+	connect.Connect(con, &newSolver)
+	return newSolver(solution, options)
+}
+
+// SolveOptions are the options for the solver.
 type SolveOptions struct {
 	Iterations        int           `json:"iterations"  usage:"number of iterations"`
 	MaximumDuration   time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
@@ -24,6 +43,7 @@ type Solver interface {
 	SolverOptions() SolverOptions
 }
 
+// IntParameterOptions are the options for an integer parameter.
 type IntParameterOptions struct {
 	StartValue               int  `json:"start_value"  usage:"start value"`
 	DeltaAfterIterations     int  `json:"delta_after_iterations"  usage:"delta after each iterations"`
@@ -34,6 +54,7 @@ type IntParameterOptions struct {
 	Zigzag                   bool `json:"zigzag"  usage:"zigzag between min and max value lik a jig saw"`
 }
 
+// SolverOptions are the options for the solver and it's operators.
 type SolverOptions struct {
 	Unplan  IntParameterOptions `json:"unplan"  usage:"unplan parameter"`
 	Plan    IntParameterOptions `json:"plan"  usage:"plan parameter"`
@@ -44,17 +65,4 @@ type SolverOptions struct {
 type SolverFactory interface {
 	// NewSolver creates a new solver.
 	NewSolver(model Model) (Solver, error)
-}
-
-func NewSolverFactory() SolverFactory {
-	connect.Connect(con, &newSolverFactory)
-	return newSolverFactory()
-}
-
-func NewSolver(
-	solution Solution,
-	options SolverOptions,
-) (Solver, error) {
-	connect.Connect(con, &newSolver)
-	return newSolver(solution, options)
 }

@@ -180,6 +180,16 @@ issues:
     - path: measure/bin_test\.go
       linters:
         - gocyclo
+        -
+    # Deactivate line length in solver.go because of go tags
+    - path: nextroute/solver\.go
+      linters:
+        - lll
+
+    # Deactivate line length in solver_parallel.go because of go tags
+    - path: nextroute/solver_parallel\.go
+      linters:
+        - lll
 
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go

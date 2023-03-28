@@ -1,9 +1,22 @@
 package nextroute
 
 import (
-	"github.com/nextmv-io/sdk/connect"
 	"math/rand"
+
+	"github.com/nextmv-io/sdk/connect"
 )
+
+// NewSolutionPlanClusterCollection creates a new SolutionPlanClusterCollection.
+// A SolutionPlanClusterCollection is a collection of solution plan clusters. It
+// can be used to randomly draw a sample of solution plan clusters and remove
+// solution plan clusters from the collection.
+func NewSolutionPlanClusterCollection(
+	source *rand.Rand,
+	planClusters SolutionPlanClusters,
+) SolutionPlanClusterCollection {
+	connect.Connect(con, &newSolutionPlanClusterCollection)
+	return newSolutionPlanClusterCollection(source, planClusters)
+}
 
 // SolutionPlanClusterCollection is a collection of solution plan clusters.
 type SolutionPlanClusterCollection interface {
@@ -15,12 +28,4 @@ type SolutionPlanClusterCollection interface {
 	Remove(cluster SolutionPlanCluster)
 	// Size return the number of solution plan clusters in the collection.
 	Size() int
-}
-
-func NewSolutionPlanClusterCollection(
-	source *rand.Rand,
-	planClusters SolutionPlanClusters,
-) SolutionPlanClusterCollection {
-	connect.Connect(con, &newSolutionPlanClusterCollection)
-	return newSolutionPlanClusterCollection(source, planClusters)
 }

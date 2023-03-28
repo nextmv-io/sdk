@@ -6,24 +6,35 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// NewNotExecutableMove returns a new empty move. An empty move is a move that does not
-// change the solution and it is not executable.
+// NewNotExecutableMove returns a new empty move. An empty move is a move that
+// does not change the solution, and it is marked as not executable.
 func NewNotExecutableMove() Move {
 	connect.Connect(con, &newNotExecutableMove)
 	return newNotExecutableMove()
 }
 
 // Move is a move in a solution. A move is a change in the solution that can be
-// executed. A move can be executed if it is executable.
+// executed. A move can be executed which may or may not result in a change in
+// the solution. A move can be asked if it is executable, it is not executable
+// if it is incomplete or if it is not executable because the move is not
+// allowed. A move can be asked if it is an improvement, it is an improvement
+// if it is executable and the move has a value less than zero.
+// A move describes the change in the solution. The change in the solution
+// is described by the stop positions. The stop positions describe for each
+// stop in the associated cluster where in the existing solution the stop
+// is supposed to be placed. The stop positions are ordered by the order
+// of the stops in the cluster. The first stop in the cluster is the first
+// stop in the stop positions. The last stop in the cluster is the last
+// stop in the stop positions.
 type Move interface {
-	// AfterStop returns the stop after which the first to be planned stop
-	// is supposed to be planned. The first to be planned stop is the first
-	// stop in the stop positions which is the first stop in the cluster.
+	// AfterStop returns the planned stop after which the first to be planned
+	// stop is supposed to be planned. AfterStop is the same stop as the
+	// after stop of the first stop position.
 	AfterStop() SolutionStop
 
-	// BeforeStop returns the stop before which the last to be planned stop
-	// is supposed to be planned. The last to be planned stop is the last
-	// stop in the stop positions which is the last stop in the cluster.
+	// BeforeStop returns the planned stop before which the last to be planned
+	// stop is supposed to be planned. BeforeStop is the same stop as the
+	// before stop of the last stop position.
 	BeforeStop() SolutionStop
 
 	// Execute executes the move. Returns true if the move was executed
@@ -84,14 +95,21 @@ type Move interface {
 // unplanned set to the planned set by positioning it directly before the
 // BeforeStop.
 type StopPosition interface {
-	// AfterStop returns the stop after which Stop will be inserted.
+	// AfterStop returns the stop after which Stop will be inserted. AfterStop
+	// does not have to be planned yet if the invoking stop position is not the
+	// first stop position of a move.
 	AfterStop() SolutionStop
 
 	// BeforeStop returns the stop which is already part of the solution.
+	// BeforeStop does not have to be planned yet if the invoking stop position
+	// is not the last stop position of a move.
 	BeforeStop() SolutionStop
-	// Stop returns the stop which is not yet part of the solution.
+
+	// Stop returns the stop which is not yet part of the solution. This stop
+	// is not planned yet if the move where the invoking stop position belongs
+	// to, has not been executed yet.
 	Stop() SolutionStop
 }
 
-// StopPositions is a list of stop positions.
+// StopPositions is a slice of stop positions.
 type StopPositions []StopPosition
