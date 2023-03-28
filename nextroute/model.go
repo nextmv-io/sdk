@@ -6,12 +6,29 @@ import (
 
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/nextroute/schema"
 )
+
+// ModelFactory creates a new model.
+type ModelFactory interface {
+	NewModel(schema.Input, ModelOptions, ...Option) (Model, error)
+}
+
+// NewModelFactory creates a new model factory.
+func NewModelFactory() ModelFactory {
+	connect.Connect(con, &newModelFactory)
+	return newModelFactory()
+}
 
 // NewModel creates a new model. The model is used to define a routing problem.
 func NewModel() (Model, error) {
 	connect.Connect(con, &newModel)
 	return newModel()
+}
+
+// ModelOptions represents options for a model.
+type ModelOptions struct {
+	IgnoreUnplanned bool `json:"ignore_unplanned"  usage:"ignore unplanned penalties"`
 }
 
 // Model defines routing problem.

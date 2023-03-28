@@ -78,6 +78,7 @@ var (
 		measure.ByPoint,
 	) ModelExpression
 	newModel                func() (Model, error)
+	newModelFactory         func() ModelFactory
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
 	newModelObjectiveIndex  func() int
