@@ -114,7 +114,8 @@ func Example() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1243
+	//       "route_duration": 1243,
+	//       "route_distance": 12425
 	//     },
 	//     {
 	//       "id": "v2",
@@ -127,7 +128,8 @@ func Example() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }
@@ -237,7 +239,8 @@ func ExampleRouter_options() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 664
+	//       "route_duration": 664,
+	//       "route_distance": 6637
 	//     },
 	//     {
 	//       "id": "v2",
@@ -292,7 +295,8 @@ func ExampleRouter_options() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 1484
+	//       "route_duration": 1484,
+	//       "route_distance": 14830
 	//     }
 	//   ]
 	// }
@@ -435,7 +439,8 @@ func ExampleRouter_plan() {
 	//         }
 	//       }
 	//     ],
-	//     "route_duration": 795
+	//     "route_duration": 795,
+	//     "route_distance": 7944
 	//   },
 	//   {
 	//     "id": "v2",
@@ -448,7 +453,8 @@ func ExampleRouter_plan() {
 	//         }
 	//       }
 	//     ],
-	//     "route_duration": 0
+	//     "route_duration": 0,
+	//     "route_distance": 0
 	//   }
 	// ]
 }
@@ -518,7 +524,8 @@ func ExampleNewRouter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 328
+	//       "route_duration": 328,
+	//       "route_distance": 3280
 	//     },
 	//     {
 	//       "id": "v2",
@@ -531,7 +538,8 @@ func ExampleNewRouter() {
 	//           }
 	//         }
 	//       ],
-	//       "route_duration": 0
+	//       "route_duration": 0,
+	//       "route_distance": 0
 	//     }
 	//   ]
 	// }

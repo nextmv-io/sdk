@@ -18,11 +18,11 @@ func NewSolverFactory() SolverFactory {
 // The solution passed to the solver is the starting point of the solver. The
 // solver will try to improve the solution.
 func NewSolver(
-	solution Solution,
+	model Model,
 	options SolverOptions,
 ) (Solver, error) {
 	connect.Connect(con, &newSolver)
-	return newSolver(solution, options)
+	return newSolver(model, options)
 }
 
 // SolveOptions are the options for the solver.

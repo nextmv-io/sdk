@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -87,6 +88,7 @@ var (
 		measure.ByPoint,
 	) ModelExpression
 	newModel                func() (Model, error)
+	newModelFactory         func() ModelFactory
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
 	newModelObjectiveIndex  func() int
@@ -136,13 +138,16 @@ var (
 	) VehicleFromToExpression
 
 	newSolver func(
-		Solution,
+		Model,
 		SolverOptions,
 	) (Solver, error)
 
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
+
+	newBasicFormatter   func() Formatter
+	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
 
 	newSolutionPlanClusterCollection func(
 		*rand.Rand,
