@@ -10,14 +10,14 @@ import (
 // Input is the default input schema for nextroute.
 type Input struct {
 	// Options contains arbitrary options specified by the user.
-	Options        *any                 `json:"options,omitempty"`
-	Defaults       *Defaults            `json:"defaults,omitempty"`
-	Vehicles       []Vehicle            `json:"vehicles,omitempty"`
-	Stops          []Stop               `json:"stops,omitempty"`
-	StopGroups     [][]string           `json:"stop_groups,omitempty"`
-	AlternateStops []Stop               `json:"alternate_stops,omitempty"`
-	DurationGroups []route.ServiceGroup `json:"duration_groups,omitempty"`
-	DurationMatrix [][]float64          `json:"duration_matrix,omitempty"`
+	Options        *any                  `json:"options,omitempty"`
+	Defaults       *Defaults             `json:"defaults,omitempty"`
+	Vehicles       []Vehicle             `json:"vehicles,omitempty"`
+	Stops          []Stop                `json:"stops,omitempty"`
+	StopGroups     *[][]string           `json:"stop_groups,omitempty"`
+	AlternateStops *[]Stop               `json:"alternate_stops,omitempty"`
+	DurationGroups *[]route.ServiceGroup `json:"duration_groups,omitempty"`
+	DurationMatrix *[][]float64          `json:"duration_matrix,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -37,7 +37,7 @@ type VehicleDefaults struct {
 	MaxStops                *int            `json:"max_stops,omitempty"`
 	MaxDistance             *int            `json:"max_distance,omitempty"`
 	MaxDuration             *int            `json:"max_duration,omitempty"`
-	CompatibilityAttributes []string        `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string       `json:"compatibility_attributes,omitempty"`
 }
 
 // StopDefaults contains default values for stops.
@@ -62,14 +62,14 @@ type Vehicle struct {
 	ID                      string          `json:"id,omitempty"`
 	ShiftStart              *time.Time      `json:"shift_start,omitempty"`
 	ShiftEnd                *time.Time      `json:"shift_end,omitempty"`
-	CompatibilityAttributes []string        `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string       `json:"compatibility_attributes,omitempty"`
 	MaxStops                *int            `json:"max_stops,omitempty"`
 	MaxDistance             *int            `json:"max_distance,omitempty"`
 	MaxDuration             *int            `json:"max_duration,omitempty"`
 	StopDurationMultiplier  *float64        `json:"stop_duration_multiplier,omitempty"`
-	Backlog                 []string        `json:"backlog,omitempty"`
-	AlternateStops          []string        `json:"alternate_stops,omitempty"`
-	InitializationCost      int             `json:"initialization_cost,omitempty"`
+	Backlog                 *[]string       `json:"backlog,omitempty"`
+	AlternateStops          *[]string       `json:"alternate_stops,omitempty"`
+	InitializationCost      *int            `json:"initialization_cost,omitempty"`
 }
 
 // Stop represents a stop.
