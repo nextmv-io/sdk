@@ -191,6 +191,11 @@ issues:
       linters:
         - lll
 
+    # Deactivate line length in model.go because of go tags
+    - path: nextroute/model\.go
+      linters:
+        - lll
+
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go
       linters:

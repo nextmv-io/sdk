@@ -58,6 +58,9 @@ type SolutionVehicle interface {
 	// stop.
 	Last() SolutionStop
 
+	// ModelVehicle returns the modeled vehicle type of the vehicle.
+	ModelVehicle() ModelVehicle
+
 	// NumberOfStops returns the number of stops in the vehicle. The start
 	// and end stops are not considered.
 	NumberOfStops() int
@@ -73,9 +76,6 @@ type SolutionVehicle interface {
 	// is the value of the start of the first stop. The start value is
 	// the value in model duration units since the model epoch.
 	StartValue() float64
-
-	// ModelVehicle returns the modeled vehicle type of the vehicle.
-	ModelVehicle() ModelVehicle
 }
 
 // SolutionVehicles is a slice of solution vehicles.

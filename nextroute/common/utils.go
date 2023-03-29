@@ -49,9 +49,9 @@ func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
 
 // Map maps a slice of type T to a slice of type R using the function f.
 func Map[T any, R any](v []T, f func(T) R) []R {
-	var r []R
-	for _, x := range v {
-		r = append(r, f(x))
+	r := make([]R, len(v))
+	for idx, x := range v {
+		r[idx] = f(x)
 	}
 	return r
 }
