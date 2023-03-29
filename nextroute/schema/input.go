@@ -10,7 +10,7 @@ import (
 // Input is the default input schema for nextroute.
 type Input struct {
 	// Options contains arbitrary options specified by the user.
-	Options        *any                  `json:"options,omitempty"`
+	Options        any                   `json:"options,omitempty"`
 	Defaults       *Defaults             `json:"defaults,omitempty"`
 	Vehicles       []Vehicle             `json:"vehicles,omitempty"`
 	Stops          []Stop                `json:"stops,omitempty"`
