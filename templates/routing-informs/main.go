@@ -1,4 +1,4 @@
-// package main holds the implementation of the routing template.
+// package main holds the implementation of the cloud-routing template.
 package main
 
 import (
@@ -17,73 +17,125 @@ func main() {
 	}
 }
 
-// This struct describes the expected json input by the runner.
-// Features not needed can simply be deleted or commented out, but make
-// sure that the corresponding option in `solver` is also commented out.
-// In case you would like to support a different input format you can
-// change the struct as you see fit. You may need to change some code in
-// `solver` to use the new structure.
-type input struct {
-	Stops               []route.Stop       `json:"stops"`
-	Vehicles            []string           `json:"vehicles"`
-	InitializationCosts []float64          `json:"initialization_costs"`
-	Quantities          []int              `json:"quantities"`
-	Capacities          []int              `json:"capacities"`
-	Precedences         []route.Job        `json:"precedences"`
-	Windows             []route.Window     `json:"windows"`
-	Shifts              []route.TimeWindow `json:"shifts"`
-	Penalties           []int              `json:"penalties"`
-	VehicleAttributes   []route.Attributes `json:"vehicle_attributes"`
-	StopAttributes      []route.Attributes `json:"stop_attributes"`
-	Velocities          []float64          `json:"velocities"`
-	AlternateStops      []route.Alternate  `json:"alternate_stops"`
-	DurationLimits      []float64          `json:"duration_limits"`
-	ServiceTimes        []route.Service    `json:"service_times"`
-}
-
 // solver takes the input and solver options and constructs a routing solver.
 // All route features/options depend on the input format. Depending on your
 // goal you can add, delete or fix options or add more input validations. Please
 // see the [route package
 // documentation](https://pkg.go.dev/github.com/nextmv-io/sdk/route) for further
 // information on the options available to you.
-func solver(i input, opts store.Options) (store.Solver, error) {
+var solver = func(i input, opts store.Options) (store.Solver, error) {
 	// In case you directly expose the solver to untrusted, external input,
 	// it is advisable from a security point of view to add strong
 	// input validations before passing the data to the solver.
 
-	// Define base router.
-	router, err := route.NewRouter(
-		i.Stops,
+	err := i.prepareInputData()
+	if err != nil {
+		return nil, err
+	}
+
+	routerInput := i.transform()
+
+	timeMeasures, err := buildTravelTimeMeasures(
+		routerInput.Velocities,
 		i.Vehicles,
-		route.Velocities(i.Velocities),
-		route.Capacity(i.Quantities, i.Capacities),
-		route.Precedence(i.Precedences),
-		route.Shifts(i.Shifts),
-		route.Windows(i.Windows),
-		route.Unassigned(i.Penalties),
-		route.InitializationCosts(i.InitializationCosts),
-		route.LimitDurations(
-			i.DurationLimits,
-			true, /*ignoreTriangular*/
-		),
-		route.Attribute(i.VehicleAttributes, i.StopAttributes),
-		route.Services(i.ServiceTimes),
+		i.Stops,
+		routerInput.Starts,
+		routerInput.Ends,
+		i.durationGroupsDomains,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	// You can also fix solver options like the expansion limit below.
-	opts.Diagram.Expansion.Limit = 1
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
-	if opts.Limits.Duration == 0 {
-		opts.Limits.Duration = 10 * time.Second
+	// Define base router.
+	router, err := route.NewRouter(
+		routerInput.Stops,
+		routerInput.Vehicles,
+		route.Velocities(routerInput.Velocities),
+		route.Unassigned(routerInput.Penalties),
+		route.InitializationCosts(routerInput.InitializationCosts),
+		route.ValueFunctionMeasures(timeMeasures),
+		route.LimitDurations(
+			routerInput.DurationLimits,
+			true, /*ignoreTriangular*/
+		),
+	)
+	if err != nil {
+		return nil, err
 	}
 
-	return router.Solver(opts)
+	if len(routerInput.Windows) > 0 {
+		err = router.Options(route.Windows(routerInput.Windows))
+		if err != nil {
+			return nil, err
+		}
+	}
+	if len(routerInput.Shifts) > 0 {
+		err = router.Options(route.Shifts(routerInput.Shifts))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(routerInput.StopAttributes) > 0 &&
+		len(routerInput.VehicleAttributes) > 0 {
+		err = router.Options(
+			route.Attribute(
+				routerInput.VehicleAttributes,
+				routerInput.StopAttributes,
+			),
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(routerInput.ServiceTimes) > 0 {
+		err = router.Options(route.Services(routerInput.ServiceTimes))
+		if err != nil {
+			return nil, err
+		}
+	}
+	for kind := range routerInput.Kinds {
+		err = router.Options(
+			route.Capacity(
+				routerInput.Quantities[kind],
+				routerInput.Capacities[kind],
+			),
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// You can also fix solver options like the expansion limit below.
+	opts.Diagram.Expansion.Limit = 1
+	options := i.applySolveOptions(opts)
+
+	// If the duration limit is unset, we set it to 10s. You can configure
+	// longer solver run times here. For local runs there is no time limitation.
+	// If you want to make cloud runs for longer than 5 minutes, please contact:
+	// support@nextmv.io
+	if options.Limits.Duration == 0 {
+		options.Limits.Duration = 10 * time.Second
+	}
+
+	return router.Solver(options)
+}
+
+func (i *input) prepareInputData() error {
+	i.Stops = append(i.Stops, i.AlternateStops...)
+	i.applyVehicleDefaults()
+	i.applyStopDefaults()
+	// Handle dynamic fields
+	err := i.handleDynamics()
+	if err != nil {
+		return err
+	}
+	i.autoConfigureUnassigned()
+	err = i.makeDurationGroups()
+	if err != nil {
+		return err
+	}
+	return nil
 }
