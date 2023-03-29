@@ -18,15 +18,15 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
-	// RoutingInforms23 is the main.go file in the routing template.
-	//go:embed routing-informs23/main.go
-	RoutingInforms23 string
-	// RoutingInforms23Input is the input.json file in the routing template.
-	//go:embed routing-informs23/input.json
-	RoutingInforms23Input string
-	// RoutingInforms23Readme is the README.md file in the routing template.
-	//go:embed routing-informs23/README.md
-	RoutingInforms23Readme string
+	// RoutingInforms is the main.go file in the routing template.
+	//go:embed routing-informs/main.go
+	RoutingInforms string
+	// RoutingInformsInput is the input.json file in the routing template.
+	//go:embed routing-informs/input.json
+	RoutingInformsInput string
+	// RoutingInformsReadme is the README.md file in the routing template.
+	//go:embed routing-informs/README.md
+	RoutingInformsReadme string
 
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go
