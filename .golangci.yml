@@ -210,7 +210,7 @@ issues:
     - path: templates/cloud-routing/schema\.go
       linters:
         - gocyclo
-    - path: templates/cloud-routing/main\.go
+    - path: templates/cloud-routing/solver\.go
       linters:
         - gocyclo
     - path: templates/routing-informs/helper\.go
@@ -219,7 +219,7 @@ issues:
     - path: templates/routing-informs/schema\.go
       linters:
         - gocyclo
-    - path: templates/routing-informs/solver\.go
+    - path: templates/routing-informs/main\.go
       linters:
         - gocyclo
     - path: templates/pager-duty/main\.go
