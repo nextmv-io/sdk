@@ -17,6 +17,28 @@ func NewSolution(
 	return newSolution(m)
 }
 
+// NewRandomSolution creates a new solution. The solution is created from the
+// given model. The solution starts with an empty solution and will assign
+//
+//	a random plan cluster to a random vehicle. The remaining plan clusters
+//
+// are added to the solution in a random order at the best possible position.
+func NewRandomSolution(
+	m Model,
+) (Solution, error) {
+	connect.Connect(con, &newRandomSolution)
+	return newRandomSolution(m)
+}
+
+// NewSweepSolution creates a new solution. The solution is created from the
+// given model using a sweep construction heuristic.
+func NewSweepSolution(
+	m Model,
+) (Solution, error) {
+	connect.Connect(con, &newSweepSolution)
+	return newSweepSolution(m)
+}
+
 // Solution is a solution to a model.
 type Solution interface {
 	alns.Solution[Solution]

@@ -14,6 +14,8 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
+	newRandomSolution             func(Model) (Solution, error)
+	newSweepSolution              func(Model) (Solution, error)
 	newConstantDurationExpression func(
 		string,
 		time.Duration,
