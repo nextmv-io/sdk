@@ -93,7 +93,7 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 		vehicleDefaults.ShiftEnd = &routerInput.Shifts[0].End
 	}
 	if anyAndAllEqual(routerInput.VehicleAttributes) {
-		vehicleDefaults.CompatibilityAttributes = routerInput.VehicleAttributes[0].Attributes
+		vehicleDefaults.CompatibilityAttributes = &routerInput.VehicleAttributes[0].Attributes
 	}
 
 	defaults := Defaults{
