@@ -115,7 +115,7 @@ func Example() {
 	//         }
 	//       ],
 	//       "route_duration": 1243,
-	//       "route_distance": 12425
+	//       "route_distance": 12428
 	//     },
 	//     {
 	//       "id": "v2",
@@ -296,7 +296,7 @@ func ExampleRouter_options() {
 	//         }
 	//       ],
 	//       "route_duration": 1484,
-	//       "route_distance": 14830
+	//       "route_distance": 14834
 	//     }
 	//   ]
 	// }
@@ -440,7 +440,7 @@ func ExampleRouter_plan() {
 	//       }
 	//     ],
 	//     "route_duration": 795,
-	//     "route_distance": 7944
+	//     "route_distance": 7946
 	//   },
 	//   {
 	//     "id": "v2",
