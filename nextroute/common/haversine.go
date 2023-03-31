@@ -1,15 +1,17 @@
 package common
 
 import (
+	"fmt"
 	"math"
 )
 
 // Haversine calculates the distance between two locations using the
 // Haversine formula. Haversine is a good approximation for short
 // distances (up to a few hundred kilometers).
-func Haversine(from, to Location) Distance {
+func Haversine(from, to Location) (Distance, error) {
 	if !from.valid || !to.valid {
-		return NewDistance(0, Meters)
+		return Distance{},
+			fmt.Errorf("from (%v) or to (%v) are invalid", from.valid, to.valid)
 	}
 
 	x1 := degreesToRadian(from.Longitude())
@@ -27,7 +29,7 @@ func Haversine(from, to Location) Distance {
 	return NewDistance(
 		2*radius*math.Atan2(math.Sqrt(a), math.Sqrt(1-a)),
 		Meters,
-	)
+	), nil
 }
 
 func degreesToRadian(d float64) float64 {

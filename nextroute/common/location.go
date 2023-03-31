@@ -24,6 +24,14 @@ func NewLocation(
 	}
 }
 
+// NewInvalidLocation creates a new invalid Location. Longitude and latitude
+// are not important.
+func NewInvalidLocation() Location {
+	return Location{
+		valid: false,
+	}
+}
+
 // Locations is a slice of Location.
 type Locations []Location
 
