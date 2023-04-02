@@ -57,7 +57,7 @@ type Solution interface {
 	ObjectiveValue() float64
 
 	// PlannedPlanClusters returns the solution plan clusters that are planned.
-	PlannedPlanClusters() SolutionPlanClusters
+	PlannedPlanClusters() ImmutableSolutionPlanClusterCollection
 
 	// SolutionPlanCluster returns the solution plan cluster for the given
 	// model plan cluster.
@@ -67,9 +67,9 @@ type Solution interface {
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.
 	SolutionVehicle(vehicle ModelVehicle) SolutionVehicle
 
-	// UnplannedPlanClusters returns the solution plan clusters that are not
+	// UnPlannedPlanClusters returns the solution plan clusters that are not
 	// planned.
-	UnplannedPlanClusters() SolutionPlanClusters
+	UnPlannedPlanClusters() ImmutableSolutionPlanClusterCollection
 
 	// Vehicles returns the vehicles of the solution.
 	Vehicles() SolutionVehicles
