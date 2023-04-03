@@ -76,6 +76,10 @@ type SolutionVehicle interface {
 	// is the value of the start of the first stop. The start value is
 	// the value in model duration units since the model epoch.
 	StartValue() float64
+
+	// Unplan removes all stops from the vehicle. The start and end stops
+	// are not removed. Fixed stops are not removed.
+	Unplan() (bool, error)
 }
 
 // SolutionVehicles is a slice of solution vehicles.
