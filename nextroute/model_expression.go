@@ -20,6 +20,9 @@ type ModelExpression interface {
 	// Value returns the value of the expression for the given vehicle type,
 	// from stop and to stop.
 	Value(ModelVehicleType, ModelStop, ModelStop) float64
+
+	// SetName sets the name of the expression.
+	SetName(string)
 }
 
 // ModelExpressions is a slice of ModelExpression.
