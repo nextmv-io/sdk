@@ -17,6 +17,10 @@ type SolutionPlanCluster interface {
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionStops returns the solution stops in this cluster.
 	SolutionStops() SolutionStops
+	// StopPositions returns the stop positions of the invoking plan cluster.
+	// The stop positions are the positions of the stops in the solution.
+	// If the cluster is unplanned, the stop positions will be empty.
+	StopPositions() StopPositions
 
 	// UnPlan un-plans the cluster by removing the underlying solution stops
 	// from the solution. Returns true if the cluster was unplanned
