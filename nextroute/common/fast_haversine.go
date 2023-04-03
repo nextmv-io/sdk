@@ -38,7 +38,7 @@ func wrap(deg float64) float64 {
 
 // Distance returns the distance between two locations in meters.
 func (f FastHaversine) Distance(from, to Location) float64 {
-	if !from.valid || !to.valid {
+	if !from.IsValid() || !to.IsValid() {
 		return 0.0
 	}
 	dx := wrap(from.Longitude()-to.Longitude()) * f.kx

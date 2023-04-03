@@ -9,9 +9,9 @@ import (
 // Haversine formula. Haversine is a good approximation for short
 // distances (up to a few hundred kilometers).
 func Haversine(from, to Location) (Distance, error) {
-	if !from.valid || !to.valid {
+	if !from.IsValid() || !to.IsValid() {
 		return Distance{},
-			fmt.Errorf("from (%v) or to (%v) are invalid", from.valid, to.valid)
+			fmt.Errorf("from (%v) or to (%v) are invalid", from.IsValid(), to.IsValid())
 	}
 
 	x1 := degreesToRadian(from.Longitude())
