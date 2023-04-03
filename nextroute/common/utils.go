@@ -33,6 +33,21 @@ func Unique[T comparable](s []T) []T {
 	return result
 }
 
+// UniqueDefined is a universal duplicate removal function for type instances in
+// a slice that implement the comparable interface. The function f is used to
+// extract the comparable value from the type instance.
+func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
+	inResult := make(map[I]bool)
+	var result []T
+	for _, item := range items {
+		if _, ok := inResult[f(item)]; !ok {
+			inResult[f(item)] = true
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
 // GroupBy groups the elements of a slice by a key function.
 func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
 	inResult := make(map[K]bool)
