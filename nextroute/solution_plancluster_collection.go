@@ -18,7 +18,8 @@ func NewSolutionPlanClusterCollection(
 	return newSolutionPlanClusterCollection(source, planClusters)
 }
 
-// ImmutableSolutionPlanClusterCollection is a collection of solution plan clusters.
+// ImmutableSolutionPlanClusterCollection is a collection of solution plan
+// clusters.
 type ImmutableSolutionPlanClusterCollection interface {
 	// Iterator returns a channel that can be used to iterate over the solution
 	// plan clusters in the collection.
