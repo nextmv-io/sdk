@@ -20,7 +20,7 @@ type ModelPlanCluster interface {
 
 	// Centroid returns the centroid of the cluster. The centroid is the
 	// average location of all stops in the cluster.
-	Centroid() common.Location
+	Centroid() (common.Location, error)
 
 	// Index returns the index of the cluster.
 	Index() int
