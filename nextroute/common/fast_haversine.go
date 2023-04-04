@@ -44,7 +44,8 @@ func (f FastHaversine) Distance(from, to Location) (float64, error) {
 	if !from.IsValid() || !to.IsValid() {
 		return 0.0,
 			fmt.Errorf(
-				"from (%f, %f) (valid = %t) or to (%f, %f) (valid = %t) is invalid",
+				"from (lon: %f, lat: %f) (valid = %t) or "+
+					"to (lon: %f, lat: %f) (valid = %t) are invalid",
 				from.Longitude(),
 				from.Latitude(),
 				from.IsValid(),
