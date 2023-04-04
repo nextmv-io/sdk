@@ -20,6 +20,13 @@ type ModelExpression interface {
 	// Value returns the value of the expression for the given vehicle type,
 	// from stop and to stop.
 	Value(ModelVehicleType, ModelStop, ModelStop) float64
+
+	// HasNegativeValues returns true if the expression contains negative
+	// values.
+	HasNegativeValues() bool
+	// HasPositiveValues returns true if the expression contains positive
+	// values.
+	HasPositiveValues() bool
 }
 
 // ModelExpressions is a slice of ModelExpression.
