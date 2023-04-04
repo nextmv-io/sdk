@@ -11,7 +11,16 @@ import (
 func Haversine(from, to Location) (Distance, error) {
 	if !from.IsValid() || !to.IsValid() {
 		return Distance{},
-			fmt.Errorf("from (%v) or to (%v) are invalid", from.IsValid(), to.IsValid())
+			fmt.Errorf(
+				"from (lon: %f, lat: %f) (valid = %t) or "+
+					"to (lon: %f, lat: %f) (valid = %v) are invalid",
+				from.Longitude(),
+				from.Latitude(),
+				from.IsValid(),
+				to.Longitude(),
+				to.Latitude(),
+				to.IsValid(),
+			)
 	}
 
 	x1 := degreesToRadian(from.Longitude())
