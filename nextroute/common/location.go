@@ -49,14 +49,23 @@ func (l Locations) Unique() Locations {
 }
 
 // Centroid returns the centroid of the locations. If locations is empty, the
-// centroid will be (0, 0).
+// centroid will be an invalid location.
 func (l Locations) Centroid() (Location, error) {
 	if len(l) == 0 {
-		return NewLocation(0, 0)
+		return NewInvalidLocation(), nil
 	}
 	lat := 0.0
 	lon := 0.0
-	for _, location := range l {
+	for l, location := range l {
+		if !location.IsValid() {
+			return NewInvalidLocation(),
+				fmt.Errorf(
+					"location %d (%f, %f) is invalid",
+					l,
+					location.Longitude(),
+					location.Latitude(),
+				)
+		}
 		lat += location.Latitude()
 		lon += location.Longitude()
 	}

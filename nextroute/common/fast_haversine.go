@@ -1,6 +1,9 @@
 package common
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 // NewFastHaversine returns a new FastHaversine.
 func NewFastHaversine(lat float64) FastHaversine {
@@ -37,11 +40,20 @@ func wrap(deg float64) float64 {
 }
 
 // Distance returns the distance between two locations in meters.
-func (f FastHaversine) Distance(from, to Location) float64 {
+func (f FastHaversine) Distance(from, to Location) (float64, error) {
 	if !from.IsValid() || !to.IsValid() {
-		return 0.0
+		return 0.0,
+			fmt.Errorf(
+				"from (%f, %f) (valid = %t) or to (%f, %f) (valid = %t) is invalid",
+				from.Longitude(),
+				from.Latitude(),
+				from.IsValid(),
+				to.Longitude(),
+				to.Latitude(),
+				to.IsValid(),
+			)
 	}
 	dx := wrap(from.Longitude()-to.Longitude()) * f.kx
 	dy := (from.Latitude() - to.Latitude()) * f.ky
-	return math.Sqrt(dx*dx + dy*dy)
+	return math.Sqrt(dx*dx + dy*dy), nil
 }
