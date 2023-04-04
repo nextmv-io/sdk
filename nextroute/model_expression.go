@@ -21,6 +21,13 @@ type ModelExpression interface {
 	// from stop and to stop.
 	Value(ModelVehicleType, ModelStop, ModelStop) float64
 
+	// HasNegativeValues returns true if the expression contains negative
+	// values.
+	HasNegativeValues() bool
+	// HasPositiveValues returns true if the expression contains positive
+	// values.
+	HasPositiveValues() bool
+
 	// SetName sets the name of the expression.
 	SetName(string)
 }

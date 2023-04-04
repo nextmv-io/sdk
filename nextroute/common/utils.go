@@ -10,7 +10,7 @@ import (
 
 // Filter filters a slice using a predicate function.
 func Filter[T any](v []T, f func(T) bool) []T {
-	var r []T
+	r := make([]T, 0, len(v))
 	for _, x := range v {
 		if f(x) {
 			r = append(r, x)
