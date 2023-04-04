@@ -27,6 +27,9 @@ type ModelExpression interface {
 	// HasPositiveValues returns true if the expression contains positive
 	// values.
 	HasPositiveValues() bool
+
+	// SetName sets the name of the expression.
+	SetName(string)
 }
 
 // ModelExpressions is a slice of ModelExpression.

@@ -24,7 +24,7 @@ type SolutionVehicle interface {
 	// Centroid returns the centroid of the vehicle. The centroid is the
 	// average location of all stops in the vehicle excluding the start and
 	// end stops.
-	Centroid() common.Location
+	Centroid() (common.Location, error)
 
 	// Duration returns the duration of the vehicle. The duration is the
 	// time the vehicle is on the road. The duration is the time between

@@ -9,21 +9,21 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
-// ModelFactory creates a new model.
-type ModelFactory interface {
-	NewModel(schema.Input, ModelOptions, ...Option) (Model, error)
-}
-
-// NewModelFactory creates a new model factory.
-func NewModelFactory() ModelFactory {
-	connect.Connect(con, &newModelFactory)
-	return newModelFactory()
-}
-
-// NewModel creates a new model. The model is used to define a routing problem.
+// NewModel creates a new empty vehicle routing model. Please use [BuildModel]
+// if you want a model which already has all features added to it.
 func NewModel() (Model, error) {
 	connect.Connect(con, &newModel)
 	return newModel()
+}
+
+// BuildModel builds a ready-to-go vehicle routing problem. The difference with
+// [NewModel] is that BuildModel processes the input and options to add all
+// features to the model, such as constraints and objectives. On the other
+// hand, [NewModel] creates an empty vehicle routing model which must be built
+// from the ground up.
+func BuildModel(i schema.Input, m ModelOptions, opts ...Option) (Model, error) {
+	connect.Connect(con, &buildModel)
+	return buildModel(i, m, opts...)
 }
 
 // ModelOptions represents options for a model.
