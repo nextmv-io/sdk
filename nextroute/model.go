@@ -141,4 +141,8 @@ type Model interface {
 
 	// Vehicle returns the vehicle with the specified index.
 	Vehicle(index int) ModelVehicle
+
+	// SetEpoch sets the epoch of the model. You can use [Epoch] to get the
+	// epoch of the model.
+	SetEpoch(time.Time)
 }
