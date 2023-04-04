@@ -53,9 +53,12 @@ var (
 		StopTimeExpression,
 	) (LatestStart, error)
 	newMaximumConstraint func(
-		StopExpression,
+		ModelExpression,
 		VehicleTypeExpression,
 	) (MaximumConstraint, error)
+	newComposedPerVehicleTypeExpression func(
+		ModelExpression,
+	) ComposedPerVehicleTypeExpression
 	newTimeExpression func(
 		ModelExpression,
 		time.Time,

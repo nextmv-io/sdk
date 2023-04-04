@@ -293,3 +293,12 @@ func DefineLazy[T any](f func() T) Lazy[T] {
 		return value
 	}
 }
+
+// Values returns a slice of all values in the given map.
+func Values[M ~map[K]V, K comparable, V any](m M) []V {
+	r := make([]V, 0, len(m))
+	for _, v := range m {
+		r = append(r, v)
+	}
+	return r
+}
