@@ -21,14 +21,15 @@ func NewModel() (Model, error) {
 // features to the model, such as constraints and objectives. On the other
 // hand, [NewModel] creates an empty vehicle routing model which must be built
 // from the ground up.
-func BuildModel(i schema.Input, m ModelOptions, opts ...Option) (Model, error) {
+func BuildModel(i schema.Input, m ModelOptions) (Model, error) {
 	connect.Connect(con, &buildModel)
-	return buildModel(i, m, opts...)
+	return buildModel(i, m)
 }
 
 // ModelOptions represents options for a model.
 type ModelOptions struct {
-	IgnoreUnplanned bool `json:"ignore_unplanned"  usage:"ignore unplanned penalties"`
+	IgnoreUnplanned          bool `json:"ignore_unplanned"  usage:"ignore unplanned penalties"`
+	IgnoreRouteDistanceLimit bool `json:"ignore_route_distance_limit"  usage:"ignore route distance limit"`
 }
 
 // Model defines routing problem.
