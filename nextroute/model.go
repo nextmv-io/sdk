@@ -21,9 +21,9 @@ func NewModel() (Model, error) {
 // features to the model, such as constraints and objectives. On the other
 // hand, [NewModel] creates an empty vehicle routing model which must be built
 // from the ground up.
-func BuildModel(i schema.Input, m ModelOptions) (Model, error) {
+func BuildModel(i schema.Input, m ModelOptions, opts ...Option) (Model, error) {
 	connect.Connect(con, &buildModel)
-	return buildModel(i, m)
+	return buildModel(i, m, opts...)
 }
 
 // ModelOptions represents options for a model.

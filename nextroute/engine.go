@@ -97,6 +97,7 @@ var (
 	buildModel func(
 		schema.Input,
 		ModelOptions,
+		...Option,
 	) (Model, error)
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
