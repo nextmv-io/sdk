@@ -44,8 +44,3 @@ type ModelVehicleType interface {
 
 // ModelVehicleTypes is a slice of vehicle types.
 type ModelVehicleTypes []ModelVehicleType
-
-// VehicleTypeData represents the custom data for the model.
-type VehicleTypeData struct {
-	DistanceExpression DistanceExpression
-}
