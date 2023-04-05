@@ -130,7 +130,7 @@ type Model interface {
 	Stops() ModelStops
 
 	// Stop returns the stop with the specified index.
-	Stop(index int) ModelStop
+	Stop(index int) (ModelStop, error)
 
 	// TimeFormat returns the time format used for reporting.
 	TimeFormat() string
