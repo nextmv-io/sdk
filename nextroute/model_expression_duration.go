@@ -55,9 +55,7 @@ func NewConstantDurationExpression(
 // StopDurationExpression is a ModelExpression that returns a duration per stop
 // and allows to set the duration per stop.
 type StopDurationExpression interface {
-	ModelExpression
-	// Duration returns the duration for the given stop.
-	Duration(ModelStop) time.Duration
+	DurationExpression
 	// SetDuration sets the duration for the given stop.
 	SetDuration(ModelStop, time.Duration)
 }
@@ -65,9 +63,7 @@ type StopDurationExpression interface {
 // VehicleTypeDurationExpression is a ModelExpression that returns a duration
 // per vehicle type and allows to set the duration per vehicle type.
 type VehicleTypeDurationExpression interface {
-	ModelExpression
-	// Duration returns the duration for the given vehicle type.
-	Duration(ModelVehicleType) time.Duration
+	DurationExpression
 	// SetDuration sets the duration for the given vehicle type.
 	SetDuration(ModelVehicleType, time.Duration)
 }
