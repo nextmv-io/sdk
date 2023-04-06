@@ -9,7 +9,6 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 var (
@@ -93,12 +92,7 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel   func() (Model, error)
-	buildModel func(
-		schema.Input,
-		ModelOptions,
-		...Option,
-	) (Model, error)
+	newModel                func() (Model, error)
 	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
 	newModelObjectiveIndex  func() int

@@ -195,6 +195,10 @@ issues:
     - path: nextroute/model\.go
       linters:
         - lll
+    # Deactivate line length in factory/model.go because of go tags
+    - path: nextroute/factory/model\.go
+      linters:
+        - lll
     # Complexity in NewAlias is high due to multiple cases, fine for now.
     - path: nextroute/common/alias\.go
       linters:
