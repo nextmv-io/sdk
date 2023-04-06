@@ -25,6 +25,7 @@ func NewModel(
 // ModelOptions represents options for a model.
 type ModelOptions struct {
 	IgnoreCapacityConstraints      bool `json:"ignore_capacity_constraints" usage:"Ignore the capacity constraints"`
+	IgnoreDistanceLimitConstraint  bool `json:"ignore_distance_limit_constraint" usage:"Ignore the distance limit constraint"`
 	IgnoreServiceDurations         bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
 	IgnoreTravelDurationObjective  bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
 	IgnoreUnassignedStopsObjective bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
