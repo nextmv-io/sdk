@@ -8,7 +8,7 @@ import (
 	"github.com/nextmv-io/sdk/store"
 )
 
-// A Router is an engine that solves ModelVehicle Routing Problems.
+// A Router is an engine that solves Vehicle Routing Problems.
 type Router interface {
 	// Options configures the router with the given options. An error is
 	// returned if validation issues exist.
@@ -62,7 +62,7 @@ type PartialPlan interface {
 	Vehicles() []PartialVehicle
 }
 
-// PartialVehicle represents a ModelVehicle that operates on the internal solver
+// PartialVehicle represents a Vehicle that operates on the internal solver
 // data structures. Certain router options that customize solver internals have
 // to work with this data structure.
 type PartialVehicle interface {
@@ -85,13 +85,13 @@ type PartialVehicle interface {
 	Times() Times
 }
 
-// Plan describes a solution to a ModelVehicle Routing Problem.
+// Plan describes a solution to a Vehicle Routing Problem.
 type Plan struct {
 	Unassigned []Stop           `json:"unassigned"`
 	Vehicles   []PlannedVehicle `json:"vehicles"`
 }
 
-// PlannedVehicle holds information about the vehicle in a solution to a ModelVehicle
+// PlannedVehicle holds information about the vehicle in a solution to a Vehicle
 // Routing Problem.
 type PlannedVehicle struct {
 	ID            string        `json:"id"`
@@ -100,8 +100,8 @@ type PlannedVehicle struct {
 	RouteDistance int           `json:"route_distance"`
 }
 
-// PlannedStop describes a stop as part of a ModelVehicle's route of solution
-// to a ModelVehicle Routing Problem.
+// PlannedStop describes a stop as part of a Vehicle's route of solution
+// to a Vehicle Routing Problem.
 type PlannedStop struct {
 	Stop
 	EstimatedArrival   *time.Time `json:"estimated_arrival,omitempty"`
@@ -109,7 +109,7 @@ type PlannedStop struct {
 	EstimatedService   *time.Time `json:"estimated_service,omitempty"`
 }
 
-// Stop to service in a ModelVehicle Routing Problem.
+// Stop to service in a Vehicle Routing Problem.
 type Stop struct {
 	ID       string   `json:"id"`
 	Position Position `json:"position"`
