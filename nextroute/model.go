@@ -33,6 +33,7 @@ type ModelOptions struct {
 	IgnoreTravelDurationObjective  bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
 	IgnoreUnassignedStopsObjective bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
 	IgnoreWindows                  bool `json:"ignore_windows" usage:"Ignore the stop windows"`
+	IgnoreRouteDistanceLimit       bool `json:"ignore_route_distance_limit"  usage:"ignore route distance limit"`
 }
 
 // Model defines routing problem.
