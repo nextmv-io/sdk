@@ -21,8 +21,10 @@ type Solution[T any] interface {
 	Random() *rand.Rand
 }
 
+// Solutions is a channel of solutions.
 type Solutions[T any] <-chan T
 
+// Last returns the last solution in the channel.
 func (solutions Solutions[T]) Last() T {
 	var solution T
 	for s := range solutions {
@@ -31,17 +33,22 @@ func (solutions Solutions[T]) Last() T {
 	return solution
 }
 
+// Solver is an interface that can be implemented by a struct to indicate that
+// it can solve a problem.
 type Solver[T Solution[T], Options any] interface {
 	// Solve starts the solving process using the given options. It returns the
 	// solutions as a channel.
 	Solve(context.Context, Options, ...T) (Solutions[T], error)
 }
 
+// Progressioner is an interface that can be implemented by a solver to indicate
+// that is can return the progression of the solver.
 type Progressioner interface {
 	// Progression returns the progression of the solver.
 	Progression() []ProgressionEntry
 }
 
+// ProgressionEntry is a single entry in the progression of the solver.
 type ProgressionEntry struct {
 	ElapsedSeconds float64 `json:"elapsed_seconds"`
 	Value          float64 `json:"value"`
