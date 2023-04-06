@@ -7,11 +7,13 @@ import (
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/encode"
 	"github.com/nextmv-io/sdk/store"
 )
 
 func main() {
-	err := run.Run(solver)
+	err := run.Run(solver,
+		run.Encode[run.CLIRunnerConfig, input](GenericEncoder[store.Solution, store.Options](encode.JSON())))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,61 +53,18 @@ var solver = func(i input, opts store.Options) (store.Solver, error) {
 	router, err := route.NewRouter(
 		routerInput.Stops,
 		routerInput.Vehicles,
+		route.Starts(routerInput.Starts),
+		route.Ends(routerInput.Ends),
+		route.Shifts(routerInput.Shifts),
+		route.Precedence(routerInput.Precedences),
 		route.Velocities(routerInput.Velocities),
 		route.Unassigned(routerInput.Penalties),
-		route.InitializationCosts(routerInput.InitializationCosts),
 		route.ValueFunctionMeasures(timeMeasures),
-		route.LimitDurations(
-			routerInput.DurationLimits,
-			true, /*ignoreTriangular*/
-		),
+		route.Capacity(routerInput.Quantities["default"], routerInput.Capacities["default"]),
+		// route.Services(routerInput.ServiceTimes),
 	)
 	if err != nil {
 		return nil, err
-	}
-
-	if len(routerInput.Windows) > 0 {
-		err = router.Options(route.Windows(routerInput.Windows))
-		if err != nil {
-			return nil, err
-		}
-	}
-	if len(routerInput.Shifts) > 0 {
-		err = router.Options(route.Shifts(routerInput.Shifts))
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if len(routerInput.StopAttributes) > 0 &&
-		len(routerInput.VehicleAttributes) > 0 {
-		err = router.Options(
-			route.Attribute(
-				routerInput.VehicleAttributes,
-				routerInput.StopAttributes,
-			),
-		)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if len(routerInput.ServiceTimes) > 0 {
-		err = router.Options(route.Services(routerInput.ServiceTimes))
-		if err != nil {
-			return nil, err
-		}
-	}
-	for kind := range routerInput.Kinds {
-		err = router.Options(
-			route.Capacity(
-				routerInput.Quantities[kind],
-				routerInput.Capacities[kind],
-			),
-		)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	// You can also fix solver options like the expansion limit below.
@@ -121,21 +80,4 @@ var solver = func(i input, opts store.Options) (store.Solver, error) {
 	}
 
 	return router.Solver(options)
-}
-
-func (i *input) prepareInputData() error {
-	i.Stops = append(i.Stops, i.AlternateStops...)
-	i.applyVehicleDefaults()
-	i.applyStopDefaults()
-	// Handle dynamic fields
-	err := i.handleDynamics()
-	if err != nil {
-		return err
-	}
-	i.autoConfigureUnassigned()
-	err = i.makeDurationGroups()
-	if err != nil {
-		return err
-	}
-	return nil
 }

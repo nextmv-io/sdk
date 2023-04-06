@@ -611,3 +611,20 @@ func point(p route.Position) route.Point {
 		p.Lon, p.Lat,
 	}
 }
+
+func (i *input) prepareInputData() error {
+	i.Stops = append(i.Stops, i.AlternateStops...)
+	i.applyVehicleDefaults()
+	i.applyStopDefaults()
+	// Handle dynamic fields
+	err := i.handleDynamics()
+	if err != nil {
+		return err
+	}
+	i.autoConfigureUnassigned()
+	err = i.makeDurationGroups()
+	if err != nil {
+		return err
+	}
+	return nil
+}

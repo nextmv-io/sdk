@@ -21,12 +21,39 @@ var (
 	// RoutingInforms is the main.go file in the routing template.
 	//go:embed routing-informs/main.go
 	RoutingInforms string
-	// RoutingInformsInput is the input.json file in the routing template.
-	//go:embed routing-informs/input.json
-	RoutingInformsInput string
+	// RoutingInformsInput1 is the input.json file in the routing template.
+	//go:embed routing-informs/data/denv_l.json
+	RoutingInformsInput1 string
+	// RoutingInformsInput2 is the input.json file in the routing template.
+	//go:embed routing-informs/data/denv_m.json
+	RoutingInformsInput2 string
+	// RoutingInformsInput3 is the input.json file in the routing template.
+	//go:embed routing-informs/data/denv_s.json
+	RoutingInformsInput3 string
+	// RoutingInformsInput4 is the input.json file in the routing template.
+	//go:embed routing-informs/data/set2/denv_l_v.json
+	RoutingInformsInput4 string
+	// RoutingInformsInput5 is the input.json file in the routing template.
+	//go:embed routing-informs/data/set2/denv_m_v.json
+	RoutingInformsInput5 string
+	// RoutingInformsInput6 is the input.json file in the routing template.
+	//go:embed routing-informs/data/set2/denv_s_v.json
+	RoutingInformsInput6 string
+	// RoutingInformsInput7 is the input.json file in the routing template.
+	//go:embed routing-informs/data/set2/denv_xl_v.json
+	RoutingInformsInput7 string
+	// RoutingInformsHelper is the helper.go file in the routing template.
+	//go:embed routing-informs/helper.go
+	RoutingInformsHelper string
+	// RoutingInformsEncoder is the encoder.go file in the routing template.
+	//go:embed routing-informs/encoder.go
+	RoutingInformsEncoder string
 	// RoutingInformsReadme is the README.md file in the routing template.
 	//go:embed routing-informs/README.md
 	RoutingInformsReadme string
+	// RoutingInformsSchema is the schema.go file in the routing template.
+	//go:embed routing-informs/schema.go
+	RoutingInformsSchema string
 
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go
