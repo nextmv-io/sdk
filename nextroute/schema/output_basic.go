@@ -18,7 +18,6 @@ type VehicleOutput struct {
 	ID            string       `json:"id"`
 	Route         []StopOutput `json:"route"`
 	RouteDuration int          `json:"route_duration"`
-	RouteDistance int          `json:"route_distance"`
 }
 
 // StopOutput adds information to the input stop.
