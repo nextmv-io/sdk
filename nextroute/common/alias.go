@@ -57,7 +57,7 @@ func NewAlias(weights []float64) (Alias, error) {
 
 	multiplier := float64(n) / sum
 	for i, weight := range weights {
-		weight = weight * multiplier
+		weight *= multiplier
 		if weight >= 1 {
 			largeBottom--
 			twins[largeBottom] = float64PieceImpl{

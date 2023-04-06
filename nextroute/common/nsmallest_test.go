@@ -1,8 +1,9 @@
 package common_test
 
 import (
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"testing"
+
+	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 type TestItem interface {

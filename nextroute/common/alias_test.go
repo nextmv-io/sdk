@@ -1,14 +1,17 @@
 package common_test
 
 import (
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"math"
 	"math/rand"
 	"testing"
+
+	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
-const samples = 1_000_000
-const errorEpsilon = 0.001
+const (
+	samples      = 1_000_000
+	errorEpsilon = 0.001
+)
 
 func TestAlias(t *testing.T) {
 	testAlias(t, []float64{2, 2}, 22)

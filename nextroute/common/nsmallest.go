@@ -46,6 +46,7 @@ type minHeap[T any] []itemValue[T]
 func (h minHeap[T]) Len() int {
 	return len(h)
 }
+
 func (h minHeap[T]) Less(i, j int) bool {
 	return h[i].value < h[j].value
 }
@@ -65,6 +66,7 @@ func (h *minHeap[T]) Pop() interface{} {
 	*h = old[0 : n-1]
 	return x
 }
+
 func (h *minHeap[T]) Peek() itemValue[T] {
 	return (*h)[0]
 }

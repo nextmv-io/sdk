@@ -6,6 +6,7 @@ import (
 	"sort"
 )
 
+// Statistics describes statistics.
 type Statistics struct {
 	Count              float64
 	Sum                float64
@@ -22,6 +23,7 @@ type Statistics struct {
 	MidHinge           float64
 }
 
+// Report returns a string containing a report of the statistics.
 func (s Statistics) Report() string {
 	return fmt.Sprintf(
 		"Count                       : %d\n"+
