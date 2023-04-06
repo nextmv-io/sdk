@@ -23,22 +23,19 @@ func NewSpeed(
 	}
 }
 
-// NewKilometersPerHour returns a new speed unit of kilometers per hour.
-func NewKilometersPerHour() SpeedUnit {
-	return &speedUnitImpl{
-		distanceUnit: Kilometers,
-		duration:     time.Hour,
-	}
+// KilometersPerHour is a speed unit of kilometers per hour.
+var KilometersPerHour = &speedUnitImpl{
+	distanceUnit: Kilometers,
+	duration:     time.Hour,
 }
 
-// NewMilesPerHour returns a new speed unit of miles per hour.
-func NewMilesPerHour() SpeedUnit {
-	return &speedUnitImpl{
-		distanceUnit: Miles,
-		duration:     time.Hour,
-	}
+// MilesPerHour is a speed unit of miles per hour.
+var MilesPerHour = &speedUnitImpl{
+	distanceUnit: Miles,
+	duration:     time.Hour,
 }
 
+// MetersPerSecond is a speed unit of meters per second.
 var MetersPerSecond = &speedUnitImpl{
 	distanceUnit: Meters,
 	duration:     time.Second,

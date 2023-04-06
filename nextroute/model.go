@@ -28,7 +28,11 @@ func BuildModel(i schema.Input, m ModelOptions, opts ...Option) (Model, error) {
 
 // ModelOptions represents options for a model.
 type ModelOptions struct {
-	IgnoreUnplanned bool `json:"ignore_unplanned"  usage:"ignore unplanned penalties"`
+	IgnoreCapacityConstraints      bool `json:"ignore_capacity_constraints" usage:"Ignore the capacity constraints"`
+	IgnoreServiceDurations         bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
+	IgnoreTravelDurationObjective  bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
+	IgnoreUnassignedStopsObjective bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
+	IgnoreWindows                  bool `json:"ignore_windows" usage:"Ignore the stop windows"`
 }
 
 // Model defines routing problem.

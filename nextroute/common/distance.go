@@ -44,6 +44,7 @@ const (
 	factorMilesToMeters      = 1609.34
 )
 
+// String returns the string representation of the distance unit.
 func (d DistanceUnit) String() string {
 	switch d {
 	case Kilometers:
@@ -56,11 +57,13 @@ func (d DistanceUnit) String() string {
 	return fmt.Sprintf("unknown distance unit %v", int(d))
 }
 
+// Distance is a distance in a given unit.
 type Distance struct {
 	meters float64
 	unit   DistanceUnit
 }
 
+// Value returns the distance in the specified unit.
 func (d Distance) Value(unit DistanceUnit) float64 {
 	returnValue := d.meters
 	switch unit {
