@@ -27,8 +27,8 @@ func NewSolver(
 
 // SolveOptions are the options for the solver.
 type SolveOptions struct {
-	Iterations      int           `json:"iterations"  usage:"number of iterations, 0 assumes no limit"`
-	MaximumDuration time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds"`
+	Iterations      int           `json:"iterations"  usage:"number of iterations, 0 assumes no limit" default:"0"`
+	MaximumDuration time.Duration `json:"maximum_duration"  usage:"maximum duration of solver in seconds" default:"30s"`
 }
 
 // Solver is the interface for a solver.
