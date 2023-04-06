@@ -1,9 +1,10 @@
 package common_test
 
 import (
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"math"
 	"testing"
+
+	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 func TestStatistics(t *testing.T) {
@@ -74,7 +75,11 @@ func TestStatistics(t *testing.T) {
 	}, statistics)
 }
 
-func testResult(t *testing.T, data []float64, expected, actual common.Statistics) {
+func testResult(
+	t *testing.T,
+	data []float64,
+	expected, actual common.Statistics,
+) {
 	if testNotEqual(expected.Count, actual.Count) {
 		t.Errorf(
 			"Count: expected %v, actual %v, data %v",
@@ -181,6 +186,7 @@ func testResult(t *testing.T, data []float64, expected, actual common.Statistics
 		)
 	}
 }
+
 func testEquals(expected, actual float64) bool {
 	return (math.IsNaN(expected) && math.IsNaN(actual)) ||
 		math.Abs(expected-actual) < 0.0000001

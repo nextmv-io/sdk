@@ -195,7 +195,20 @@ issues:
     - path: nextroute/model\.go
       linters:
         - lll
-
+    # Complexity in NewAlias is high due to multiple cases, fine for now.
+    - path: nextroute/common/alias\.go
+      linters:
+        - gocyclo
+    # Complexity in statistics is high due to multiple cases, fine for now.
+    - path: nextroute/common/statistics\.go
+      linters:
+        - gocyclo
+    - path: nextroute/common/statistics_test\.go
+      linters:
+        - gocyclo
+    - path: nextroute/common/nsmallest_test\.go
+      linters:
+        - gocyclo
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go
       linters:
