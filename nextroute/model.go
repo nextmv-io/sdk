@@ -125,4 +125,9 @@ type Model interface {
 
 	// Vehicle returns the vehicle with the specified index.
 	Vehicle(index int) ModelVehicle
+
+	// MaxTime returns the maximum end time (upper bound) for any stop. This
+	// function uses the [Model.Epoch()] as a starting point and adds a large
+	// number to provide a large enough upper bound.
+	MaxTime() time.Time
 }
