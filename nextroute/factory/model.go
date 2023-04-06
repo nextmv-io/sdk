@@ -24,6 +24,7 @@ func NewModel(
 
 // ModelOptions represents options for a model.
 type ModelOptions struct {
+	EnableClusterConstraint        bool `json:"enable_cluster_constraint" usage:"Enable the cluster constraint creating compact clusters of stops"`
 	IgnoreCapacityConstraint       bool `json:"ignore_capacity_constraint" usage:"Ignore the capacity constraint"`
 	IgnoreDistanceLimitConstraint  bool `json:"ignore_distance_limit_constraint" usage:"Ignore the distance limit constraint"`
 	IgnoreShiftConstraint          bool `json:"ignore_shift_constraint" usage:"Ignore the shift constraint"`
