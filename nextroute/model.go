@@ -6,7 +6,6 @@ import (
 
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/common"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 // NewModel creates a new empty vehicle routing model. Please use [BuildModel]
@@ -14,26 +13,6 @@ import (
 func NewModel() (Model, error) {
 	connect.Connect(con, &newModel)
 	return newModel()
-}
-
-// BuildModel builds a ready-to-go vehicle routing problem. The difference with
-// [NewModel] is that BuildModel processes the input and options to add all
-// features to the model, such as constraints and objectives. On the other
-// hand, [NewModel] creates an empty vehicle routing model which must be built
-// from the ground up.
-func BuildModel(i schema.Input, m ModelOptions, opts ...Option) (Model, error) {
-	connect.Connect(con, &buildModel)
-	return buildModel(i, m, opts...)
-}
-
-// ModelOptions represents options for a model.
-type ModelOptions struct {
-	IgnoreCapacityConstraints      bool `json:"ignore_capacity_constraints" usage:"Ignore the capacity constraints"`
-	IgnoreServiceDurations         bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
-	IgnoreTravelDurationObjective  bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
-	IgnoreUnassignedStopsObjective bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
-	IgnoreWindows                  bool `json:"ignore_windows" usage:"Ignore the stop windows"`
-	IgnoreRouteDistanceLimit       bool `json:"ignore_route_distance_limit"  usage:"ignore route distance limit"`
 }
 
 // Model defines routing problem.
