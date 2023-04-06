@@ -13,7 +13,10 @@ import (
 
 func main() {
 	err := run.Run(solver,
-		run.Encode[run.CLIRunnerConfig, input](GenericEncoder[store.Solution, store.Options](encode.JSON())))
+		run.Encode[run.CLIRunnerConfig, input](
+			GenericEncoder[store.Solution, store.Options](encode.JSON()),
+		),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,7 +63,10 @@ var solver = func(i input, opts store.Options) (store.Solver, error) {
 		route.Velocities(routerInput.Velocities),
 		route.Unassigned(routerInput.Penalties),
 		route.ValueFunctionMeasures(timeMeasures),
-		route.Capacity(routerInput.Quantities["default"], routerInput.Capacities["default"]),
+		route.Capacity(
+			routerInput.Quantities["default"],
+			routerInput.Capacities["default"],
+		),
 		// route.Services(routerInput.ServiceTimes),
 	)
 	if err != nil {

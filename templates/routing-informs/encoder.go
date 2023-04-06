@@ -17,30 +17,31 @@ import (
 
 type output struct {
 	Store      route.Plan   `json:"store"`
-	Statistics StatisticsIn `json:"statistics"`
+	Statistics statisticsIn `json:"statistics"`
 }
 
-// Statistics of the search.
-type StatisticsIn struct {
+// statisticsIn of the search.
+type statisticsIn struct {
 	Time Time `json:"time"`
 	// Value of the store. Nil when using a Satisfier.
 	Value *int `json:"value,omitempty"`
 }
 
+// Time needed.
 type Time struct {
 	Start   time.Time `json:"start"`
-	Elapsed Duration  `json:"elapsed"`
+	Elapsed duration  `json:"elapsed"`
 }
 
-type Duration struct {
+type duration struct {
 	time.Duration
 }
 
-func (d Duration) MarshalJSON() ([]byte, error) {
+func (d duration) MarshalJSON() ([]byte, error) {
 	return json.Marshal(d.String())
 }
 
-func (d *Duration) UnmarshalJSON(b []byte) error {
+func (d *duration) UnmarshalJSON(b []byte) error {
 	var v interface{}
 	if err := json.Unmarshal(b, &v); err != nil {
 		return err
@@ -61,7 +62,7 @@ func (d *Duration) UnmarshalJSON(b []byte) error {
 	}
 }
 
-type StatisticsOut struct {
+type statisticsOut struct {
 	Schema string `json:"schema"`
 	Run    struct {
 		Time float64 `json:"time"`
@@ -82,7 +83,7 @@ type meta[Options, Solution any] struct {
 	Version    version       `json:"version"`
 	Options    Options       `json:"options"`
 	Solutions  []Solution    `json:"solutions"`
-	Statistics StatisticsOut `json:"statistics"`
+	Statistics statisticsOut `json:"statistics"`
 }
 
 type custom struct {
@@ -115,7 +116,7 @@ type genericEncoder[Solution, Options any] struct {
 // Encode encodes the solution using the given encoder. If a given output path
 // ends in .gz, it will be gzipped after encoding. The writer needs to be an
 // io.Writer.
-func (g *genericEncoder[Solution, Options]) Encode(
+func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 	_ context.Context,
 	solutions <-chan Solution,
 	writer any,
@@ -163,6 +164,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 		}
 	}
 
+	//nolint:nestif
 	if quieter, ok := runnerCfg.(run.Quieter); ok && !quieter.Quiet() {
 		m := meta[Options, Solution]{}
 		m.Version = version{
@@ -197,7 +199,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 				unassigned = len(s.Store.Unassigned)
 			}
 			if s.Store.Vehicles != nil {
-				m.Statistics = StatisticsOut{
+				m.Statistics = statisticsOut{
 					Schema: "v0",
 					Result: result{
 						Value:   float64(*s.Statistics.Value),
