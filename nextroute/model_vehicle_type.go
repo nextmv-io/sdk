@@ -7,14 +7,14 @@ package nextroute
 type ModelVehicleType interface {
 	ModelData
 
-	// CalculateStartAndEnd calculates the start and end time of stop if
-	// it would be assigned after previousStop to this vehicle type, and
+	// CalculateTemporalValues calculates the arrival, start and end time of
+	// stop if it would be assigned after previousStop to this vehicle type, and
 	// it would leaf from previousStop at previousEnd.
-	CalculateStartAndEnd(
+	CalculateTemporalValues(
 		previousEnd float64,
 		previousStop ModelStop,
 		stop ModelStop,
-	) (start float64, end float64)
+	) (arrival, start, end float64)
 
 	// Index returns the index of the vehicle type.
 	Index() int

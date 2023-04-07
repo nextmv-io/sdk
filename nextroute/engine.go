@@ -169,4 +169,8 @@ var (
 	newVehicleStatistics func(
 		ModelVehicle,
 	) VehicleStatistics
+	newEarlinessObjective func(
+		StopTimeExpression,
+		TemporalReference,
+	) (EarlinessObjective, error)
 )
