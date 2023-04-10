@@ -10,8 +10,6 @@ const (
 	SingleStop PlanClusterType = iota
 	// Sequence is a cluster that contains a sequence of stops.
 	Sequence
-	// MultipleStop is a cluster that contains unordered multiple stops.
-	MultipleStop
 )
 
 // ModelPlanCluster is a cluster of stops in a plan. A cluster is a set of stops
