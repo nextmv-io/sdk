@@ -70,6 +70,13 @@ type Model interface {
 	// is a plan cluster of a single stop. A plan cluster is a collection of
 	// stops which are always planned and unplanned as a single entity.
 	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
+	// NewPlanMultipleStops creates a new plan of multiple stops. A plan of
+	// multiple stops is a plan cluster of more than one stop. A plan cluster
+	// is a collection of stops which are always planned and unplanned as a
+	// single entity. When planned, they are always assigned to the same
+	// vehicle. Unlike NewPlanSequence, the order (sequence) of the stops is
+	// not enforced.
+	NewPlanMultipleStops(stops ModelStops) (ModelPlanMultipleStops, error)
 
 	// NewStop creates a new stop. The stop is used to create plan clusters.
 	NewStop(location common.Location) (ModelStop, error)
