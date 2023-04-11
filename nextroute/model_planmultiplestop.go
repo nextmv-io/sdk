@@ -6,4 +6,7 @@ package nextroute
 // that the stops must be planned together.
 type ModelPlanMultipleStops interface {
 	ModelPlanCluster
+
+	// DirectedAcyclicGraph returns the directed acyclic graph of the plan.
+	DirectedAcyclicGraph() DirectedAcyclicGraph
 }

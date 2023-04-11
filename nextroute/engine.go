@@ -169,4 +169,5 @@ var (
 	newVehicleStatistics func(
 		ModelVehicle,
 	) VehicleStatistics
+	newDirectedAcyclicGraph func() DirectedAcyclicGraph
 )

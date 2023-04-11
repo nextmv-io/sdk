@@ -74,9 +74,12 @@ type Model interface {
 	// multiple stops is a plan cluster of more than one stop. A plan cluster
 	// is a collection of stops which are always planned and unplanned as a
 	// single entity. When planned, they are always assigned to the same
-	// vehicle. Unlike NewPlanSequence, the order (sequence) of the stops is
-	// not enforced.
-	NewPlanMultipleStops(stops ModelStops) (ModelPlanMultipleStops, error)
+	// vehicle. The function takes in a Directed Acyclic Graph (DAG) which
+	// defines the restrictions on the sequence of the stops.
+	NewPlanMultipleStops(
+		stops ModelStops,
+		dag DirectedAcyclicGraph,
+	) (ModelPlanMultipleStops, error)
 
 	// NewStop creates a new stop. The stop is used to create plan clusters.
 	NewStop(location common.Location) (ModelStop, error)
