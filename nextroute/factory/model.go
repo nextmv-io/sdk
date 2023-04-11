@@ -34,6 +34,7 @@ type ModelOptions struct {
 	IgnoreTravelDurationObjective     bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
 	IgnoreUnassignedStopsObjective    bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
 	IgnoreWindowsConstraint           bool `json:"ignore_windows_constraint" usage:"Ignore the windows constraint"`
+	IgnoreEarlinessObjective          bool `json:"ignore_earliness_objective" usage:"Ignore the earliness objective"`
 }
 
 var (

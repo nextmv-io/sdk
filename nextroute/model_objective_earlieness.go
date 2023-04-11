@@ -39,11 +39,14 @@ type EarlinessObjective interface {
 
 // NewEarlinessObjective creates a construct that can be added to the model as
 // an objective. The target time of a stop is the time the vehicle should either
-// arrive, start or end. The latter is defined by temporal reference.
+// arrive, start or end. The latter is defined by temporal reference. The
+// earliness factor is used to apply a penalty factor per stop to the deviating
+// seconds.
 func NewEarlinessObjective(
 	targetTime StopTimeExpression,
+	earlinessFactor StopExpression,
 	temporalReference TemporalReference,
 ) (EarlinessObjective, error) {
 	connect.Connect(con, &newEarlinessObjective)
-	return newEarlinessObjective(targetTime, temporalReference)
+	return newEarlinessObjective(targetTime, earlinessFactor, temporalReference)
 }
