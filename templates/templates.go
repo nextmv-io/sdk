@@ -19,6 +19,37 @@ var (
 	RoutingReadme string
 
 	// RoutingInforms is the main.go file in the routing template.
+	//go:embed farm-share-informs/main.go
+	FarmShareInforms string
+	// RoutingInformsInput1 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/denv_l.json
+	FarmShareInformsInput1 string
+	// RoutingInformsInput2 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/denv_m.json
+	FarmShareInformsInput2 string
+	// RoutingInformsInput3 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/denv_s.json
+	FarmShareInformsInput3 string
+	// RoutingInformsInput4 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/set2/denv_l_v.json
+	FarmShareInformsInput4 string
+	// RoutingInformsInput5 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/set2/denv_m_v.json
+	FarmShareInformsInput5 string
+	// RoutingInformsInput6 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/set2/denv_s_v.json
+	FarmShareInformsInput6 string
+	// RoutingInformsInput7 is the input.json file in the routing template.
+	//go:embed farm-share-informs/data/set2/denv_xl_v.json
+	FarmShareInformsInput7 string
+	// RoutingInformsEncoder is the encoder.go file in the routing template.
+	//go:embed farm-share-informs/encoder.go
+	FarmShareInformsEncoder string
+	// RoutingInformsReadme is the README.md file in the routing template.
+	//go:embed farm-share-informs/README.md
+	FarmShareInformsReadme string
+
+	// RoutingInforms is the main.go file in the routing template.
 	//go:embed routing-informs/main.go
 	RoutingInforms string
 	// RoutingInformsInput1 is the input.json file in the routing template.
