@@ -52,9 +52,9 @@ type Solution interface {
 	// Model returns the model of the solution.
 	Model() Model
 
-	// ObjectiveValue returns the objective value of the solution. The objective
-	// value is the sum of the objective values defined in Model.Objective.
-	ObjectiveValue() float64
+	// ObjectiveValue returns the objective value for the objective in the
+	// solution. Also returns 0.0 if the objective is not part of the solution.
+	ObjectiveValue(objective ModelObjective) float64
 
 	// PlannedPlanClusters returns the solution plan clusters that are planned.
 	PlannedPlanClusters() ImmutableSolutionPlanClusterCollection
