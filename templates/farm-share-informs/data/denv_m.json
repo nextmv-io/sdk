@@ -1,0 +1,521 @@
+{
+  "defaults": {
+    "vehicles": {
+      "start": {
+        "lon": -104.940821,
+        "lat": 39.739971
+      },
+      "end": {
+        "lon": -104.940821,
+        "lat": 39.739971
+      },
+      "shift_start": "2021-10-17T08:00:00-06:00",
+      "shift_end": "2021-10-17T12:00:00-06:00",
+      "speed": 10,
+      "capacity": 10
+    },
+    "stops": {
+      "quantity": -1,
+      "unassigned_penalty": 2000000000
+    }
+  },
+  "vehicles": [
+    {
+      "id": "van-1"
+    },
+    {
+      "id": "van-2"
+    },
+    {
+      "id": "van-3"
+    },
+    {
+      "id": "van-4"
+    },
+    {
+      "id": "van-5"
+    }
+  ],
+  "stops": [
+    {
+      "id": "farm-1-pickup",
+      "position": {
+        "lon": -105.162054,
+        "lat": 39.995266
+      },
+      "precedes": "location-1-dropoff"
+    },
+    {
+      "id": "location-1-dropoff",
+      "position": {
+        "lon": -104.91524511702116,
+        "lat": 39.73951044361809
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-2-pickup",
+      "position": {
+        "lon": -104.928528,
+        "lat": 39.990622
+      },
+      "precedes": "location-2-dropoff"
+    },
+    {
+      "id": "location-2-dropoff",
+      "position": {
+        "lon": -104.88899577047333,
+        "lat": 39.77284774413436
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-3-pickup",
+      "position": {
+        "lon": -104.874949,
+        "lat": 39.976636
+      },
+      "precedes": "location-3-dropoff"
+    },
+    {
+      "id": "location-3-dropoff",
+      "position": {
+        "lon": -104.95498693963287,
+        "lat": 39.779387622587386
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-4-pickup",
+      "position": {
+        "lon": -104.791648,
+        "lat": 39.898691
+      },
+      "precedes": "location-4-dropoff"
+    },
+    {
+      "id": "location-4-dropoff",
+      "position": {
+        "lon": -104.97624309117292,
+        "lat": 39.7331287216349
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-5-pickup",
+      "position": {
+        "lon": -104.599509,
+        "lat": 39.748156
+      },
+      "precedes": "location-5-dropoff"
+    },
+    {
+      "id": "location-5-dropoff",
+      "position": {
+        "lon": -104.96588704618294,
+        "lat": 39.71106774678957
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-6-pickup",
+      "position": {
+        "lon": -104.992853,
+        "lat": 39.358919
+      },
+      "precedes": "location-6-dropoff"
+    },
+    {
+      "id": "location-6-dropoff",
+      "position": {
+        "lon": -104.88584800255272,
+        "lat": 39.74967895968852
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-7-pickup",
+      "position": {
+        "lon": -104.462206,
+        "lat": 39.582939
+      },
+      "precedes": "location-7-dropoff"
+    },
+    {
+      "id": "location-7-dropoff",
+      "position": {
+        "lon": -104.98185602405766,
+        "lat": 39.78256498492671
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-8-pickup",
+      "position": {
+        "lon": -104.443667,
+        "lat": 39.97141
+      },
+      "precedes": "location-8-dropoff"
+    },
+    {
+      "id": "location-8-dropoff",
+      "position": {
+        "lon": -104.88627142622985,
+        "lat": 39.79556961552595
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-9-pickup",
+      "position": {
+        "lon": -104.801837,
+        "lat": 39.943478
+      },
+      "precedes": "location-9-dropoff"
+    },
+    {
+      "id": "location-9-dropoff",
+      "position": {
+        "lon": -104.9752581857318,
+        "lat": 39.74068504125872
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-10-pickup",
+      "position": {
+        "lon": -104.666421,
+        "lat": 39.582075
+      },
+      "precedes": "location-10-dropoff"
+    },
+    {
+      "id": "location-10-dropoff",
+      "position": {
+        "lon": -104.98521908294428,
+        "lat": 39.76817411018715
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-11-pickup",
+      "position": {
+        "lon": -105.162054,
+        "lat": 39.995266
+      },
+      "precedes": "location-11-dropoff"
+    },
+    {
+      "id": "location-11-dropoff",
+      "position": {
+        "lon": -104.9931667351709,
+        "lat": 39.774614999013856
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-12-pickup",
+      "position": {
+        "lon": -104.928528,
+        "lat": 39.990622
+      },
+      "precedes": "location-12-dropoff"
+    },
+    {
+      "id": "location-12-dropoff",
+      "position": {
+        "lon": -104.95695201526013,
+        "lat": 39.74208339470252
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-13-pickup",
+      "position": {
+        "lon": -104.874949,
+        "lat": 39.976636
+      },
+      "precedes": "location-13-dropoff"
+    },
+    {
+      "id": "location-13-dropoff",
+      "position": {
+        "lon": -104.93832840692701,
+        "lat": 39.739381120866334
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-14-pickup",
+      "position": {
+        "lon": -104.791648,
+        "lat": 39.898691
+      },
+      "precedes": "location-14-dropoff"
+    },
+    {
+      "id": "location-14-dropoff",
+      "position": {
+        "lon": -104.95008420413032,
+        "lat": 39.74690787116347
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-15-pickup",
+      "position": {
+        "lon": -104.599509,
+        "lat": 39.748156
+      },
+      "precedes": "location-15-dropoff"
+    },
+    {
+      "id": "location-15-dropoff",
+      "position": {
+        "lon": -104.89837866897196,
+        "lat": 39.766032836276445
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-16-pickup",
+      "position": {
+        "lon": -104.992853,
+        "lat": 39.358919
+      },
+      "precedes": "location-16-dropoff"
+    },
+    {
+      "id": "location-16-dropoff",
+      "position": {
+        "lon": -104.91989393229586,
+        "lat": 39.747959657283246
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-17-pickup",
+      "position": {
+        "lon": -104.462206,
+        "lat": 39.582939
+      },
+      "precedes": "location-17-dropoff"
+    },
+    {
+      "id": "location-17-dropoff",
+      "position": {
+        "lon": -104.97768970728437,
+        "lat": 39.77564356083757
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-18-pickup",
+      "position": {
+        "lon": -104.443667,
+        "lat": 39.97141
+      },
+      "precedes": "location-18-dropoff"
+    },
+    {
+      "id": "location-18-dropoff",
+      "position": {
+        "lon": -104.9330988074809,
+        "lat": 39.744829826999236
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-19-pickup",
+      "position": {
+        "lon": -104.801837,
+        "lat": 39.943478
+      },
+      "precedes": "location-19-dropoff"
+    },
+    {
+      "id": "location-19-dropoff",
+      "position": {
+        "lon": -104.94015904526475,
+        "lat": 39.72780739998138
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-20-pickup",
+      "position": {
+        "lon": -104.666421,
+        "lat": 39.582075
+      },
+      "precedes": "location-20-dropoff"
+    },
+    {
+      "id": "location-20-dropoff",
+      "position": {
+        "lon": -104.93343927283279,
+        "lat": 39.7514976210971
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-21-pickup",
+      "position": {
+        "lon": -105.162054,
+        "lat": 39.995266
+      },
+      "precedes": "location-21-dropoff"
+    },
+    {
+      "id": "location-21-dropoff",
+      "position": {
+        "lon": -104.99692839651341,
+        "lat": 39.65408916265135
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-22-pickup",
+      "position": {
+        "lon": -104.928528,
+        "lat": 39.990622
+      },
+      "precedes": "location-22-dropoff"
+    },
+    {
+      "id": "location-22-dropoff",
+      "position": {
+        "lon": -104.92718188371087,
+        "lat": 39.758887319310205
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-23-pickup",
+      "position": {
+        "lon": -104.874949,
+        "lat": 39.976636
+      },
+      "precedes": "location-23-dropoff"
+    },
+    {
+      "id": "location-23-dropoff",
+      "position": {
+        "lon": -105.01599833624743,
+        "lat": 39.730684517319474
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-24-pickup",
+      "position": {
+        "lon": -104.791648,
+        "lat": 39.898691
+      },
+      "precedes": "location-24-dropoff"
+    },
+    {
+      "id": "location-24-dropoff",
+      "position": {
+        "lon": -104.99283963120145,
+        "lat": 39.714621021512656
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-25-pickup",
+      "position": {
+        "lon": -104.599509,
+        "lat": 39.748156
+      },
+      "precedes": "location-25-dropoff"
+    },
+    {
+      "id": "location-25-dropoff",
+      "position": {
+        "lon": -104.91279413935803,
+        "lat": 39.72118407909123
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-26-pickup",
+      "position": {
+        "lon": -104.992853,
+        "lat": 39.358919
+      },
+      "precedes": "location-26-dropoff"
+    },
+    {
+      "id": "location-26-dropoff",
+      "position": {
+        "lon": -104.99691026559563,
+        "lat": 39.73456154405585
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-27-pickup",
+      "position": {
+        "lon": -104.462206,
+        "lat": 39.582939
+      },
+      "precedes": "location-27-dropoff"
+    },
+    {
+      "id": "location-27-dropoff",
+      "position": {
+        "lon": -104.93989716344073,
+        "lat": 39.772042675784725
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-28-pickup",
+      "position": {
+        "lon": -104.443667,
+        "lat": 39.97141
+      },
+      "precedes": "location-28-dropoff"
+    },
+    {
+      "id": "location-28-dropoff",
+      "position": {
+        "lon": -105.03164268530334,
+        "lat": 39.67608575404199
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-29-pickup",
+      "position": {
+        "lon": -104.801837,
+        "lat": 39.943478
+      },
+      "precedes": "location-29-dropoff"
+    },
+    {
+      "id": "location-29-dropoff",
+      "position": {
+        "lon": -104.9125548418957,
+        "lat": 39.774188488352756
+      },
+      "quantity": 1
+    },
+    {
+      "id": "farm-30-pickup",
+      "position": {
+        "lon": -104.666421,
+        "lat": 39.582075
+      },
+      "precedes": "location-30-dropoff"
+    },
+    {
+      "id": "location-30-dropoff",
+      "position": {
+        "lon": -104.99770222901238,
+        "lat": 39.72620835158805
+      },
+      "quantity": 1
+    }
+  ]
+}
