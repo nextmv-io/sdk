@@ -25,6 +25,9 @@ type DirectedAcyclicGraph interface {
 	NewArc(origin, destination ModelStop) (Arc, error)
 	// Arcs returns all [Arcs] in the graph.
 	Arcs() Arcs
+	// OutboundArcs returns all [Arcs] that have the given [ModelStop] as their
+	// origin.
+	OutboundArcs(stop ModelStop) Arcs
 }
 
 // NewDirectedAcyclicGraph creates a new [DirectedAcyclicGraph].
