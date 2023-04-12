@@ -64,9 +64,6 @@ func (d *duration) UnmarshalJSON(b []byte) error {
 
 type statisticsOut struct {
 	Schema string `json:"schema"`
-	Run    struct {
-		Time float64 `json:"time"`
-	} `json:"run"`
 	Result result `json:"result"`
 }
 
@@ -200,7 +197,7 @@ func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 			}
 			if s.Store.Vehicles != nil {
 				m.Statistics = statisticsOut{
-					Schema: "v0",
+					Schema: "v1",
 					Result: result{
 						Value:   float64(*s.Statistics.Value),
 						Elapsed: s.Statistics.Time.Elapsed.Seconds(),
