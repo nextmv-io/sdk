@@ -2,6 +2,8 @@
 run:
   timeout: 5m
   go: "1.19"
+  skip-dirs:
+    - templates/farm-share-informs
 
 # Configures linters. Details: https://golangci-lint.run/usage/linters
 linters-settings:
@@ -286,3 +288,4 @@ issues:
       linters:
         - gocyclo
       source: ^func \(r \*genericRunner.*$
+
