@@ -1,11 +1,11 @@
-package common_test
+package alias_test
 
 import (
 	"math"
 	"math/rand"
 	"testing"
 
-	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/nextroute/alias"
 )
 
 const (
@@ -25,7 +25,7 @@ func testAlias(t *testing.T, weights []float64, seed int64) {
 	for i := 0; i < len(weights); i++ {
 		sum += weights[i]
 	}
-	alias, err := common.NewAlias(weights)
+	alias, err := alias.New(weights)
 	if err != nil {
 		t.Fatal(err)
 	}

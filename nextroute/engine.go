@@ -1,4 +1,3 @@
-// Package nextroute is a package
 package nextroute
 
 import (
@@ -8,7 +7,6 @@ import (
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 var (
@@ -27,7 +25,7 @@ var (
 	newDistanceExpression func(
 		string,
 		ModelExpression,
-		common.DistanceUnit,
+		DistanceUnit,
 	) DistanceExpression
 	newDurationExpression func(
 		ModelExpression,
@@ -74,15 +72,12 @@ var (
 		string,
 		time.Duration,
 	) VehicleTypeDurationExpression
-
 	newMaximumDurationConstraint func(
 		VehicleTypeDurationExpression,
 	) (MaximumDurationConstraint, error)
-
 	newMaximumTravelDurationConstraint func(
 		VehicleTypeDurationExpression,
 	) (MaximumTravelDurationConstraint, error)
-
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
@@ -121,7 +116,7 @@ var (
 	) TermExpression
 	newTravelDurationExpression func(
 		DistanceExpression,
-		common.Speed,
+		Speed,
 	) TravelDurationExpression
 	newTravelDurationObjective func() TravelDurationObjective
 	newUnPlannedObjective      func(
@@ -140,33 +135,35 @@ var (
 		string,
 		float64,
 	) VehicleFromToExpression
-
 	newSolver func(
 		Model,
 		SolverOptions,
 	) (Solver, error)
-
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
-
-	newBasicFormatter   func() Formatter
-	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
-
+	newBasicFormatter                func() Formatter
+	newVerboseFormatter              func([]alns.ProgressionEntry) Formatter
 	newSolutionPlanClusterCollection func(
 		*rand.Rand,
 		SolutionPlanClusters,
 	) SolutionPlanClusterCollection
-
 	newPerformanceObserver func(
 		Model,
 	) PerformanceObserver
-
 	newModelStatistics func(
 		Model,
 	) ModelStatistics
-
 	newVehicleStatistics func(
 		ModelVehicle,
 	) VehicleStatistics
+	newLocation        func(float64, float64) (Location, error)
+	newInvalidLocation func() Location
+	unique             func(Locations) Locations
+	centroid           func(Locations) (Location, error)
+	newSpeed           func(float64, SpeedUnit) Speed
+	newSpeedUnit       func(DistanceUnit, time.Duration) SpeedUnit
+	newDistance        func(float64, DistanceUnit) Distance
+	haversine          func(Location, Location) (Distance, error)
+	durationValue      func(Distance, Speed, time.Duration) float64
 )

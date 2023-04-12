@@ -1,9 +1,9 @@
-package common_test
+package slice_test
 
 import (
 	"testing"
 
-	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/nextroute/slice"
 )
 
 type TestItem interface {
@@ -29,7 +29,7 @@ func TestSmallest(t *testing.T) {
 	f := func(item TestItem) float64 {
 		return item.Value()
 	}
-	result := common.NSmallest(items, f, 3)
+	result := slice.NSmallest(items, f, 3)
 	if len(result) != 3 {
 		t.Errorf("Expected 3 items, got %v", len(result))
 	}
@@ -42,7 +42,7 @@ func TestSmallest(t *testing.T) {
 	if result[2].Value() != 3 {
 		t.Errorf("Expected 3, got %v", result[2].Value())
 	}
-	result = common.NSmallest(items, f, 10)
+	result = slice.NSmallest(items, f, 10)
 	if len(result) != 5 {
 		t.Errorf("Expected 3 items, got %v", len(result))
 	}
@@ -62,12 +62,12 @@ func TestSmallest(t *testing.T) {
 		t.Errorf("Expected 5, got %v", result[4].Value())
 	}
 
-	result = common.NSmallest(items, f, 0)
+	result = slice.NSmallest(items, f, 0)
 	if len(result) != 0 {
 		t.Errorf("Expected 0 items, got %v", len(result))
 	}
 
-	result = common.NSmallest([]TestItem{}, f, 3)
+	result = slice.NSmallest([]TestItem{}, f, 3)
 	if len(result) != 0 {
 		t.Errorf("Expected 0 items, got %v", len(result))
 	}

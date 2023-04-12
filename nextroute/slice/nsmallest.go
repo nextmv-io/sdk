@@ -1,8 +1,6 @@
-package common
+package slice
 
-import (
-	"container/heap"
-)
+import "container/heap"
 
 // NSmallest returns the n-smallest items in the slice items using the
 // function f to determine the value of each item. If n is greater than

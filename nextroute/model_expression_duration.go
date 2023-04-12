@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // NewDurationExpression creates a new duration expression.
@@ -19,7 +18,7 @@ func NewDurationExpression(
 // NewTravelDurationExpression creates a new travel duration expression.
 func NewTravelDurationExpression(
 	distanceExpression DistanceExpression,
-	speed common.Speed,
+	speed Speed,
 ) TravelDurationExpression {
 	connect.Connect(con, &newTravelDurationExpression)
 	return newTravelDurationExpression(distanceExpression, speed)
@@ -81,7 +80,7 @@ type DistanceExpression interface {
 	ModelExpression
 	// Distance returns the distance for the given vehicle type, start and
 	// end stop.
-	Distance(ModelVehicleType, ModelStop, ModelStop) common.Distance
+	Distance(ModelVehicleType, ModelStop, ModelStop) Distance
 }
 
 // TravelDurationExpression is an expression that returns a duration based on
@@ -91,5 +90,5 @@ type TravelDurationExpression interface {
 	// DistanceExpression returns the distance expression.
 	DistanceExpression() DistanceExpression
 	// Speed returns the speed.
-	Speed() common.Speed
+	Speed() Speed
 }

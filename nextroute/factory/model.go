@@ -1,11 +1,10 @@
 // Package factory is a package containing factory functions for creating
-// next-route models.
+// nextroute models.
 package factory
 
 import (
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 // NewModel builds a ready-to-go vehicle routing problem. The difference with
@@ -14,7 +13,7 @@ import (
 // hand, [nextroute.NewModel] creates an empty vehicle routing model which
 // must be built from the ground up.
 func NewModel(
-	input schema.Input,
+	input nextroute.Input,
 	modelOptions ModelOptions,
 	options ...nextroute.Option,
 ) (nextroute.Model, error) {
@@ -42,7 +41,7 @@ var (
 	con = connect.NewConnector("sdk", "NextRouteFactory")
 
 	newModel func(
-		schema.Input,
+		nextroute.Input,
 		ModelOptions,
 		...nextroute.Option,
 	) (nextroute.Model, error)

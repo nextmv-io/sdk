@@ -1,7 +1,5 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/nextroute/common"
-
 // PlanClusterType is the type of the plan cluster.
 type PlanClusterType int
 
@@ -20,7 +18,7 @@ type ModelPlanCluster interface {
 
 	// Centroid returns the centroid of the cluster. The centroid is the
 	// average location of all stops in the cluster.
-	Centroid() (common.Location, error)
+	Centroid() (Location, error)
 
 	// Index returns the index of the cluster.
 	Index() int

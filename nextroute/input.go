@@ -1,5 +1,4 @@
-// Package schema provides the input and output schema for nextroute.
-package schema
+package nextroute
 
 import (
 	"time"

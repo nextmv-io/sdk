@@ -1,4 +1,4 @@
-package schema
+package nextroute
 
 import (
 	"reflect"
@@ -50,8 +50,8 @@ type RouterInput struct {
 // - DistanceLimits
 // - ServiceGroups
 
-// RouterToNextRoute transforms router input to nextroute input.
-func RouterToNextRoute(routerInput RouterInput) Input {
+// FromRouter transforms router input to nextroute input.
+func FromRouter(routerInput RouterInput) Input {
 	// Convert stop defaults
 	stopDefaults := StopDefaults{}
 	if anyAndAllEqual(routerInput.Penalties) {

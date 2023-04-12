@@ -2,8 +2,6 @@ package nextroute
 
 import (
 	"time"
-
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // ModelStop is a stop to be assigned to a vehicle.
@@ -25,7 +23,7 @@ type ModelStop interface {
 	Index() int
 
 	// Location returns the location of the stop.
-	Location() common.Location
+	Location() Location
 
 	// Model returns the model of the stop.
 	Model() Model

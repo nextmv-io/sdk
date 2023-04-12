@@ -1,4 +1,5 @@
-package common
+// Package statistics holds functionality for working with statistics.
+package statistics
 
 import (
 	"fmt"

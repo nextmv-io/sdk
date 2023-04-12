@@ -1,4 +1,6 @@
-package common
+// Package alias implements the alias method for sampling from a discrete
+// distribution.
+package alias
 
 import (
 	"fmt"
@@ -11,13 +13,11 @@ type Alias interface {
 	Sample(rng *rand.Rand) int
 }
 
-// NewAlias creates a new Alias from the given weights.
-// The weights must be positive and at least one weight must be given.
-// The weights are normalized to sum to 1.
-// NewAlias([]float64{1, 2, 3}) will return an Alias that will
-// return 0 with probability 1/6, 1 with probability 1/3 and 2 with
-// probability 1/2.
-func NewAlias(weights []float64) (Alias, error) {
+// New creates a new Alias from the given weights. The weights must be positive
+// and at least one weight must be given. The weights are normalized to sum to
+// 1. New([]float64{1, 2, 3}) will return an Alias that will return 0 with
+// probability 1/6, 1 with probability 1/3 and 2 with probability 1/2.
+func New(weights []float64) (Alias, error) {
 	n := len(weights)
 
 	if n < 1 {

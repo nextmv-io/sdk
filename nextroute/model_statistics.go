@@ -2,7 +2,7 @@ package nextroute
 
 import (
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/nextroute/statistics"
 )
 
 // NewModelStatistics creates a new ModelStatistics instance.
@@ -52,12 +52,12 @@ type VehicleStatistics interface {
 	FirstToLastSeconds() float64
 	// FromFirstSeconds returns the travel time in seconds from the first
 	// location to all stops as statistics.
-	FromFirstSeconds() common.Statistics
+	FromFirstSeconds() statistics.Statistics
 
 	// Report returns a report of the statistics.
 	Report() string
 
 	// ToLastSeconds returns the travel time in seconds from all stops to the
 	// last location as statistics.
-	ToLastSeconds() common.Statistics
+	ToLastSeconds() statistics.Statistics
 }

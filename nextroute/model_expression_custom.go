@@ -2,7 +2,6 @@ package nextroute
 
 import (
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // NewConstantExpression returns an expression that always returns the same
@@ -80,7 +79,7 @@ func NewVehicleTypeFromToExpression(
 func NewDistanceExpression(
 	name string,
 	modelExpression ModelExpression,
-	unit common.DistanceUnit,
+	unit DistanceUnit,
 ) DistanceExpression {
 	connect.Connect(con, &newDistanceExpression)
 	return newDistanceExpression(name, modelExpression, unit)

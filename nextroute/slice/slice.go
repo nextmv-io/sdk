@@ -1,10 +1,9 @@
-package common
+// Package slice holds functionality for working with slices.
+package slice
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
-	"sync"
 	"time"
 )
 
@@ -33,9 +32,9 @@ func Unique[T comparable](s []T) []T {
 	return result
 }
 
-// UniqueDefined is a universal duplicate removal function for type instances in
-// a slice that implement the comparable interface. The function f is used to
-// extract the comparable value from the type instance.
+// UniqueDefined is a universal duplicate removal function for type instances
+// in a slice that implement the comparable interface. The function f is used
+// to extract the comparable value from the type instance.
 func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	inResult := make(map[I]bool)
 	var result []T
@@ -141,37 +140,6 @@ func DefensiveCopy[T any](v []T) []T {
 	return c
 }
 
-// WithinTolerance returns true if a and b are within the given tolerance.
-func WithinTolerance(a, b, tolerance float64) bool {
-	if a == b {
-		return true
-	}
-	d := math.Abs(a - b)
-	if b == 0 {
-		return d < tolerance
-	}
-	return (d / math.Abs(b)) < tolerance
-}
-
-// DurationValue returns the value of a duration in the given time unit.
-// Will panic if the time unit is zero.
-func DurationValue(
-	distance Distance,
-	speed Speed,
-	timeUnit time.Duration,
-) float64 {
-	if timeUnit.Seconds() == 0 {
-		panic(
-			fmt.Errorf(
-				"time unit is zero in duration calculation",
-			),
-		)
-	}
-	seconds := distance.Value(Meters) / speed.Value(MetersPerSecond)
-
-	return seconds / timeUnit.Seconds()
-}
-
 // RandomElement returns a random element from the given slice. If the slice is
 // empty, panic is raised. If source is nil, a new source is created using the
 // current time.
@@ -210,7 +178,7 @@ func RandomElements[T any](
 	result := make([]T, 0, n)
 	indicesUsed := make(map[int]bool, 0)
 	for i := 0; i < n; i++ {
-		index := RandomIndex(
+		index := randomIndex(
 			source,
 			len(elements),
 			indicesUsed,
@@ -247,7 +215,7 @@ func RandomElementIndices[T any](
 	result := make([]int, 0, n)
 	indicesUsed := make(map[int]bool, 0)
 	for i := 0; i < n; i++ {
-		index := RandomIndex(
+		index := randomIndex(
 			source,
 			len(elements),
 			indicesUsed,
@@ -258,10 +226,10 @@ func RandomElementIndices[T any](
 	return result
 }
 
-// RandomIndex returns a random index from the given size. If the index has
+// randomIndex returns a random index from the given size. If the index has
 // already been used, a new index is generated. If source is nil, a new source
 // is created using the current time.
-func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
+func randomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -272,25 +240,6 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 			indicesUsed[index] = true
 			return index
 		}
-	}
-}
-
-// Lazy is a function that returns a value of type T. The value is only
-// calculated once, and the result is cached for subsequent calls.
-type Lazy[T any] func() T
-
-// DefineLazy returns a Lazy[T] that will call the given function to
-// calculate the value. The value is only calculated once, and the result
-// is cached for subsequent calls.
-func DefineLazy[T any](f func() T) Lazy[T] {
-	var value T
-	var once sync.Once
-	return func() T {
-		once.Do(func() {
-			value = f()
-			f = nil
-		})
-		return value
 	}
 }
 

@@ -1,20 +1,20 @@
-package common_test
+package statistics_test
 
 import (
 	"math"
 	"testing"
 
-	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/nextroute/statistics"
 )
 
 func TestStatistics(t *testing.T) {
 	data := make([]float64, 0)
 
-	statistics := common.NewStatistics(data, func(d float64) float64 {
+	stats := statistics.NewStatistics(data, func(d float64) float64 {
 		return d
 	})
 
-	testResult(t, data, common.Statistics{
+	testResult(t, data, statistics.Statistics{
 		Count:              0,
 		Sum:                0,
 		Average:            0,
@@ -28,15 +28,15 @@ func TestStatistics(t *testing.T) {
 		Quartile3:          0,
 		InterQuartileRange: 0,
 		MidHinge:           0,
-	}, statistics)
+	}, stats)
 
 	data = []float64{1}
 
-	statistics = common.NewStatistics(data, func(d float64) float64 {
+	stats = statistics.NewStatistics(data, func(d float64) float64 {
 		return d
 	})
 
-	testResult(t, data, common.Statistics{
+	testResult(t, data, statistics.Statistics{
 		Count:              1,
 		Sum:                1,
 		Average:            1,
@@ -50,15 +50,15 @@ func TestStatistics(t *testing.T) {
 		Quartile3:          math.NaN(),
 		InterQuartileRange: math.NaN(),
 		MidHinge:           math.NaN(),
-	}, statistics)
+	}, stats)
 
 	data = []float64{1, 2}
 
-	statistics = common.NewStatistics(data, func(d float64) float64 {
+	stats = statistics.NewStatistics(data, func(d float64) float64 {
 		return d
 	})
 
-	testResult(t, data, common.Statistics{
+	testResult(t, data, statistics.Statistics{
 		Count:              2,
 		Sum:                3,
 		Average:            1.5,
@@ -72,13 +72,13 @@ func TestStatistics(t *testing.T) {
 		Quartile3:          2,
 		InterQuartileRange: 1,
 		MidHinge:           1.75,
-	}, statistics)
+	}, stats)
 }
 
 func testResult(
 	t *testing.T,
 	data []float64,
-	expected, actual common.Statistics,
+	expected, actual statistics.Statistics,
 ) {
 	if testNotEqual(expected.Count, actual.Count) {
 		t.Errorf(

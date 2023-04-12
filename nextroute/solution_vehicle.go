@@ -3,8 +3,6 @@ package nextroute
 import (
 	"context"
 	"time"
-
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // SolutionVehicle is a vehicle in a solution.
@@ -24,7 +22,7 @@ type SolutionVehicle interface {
 	// Centroid returns the centroid of the vehicle. The centroid is the
 	// average location of all stops in the vehicle excluding the start and
 	// end stops.
-	Centroid() (common.Location, error)
+	Centroid() (Location, error)
 
 	// Duration returns the duration of the vehicle. The duration is the
 	// time the vehicle is on the road. The duration is the time between

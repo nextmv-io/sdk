@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // NewModel creates a new empty vehicle routing model. Please use [BuildModel]
@@ -35,7 +34,7 @@ type Model interface {
 	// DistanceUnit returns the unit of distance used in the model. The
 	// unit is used to convert distances to values and vice versa. This is
 	// also used for reporting.
-	DistanceUnit() common.DistanceUnit
+	DistanceUnit() DistanceUnit
 
 	// DurationUnit returns the unit of duration used in the model. The
 	// unit is used to convert durations to values and vice versa. This is
@@ -72,7 +71,7 @@ type Model interface {
 	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
 
 	// NewStop creates a new stop. The stop is used to create plan clusters.
-	NewStop(location common.Location) (ModelStop, error)
+	NewStop(location Location) (ModelStop, error)
 
 	// NewVehicle creates a new vehicle. The vehicle is used to create
 	// solutions.
