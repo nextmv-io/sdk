@@ -32,7 +32,7 @@ cat << EOF
 We now want to create a staging instance, and assign our v2 version to that instance.
 We can then use the staging instance to run further tests against
 our production release.
-The following command will be ran:
+The following command will be run:
 nextmv app instance create \\
 --app-id  $APPID \\
 --version-id informs-routing-app-v2 \\
@@ -76,12 +76,12 @@ nextmv app run \
 
 
 cat << EOF
-====== Create a input set   ======
+====== Create an input set   ======
 Input sets are a way to group together previous run inputs that can be used in experiments
 to compare two or more versions of an application. Input sets can be created from previous
-runs by specifying a list of input IDs, or by searching for a set of inputs ran by an instance, 
+runs by specifying a list of input IDs, or by searching for a set of inputs that were run by an instance, 
 optionally using date/time ranges. In this case we will use the most recent runs for the staging instance.
-The following command will be ran to create an input set (by default, up to the last 20 runs in 
+The following command will be run to create an input set (by default, up to the last 20 runs in 
 from the previous day will be used):
 nextmv experiment input-set create \\
 		--app-id $APPID \\
@@ -103,10 +103,10 @@ nextmv experiment input-set create \
   
 cat << EOF
 ====== Run an experiment   ======
-Now lets run an experiment comparing the results of our updated version to that of the current
+Now let's run an experiment comparing the results of our updated version to that of the current
 production instance. An experiment runs two versions (represented by instances) against the same
 set of inputs, and compares the results.
-The following command will be ran to compare the results of production and staging:
+The following command will be run to compare the results of production and staging:
 nextmv experiment batch start \\
       --experiment-id "compare-with-service-times" \\
       --app-id $APPID \\
@@ -114,7 +114,7 @@ nextmv experiment batch start \\
 			--input-set-id denver-sample \\
       --name "Compare v1 prod to v2 staging" \\
 			--description "Comparison with service times"
-Press return to create a the staging instance, with our updated version assigned.
+Press return to create the staging instance, with our updated version assigned.
 EOF
 read -r
 
