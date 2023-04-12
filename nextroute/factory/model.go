@@ -25,16 +25,18 @@ func NewModel(
 // ModelOptions represents options for a model.
 type ModelOptions struct {
 	EnableClusterConstraint           bool `json:"enable_cluster_constraint" usage:"Enable the cluster constraint creating compact clusters of stops"`
+	IgnoreAttributesConstraint        bool `json:"ignore_attributes_constraint" usage:"Ignore the compatibility attributes constraint"`
 	IgnoreCapacityConstraint          bool `json:"ignore_capacity_constraint" usage:"Ignore the capacity constraint"`
 	IgnoreDistanceLimitConstraint     bool `json:"ignore_distance_limit_constraint" usage:"Ignore the distance limit constraint"`
 	IgnoreInitializationCostObjective bool `json:"ignore_initialization_cost_objective" usage:"Ignore the initialization cost objective"`
 	IgnoreMaximumDurationConstraint   bool `json:"ignore_maximum_duration_constraint" usage:"Ignore the maximum duration constraint"`
-	IgnoreServiceDurations            bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
-	IgnoreShiftConstraint             bool `json:"ignore_shift_constraint" usage:"Ignore the shift constraint"`
-	IgnoreTravelDurationObjective     bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
-	IgnoreUnassignedStopsObjective    bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
-	IgnoreWindowsConstraint           bool `json:"ignore_windows_constraint" usage:"Ignore the windows constraint"`
-	IgnoreEarlinessObjective          bool `json:"ignore_earliness_objective" usage:"Ignore the earliness objective"`
+	// IgnorePrecedenceConstraint        bool `json:"ignore_precedence_constraint" usage:"Ignore the precedence (pickups & deliveries) constraint"`
+	IgnoreServiceDurations         bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
+	IgnoreShiftConstraint          bool `json:"ignore_shift_constraint" usage:"Ignore the shift constraint"`
+	IgnoreTravelDurationObjective  bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
+	IgnoreUnassignedStopsObjective bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
+	IgnoreWindowsConstraint        bool `json:"ignore_windows_constraint" usage:"Ignore the windows constraint"`
+	IgnoreEarlinessObjective       bool `json:"ignore_earliness_objective" usage:"Ignore the earliness objective"`
 }
 
 var (
