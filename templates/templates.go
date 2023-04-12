@@ -30,18 +30,12 @@ var (
 	// RoutingInformsInput3 is the input.json file in the routing template.
 	//go:embed farm-share-informs/data/denv_s.json
 	FarmShareInformsInput3 string
-	// RoutingInformsInput4 is the input.json file in the routing template.
-	//go:embed farm-share-informs/data/set2/denv_l_v.json
-	FarmShareInformsInput4 string
-	// RoutingInformsInput5 is the input.json file in the routing template.
-	//go:embed farm-share-informs/data/set2/denv_m_v.json
-	FarmShareInformsInput5 string
-	// RoutingInformsInput6 is the input.json file in the routing template.
-	//go:embed farm-share-informs/data/set2/denv_s_v.json
-	FarmShareInformsInput6 string
-	// RoutingInformsInput7 is the input.json file in the routing template.
-	//go:embed farm-share-informs/data/set2/denv_xl_v.json
-	FarmShareInformsInput7 string
+	// FarmShareInformsPart1 is the part1.sh file in the routing template.
+	//go:embed farm-share-informs/part1.sh
+	FarmShareInformsPart1 string
+	// FarmShareInformsPart2 is the part2.sh file in the routing template.
+	//go:embed farm-share-informs/part2.sh
+	FarmShareInformsPart2 string
 	// RoutingInformsEncoder is the encoder.go file in the routing template.
 	//go:embed farm-share-informs/encoder.go
 	FarmShareInformsEncoder string
@@ -61,18 +55,12 @@ var (
 	// RoutingInformsInput3 is the input.json file in the routing template.
 	//go:embed routing-informs/data/denv_s.json
 	RoutingInformsInput3 string
-	// RoutingInformsInput4 is the input.json file in the routing template.
-	//go:embed routing-informs/data/set2/denv_l_v.json
-	RoutingInformsInput4 string
-	// RoutingInformsInput5 is the input.json file in the routing template.
-	//go:embed routing-informs/data/set2/denv_m_v.json
-	RoutingInformsInput5 string
-	// RoutingInformsInput6 is the input.json file in the routing template.
-	//go:embed routing-informs/data/set2/denv_s_v.json
-	RoutingInformsInput6 string
-	// RoutingInformsInput7 is the input.json file in the routing template.
-	//go:embed routing-informs/data/set2/denv_xl_v.json
-	RoutingInformsInput7 string
+	// RoutingInformsPart1 is the part1.sh file in the routing template.
+	//go:embed routing-informs/part1.sh
+	RoutingInformsPart1 string
+	// RoutingInformsPart2 is the part2.sh file in the routing template.
+	//go:embed routing-informs/part2.sh
+	RoutingInformsPart2 string
 	// RoutingInformsHelper is the helper.go file in the routing template.
 	//go:embed routing-informs/helper.go
 	RoutingInformsHelper string
