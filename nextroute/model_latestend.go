@@ -18,6 +18,11 @@ type LatestEnd interface {
 
 	// Lateness returns the lateness of a stop. The lateness is the difference
 	Lateness(stop SolutionStop) float64
+
+	// SetLatenessFactor adds a factor with which a deviating stop is
+	// multiplied. This is only taken into account if the construct is used as
+	// an objective.
+	SetLatenessFactor(factor StopExpression)
 }
 
 // NewLatestEnd creates a new latest end construct. The latest end of a stop is
