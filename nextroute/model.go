@@ -70,18 +70,18 @@ type Model interface {
 	// is a plan cluster of a single stop. A plan cluster is a collection of
 	// stops which are always planned and unplanned as a single entity.
 	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
-	// NewPlanMultipleStops creates a new plan of multiple stops. A plan of
-	// multiple stops is a plan cluster of more than one stop. A plan cluster
-	// is a collection of stops which are always planned and unplanned as a
-	// single entity. When planned, they are always assigned to the same
-	// vehicle. The function takes in a sequence represented by a Directed
-	// Acyclic Graph (DAG) which defines the restrictions of said sequence.
-	// Using an empty DAG means that the stops can be planned in any order and
-	// they will always be assigned to the same vehicle. Consider the stops
-	// [s1, s2, s3] and the sequence [s1 -> s2, s1 -> s3]. This means that we
-	// are restricting that the stop s1 must come before s2 and s3. However, we
-	// are not specifying the order of s2 and s3. This means that we can plan
-	// s2 before s3 or s3 before s2.
+	// NewPlanMultipleStops creates a new plan of multiple [ModelStops]. A plan
+	// of multiple stops is a [ModelPlanCluster] of more than one stop. A plan
+	// cluster is a collection of stops which are always planned and unplanned
+	// as a single entity. When planned, they are always assigned to the same
+	// vehicle. The function takes in a sequence represented by a
+	// [DirectedAcyclicGraph] (DAG) which restricts the order in which the
+	// stops can be planned on the vehicle. Using an empty DAG means that the
+	// stops can be planned in any order and they will always be assigned to
+	// the same vehicle. Consider the stops [s1, s2, s3] and the sequence [s1
+	// -> s2, s1 -> s3]. This means that we are restricting that the stop s1
+	// must come before s2 and s3. However, we are not specifying the order of
+	// s2 and s3. This means that we can plan s2 before s3 or s3 before s2.
 	NewPlanMultipleStops(
 		stops ModelStops,
 		sequence DirectedAcyclicGraph,
