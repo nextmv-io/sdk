@@ -6,24 +6,22 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// NewTimeDependentDurationExpression creates a new time dependent expression.
-// The expression passed in is the default expression for the time dependent
-// expression. The default expression is used when the time is not within any
-// of the intervals set by SetExpression. Expressions can be defined for
-// intervals of time. The intervals are inclusive of the start time and
-// exclusive of the end time. For example, if the interval is [9:30, 10:30),
-// the expression is valid for 9:30, 9:31, ..., 10:29:59:999. The interval must
-// be on the minute boundary. The start time must be before the end time.
-// The interval defined my the minimum of all start times and the maximum
-// of all end times can not exceed more than one week.
+// NewTimeDependentDurationExpression creates a
+// [TimeDependentDurationExpression], which takes a default expression as input.
+// This default expression is used when the time is not within any of the
+// intervals set by the SetExpression method.
 //
-// First, a request is made for the value at a certain time. Then, the
-// expression for that time is found and used to calculate the value. The
-// percentage of how much can be served within the time interval, starting at
-// the time, of the expression is calculated, and the value is multiplied by
-// that percentage. We continue to the next expression to serve the remaining
-// value if necessary. We repeat this process until the value is served.
-
+// The [TimeDependentDurationExpression.SetExpression] method can be used to
+// define expressions for intervals of time, which are inclusive of the start
+// time and exclusive of the end time. For example, if the interval is
+// [9:30, 10:30), the expression is valid for all times from 9:30 up to (but not
+// including) 10:30. Note that the interval must be on the minute boundary, and
+// the start time must be before the end time.
+//
+// The overall interval defined by the minimum of all start times and the
+// maximum of all end times cannot exceed more than one week.
+// The default expression is used for all times that go outside the defined
+// intervals and may not contain any negative values.
 func NewTimeDependentDurationExpression(
 	model Model,
 	defaultExpression DurationExpression,
@@ -32,8 +30,8 @@ func NewTimeDependentDurationExpression(
 	return newTimeDependentDurationExpression(model, defaultExpression)
 }
 
-// NewTimeInDependentDurationExpression creates a new time in-dependent
-// duration expression.
+// NewTimeInDependentDurationExpression creates a
+// [TimeDependentDurationExpression] which is not dependent on time.
 // This expression has the same interface as the time dependent expression
 // but the time is not used in any of the calculations. All values originate
 // from the base expression.
@@ -60,7 +58,7 @@ type TimeDependentDurationExpression interface {
 	// SetExpression sets the expression for the given time interval
 	// [start, end). If the interval overlaps with an existing interval,
 	// the existing interval is replaced. Both start and end must be on the
-	// minute boundary.
+	// minute boundary. Expression is not allowed to contain negative values.
 	SetExpression(start, end time.Time, expression DurationExpression) error
 
 	// ExpressionAtTime returns the expression for the given time.
@@ -69,7 +67,15 @@ type TimeDependentDurationExpression interface {
 	ExpressionAtValue(float64) DurationExpression
 
 	// ValueAtTime returns the value for the given time.
-	ValueAtTime(time time.Time, vehicleType ModelVehicleType, from, to ModelStop) float64
+	ValueAtTime(
+		time time.Time,
+		vehicleType ModelVehicleType,
+		from, to ModelStop,
+	) float64
 	// ValueAtValue returns the value for the given value.
-	ValueAtValue(value float64, vehicleType ModelVehicleType, from, to ModelStop) float64
+	ValueAtValue(
+		value float64,
+		vehicleType ModelVehicleType,
+		from, to ModelStop,
+	) float64
 }
