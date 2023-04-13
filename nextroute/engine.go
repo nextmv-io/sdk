@@ -166,4 +166,7 @@ var (
 	newDistance        func(float64, DistanceUnit) Distance
 	haversine          func(Location, Location) (Distance, error)
 	durationValue      func(Distance, Speed, time.Duration) float64
+	kilometersPerHour  func() SpeedUnit
+	milesPerHour       func() SpeedUnit
+	metersPerSecond    func() SpeedUnit
 )

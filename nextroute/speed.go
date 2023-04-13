@@ -33,10 +33,19 @@ type SpeedUnit interface {
 }
 
 // KilometersPerHour is a speed unit of kilometers per hour.
-var KilometersPerHour = NewSpeedUnit(Kilometers, time.Hour)
+func KilometersPerHour() SpeedUnit {
+	connect.Connect(con, &kilometersPerHour)
+	return kilometersPerHour()
+}
 
 // MilesPerHour is a speed unit of miles per hour.
-var MilesPerHour = NewSpeedUnit(Miles, time.Hour)
+func MilesPerHour() SpeedUnit {
+	connect.Connect(con, &milesPerHour)
+	return milesPerHour()
+}
 
 // MetersPerSecond is a speed unit of meters per second.
-var MetersPerSecond = NewSpeedUnit(Meters, time.Second)
+func MetersPerSecond() SpeedUnit {
+	connect.Connect(con, &metersPerSecond)
+	return metersPerSecond()
+}
