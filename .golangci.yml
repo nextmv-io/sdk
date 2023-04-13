@@ -189,11 +189,11 @@ issues:
       linters:
         - lll
     # Deactivate gocyclo in router.go due to many if statements.
-    - path: nextroute/schema/router\.go
+    - path: nextroute/router\.go
       linters:
         - gocyclo
     # Deactivate lll in schema due to go tags.
-    - path: nextroute/schema
+    - path: nextroute/input\.go
       linters:
         - lll
     # Deactivate lll in route/example_option_test.go
@@ -213,17 +213,17 @@ issues:
       linters:
         - lll
     # Complexity in NewAlias is high due to multiple cases, fine for now.
-    - path: nextroute/common/alias\.go
+    - path: nextroute/alias/alias\.go
       linters:
         - gocyclo
     # Complexity in statistics is high due to multiple cases, fine for now.
-    - path: nextroute/common/statistics\.go
+    - path: nextroute/statistics/statistics\.go
       linters:
         - gocyclo
-    - path: nextroute/common/statistics_test\.go
+    - path: nextroute/statistics/statistics_test\.go
       linters:
         - gocyclo
-    - path: nextroute/common/nsmallest_test\.go
+    - path: nextroute/slice/nsmallest_test\.go
       linters:
         - gocyclo
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
@@ -302,7 +302,7 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
-      
+
     - path: templates/cluster-tsp/schema\.go
       linters:
         - unparam
@@ -336,4 +336,3 @@ issues:
       linters:
         - gocyclo
       source: ^func \(r \*genericRunner.*$
-
