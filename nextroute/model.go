@@ -85,7 +85,7 @@ type Model interface {
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
-		travelDuration DurationExpression,
+		travelDuration TimeDependentDurationExpression,
 		processDuration DurationExpression,
 	) (ModelVehicleType, error)
 

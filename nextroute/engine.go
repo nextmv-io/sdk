@@ -169,4 +169,13 @@ var (
 	newVehicleStatistics func(
 		ModelVehicle,
 	) VehicleStatistics
+
+	newTimeDependentDurationExpression func(
+		Model,
+		DurationExpression,
+	) (TimeDependentDurationExpression, error)
+
+	newTimeInDependentDurationExpression func(
+		DurationExpression,
+	) TimeDependentDurationExpression
 )
