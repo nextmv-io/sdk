@@ -16,6 +16,14 @@ import (
 // be on the minute boundary. The start time must be before the end time.
 // The interval defined my the minimum of all start times and the maximum
 // of all end times can not exceed more than one week.
+//
+// First, a request is made for the value at a certain time. Then, the
+// expression for that time is found and used to calculate the value. The
+// percentage of how much can be served within the time interval, starting at
+// the time, of the expression is calculated, and the value is multiplied by
+// that percentage. We continue to the next expression to serve the remaining
+// value if necessary. We repeat this process until the value is served.
+
 func NewTimeDependentDurationExpression(
 	model Model,
 	defaultExpression DurationExpression,
