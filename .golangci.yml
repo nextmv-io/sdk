@@ -180,7 +180,52 @@ issues:
     - path: measure/bin_test\.go
       linters:
         - gocyclo
-
+    # Deactivate line length in solver.go because of go tags
+    - path: nextroute/solver\.go
+      linters:
+        - lll
+    # Deactivate line length in solver_parallel.go because of go tags
+    - path: nextroute/solver_parallel\.go
+      linters:
+        - lll
+    # Deactivate gocyclo in router.go due to many if statements.
+    - path: nextroute/schema/router\.go
+      linters:
+        - gocyclo
+    # Deactivate lll in schema due to go tags.
+    - path: nextroute/schema
+      linters:
+        - lll
+    # Deactivate lll in route/example_option_test.go
+    - path: route/example_option_test\.go
+      linters:
+        - lll
+      # Deactivate lll in route/router.go
+    - path: route/router\.go
+      linters:
+        - lll
+    # Deactivate line length in model.go because of go tags
+    - path: nextroute/model\.go
+      linters:
+        - lll
+    # Deactivate line length in factory/model.go because of go tags
+    - path: nextroute/factory/model\.go
+      linters:
+        - lll
+    # Complexity in NewAlias is high due to multiple cases, fine for now.
+    - path: nextroute/common/alias\.go
+      linters:
+        - gocyclo
+    # Complexity in statistics is high due to multiple cases, fine for now.
+    - path: nextroute/common/statistics\.go
+      linters:
+        - gocyclo
+    - path: nextroute/common/statistics_test\.go
+      linters:
+        - gocyclo
+    - path: nextroute/common/nsmallest_test\.go
+      linters:
+        - gocyclo
     # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
     - path: route/load\.go
       linters:
@@ -192,6 +237,11 @@ issues:
       linters:
         - tagliatelle
       text: measure
+
+    # Complex nested block nesting is fine for now.
+    - path: alns/solver\.go
+      linters:
+        - nestif
 
     # Please note that other Go modules have issues that are ignored but are
     # not listed here. The reason is that linting must be done standing on the
