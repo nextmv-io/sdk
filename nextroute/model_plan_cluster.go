@@ -8,8 +8,6 @@ type PlanClusterType int
 const (
 	// SingleStop is a cluster that contains a single stop.
 	SingleStop PlanClusterType = iota
-	// Sequence is a cluster that contains a sequence of stops.
-	Sequence
 	// MultipleStop is a cluster that contains multiple stops sequenced by a
 	// directed acyclic graph.
 	MultipleStop
