@@ -105,7 +105,7 @@ nextmv app instance create \
 printf "\n ============= Completed ================"
 printf "\n\nYour assigned app ID is %s." "$APPID"
 
-printf "\n\nRun export APPID=%s to set it in your environment."  "$APPID"
+printf "\n\nRun export APPID=%s to set it in your environment.\n"  "$APPID"
 
 cat << "EOF"
 Finally, execute the following command to run your application from 
