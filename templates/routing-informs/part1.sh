@@ -108,8 +108,6 @@ printf "\n\nYour assigned app ID is %s." "$APPID"
 printf "\n\nRun export APPID=%s to set it in your environment."  "$APPID"
 
 cat << "EOF"
-Then, set the API key you used to configure to the following value:
-export NEXTMV_API_KEY=<your key>
 Finally, execute the following command to run your application from 
 its assigned endpoint:
   curl -X POST \

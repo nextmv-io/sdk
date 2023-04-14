@@ -8,7 +8,7 @@ if [ "${APPID}" = "" ]; then
 fi
 
 INPUT_SET_ID="denver-sample-$RAND"
-EXPERIMENT_ID="compare-with-service-times-$RAND"
+EXPERIMENT_ID="compare-w-service-times-$RAND"
 
 cat << EOF
 ====== Create an input set   ======
