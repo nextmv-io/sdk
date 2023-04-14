@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "${APPID}" = "" ]; then
   printf "\nPlease set the APPID environment variable to the value created in part 1.\n\n"
@@ -10,12 +10,12 @@ cat << EOF
 Once you are happy with the updates in the current app, create a new version. 
 This version represents the binary containing the updates you made.
 The following command will be run:
-nextmv app version create \\
---app-id $APPID \\
---version-id informs-routing-app-v2 \\
---name "release candidate v2" \\
---description "INFORMS workshop v2 app" \\
---json
+  nextmv app version create \\
+    --app-id $APPID \\
+    --version-id informs-routing-app-v2 \\
+    --name "release candidate v2" \\
+    --description "INFORMS workshop v2 app" \\
+    --json
 Press return to create the v2 version.
 EOF
 read -r
@@ -33,12 +33,12 @@ We now want to create a staging instance, and assign our v2 version to that inst
 We can then use the staging instance to run further tests against
 our production release.
 The following command will be run:
-nextmv app instance create \\
---app-id  $APPID \\
---version-id informs-routing-app-v2 \\
---instance-id staging \\
---name "Staging instance" \\
---description "Staging instance of informs routing app
+  nextmv app instance create \\
+    --app-id  $APPID \\
+    --version-id informs-routing-app-v2 \\
+    --instance-id staging \\
+    --name "Staging instance" \\
+    --description "Staging instance of informs routing app
 Press return to create the staging instance, with our updated version assigned.
 EOF
 read -r
@@ -74,54 +74,6 @@ nextmv app run \
     --input "data/denv_l.json" \
 		--instance staging
 
-
-cat << EOF
-====== Create an input set   ======
-Input sets are a way to group together previous run inputs that can be used in experiments
-to compare two or more versions of an application. Input sets can be created from previous
-runs by specifying a list of input IDs, or by searching for a set of inputs that were run by an instance, 
-optionally using date/time ranges. In this case we will use the most recent runs for the staging instance.
-The following command will be run to create an input set (by default, up to the last 20 runs in 
-from the previous day will be used):
-nextmv experiment input-set create \\
-		--app-id $APPID \\
-		--input-set-id denver-sample \\
-    --instance-id staging \\
-		--name "Denver sample runs" \\
-		--description "low, med, and high vol for denver"
-Press return to create the staging instance, with our updated version assigned.
-EOF
-read -r
-
-nextmv experiment input-set create \
-		--app-id $APPID \
-		--input-set-id denver-sample \
-    --instance-id staging \
-		--name "Denver sample runs" \
-		--description "low, med, and high vol for denver"
-
-  
-cat << EOF
-====== Run an experiment   ======
-Now let's run an experiment comparing the results of our updated version to that of the current
-production instance. An experiment runs two versions (represented by instances) against the same
-set of inputs, and compares the results.
-The following command will be run to compare the results of production and staging:
-nextmv experiment batch start \\
-      --experiment-id "compare-with-service-times" \\
-      --app-id $APPID \\
-			--instance-ids "prod,staging" \\
-			--input-set-id denver-sample \\
-      --name "Compare v1 prod to v2 staging" \\
-			--description "Comparison with service times"
-Press return to create the staging instance, with our updated version assigned.
-EOF
-read -r
-
-nextmv experiment batch start \
-      --experiment-id "compare-with-service-times" \
-		  --app-id "$APPID" \
-			--instance-ids "prod,staging" \
-			--input-set-id denver-sample \
-      --name "Compare v1 prod to v2 staging" \
-			--description "Comparison with service times"
+printf "\n ============= Completed ================"
+printf "\n\nIt should now be possible to run experiments on application with ID:"
+printf "\n$APPID\n"
