@@ -117,4 +117,4 @@ its assigned endpoint:
     "https://api.cloud.nextmv.io/v1/applications/$APPID/runs?instance_id=prod"
 EOF
 
-echo "\n\nYour assigned app ID is $APPID \n"
+printf "\n\nYour assigned app ID is $APPID \n"
