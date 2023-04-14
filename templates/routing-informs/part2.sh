@@ -29,8 +29,8 @@ nextmv app version create \
 
 cat << EOF
 ====== Create a staging instance   ======
-We now want to create a staging instance, and assign our v2 version to that instance.
-We can then use the staging instance to run further tests against
+We now want to create a staging instance, and assign our v2 version to that 
+instance. We can then use the staging instance to run further tests against
 our production release.
 The following command will be run:
   nextmv app instance create \\

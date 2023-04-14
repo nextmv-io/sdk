@@ -9,11 +9,8 @@ if [ "${NEXTMV_API_KEY}" = "" ]; then
   exit 1
 fi
 
-printf "\nEnter your initials (letters only): "
+printf "\nEnter your initials (One to three letters, lowercase letters only): "
 read -r ID
-
-## Convert initials to lowercase (to match expected App ID formatting)
-ID=(echo $ID | tr '[:upper:]' '[:lower:]')
 
 APPID="informs-routing-app-$ID-$RAND"
 
