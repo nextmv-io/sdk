@@ -1,0 +1,248 @@
+{
+  "stops": [
+    {
+      "id": "22387W8poDQ5KW76M",
+      "position": {
+        "lon": -78.90919,
+        "lat": 35.72389
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "23eAf7rPXymhinxJf",
+      "position": {
+        "lon": -78.813862,
+        "lat": 35.75712
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "252LqkAZGyveCdEaP",
+      "position": {
+        "lon": -78.92996,
+        "lat": 35.932795
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "25ALTwCKaK9uPvn5s",
+      "position": {
+        "lon": -78.505745,
+        "lat": 35.77772
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "27WKRZW3kno7zMEkG",
+      "position": {
+        "lon": -78.75084,
+        "lat": 35.732995
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "28BTGReBpgTXQnAva",
+      "position": {
+        "lon": -78.788025,
+        "lat": 35.813025
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "29HNPHR2QjJLjhzer",
+      "position": {
+        "lon": -78.749391,
+        "lat": 35.74261
+      },
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "2AafSrHoni6Ewdzeb",
+      "position": {
+        "lon": -78.94658,
+        "lat": 36.039135
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2BJGAqwWRPbs6ksXs",
+      "position": {
+        "lon": -78.64972,
+        "lat": 35.64796
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2EXfYNB7obq3BFQT6",
+      "position": {
+        "lon": -78.747955,
+        "lat": 35.672955
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2HhiXPryk3hZEuFaN",
+      "position": {
+        "lon": -78.83403,
+        "lat": 35.77013
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2QbLndj8um6hAPH5M",
+      "position": {
+        "lon": -78.864465,
+        "lat": 35.782855
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2SHgArQ9kBQTYSZp6",
+      "position": {
+        "lon": -78.952142,
+        "lat": 35.88029
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2TCD3ahGp2XnidPxW",
+      "position": {
+        "lon": -78.52748,
+        "lat": 35.961465
+      },
+      "compatibility_attributes": ["basic"]
+    },
+    {
+      "id": "2Y3KX8sRknjypCW4t",
+      "position": {
+        "lon": -78.89832,
+        "lat": 35.83202
+      }
+    },
+    {
+      "id": "2aa8Pt2xkwBfQsEGM",
+      "position": {
+        "lon": -78.63216,
+        "lat": 35.83458
+      }
+    },
+    {
+      "id": "2bDazECpaqYN5sFM4",
+      "position": {
+        "lon": -78.76063,
+        "lat": 35.67337
+      }
+    },
+    {
+      "id": "2c7fWaJQx8yq9Sih2",
+      "position": {
+        "lon": -78.911485,
+        "lat": 36.009015
+      }
+    },
+    {
+      "id": "2ct2wJnPSktctijyk",
+      "position": {
+        "lon": -78.522705,
+        "lat": 35.93663
+      }
+    },
+    {
+      "id": "2ctCtnLM4iyLzXBrA",
+      "position": {
+        "lon": -78.995162,
+        "lat": 35.97414
+      }
+    },
+    {
+      "id": "2dDqR2wbdx6eZWc8p",
+      "position": {
+        "lon": -78.50509,
+        "lat": 35.7606
+      }
+    },
+    {
+      "id": "2fBW9YdiG9zgCxseB",
+      "position": {
+        "lon": -78.828547,
+        "lat": 35.962635
+      },
+      "precedes": ["2aa8Pt2xkwBfQsEGM", "2fjcmXvN96BQq4bRd"]
+    },
+    {
+      "id": "2fjcmXvN96BQq4bRd",
+      "position": {
+        "lon": -78.60914,
+        "lat": 35.84616
+      },
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"]
+    },
+    {
+      "id": "2k8M5Paaj72xKCqHS",
+      "position": {
+        "lon": -78.65521,
+        "lat": 35.740605
+      },
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"],
+      "succeeds": "2kgJTWCk7zCZn6A6o"
+    },
+    {
+      "id": "2kgJTWCk7zCZn6A6o",
+      "position": {
+        "lon": -78.92051,
+        "lat": 35.887575
+      },
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"],
+      "precedes": "2khzNgeCFeNgtmyoj"
+    },
+    {
+      "id": "2khzNgeCFeNgtmyoj",
+      "position": {
+        "lon": -78.84058,
+        "lat": 35.823865
+      },
+      "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"]
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "vehicle-0",
+      "shift_start": "2021-10-17T06:00:00-06:00",
+      "shift_end": "2021-10-17T10:00:00-06:00",
+      "initialization_cost": 4000,
+      "compatibility_attributes": ["premium"]
+    },
+    {
+      "id": "vehicle-1",
+      "shift_start": "2021-10-17T10:00:00-06:00",
+      "shift_end": "2021-10-17T12:00:00-06:00",
+      "max_duration": 7000,
+      "compatibility_attributes": ["basic"]
+    }
+  ],
+  "defaults": {
+    "vehicles": {
+      "capacity": {
+        "bunnies": 20,
+        "rabbits": 10
+      },
+      "start": {
+        "lat": 35.791729813680874,
+        "lon": -78.7401685145487
+      },
+      "end": {
+        "lat": 35.791729813680874,
+        "lon": -78.7401685145487
+      },
+      "speed": 10
+    },
+    "stops": {
+      "stop_duration": 300,
+      "quantity": {
+        "bunnies": -1,
+        "rabbits": -1
+      },
+      "unassigned_penalty": 200000
+    }
+  }
+}

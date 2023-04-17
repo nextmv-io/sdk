@@ -2,6 +2,7 @@
 package nextroute
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
@@ -170,4 +171,10 @@ var (
 		ModelVehicle,
 	) VehicleStatistics
 	newDirectedAcyclicGraph func() DirectedAcyclicGraph
+	solve                   func(
+		context.Context,
+		ParallelSolver,
+		ParallelSolveOptions,
+		chan<- any,
+	) error
 )
