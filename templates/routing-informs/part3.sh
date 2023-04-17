@@ -8,16 +8,17 @@ if [ "${APPID}" = "" ]; then
 fi
 
 INPUT_SET_ID="denver-sample-$RAND"
-EXPERIMENT_ID="compare-with-service-times-$RAND"
+EXPERIMENT_ID="compare-w-service-times-$RAND"
 
 cat << EOF
 ====== Create an input set   ======
-Input sets are a way to group together previous run inputs that can be used in experiments
-to compare two or more versions of an application. Input sets can be created from previous
-runs by specifying a list of input IDs, or by searching for a set of inputs that were run by an instance, 
-optionally using date/time ranges. In this case we will use the most recent runs for the staging instance.
-The following command will be run to create an input set (by default, up to the last 20 runs in 
-from the previous day will be used):
+Input sets are a way to group together previous run inputs that can be used in 
+experiments to compare two or more versions of an application. Input sets can 
+be created from previous runs by specifying a list of input IDs, or by
+searching for a set of inputs that were run by an instance, optionally using 
+date/time ranges. In this case we will use the most recent runs for the staging 
+instance. The following command will be run to create an input set (by default, 
+up to the last 20 runs in from the previous day will be used):
   nextmv experiment input-set create \\
     --app-id $APPID \\
     --input-set-id $INPUT_SET_ID \\
@@ -38,10 +39,11 @@ nextmv experiment input-set create \
   
 cat << EOF
 ====== Run an experiment   ======
-Now let's run an experiment comparing the results of our updated version to that of the current
-production instance. An experiment runs two versions (represented by instances) against the same
-set of inputs, and compares the results.
-The following command will be run to compare the results of production and staging:
+Now let's run an experiment comparing the results of our updated version to 
+that of the current production instance. An experiment runs two versions 
+(represented by instances) against the same set of inputs, and compares the 
+results. The following command will be run to compare the results of production 
+and staging:
   nextmv experiment batch start \\
     --app-id $APPID \\
     --experiment-id "$EXPERIMENT_ID" \\

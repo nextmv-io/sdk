@@ -9,11 +9,8 @@ if [ "${NEXTMV_API_KEY}" = "" ]; then
   exit 1
 fi
 
-printf "\nEnter your initials (letters only): "
+printf "\nEnter your initials (One to three letters, lowercase letters only): "
 read -r ID
-
-## Convert initials to lowercase (to match expected App ID formatting)
-ID=(echo $ID | tr '[:upper:]' '[:lower:]')
 
 APPID="informs-routing-app-$ID-$RAND"
 
@@ -108,11 +105,9 @@ nextmv app instance create \
 printf "\n ============= Completed ================"
 printf "\n\nYour assigned app ID is %s." "$APPID"
 
-printf "\n\nRun export APPID=%s to set it in your environment."  "$APPID"
+printf "\n\nRun export APPID=%s to set it in your environment.\n"  "$APPID"
 
 cat << "EOF"
-Then, set the API key you used to configure to the following value:
-export NEXTMV_API_KEY=<your key>
 Finally, execute the following command to run your application from 
 its assigned endpoint:
   curl -X POST \
@@ -122,4 +117,4 @@ its assigned endpoint:
     "https://api.cloud.nextmv.io/v1/applications/$APPID/runs?instance_id=prod"
 EOF
 
-echo "\n\nYour assigned app ID is $APPID \n"
+printf "\n\nYour assigned app ID is $APPID \n"
