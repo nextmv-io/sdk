@@ -36,6 +36,9 @@ var (
 	// RoutingInformsPart2 is the part2.sh file in the routing template.
 	//go:embed routing-informs/part2.sh
 	RoutingInformsPart2 string
+	// RoutingInformsPart3 is the part3.sh file in the routing template.
+	//go:embed routing-informs/part3.sh
+	RoutingInformsPart3 string
 	// RoutingInformsHelper is the helper.go file in the routing template.
 	//go:embed routing-informs/helper.go
 	RoutingInformsHelper string
