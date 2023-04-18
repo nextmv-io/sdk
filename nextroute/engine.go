@@ -177,4 +177,14 @@ var (
 		StopExpression,
 		TemporalReference,
 	) (EarlinessObjective, error)
+	newDirectedAcyclicGraph func() DirectedAcyclicGraph
+
+	newTimeDependentDurationExpression func(
+		Model,
+		DurationExpression,
+	) (TimeDependentDurationExpression, error)
+
+	newTimeIndependentDurationExpression func(
+		DurationExpression,
+	) TimeDependentDurationExpression
 )

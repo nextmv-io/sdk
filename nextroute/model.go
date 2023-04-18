@@ -65,11 +65,27 @@ type Model interface {
 	// collection of stops which are always planned and unplanned as a
 	// single entity. In this case they have to be planned as a sequence on
 	// the same vehicle.
-	NewPlanSequence(stops ModelStops) (ModelPlanSequence, error)
+	NewPlanSequence(stops ModelStops) (ModelPlanMultipleStops, error)
 	// NewPlanSingleStop creates a new plan single stop. A plan single stop
 	// is a plan cluster of a single stop. A plan cluster is a collection of
 	// stops which are always planned and unplanned as a single entity.
 	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
+	// NewPlanMultipleStops creates a new plan of multiple [ModelStops]. A plan
+	// of multiple stops is a [ModelPlanCluster] of more than one stop. A plan
+	// cluster is a collection of stops which are always planned and unplanned
+	// as a single entity. When planned, they are always assigned to the same
+	// vehicle. The function takes in a sequence represented by a
+	// [DirectedAcyclicGraph] (DAG) which restricts the order in which the
+	// stops can be planned on the vehicle. Using an empty DAG means that the
+	// stops can be planned in any order and they will always be assigned to
+	// the same vehicle. Consider the stops [s1, s2, s3] and the sequence [s1
+	// -> s2, s1 -> s3]. This means that we are restricting that the stop s1
+	// must come before s2 and s3. However, we are not specifying the order of
+	// s2 and s3. This means that we can plan s2 before s3 or s3 before s2.
+	NewPlanMultipleStops(
+		stops ModelStops,
+		sequence DirectedAcyclicGraph,
+	) (ModelPlanMultipleStops, error)
 
 	// NewStop creates a new stop. The stop is used to create plan clusters.
 	NewStop(location common.Location) (ModelStop, error)
@@ -85,7 +101,7 @@ type Model interface {
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
-		travelDuration DurationExpression,
+		travelDuration TimeDependentDurationExpression,
 		processDuration DurationExpression,
 	) (ModelVehicleType, error)
 
@@ -118,6 +134,14 @@ type Model interface {
 	// TimeFormat returns the time format used for reporting.
 	TimeFormat() string
 
+	// TimeToValue converts the specified time to a value as used
+	// internally in the model.
+	TimeToValue(time time.Time) float64
+
+	// ValueToTime converts the specified value to a time.Time as used
+	// by the user. It is assuming value represents time since
+	// the [Model.Epoch()] in the unit [Model.DurationUnit()].
+	ValueToTime(value float64) time.Time
 	// Vehicles returns all vehicles of the model.
 	Vehicles() ModelVehicles
 	// VehicleTypes returns all vehicle types of the model.

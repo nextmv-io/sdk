@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## SETUP
 
@@ -9,7 +9,7 @@ if [ "${NEXTMV_API_KEY}" = "" ]; then
   exit 1
 fi
 
-printf "\nEnter your initials: "
+printf "\nEnter your initials (One to three letters, lowercase letters only): "
 read -r ID
 
 APPID="informs-routing-app-$ID-$RAND"
@@ -52,7 +52,8 @@ nextmv app push --app-id "$APPID"
 cat << EOF
 ====== Create an Application Version ======
 Once you are happy with the current app you are working with in the cloud, 
-you can create a version. The version represents a specific executable app binary (e.g., to use for testing or to run in production). 
+you can create a version. The version represents a specific executable app 
+binary (e.g., to use for testing or to run in production).
 The following command will be run:
   nextmv app version create \\
     --app-id "$APPID"  \\
@@ -73,9 +74,12 @@ nextmv app version create \
 
 cat << EOF
 ====== Create an Application Instance ======
-Finally we'll create an application instance. An application instance is a representation of a version and optional configuration that you want to use in some context. The same version can be used by multiple application instances.
-For example, you might have a configuration that
-you run for each farm share delivery region, like the Northeast, Midwest, etc or one for different environments, like staging and production.
+Finally we'll create an application instance. An application instance is a 
+representation of a version and optional configuration that you want to use in 
+some context. The same version can be used by multiple application instances. 
+For example, you might have a configuration that you run for each farm share 
+delivery region, like the Northeast, Midwest, etc or one for different 
+environments, like staging and production.
 The following command will be run:
   nextmv app instance create \\
     --app-id "$APPID" \\
@@ -101,12 +105,11 @@ nextmv app instance create \
 printf "\n ============= Completed ================"
 printf "\n\nYour assigned app ID is %s." "$APPID"
 
-printf "\n\nRun export APPID=%s to set it in your environment."  "$APPID"
+printf "\n\nRun export APPID=%s to set it in your environment.\n"  "$APPID"
 
 cat << "EOF"
-Then, set the API key you used to configure to the following value:
-export NEXTMV_API_KEY=<your key>
-Finally, execute the following command to run your application from its assigned endpoint:
+Finally, execute the following command to run your application from 
+its assigned endpoint:
   curl -X POST \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $NEXTMV_API_KEY" \
@@ -114,4 +117,4 @@ Finally, execute the following command to run your application from its assigned
     "https://api.cloud.nextmv.io/v1/applications/$APPID/runs?instance_id=prod"
 EOF
 
-echo "\n\nYour assigned app ID is $APPID \n"
+printf "\n\nYour assigned app ID is $APPID \n"

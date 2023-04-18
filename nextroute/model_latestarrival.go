@@ -20,10 +20,12 @@ type LatestArrival interface {
 	// between the actual arrival and its target arrival time.
 	Lateness(stop SolutionStop) float64
 
-	// SetLatenessFactor adds a factor with which a deviating stop is
-	// multiplied. This is only taken into account if the construct is used as
-	// an objective.
-	SetLatenessFactor(factor StopExpression)
+	// SetFactor adds a factor with which a deviating stop is multiplied. This
+	// is only taken into account if the construct is used as an objective.
+	SetFactor(factor float64, stop ModelStop)
+
+	// Factor returns the multiplication factor for the given stop expression.
+	Factor(stop ModelStop) float64
 }
 
 // NewLatestArrival creates a construct that can be added to the model as a
