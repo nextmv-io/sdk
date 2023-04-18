@@ -138,8 +138,8 @@ type Model interface {
 	// internally in the model.
 	TimeToValue(time time.Time) float64
 
-	// ValueToTime converts the specified value to a time.Time as it used
-	// internally in the model. It is assuming value represents time since
+	// ValueToTime converts the specified value to a time.Time as used
+	// by the user. It is assuming value represents time since
 	// the [Model.Epoch()] in the unit [Model.DurationUnit()].
 	ValueToTime(value float64) time.Time
 	// Vehicles returns all vehicles of the model.
