@@ -1,7 +1,7 @@
 {
   "stops": [
     {
-      "id": "22387W8poDQ5KW76M",
+      "id": "s1",
       "position": {
         "lon": -78.90919,
         "lat": 35.72389
@@ -9,7 +9,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "23eAf7rPXymhinxJf",
+      "id": "s2",
       "position": {
         "lon": -78.813862,
         "lat": 35.75712
@@ -17,7 +17,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "252LqkAZGyveCdEaP",
+      "id": "s3",
       "position": {
         "lon": -78.92996,
         "lat": 35.932795
@@ -25,7 +25,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "25ALTwCKaK9uPvn5s",
+      "id": "s4",
       "position": {
         "lon": -78.505745,
         "lat": 35.77772
@@ -33,7 +33,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "27WKRZW3kno7zMEkG",
+      "id": "s5",
       "position": {
         "lon": -78.75084,
         "lat": 35.732995
@@ -41,7 +41,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "28BTGReBpgTXQnAva",
+      "id": "s6",
       "position": {
         "lon": -78.788025,
         "lat": 35.813025
@@ -49,7 +49,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "29HNPHR2QjJLjhzer",
+      "id": "s7",
       "position": {
         "lon": -78.749391,
         "lat": 35.74261
@@ -57,7 +57,7 @@
       "compatibility_attributes": ["premium"]
     },
     {
-      "id": "2AafSrHoni6Ewdzeb",
+      "id": "s8",
       "position": {
         "lon": -78.94658,
         "lat": 36.039135
@@ -65,7 +65,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2BJGAqwWRPbs6ksXs",
+      "id": "s9",
       "position": {
         "lon": -78.64972,
         "lat": 35.64796
@@ -73,7 +73,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2EXfYNB7obq3BFQT6",
+      "id": "s10",
       "position": {
         "lon": -78.747955,
         "lat": 35.672955
@@ -81,7 +81,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2HhiXPryk3hZEuFaN",
+      "id": "s11",
       "position": {
         "lon": -78.83403,
         "lat": 35.77013
@@ -89,7 +89,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2QbLndj8um6hAPH5M",
+      "id": "s12",
       "position": {
         "lon": -78.864465,
         "lat": 35.782855
@@ -97,7 +97,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2SHgArQ9kBQTYSZp6",
+      "id": "s13",
       "position": {
         "lon": -78.952142,
         "lat": 35.88029
@@ -105,7 +105,7 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2TCD3ahGp2XnidPxW",
+      "id": "s14",
       "position": {
         "lon": -78.52748,
         "lat": 35.961465
@@ -113,64 +113,64 @@
       "compatibility_attributes": ["basic"]
     },
     {
-      "id": "2Y3KX8sRknjypCW4t",
+      "id": "s15",
       "position": {
         "lon": -78.89832,
         "lat": 35.83202
       }
     },
     {
-      "id": "2aa8Pt2xkwBfQsEGM",
+      "id": "s16",
       "position": {
         "lon": -78.63216,
         "lat": 35.83458
       }
     },
     {
-      "id": "2bDazECpaqYN5sFM4",
+      "id": "s17",
       "position": {
         "lon": -78.76063,
         "lat": 35.67337
       }
     },
     {
-      "id": "2c7fWaJQx8yq9Sih2",
+      "id": "s18",
       "position": {
         "lon": -78.911485,
         "lat": 36.009015
       }
     },
     {
-      "id": "2ct2wJnPSktctijyk",
+      "id": "s19",
       "position": {
         "lon": -78.522705,
         "lat": 35.93663
       }
     },
     {
-      "id": "2ctCtnLM4iyLzXBrA",
+      "id": "s20",
       "position": {
         "lon": -78.995162,
         "lat": 35.97414
       }
     },
     {
-      "id": "2dDqR2wbdx6eZWc8p",
+      "id": "s21",
       "position": {
         "lon": -78.50509,
         "lat": 35.7606
       }
     },
     {
-      "id": "2fBW9YdiG9zgCxseB",
+      "id": "s22",
       "position": {
         "lon": -78.828547,
         "lat": 35.962635
       },
-      "precedes": ["2aa8Pt2xkwBfQsEGM", "2fjcmXvN96BQq4bRd"]
+      "precedes": ["s16", "s23"]
     },
     {
-      "id": "2fjcmXvN96BQq4bRd",
+      "id": "s23",
       "position": {
         "lon": -78.60914,
         "lat": 35.84616
@@ -178,25 +178,25 @@
       "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"]
     },
     {
-      "id": "2k8M5Paaj72xKCqHS",
+      "id": "s24",
       "position": {
         "lon": -78.65521,
         "lat": 35.740605
       },
       "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"],
-      "succeeds": "2kgJTWCk7zCZn6A6o"
+      "succeeds": "s25"
     },
     {
-      "id": "2kgJTWCk7zCZn6A6o",
+      "id": "s25",
       "position": {
         "lon": -78.92051,
         "lat": 35.887575
       },
       "hard_window": ["2021-10-17T09:00:00-06:00", "2021-10-17T09:30:00-06:00"],
-      "precedes": "2khzNgeCFeNgtmyoj"
+      "precedes": "s26"
     },
     {
-      "id": "2khzNgeCFeNgtmyoj",
+      "id": "s26",
       "position": {
         "lon": -78.84058,
         "lat": 35.823865
