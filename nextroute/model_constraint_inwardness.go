@@ -11,6 +11,7 @@ import (
 type InwardnessConstraint interface {
 	ConstraintDataUpdater
 	ModelConstraint
+	ModelObjective
 }
 
 // NewInwardnessConstraint creates a new inwardness constraint. The constraint
