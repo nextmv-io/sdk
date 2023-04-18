@@ -101,7 +101,7 @@ type Model interface {
 	// NewVehicleType creates a new vehicle type. The vehicle type is used
 	// to create vehicles.
 	NewVehicleType(
-		travelDuration DurationExpression,
+		travelDuration TimeDependentDurationExpression,
 		processDuration DurationExpression,
 	) (ModelVehicleType, error)
 
@@ -134,6 +134,14 @@ type Model interface {
 	// TimeFormat returns the time format used for reporting.
 	TimeFormat() string
 
+	// TimeToValue converts the specified time to a value as used
+	// internally in the model.
+	TimeToValue(time time.Time) float64
+
+	// ValueToTime converts the specified value to a time.Time as used
+	// by the user. It is assuming value represents time since
+	// the [Model.Epoch()] in the unit [Model.DurationUnit()].
+	ValueToTime(value float64) time.Time
 	// Vehicles returns all vehicles of the model.
 	Vehicles() ModelVehicles
 	// VehicleTypes returns all vehicle types of the model.

@@ -7,14 +7,13 @@ package nextroute
 type ModelVehicleType interface {
 	ModelData
 
-	// CalculateStartAndEnd calculates the start and end time of stop if
-	// it would be assigned after previousStop to this vehicle type, and
-	// it would leaf from previousStop at previousEnd.
-	CalculateStartAndEnd(
-		previousEnd float64,
-		previousStop ModelStop,
-		stop ModelStop,
-	) (start float64, end float64)
+	// TemporalValues calculates the temporal values if the vehicle
+	// would depart at departure going from stop to stop.
+	TemporalValues(
+		departure float64,
+		from ModelStop,
+		to ModelStop,
+	) (travelDuration, arrival, start, end float64)
 
 	// Index returns the index of the vehicle type.
 	Index() int
@@ -36,7 +35,7 @@ type ModelVehicleType interface {
 	// TravelDurationExpression returns the duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
-	TravelDurationExpression() DurationExpression
+	TravelDurationExpression() TimeDependentDurationExpression
 
 	// Vehicles returns the vehicles of this vehicle type.
 	Vehicles() ModelVehicles

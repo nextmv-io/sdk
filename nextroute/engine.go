@@ -171,6 +171,14 @@ var (
 		ModelVehicle,
 	) VehicleStatistics
 	newDirectedAcyclicGraph func() DirectedAcyclicGraph
+	newTimeDependentDurationExpression func(
+		Model,
+		DurationExpression,
+	) (TimeDependentDurationExpression, error)
+
+	newTimeIndependentDurationExpression func(
+		DurationExpression,
+	) TimeDependentDurationExpression
 	solve                   func(
 		context.Context,
 		ParallelSolver,
