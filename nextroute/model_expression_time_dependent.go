@@ -30,16 +30,16 @@ func NewTimeDependentDurationExpression(
 	return newTimeDependentDurationExpression(model, defaultExpression)
 }
 
-// NewTimeInDependentDurationExpression creates a
+// NewTimeIndependentDurationExpression creates a
 // [TimeDependentDurationExpression] which is not dependent on time.
 // This expression has the same interface as the time dependent expression
 // but the time is not used in any of the calculations. All values originate
 // from the base expression.
-func NewTimeInDependentDurationExpression(
+func NewTimeIndependentDurationExpression(
 	expression DurationExpression,
 ) TimeDependentDurationExpression {
-	connect.Connect(con, &newTimeInDependentDurationExpression)
-	return newTimeInDependentDurationExpression(expression)
+	connect.Connect(con, &newTimeIndependentDurationExpression)
+	return newTimeIndependentDurationExpression(expression)
 }
 
 // TimeDependentDurationExpression is a DurationExpression that returns a value

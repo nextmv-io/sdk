@@ -175,7 +175,7 @@ var (
 		DurationExpression,
 	) (TimeDependentDurationExpression, error)
 
-	newTimeInDependentDurationExpression func(
+	newTimeIndependentDurationExpression func(
 		DurationExpression,
 	) TimeDependentDurationExpression
 )
