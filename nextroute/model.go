@@ -134,7 +134,7 @@ type Model interface {
 	// TimeFormat returns the time format used for reporting.
 	TimeFormat() string
 
-	// TimeToValue converts the specified time to a value as it used
+	// TimeToValue converts the specified time to a value as used
 	// internally in the model.
 	TimeToValue(time time.Time) float64
 
