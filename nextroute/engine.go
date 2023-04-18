@@ -170,4 +170,13 @@ var (
 		ModelVehicle,
 	) VehicleStatistics
 	newDirectedAcyclicGraph func() DirectedAcyclicGraph
+
+	newTimeDependentDurationExpression func(
+		Model,
+		DurationExpression,
+	) (TimeDependentDurationExpression, error)
+
+	newTimeIndependentDurationExpression func(
+		DurationExpression,
+	) TimeDependentDurationExpression
 )
