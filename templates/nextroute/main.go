@@ -1,47 +1,54 @@
-// © 2019-2021 nextmv.io inc. All rights reserved.
-// nextmv.io, inc. CONFIDENTIAL
-//
-// This file includes unpublished proprietary source code of nextmv.io, inc.
-// The copyright notice above does not evidence any actual or intended
-// publication of such source code. Disclosure of this source code or any
-// related proprietary information is strictly prohibited without the express
-// written permission of nextmv.io, inc.
-
+// package main holds the implementation of the nextroute template.
 package main
 
 import (
 	"context"
 	"log"
 
-	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/nextroute"
+	"github.com/nextmv-io/sdk/nextroute/factory"
+	"github.com/nextmv-io/sdk/nextroute/schema"
+	"github.com/nextmv-io/sdk/run"
 )
 
 func main() {
-	runner := run.CLI(solver)
+	runner := run.NewCLIRunner(solver)
 	err := runner.Run(context.Background())
 	if err != nil {
-		log.Fatalf("could not run solver: %v", err)
+		log.Fatal(err)
 	}
 }
 
-func solver(i nextroute.Input, opts nextroute.EngineOptions) ([]nextroute.Solution, error) {
-	model, err := nextroute.NewModel(i, opts.ModelOptions)
+type options struct {
+	Model factory.Options
+	Solve nextroute.ParallelSolveOptions
+}
+
+func solver(
+	ctx context.Context,
+	input schema.Input,
+	options options,
+	solutions chan<- any,
+) error {
+	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// Create a solver.
-	solver, err := nextroute.NewSolver(model, opts.SolverOptions)
+	solver, err := nextroute.NewParallelSolver(model)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// Solve the problem.
-	solutions, err := solver.Solve(opts.SolveOptions)
+	solverSolutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return solutions, nil
+	last := solverSolutions.Last()
+	if last != nil {
+		solutions <- nextroute.NewBasicFormatter().ToOutput(last)
+	}
+
+	return nil
 }

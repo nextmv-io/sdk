@@ -18,37 +18,47 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
-	// RoutingInforms is the main.go file in the routing template.
+	// NextrouteMain is the main.go file in the nextroute template.
+	//go:embed nextroute/main.go
+	NextrouteMain string
+	// NextrouteInput is the input.json file in the nextroute template.
+	//go:embed nextroute/input.json
+	NextrouteInput string
+	// NextrouteReadme is the README.md file in the nextroute template.
+	//go:embed nextroute/README.md
+	NextrouteReadme string
+
+	// RoutingInforms is the main.go file in the routing-informs template.
 	//go:embed routing-informs/main.go
 	RoutingInforms string
-	// RoutingInformsInput1 is the input.json file in the routing template.
+	// RoutingInformsInput1 is the input.json file in the routing-informs template.
 	//go:embed routing-informs/data/denv_l.json
 	RoutingInformsInput1 string
-	// RoutingInformsInput2 is the input.json file in the routing template.
+	// RoutingInformsInput2 is the input.json file in the routing-informs template.
 	//go:embed routing-informs/data/denv_m.json
 	RoutingInformsInput2 string
-	// RoutingInformsInput3 is the input.json file in the routing template.
+	// RoutingInformsInput3 is the input.json file in the routing-informs template.
 	//go:embed routing-informs/data/denv_s.json
 	RoutingInformsInput3 string
-	// RoutingInformsPart1 is the part1.sh file in the routing template.
+	// RoutingInformsPart1 is the part1.sh file in the routing-informs template.
 	//go:embed routing-informs/part1.sh
 	RoutingInformsPart1 string
-	// RoutingInformsPart2 is the part2.sh file in the routing template.
+	// RoutingInformsPart2 is the part2.sh file in the routing-informs template.
 	//go:embed routing-informs/part2.sh
 	RoutingInformsPart2 string
-	// RoutingInformsPart3 is the part3.sh file in the routing template.
+	// RoutingInformsPart3 is the part3.sh file in the routing-informs template.
 	//go:embed routing-informs/part3.sh
 	RoutingInformsPart3 string
-	// RoutingInformsHelper is the helper.go file in the routing template.
+	// RoutingInformsHelper is the helper.go file in the routing-informs template.
 	//go:embed routing-informs/helper.go
 	RoutingInformsHelper string
-	// RoutingInformsEncoder is the encoder.go file in the routing template.
+	// RoutingInformsEncoder is the encoder.go file in the routing-informs template.
 	//go:embed routing-informs/encoder.go
 	RoutingInformsEncoder string
-	// RoutingInformsReadme is the README.md file in the routing template.
+	// RoutingInformsReadme is the README.md file in the routing-informs template.
 	//go:embed routing-informs/README.md
 	RoutingInformsReadme string
-	// RoutingInformsSchema is the schema.go file in the routing template.
+	// RoutingInformsSchema is the schema.go file in the routing-informs template.
 	//go:embed routing-informs/schema.go
 	RoutingInformsSchema string
 
@@ -254,23 +264,23 @@ var (
 	//go:embed cluster-tsp/input.json
 	ClusterTspInput string
 
-	// TimeDependentMain is the main.go file in the routing template.
+	// TimeDependentMain is the main.go file in the routing time-dependent template.
 	//go:embed time-dependent-measure/main.go
 	TimeDependentMain string
-	// TimeDependentInput is the input.json file in the routing template.
+	// TimeDependentInput is the input.json file in the routing time-dependent template.
 	//go:embed time-dependent-measure/input.json
 	TimeDependentInput string
-	// TimeDependentReadme is the README.md file in the routing template.
+	// TimeDependentReadme is the README.md file in the routing time-dependent template.
 	//go:embed time-dependent-measure/README.md
 	TimeDependentReadme string
 
-	// UniqueMatrixMain is the main.go file in the routing template.
+	// UniqueMatrixMain is the main.go file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/main.go
 	UniqueMatrixMain string
-	// UniqueMatrixInput is the input.json file in the routing template.
+	// UniqueMatrixInput is the input.json file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/input.json
 	UniqueMatrixInput string
-	// UniqueMatrixReadme is the README.md file in the routing template.
+	// UniqueMatrixReadme is the README.md file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/README.md
 	UniqueMatrixReadme string
 )

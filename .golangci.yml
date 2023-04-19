@@ -49,7 +49,7 @@ linters-settings:
         json: snake
   # Check line length
   lll:
-    line-length: 80
+    line-length: 120
 
 # Specifies which linters are enabled. Full list: https://golangci-lint.run/usage/linters/
 linters:
@@ -302,7 +302,7 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
-      
+
     - path: templates/cluster-tsp/schema\.go
       linters:
         - unparam
@@ -336,4 +336,3 @@ issues:
       linters:
         - gocyclo
       source: ^func \(r \*genericRunner.*$
-
