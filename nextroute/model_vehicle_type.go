@@ -8,7 +8,8 @@ type ModelVehicleType interface {
 	ModelData
 
 	// TemporalValues calculates the temporal values if the vehicle
-	// would depart at departure going from stop to stop.
+	// would depart at departure going from stop to stop. If from or to is
+	// invalid, the returned travelDuration will be 0.
 	TemporalValues(
 		departure float64,
 		from ModelStop,
