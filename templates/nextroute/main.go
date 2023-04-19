@@ -19,10 +19,15 @@ func main() {
 	}
 }
 
+type options struct {
+	Model factory.Options
+	Solve nextroute.ParallelSolveOptions
+}
+
 func solver(
 	ctx context.Context,
 	input schema.Input,
-	options nextroute.RunnerOptions,
+	options options,
 	solutions chan<- any,
 ) error {
 	model, err := factory.NewModel(input, options.Model)
@@ -35,5 +40,15 @@ func solver(
 		return err
 	}
 
-	return nextroute.Solve(ctx, solver, options.Solver, solutions)
+	solverSolutions, err := solver.Solve(ctx, options.Solve)
+	if err != nil {
+		return err
+	}
+
+	last := solverSolutions.Last()
+	if last != nil {
+		solutions <- nextroute.NewBasicFormatter().ToOutput(last)
+	}
+
+	return nil
 }

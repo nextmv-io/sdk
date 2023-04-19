@@ -2,7 +2,6 @@
 package nextroute
 
 import (
-	"context"
 	"math/rand"
 	"time"
 
@@ -179,10 +178,4 @@ var (
 	newTimeIndependentDurationExpression func(
 		DurationExpression,
 	) TimeDependentDurationExpression
-	solve func(
-		context.Context,
-		ParallelSolver,
-		ParallelSolveOptions,
-		chan<- any,
-	) error
 )
