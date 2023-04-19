@@ -51,6 +51,9 @@ var (
 	newLatestStart func(
 		StopTimeExpression,
 	) (LatestStart, error)
+	newLatestArrival func(
+		StopTimeExpression,
+	) (LatestArrival, error)
 	newMaximumConstraint func(
 		ModelExpression,
 		VehicleTypeExpression,
@@ -169,6 +172,11 @@ var (
 	newVehicleStatistics func(
 		ModelVehicle,
 	) VehicleStatistics
+	newEarlinessObjective func(
+		StopTimeExpression,
+		StopExpression,
+		TemporalReference,
+	) (EarlinessObjective, error)
 	newDirectedAcyclicGraph func() DirectedAcyclicGraph
 
 	newTimeDependentDurationExpression func(
