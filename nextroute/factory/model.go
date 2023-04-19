@@ -54,6 +54,7 @@ type Options struct {
 		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
 		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
 		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
+		Cluster            float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
 	}
 	Properties struct {
 		Disable struct {
