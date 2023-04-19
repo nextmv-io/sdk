@@ -17,7 +17,15 @@ type LatestEnd interface {
 	Latest() StopTimeExpression
 
 	// Lateness returns the lateness of a stop. The lateness is the difference
+	// between the actual end and its target end time.
 	Lateness(stop SolutionStop) float64
+
+	// SetFactor adds a factor with which a deviating stop is multiplied. This
+	// is only taken into account if the construct is used as an objective.
+	SetFactor(factor float64, stop ModelStop)
+
+	// Factor returns the multiplication factor for the given stop expression.
+	Factor(stop ModelStop) float64
 }
 
 // NewLatestEnd creates a new latest end construct. The latest end of a stop is
