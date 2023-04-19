@@ -15,28 +15,11 @@ import (
 // must be built from the ground up.
 func NewModel(
 	input schema.Input,
-	modelOptions ModelOptions,
+	modelOptions Options,
 	options ...nextroute.Option,
 ) (nextroute.Model, error) {
 	connect.Connect(con, &newModel)
 	return newModel(input, modelOptions, options...)
-}
-
-// ModelOptions represents options for a model.
-type ModelOptions struct {
-	EnableClusterConstraint           bool `json:"enable_cluster_constraint" usage:"Enable the cluster constraint creating compact clusters of stops"`
-	IgnoreAttributesConstraint        bool `json:"ignore_attributes_constraint" usage:"Ignore the compatibility attributes constraint"`
-	IgnoreCapacityConstraint          bool `json:"ignore_capacity_constraint" usage:"Ignore the capacity constraint"`
-	IgnoreDistanceLimitConstraint     bool `json:"ignore_distance_limit_constraint" usage:"Ignore the distance limit constraint"`
-	IgnoreInitializationCostObjective bool `json:"ignore_initialization_cost_objective" usage:"Ignore the initialization cost objective"`
-	IgnoreMaximumDurationConstraint   bool `json:"ignore_maximum_duration_constraint" usage:"Ignore the maximum duration constraint"`
-	IgnorePrecedenceConstraint        bool `json:"ignore_precedence_constraint" usage:"Ignore the precedence (pickups & deliveries) constraint"`
-	IgnoreServiceDurations            bool `json:"ignore_service_durations" usage:"Ignore the service durations of stops"`
-	IgnoreShiftConstraint             bool `json:"ignore_shift_constraint" usage:"Ignore the shift constraint"`
-	IgnoreTravelDurationObjective     bool `json:"ignore_travel_duration_objective" usage:"Ignore the travel duration objective"`
-	IgnoreUnassignedStopsObjective    bool `json:"ignore_unassigned_stops_objective" usage:"Ignore the unplanned objective"`
-	IgnoreWindowsConstraint           bool `json:"ignore_windows_constraint" usage:"Ignore the windows constraint"`
-	IgnoreEarlinessObjective          bool `json:"ignore_earliness_objective" usage:"Ignore the earliness objective"`
 }
 
 var (
@@ -44,7 +27,37 @@ var (
 
 	newModel func(
 		schema.Input,
-		ModelOptions,
+		Options,
 		...nextroute.Option,
 	) (nextroute.Model, error)
 )
+
+// Options configure how the [NewModel] function builds [nextroute.Model].
+type Options struct {
+	Constraints struct {
+		Disable struct {
+			Attributes      bool `json:"attributes" usage:"ignore the compatibility attributes constraint"`
+			Capacity        bool `json:"capacity" usage:"ignore the capacity constraint"`
+			DistanceLimit   bool `json:"distance_limit" usage:"ignore the distance limit constraint"`
+			MaximumDuration bool `json:"maximum_duration" usage:"ignore the maximum duration constraint"`
+			Precedence      bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
+			Shift           bool `json:"shift" usage:"ignore the shift constraint"`
+			Windows         bool `json:"windows" usage:"ignore the windows constraint"`
+		}
+		Enable struct {
+			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
+		}
+	}
+	Objectives struct {
+		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
+		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
+		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
+		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
+		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
+	}
+	Properties struct {
+		Disable struct {
+			ServiceDurations bool `json:"service_durations" usage:"ignore the service durations of stops"`
+		}
+	}
+}
