@@ -50,6 +50,7 @@ type Options struct {
 	}
 	Objectives struct {
 		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
+		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
 		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
 		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
 		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
