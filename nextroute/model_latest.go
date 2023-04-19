@@ -4,10 +4,10 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// LatestArrival is a construct that can be added to the model as a constraint
+// Latest is a construct that can be added to the model as a constraint
 // or as an objective. The latest arrival of a stop is the latest time a stop
 // can arrive at the location of the stop.
-type LatestArrival interface {
+type Latest interface {
 	ConstraintReporter
 	ModelConstraint
 	ModelObjective
@@ -28,12 +28,12 @@ type LatestArrival interface {
 	Factor(stop ModelStop) float64
 }
 
-// NewLatestArrival creates a construct that can be added to the model as a
+// NewLatest creates a construct that can be added to the model as a
 // constraint or as an objective. The latest start of a stop is the latest time
-// a stop can start at the location of the stop.
-func NewLatestArrival(
+// a stop can arrive at the location of the stop.
+func NewLatest(
 	latest StopTimeExpression,
-) (LatestArrival, error) {
-	connect.Connect(con, &newLatestArrival)
-	return newLatestArrival(latest)
+) (Latest, error) {
+	connect.Connect(con, &newLatest)
+	return newLatest(latest)
 }
