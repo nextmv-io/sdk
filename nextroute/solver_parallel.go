@@ -12,6 +12,7 @@ type ParallelSolveOptions struct {
 	MaximumDuration      time.Duration `json:"maximum_duration" usage:"maximum duration of the solver" default:"30s"`
 	MaximumParallelRuns  int           `json:"maximum_parallel_runs" usage:"maximum number of parallel runs, -1 results in using all available resources" default:"100"`
 	StartSolutions       int           `json:"start_solutions" usage:"number of solutions to start with; one solution generated with sweep algorithm, the rest generated randomly" default:"0"`
+	StartSweepSolution   bool          `json:"start_sweep_solution" usage:"generate a solution with the sweep algorithm" default:"false"`
 	RunDeterministically bool          `json:"run_deterministically"  usage:"run the parallel solver deterministically"`
 }
 
