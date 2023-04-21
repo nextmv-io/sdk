@@ -14,7 +14,4 @@ require (
 	github.com/twpayne/go-polyline v1.1.1 // indirect
 )
 
-require (
-	github.com/iancoleman/strcase v0.2.0 // indirect
-	github.com/stretchr/testify v1.8.2 // indirect
-)
+require github.com/iancoleman/strcase v0.2.0 // indirect
