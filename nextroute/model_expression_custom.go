@@ -137,6 +137,8 @@ type StopExpression interface {
 	)
 }
 
+// VehicleExpression is an expression that implements a DefaultExpression and is
+// used be encapsuled by VehicleTypeExpression and VehicleTypeDistanceExpression.
 type VehicleExpression interface {
 	DefaultExpression
 }
