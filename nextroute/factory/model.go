@@ -39,6 +39,7 @@ type Options struct {
 			Attributes      bool `json:"attributes" usage:"ignore the compatibility attributes constraint"`
 			Capacity        bool `json:"capacity" usage:"ignore the capacity constraint"`
 			DistanceLimit   bool `json:"distance_limit" usage:"ignore the distance limit constraint"`
+			Groups          bool `json:"groups" usage:"ignore the groups constraint"`
 			MaximumDuration bool `json:"maximum_duration" usage:"ignore the maximum duration constraint"`
 			Precedence      bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			Shift           bool `json:"shift" usage:"ignore the shift constraint"`

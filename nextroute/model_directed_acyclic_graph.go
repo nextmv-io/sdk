@@ -20,11 +20,13 @@ type Arcs []Arc
 // stops can be planned on the vehicle. An arc (u -> v) indicates that the stop
 // u must be planned before the stop v on the vehicle's route.
 type DirectedAcyclicGraph interface {
+	// Arcs returns all [Arcs] in the graph.
+	Arcs() Arcs
+	// ModelStops returns all [ModelStops] in the graph.
+	ModelStops() ModelStops
 	// NewArc creates a new [Arc] in the graph. The new [Arc] should not be
 	// repeated or cause a cycle.
 	NewArc(origin, destination ModelStop) (Arc, error)
-	// Arcs returns all [Arcs] in the graph.
-	Arcs() Arcs
 	// OutboundArcs returns all [Arcs] that have the given [ModelStop] as their
 	// origin.
 	OutboundArcs(stop ModelStop) Arcs
