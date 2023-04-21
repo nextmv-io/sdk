@@ -51,6 +51,19 @@ func NewVehicleTypeExpression(
 	return newVehicleTypeExpression(name, defaultValue)
 }
 
+// NewVehicleTypeDistanceExpression returns a NewVehicleTypeDistanceExpression
+// whose value is based on the vehicle type in Value method and expresses a
+// distance. Expression values are calculated by calling the expression's Value
+// method which takes a vehicle type, a from stop and a to stop as arguments.
+func NewVehicleTypeDistanceExpression(
+	name string,
+	defaultValue common.Distance,
+	defaultUnit common.DistanceUnit,
+) VehicleTypeDistanceExpression {
+	connect.Connect(con, &newVehicleTypeDistanceExpression)
+	return newVehicleTypeDistanceExpression(name, defaultValue, defaultUnit)
+}
+
 // NewFromToExpression returns an expression whose value is based on the
 // from and to stops in Value method. Expression values are calculated by
 // calling the expression's Value method which takes a vehicle type, a
@@ -124,15 +137,32 @@ type StopExpression interface {
 	)
 }
 
+type VehicleExpression interface {
+	DefaultExpression
+}
+
 // VehicleTypeExpression is an expression that has a value for each vehicle
 // type.
 type VehicleTypeExpression interface {
-	DefaultExpression
+	VehicleExpression
 
 	// SetValue sets the value of the expression for the given vehicle type.
 	SetValue(
 		vehicle ModelVehicleType,
 		value float64,
+	)
+}
+
+// VehicleTypeDistanceExpression is a distance expression that has a value for
+// each vehicle type.
+type VehicleTypeDistanceExpression interface {
+	VehicleExpression
+
+	// SetValue sets the distance value of the expression for the given
+	// vehicle type.
+	SetValue(
+		vehicle ModelVehicleType,
+		value common.Distance,
 	)
 }
 

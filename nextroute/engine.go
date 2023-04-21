@@ -139,6 +139,11 @@ var (
 		string,
 		float64,
 	) VehicleTypeExpression
+	newVehicleTypeDistanceExpression func(
+		string,
+		common.Distance,
+		common.DistanceUnit,
+	) VehicleTypeDistanceExpression
 	newVehicleTypeFromToExpression func(
 		string,
 		float64,

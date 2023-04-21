@@ -16,7 +16,7 @@ type MaximumConstraint interface {
 
 	// Maximum returns the maximum expression which defines the maximum
 	// cumulative value that can be assigned to a vehicle type.
-	Maximum() VehicleTypeExpression
+	Maximum() VehicleExpression
 }
 
 // NewMaximumConstraint creates a new maximum constraint. The constraint
