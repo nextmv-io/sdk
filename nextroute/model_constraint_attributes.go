@@ -2,7 +2,7 @@ package nextroute
 
 import "github.com/nextmv-io/sdk/connect"
 
-// AttributesConstraint is a constraint that limits the vehicles a plan cluster
+// AttributesConstraint is a constraint that limits the vehicles a plan unit
 // can be added to. The Attribute constraint configures compatibility
 // attributes for stops and vehicles separately. This is done by specifying
 // a list of attributes for stops and vehicles, respectively. Stops that
