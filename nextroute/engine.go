@@ -44,7 +44,7 @@ var (
 	) FromToExpression
 	newHaversineExpression  func() DistanceExpression
 	newAttributesConstraint func() (AttributesConstraint, error)
-	newInwardnessConstraint func() (InwardnessConstraint, error)
+	newCluster              func() (Cluster, error)
 	newLatestEnd            func(
 		StopTimeExpression,
 	) (LatestEnd, error)
