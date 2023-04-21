@@ -11,3 +11,5 @@ require (
 )
 
 require github.com/twpayne/go-polyline v1.1.1
+
+require gopkg.in/yaml.v3 v3.0.1 // indirect
