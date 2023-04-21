@@ -5,7 +5,7 @@ import (
 )
 
 // A SolutionStop is a stop that is planned to be visited by a vehicle. It is
-// part of a SolutionPlanCluster and is based on a ModelStop.
+// part of a SolutionPlanUnit and is based on a ModelStop.
 type SolutionStop interface {
 	// Arrival returns the arrival time of the stop. If the stop is unplanned,
 	// the arrival time has no semantic meaning.
@@ -84,8 +84,9 @@ type SolutionStop interface {
 	// nil is returned. If the stop is unplanned, the objective value has no
 	// semantic meaning.
 	ObjectiveData(objective ModelObjective) any
-	// PlanCluster returns the SolutionPlanCluster that the stop is part of.
-	PlanCluster() SolutionPlanCluster
+
+	// PlanUnit returns the [SolutionPlanUnit] that the stop is associated with.
+	PlanUnit() SolutionPlanUnit
 	// Previous returns the previous stop the vehicle visited before the stop.
 	// If the stop is the first stop of a vehicle, the solution stop itself is
 	// returned. If the stop is unplanned, the previous stop has no semantic

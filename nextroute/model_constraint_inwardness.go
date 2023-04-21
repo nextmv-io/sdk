@@ -4,9 +4,9 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// InwardnessConstraint is a constraint that limits the vehicles a plan cluster
-// can be added to. A plan cluster can only be added to a vehicles whose
-// centroid is closer to the plan cluster than the centroid of any other
+// InwardnessConstraint is a constraint that limits the vehicles a plan unit
+// can be added to. A plan unit can only be added to a vehicles whose
+// centroid is closer to the plan unit than the centroid of any other
 // vehicle.
 type InwardnessConstraint interface {
 	ConstraintDataUpdater

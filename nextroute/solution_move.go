@@ -21,10 +21,10 @@ func NewNotExecutableMove() Move {
 // if it is executable and the move has a value less than zero.
 // A move describes the change in the solution. The change in the solution
 // is described by the stop positions. The stop positions describe for each
-// stop in the associated cluster where in the existing solution the stop
+// stop in the associated units where in the existing solution the stop
 // is supposed to be placed. The stop positions are ordered by the order
-// of the stops in the cluster. The first stop in the cluster is the first
-// stop in the stop positions. The last stop in the cluster is the last
+// of the stops in the unit. The first stop in the unit is the first
+// stop in the stop positions. The last stop in the unit is the last
 // stop in the stop positions.
 type Move interface {
 	// AfterStop returns the planned stop after which the first to be planned
@@ -55,10 +55,10 @@ type Move interface {
 	// the move has a value of zero or greater than zero.
 	IsImprovement() bool
 
-	// PlanCluster returns the plan cluster that is affected by the move.
-	PlanCluster() SolutionPlanCluster
+	// PlanUnit returns the [SolutionPlanUnit] that is affected by the move.
+	PlanUnit() SolutionPlanUnit
 
-	// StopPositions returns the stop positions that define the move and
+	// StopPositions returns the [StopPositions] that define the move and
 	// how it will change the solution.
 	StopPositions() StopPositions
 

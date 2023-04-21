@@ -30,8 +30,8 @@ type ModelStatistics interface {
 	// locations of a vehicle.
 	Locations() int
 
-	// PlanClusters returns the number of plan clusters.
-	PlanClusters() int
+	// PlanUnits returns the number of plan units.
+	PlanUnits() int
 
 	// Report returns a report of the statistics.
 	Report() string
