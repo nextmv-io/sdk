@@ -50,6 +50,7 @@ type Options struct {
 		}
 	}
 	Objectives struct {
+		BalanceStops       float64 `json:"balance_stops" usage:"factor to weigh the balance stops objective" default:"0.0"`
 		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
 		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
 		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
