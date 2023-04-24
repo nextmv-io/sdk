@@ -50,17 +50,23 @@ type Options struct {
 		}
 	}
 	Objectives struct {
-		BalanceStops       float64 `json:"balance_stops" usage:"factor to weigh the balance stops objective" default:"0.0"`
-		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
-		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
-		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
-		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
-		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
-		Cluster            float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
+		BalanceStops       BalanceStops `json:"balance_stops"`
+		Earliness          float64      `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
+		Lateness           float64      `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
+		InitializationCost float64      `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
+		TravelDuration     float64      `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
+		UnassignedStops    float64      `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
+		Cluster            float64      `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
 	}
 	Properties struct {
 		Disable struct {
 			ServiceDurations bool `json:"service_durations" usage:"ignore the service durations of stops"`
 		}
 	}
+}
+
+// BalanceStops is the configuration for the balance stops objective.
+type BalanceStops struct {
+	Factor  float64 `json:"factor" usage:"factor to weigh the balance stops objective" default:"0.0"`
+	Penalty float64 `json:"penalty" usage:"penalty value per stop in a route" default:"100000.0"`
 }
