@@ -16,14 +16,14 @@ type MaximumConstraint interface {
 
 	// Maximum returns the maximum expression which defines the maximum
 	// cumulative value that can be assigned to a vehicle type.
-	Maximum() VehicleExpression
+	Maximum() VehicleTypeBaseExpression
 }
 
 // NewMaximumConstraint creates a new maximum constraint. The constraint
 // needs to be added to the model to be taken into account.
 func NewMaximumConstraint(
 	expression ModelExpression,
-	maximum VehicleTypeExpression,
+	maximum VehicleTypeBaseExpression,
 ) (MaximumConstraint, error) {
 	connect.Connect(con, &newMaximumConstraint)
 	return newMaximumConstraint(expression, maximum)

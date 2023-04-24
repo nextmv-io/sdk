@@ -137,16 +137,16 @@ type StopExpression interface {
 	)
 }
 
-// VehicleExpression is an expression that implements a DefaultExpression and is
-// used be encapsuled by VehicleTypeExpression and VehicleTypeDistanceExpression.
-type VehicleExpression interface {
+// VehicleTypeBaseExpression is the base expression for
+// VehicleTypeExpressions.
+type VehicleTypeBaseExpression interface {
 	DefaultExpression
 }
 
 // VehicleTypeExpression is an expression that has a value for each vehicle
 // type.
 type VehicleTypeExpression interface {
-	VehicleExpression
+	VehicleTypeBaseExpression
 
 	// SetValue sets the value of the expression for the given vehicle type.
 	SetValue(
@@ -158,10 +158,10 @@ type VehicleTypeExpression interface {
 // VehicleTypeDistanceExpression is a distance expression that has a value for
 // each vehicle type.
 type VehicleTypeDistanceExpression interface {
-	VehicleExpression
+	VehicleTypeBaseExpression
 
-	// SetValue sets the distance value of the expression for the given
-	// vehicle type.
+	// SetValue sets the distance value of the expression for the given vehicle
+	// type.
 	SetValue(
 		vehicle ModelVehicleType,
 		value common.Distance,
