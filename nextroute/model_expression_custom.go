@@ -47,8 +47,8 @@ func NewVehicleTypeExpression(
 	name string,
 	defaultValue float64,
 ) VehicleTypeValueExpression {
-	connect.Connect(con, &newVehicleTypeExpression)
-	return newVehicleTypeExpression(name, defaultValue)
+	connect.Connect(con, &newVehicleTypeValueExpression)
+	return newVehicleTypeValueExpression(name, defaultValue)
 }
 
 // NewVehicleTypeDistanceExpression returns a NewVehicleTypeDistanceExpression

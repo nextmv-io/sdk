@@ -135,7 +135,7 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
-	newVehicleTypeExpression func(
+	newVehicleTypeValueExpression func(
 		string,
 		float64,
 	) VehicleTypeValueExpression
