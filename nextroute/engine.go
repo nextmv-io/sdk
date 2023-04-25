@@ -56,7 +56,7 @@ var (
 	) (LatestArrival, error)
 	newMaximumConstraint func(
 		ModelExpression,
-		VehicleTypeBaseExpression,
+		VehicleTypeExpression,
 	) (MaximumConstraint, error)
 	newComposedPerVehicleTypeExpression func(
 		ModelExpression,
@@ -138,7 +138,7 @@ var (
 	newVehicleTypeExpression func(
 		string,
 		float64,
-	) VehicleTypeExpression
+	) VehicleTypeValueExpression
 	newVehicleTypeDistanceExpression func(
 		string,
 		common.Distance,

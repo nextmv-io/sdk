@@ -64,8 +64,10 @@ type StopDurationExpression interface {
 // per vehicle type and allows to set the duration per vehicle type.
 type VehicleTypeDurationExpression interface {
 	DurationExpression
+	VehicleTypeExpression
 	// SetDuration sets the duration for the given vehicle type.
 	SetDuration(ModelVehicleType, time.Duration)
+	DurationForVehicleType(ModelVehicleType) time.Duration
 }
 
 // DurationExpression is an expression that returns a duration.
@@ -82,6 +84,16 @@ type DistanceExpression interface {
 	// Distance returns the distance for the given vehicle type, start and
 	// end stop.
 	Distance(ModelVehicleType, ModelStop, ModelStop) common.Distance
+}
+
+// VehicleTypeDistanceExpression is an expression that returns a distance per
+// vehicle type and allows to set the duration per vehicle.
+type VehicleTypeDistanceExpression interface {
+	DistanceExpression
+	VehicleTypeExpression
+
+	SetDistance(ModelVehicleType, common.Distance)
+	DistanceForVehicleType(ModelVehicleType) common.Distance
 }
 
 // TravelDurationExpression is an expression that returns a duration based on
