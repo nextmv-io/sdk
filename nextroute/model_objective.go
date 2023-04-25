@@ -16,16 +16,9 @@ type ObjectiveDataUpdater interface {
 // ModelObjective is an objective function that can be used to optimize a
 // solution.
 type ModelObjective interface {
-	RegisteredModelExpressions
-
 	// EstimateDeltaValue returns the estimated change in the score if the given
 	// move would be executed.
 	EstimateDeltaValue(move Move) float64
-
-	// Index returns the index of the objective. The index is unique for each
-	// objective. The index is used to identify the objective in the
-	// solution.
-	Index() int
 
 	// Value returns the value of the objective for the given solution.
 	Value(solution Solution) float64
