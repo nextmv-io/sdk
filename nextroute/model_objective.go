@@ -1,7 +1,5 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
-
 // ObjectiveDataUpdater is the interface than can be used by an objective if
 // it wants to store data with each stop in a solution.
 type ObjectiveDataUpdater interface {
@@ -40,12 +38,4 @@ type ModelObjectiveSum interface {
 
 	// ModelObjectives returns the model objectives that are part of the sum.
 	ModelObjectives() ModelObjectives
-}
-
-// NewModelObjectiveIndex returns the next unique objective index.
-// This function can be used to create a unique index for a custom
-// objective.
-func NewModelObjectiveIndex() int {
-	connect.Connect(con, &newModelObjectiveIndex)
-	return newModelObjectiveIndex()
 }

@@ -1,9 +1,5 @@
 package nextroute
 
-import (
-	"github.com/nextmv-io/sdk/connect"
-)
-
 // Copier is the interface that all objects that can be copied must implement.
 type Copier interface {
 	// Copy returns a copy of the object.
@@ -101,11 +97,3 @@ type ModelConstraint interface {
 
 // ModelConstraints is a slice of ModelConstraint.
 type ModelConstraints []ModelConstraint
-
-// NewModelConstraintIndex returns the next unique constraint index.
-// This function can be used to create a unique index for a custom
-// constraint.
-func NewModelConstraintIndex() int {
-	connect.Connect(con, &newModelConstraintIndex)
-	return newModelConstraintIndex()
-}
