@@ -97,13 +97,6 @@ type ModelConstraint interface {
 	// The stopPositionsHint can be used to speed up the estimation of the
 	// constraint violation.
 	EstimateIsViolated(Move) (isViolated bool, stopPositionsHint StopPositionsHint)
-
-	// Index returns the index of the constraint. The index should be
-	// unique for each constraint.
-	Index() int
-
-	// Name returns the name of the constraint.
-	Name() string
 }
 
 // ModelConstraints is a slice of ModelConstraint.
