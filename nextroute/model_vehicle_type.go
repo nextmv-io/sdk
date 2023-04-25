@@ -29,6 +29,9 @@ type ModelVehicleType interface {
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
 	ProcessDurationExpression() DurationExpression
+	// SetProcessDurationExpression modifies the process duration expression of
+	// the vehicle type.
+	SetProcessDurationExpression(expression DurationExpression)
 
 	// SetName sets the name of the vehicle.
 	SetName(string)
@@ -37,6 +40,9 @@ type ModelVehicleType interface {
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
 	TravelDurationExpression() TimeDependentDurationExpression
+	// SetTravelDurationExpression modifies the duration expression of the
+	// vehicle type.
+	SetTravelDurationExpression(expression TimeDependentDurationExpression)
 
 	// Vehicles returns the vehicles of this vehicle type.
 	Vehicles() ModelVehicles
