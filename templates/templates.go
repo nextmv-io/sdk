@@ -28,40 +28,6 @@ var (
 	//go:embed nextroute/README.md
 	NextrouteReadme string
 
-	// RoutingInforms is the main.go file in the routing-informs template.
-	//go:embed routing-informs/main.go
-	RoutingInforms string
-	// RoutingInformsInput1 is the input.json file in the routing-informs template.
-	//go:embed routing-informs/data/denv_l.json
-	RoutingInformsInput1 string
-	// RoutingInformsInput2 is the input.json file in the routing-informs template.
-	//go:embed routing-informs/data/denv_m.json
-	RoutingInformsInput2 string
-	// RoutingInformsInput3 is the input.json file in the routing-informs template.
-	//go:embed routing-informs/data/denv_s.json
-	RoutingInformsInput3 string
-	// RoutingInformsPart1 is the part1.sh file in the routing-informs template.
-	//go:embed routing-informs/part1.sh
-	RoutingInformsPart1 string
-	// RoutingInformsPart2 is the part2.sh file in the routing-informs template.
-	//go:embed routing-informs/part2.sh
-	RoutingInformsPart2 string
-	// RoutingInformsPart3 is the part3.sh file in the routing-informs template.
-	//go:embed routing-informs/part3.sh
-	RoutingInformsPart3 string
-	// RoutingInformsHelper is the helper.go file in the routing-informs template.
-	//go:embed routing-informs/helper.go
-	RoutingInformsHelper string
-	// RoutingInformsEncoder is the encoder.go file in the routing-informs template.
-	//go:embed routing-informs/encoder.go
-	RoutingInformsEncoder string
-	// RoutingInformsReadme is the README.md file in the routing-informs template.
-	//go:embed routing-informs/README.md
-	RoutingInformsReadme string
-	// RoutingInformsSchema is the schema.go file in the routing-informs template.
-	//go:embed routing-informs/schema.go
-	RoutingInformsSchema string
-
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go
 	RoutingMatrixMain string
