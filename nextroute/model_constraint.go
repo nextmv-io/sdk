@@ -90,7 +90,6 @@ type SolutionViolationCheck interface {
 // check if a solution is valid after a move is executed or plan units have
 // been unplanned.
 type ModelConstraint interface {
-	RegisteredModelExpressions
 	// EstimateIsViolated estimates if the solution is changed by the given
 	// new positions described in stopPositions if it will be violated or not.
 	// The stopPositions is not  allowed to be nil. Should be a pure function,
