@@ -27,9 +27,8 @@ func NoPositionsHint() StopPositionsHint {
 }
 
 // SkipVehiclePositionsHint returns a new StopPositionsHint that skips the
-// vehicle if skipVehicle is true. Is skipVehicle is false the solver will try
-// to find the next stop.
-func SkipVehiclePositionsHint(skipVehicle bool) StopPositionsHint {
+// vehicle.
+func SkipVehiclePositionsHint() StopPositionsHint {
 	connect.Connect(con, &skipVehiclePositionsHint)
-	return skipVehiclePositionsHint(skipVehicle)
+	return skipVehiclePositionsHint()
 }
