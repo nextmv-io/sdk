@@ -87,7 +87,7 @@ type SolutionViolationCheck interface {
 
 // ModelConstraint is the interface that all constraints must implement.
 // Constraints are used to estimate if a move is allowed and can be used to
-// check if a solution is valid after a move is executed or plan clusters have
+// check if a solution is valid after a move is executed or plan units have
 // been unplanned.
 type ModelConstraint interface {
 	RegisteredModelExpressions

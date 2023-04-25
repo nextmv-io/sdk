@@ -61,23 +61,23 @@ type Model interface {
 	IsLocked() bool
 
 	// NewPlanSequence creates a new plan sequence. A plan sequence
-	// is a plan cluster of a collection of stops. A plan cluster is a
+	// is a plan unit of a collection of stops. A plan unit is a
 	// collection of stops which are always planned and unplanned as a
 	// single entity. In this case they have to be planned as a sequence on
-	// the same vehicle.
-	NewPlanSequence(stops ModelStops) (ModelPlanMultipleStops, error)
-	// NewPlanSingleStop creates a new plan single stop. A plan single stop
-	// is a plan cluster of a single stop. A plan cluster is a collection of
+	// the same vehicle in the order of the stops provided as an argument.
+	NewPlanSequence(stops ModelStops) (ModelPlanUnit, error)
+	// NewPlanSingleStop creates a new plan unit. A plan single stop
+	// is a plan unit of a single stop. A plan unit is a collection of
 	// stops which are always planned and unplanned as a single entity.
-	NewPlanSingleStop(stop ModelStop) (ModelPlanSingleStop, error)
+	NewPlanSingleStop(stop ModelStop) (ModelPlanUnit, error)
 	// NewPlanMultipleStops creates a new plan of multiple [ModelStops]. A plan
-	// of multiple stops is a [ModelPlanCluster] of more than one stop. A plan
-	// cluster is a collection of stops which are always planned and unplanned
+	// of multiple stops is a [ModelPlanUnit] of more than one stop. A plan
+	// unit is a collection of stops which are always planned and unplanned
 	// as a single entity. When planned, they are always assigned to the same
 	// vehicle. The function takes in a sequence represented by a
 	// [DirectedAcyclicGraph] (DAG) which restricts the order in which the
 	// stops can be planned on the vehicle. Using an empty DAG means that the
-	// stops can be planned in any order and they will always be assigned to
+	// stops can be planned in any order, and they will always be assigned to
 	// the same vehicle. Consider the stops [s1, s2, s3] and the sequence [s1
 	// -> s2, s1 -> s3]. This means that we are restricting that the stop s1
 	// must come before s2 and s3. However, we are not specifying the order of
@@ -85,9 +85,9 @@ type Model interface {
 	NewPlanMultipleStops(
 		stops ModelStops,
 		sequence DirectedAcyclicGraph,
-	) (ModelPlanMultipleStops, error)
+	) (ModelPlanUnit, error)
 
-	// NewStop creates a new stop. The stop is used to create plan clusters.
+	// NewStop creates a new stop. The stop is used to create plan units.
 	NewStop(location common.Location) (ModelStop, error)
 
 	// NewVehicle creates a new vehicle. The vehicle is used to create
@@ -111,10 +111,10 @@ type Model interface {
 	// Objective returns the objective of the model.
 	Objective() ModelObjectiveSum
 
-	// PlanClusters returns all plan clusters of the model. A plan cluster
+	// PlanUnits returns all plan units of the model. A plan unit
 	// is a collection of stops which are always planned and unplanned as a
 	// single entity.
-	PlanClusters() ModelPlanClusters
+	PlanUnits() ModelPlanUnits
 
 	// Random returns a random number generator.
 	Random() *rand.Rand

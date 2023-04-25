@@ -18,8 +18,9 @@ type ModelStop interface {
 	// sorted by their index (increasing).
 	ClosestStops() ModelStops
 
-	// HasPlanCluster returns true if the stop belongs to a plan cluster.
-	HasPlanCluster() bool
+	// HasPlanUnit returns true if the stop belongs to a plan unit. For example,
+	// start and end stops of a vehicle do not belong to a plan unit.
+	HasPlanUnit() bool
 
 	// Index returns the index of the stop.
 	Index() int
@@ -42,10 +43,10 @@ type ModelStop interface {
 	// the EarliestStart StopOption or using SetEarliestStart.
 	EarliestStartValue() float64
 
-	// PlanCluster returns the plan cluster of the stop. A stop belongs to at
-	// most one plan cluster. Can be nil if the stop is not part of a plan
-	// cluster.
-	PlanCluster() ModelPlanCluster
+	// PlanUnit returns the [ModelPlanUnit] associated with the stop. A stop
+	// is associated with at most one plan unit. Can be nil if the stop is not
+	// part of a plan unit.
+	PlanUnit() ModelPlanUnit
 
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(time time.Time)

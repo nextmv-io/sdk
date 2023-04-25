@@ -161,10 +161,10 @@ var (
 	newBasicFormatter   func() Formatter
 	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
 
-	newSolutionPlanClusterCollection func(
+	newSolutionPlanUnitCollection func(
 		*rand.Rand,
-		SolutionPlanClusters,
-	) SolutionPlanClusterCollection
+		SolutionPlanUnits,
+	) SolutionPlanUnitCollection
 
 	newPerformanceObserver func(
 		Model,

@@ -8,7 +8,7 @@ import (
 )
 
 // NewSolution creates a new solution. The solution is created from the given
-// model. The solution starts with all plan clusters unplanned. Once a solution
+// model. The solution starts with all plan units unplanned. Once a solution
 // has been created the model can no longer be changed, it becomes immutable.
 func NewSolution(
 	m Model,
@@ -19,9 +19,7 @@ func NewSolution(
 
 // NewRandomSolution creates a new solution. The solution is created from the
 // given model. The solution starts with an empty solution and will assign
-//
-//	a random plan cluster to a random vehicle. The remaining plan clusters
-//
+// a random plan unit to a random vehicle. The remaining plan units
 // are added to the solution in a random order at the best possible position.
 func NewRandomSolution(
 	m Model,
@@ -43,11 +41,11 @@ func NewSweepSolution(
 type Solution interface {
 	alns.Solution[Solution]
 
-	// BestMove returns the best move for the given solution plan cluster. The
+	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
-	// available for the given solution plan cluster, a move is returned which
+	// available for the given solution plan unit, a move is returned which
 	// is not executable, Move.IsExecutable.
-	BestMove(context.Context, SolutionPlanCluster) Move
+	BestMove(context.Context, SolutionPlanUnit) Move
 
 	// Model returns the model of the solution.
 	Model() Model
@@ -56,20 +54,21 @@ type Solution interface {
 	// solution. Also returns 0.0 if the objective is not part of the solution.
 	ObjectiveValue(objective ModelObjective) float64
 
-	// PlannedPlanClusters returns the solution plan clusters that are planned.
-	PlannedPlanClusters() ImmutableSolutionPlanClusterCollection
+	// PlannedPlanUnits returns the solution plan units that are planned as
+	// a collection of solution plan units.
+	PlannedPlanUnits() ImmutableSolutionPlanUnitCollection
 
-	// SolutionPlanCluster returns the solution plan cluster for the given
-	// model plan cluster.
-	SolutionPlanCluster(planCluster ModelPlanCluster) SolutionPlanCluster
+	// SolutionPlanUnit returns the [SolutionPlanUnit] for the given
+	// model plan unit.
+	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.
 	SolutionVehicle(vehicle ModelVehicle) SolutionVehicle
 
-	// UnPlannedPlanClusters returns the solution plan clusters that are not
+	// UnPlannedPlanUnits returns the solution plan units that are not
 	// planned.
-	UnPlannedPlanClusters() ImmutableSolutionPlanClusterCollection
+	UnPlannedPlanUnits() ImmutableSolutionPlanUnitCollection
 
 	// Vehicles returns the vehicles of the solution.
 	Vehicles() SolutionVehicles
