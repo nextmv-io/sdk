@@ -31,7 +31,7 @@ type ModelVehicleType interface {
 	ProcessDurationExpression() DurationExpression
 	// SetProcessDurationExpression modifies the process duration expression of
 	// the vehicle type.
-	SetProcessDurationExpression(expression DurationExpression)
+	SetProcessDurationExpression(expression DurationExpression) error
 
 	// SetName sets the name of the vehicle.
 	SetName(string)
@@ -42,7 +42,7 @@ type ModelVehicleType interface {
 	TravelDurationExpression() TimeDependentDurationExpression
 	// SetTravelDurationExpression modifies the duration expression of the
 	// vehicle type.
-	SetTravelDurationExpression(expression TimeDependentDurationExpression)
+	SetTravelDurationExpression(expression TimeDependentDurationExpression) error
 
 	// Vehicles returns the vehicles of this vehicle type.
 	Vehicles() ModelVehicles
