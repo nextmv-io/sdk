@@ -18,6 +18,7 @@ type Input struct {
 	DistanceMatrix *[][]float64          `json:"distance_matrix,omitempty"`
 	Vehicles       []Vehicle             `json:"vehicles,omitempty"`
 	Stops          []Stop                `json:"stops,omitempty"`
+	CustomData     any                   `json:"custom_data,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -70,6 +71,7 @@ type Vehicle struct {
 	Backlog                 *[]string       `json:"backlog,omitempty"`
 	AlternateStops          *[]string       `json:"alternate_stops,omitempty"`
 	InitializationCost      *int            `json:"initialization_cost,omitempty"`
+	CustomData              any             `json:"custom_data,omitempty"`
 }
 
 // Stop represents a stop.
@@ -87,4 +89,5 @@ type Stop struct {
 	CompatibilityAttributes *[]string      `json:"compatibility_attributes"`
 	ID                      string         `json:"id,omitempty"`
 	Position                route.Position `json:"position,omitempty"`
+	CustomData              any            `json:"custom_data,omitempty"`
 }
