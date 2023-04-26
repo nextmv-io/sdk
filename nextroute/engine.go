@@ -103,10 +103,8 @@ var (
 		ModelExpression,
 		BinaryFunction,
 	) BinaryExpression
-	skipVehiclePositionsHint func(
-		bool,
-	) StopPositionsHint
-	newStopExpression func(
+	skipVehiclePositionsHint func() StopPositionsHint
+	newStopExpression        func(
 		string,
 		float64,
 	) StopExpression
