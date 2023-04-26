@@ -15,8 +15,8 @@ type ObjectiveDataUpdater interface {
 // solution.
 type ModelObjective interface {
 	// EstimateDeltaValue returns the estimated change in the score if the given
-	// move would be executed.
-	EstimateDeltaValue(move Move) float64
+	// move were executed on the given solution.
+	EstimateDeltaValue(move Move, solution Solution) float64
 
 	// Value returns the value of the objective for the given solution.
 	Value(solution Solution) float64

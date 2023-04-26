@@ -86,13 +86,12 @@ type SolutionViolationCheck interface {
 // check if a solution is valid after a move is executed or plan units have
 // been unplanned.
 type ModelConstraint interface {
-	// EstimateIsViolated estimates if the solution is changed by the given
-	// new positions described in stopPositions if it will be violated or not.
-	// The stopPositions is not  allowed to be nil. Should be a pure function,
-	// i.e. not change any state of the constraint. The stopPositionsHint can
-	// The stopPositionsHint can be used to speed up the estimation of the
-	// constraint violation.
-	EstimateIsViolated(Move) (isViolated bool, stopPositionsHint StopPositionsHint)
+	// EstimateIsViolated estimates if the given solution, when changed by the
+	// given move will be violated or not. The move is not allowed to be nil.
+	// It should be a pure function, i.e. not change any state of the
+	// constraint. The stopPositionsHint can be used to speed up the estimation
+	// of the constraint violation.
+	EstimateIsViolated(Move, Solution) (isViolated bool, stopPositionsHint StopPositionsHint)
 }
 
 // ModelConstraints is a slice of ModelConstraint.
