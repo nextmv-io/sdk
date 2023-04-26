@@ -29,12 +29,12 @@ type ModelObjectives []ModelObjective
 type ModelObjectiveSum interface {
 	ModelObjective
 
-	// NewObjectiveTerm adds an objective to the sum. The objective is multiplied by the
+	// NewTerm adds an objective to the sum. The objective is multiplied by the
 	// factor.
-	NewObjectiveTerm(factor float64, objective ModelObjective) (ModelObjectiveTerm, error)
+	NewTerm(factor float64, objective ModelObjective) (ModelObjectiveTerm, error)
 
 	// ObjectiveTerms returns the model objectives that are part of the sum.
-	ObjectiveTerms() ModelObjectiveTerms
+	Terms() ModelObjectiveTerms
 }
 
 // ModelObjectiveTerm is a term in a model objective sum.
