@@ -96,9 +96,7 @@ var (
 		measure.ByPoint,
 	) ModelExpression
 	newModel                func() (Model, error)
-	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
-	newModelObjectiveIndex  func() int
 	noPositionsHint         func() StopPositionsHint
 	newOperatorExpression   func(
 		ModelExpression,

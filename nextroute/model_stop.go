@@ -37,11 +37,6 @@ type ModelStop interface {
 	// EarliestStart returns the earliest start time of the stop. Can be set
 	// using the EarliestStart StopOption or using SetEarliestStart.
 	EarliestStart() time.Time
-	// EarliestStartValue returns the earliest start time of the stop as a
-	// float64. The float64 value is the number of time units since the epoch
-	// both possibly set at the construction of the Model. Can be set using
-	// the EarliestStart StopOption or using SetEarliestStart.
-	EarliestStartValue() float64
 
 	// PlanUnit returns the [ModelPlanUnit] associated with the stop. A stop
 	// is associated with at most one plan unit. Can be nil if the stop is not
