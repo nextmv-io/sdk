@@ -60,15 +60,15 @@ type Model interface {
 	// locked after a solution has been created using the model.
 	IsLocked() bool
 
-	// NewPlanSequence creates a new plan sequence. A plan sequence
-	// is a plan unit of a collection of stops. A plan unit is a
-	// collection of stops which are always planned and unplanned as a
-	// single entity. In this case they have to be planned as a sequence on
-	// the same vehicle in the order of the stops provided as an argument.
+	// NewPlanSequence creates a new plan sequence. A plan sequence is a plan
+	// unit. A plan unit is a collection of stops which are always planned and
+	// unplanned as a single unit. In this case they have to be planned as a
+	// sequence on the same vehicle in the order of the stops provided as an
+	// argument.
 	NewPlanSequence(stops ModelStops) (ModelPlanUnit, error)
 	// NewPlanSingleStop creates a new plan unit. A plan single stop
 	// is a plan unit of a single stop. A plan unit is a collection of
-	// stops which are always planned and unplanned as a single entity.
+	// stops which are always planned and unplanned as a single unit.
 	NewPlanSingleStop(stop ModelStop) (ModelPlanUnit, error)
 	// NewPlanMultipleStops creates a new plan of multiple [ModelStops]. A plan
 	// of multiple stops is a [ModelPlanUnit] of more than one stop. A plan
@@ -87,11 +87,13 @@ type Model interface {
 		sequence DirectedAcyclicGraph,
 	) (ModelPlanUnit, error)
 
-	// NewStop creates a new stop. The stop is used to create plan units.
+	// NewStop creates a new stop. The stop is used to create plan units or can
+	// be used to create a first or last stop of a vehicle.
 	NewStop(location common.Location) (ModelStop, error)
 
 	// NewVehicle creates a new vehicle. The vehicle is used to create
-	// solutions.
+	// solutions. Every vehicle has a first and last stop - even if the vehicle
+	// is empty.
 	NewVehicle(
 		vehicleType ModelVehicleType,
 		start time.Time,
@@ -113,7 +115,7 @@ type Model interface {
 
 	// PlanUnits returns all plan units of the model. A plan unit
 	// is a collection of stops which are always planned and unplanned as a
-	// single entity.
+	// single unit.
 	PlanUnits() ModelPlanUnits
 
 	// Random returns a random number generator.
@@ -121,9 +123,6 @@ type Model interface {
 
 	// SetRandom sets the random number generator of the model.
 	SetRandom(random *rand.Rand)
-
-	// SetSeed sets the seed of the random number generator of the model.
-	SetSeed(seed int64)
 
 	// Stops returns all stops of the model.
 	Stops() ModelStops
