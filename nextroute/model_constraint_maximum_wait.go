@@ -6,17 +6,27 @@ import "github.com/nextmv-io/sdk/connect"
 type MaximumWaitConstraint interface {
 	ModelConstraint
 
-	// Maximum returns the maximum expression which defines the maximum
-	// wait time of a vehicle type.
-	Maximum() VehicleTypeDurationExpression
+	// SetStopMaximum sets the maximum time a vehicle can wait before serving a
+	// stop. It is specified as a duration expression.
+	SetStopMaximum(StopDurationExpression)
+
+	// SetVehicleMaximum sets the maximum accumulated time a vehicle can wait on
+	// a route. It is specified as a duration expression.
+	SetVehicleMaximum(VehicleTypeDurationExpression)
+
+	// StopMaximum returns the maximum expression which defines the maximum
+	// time a vehicle can wait before serving a stop. Returns nil if not set.
+	StopMaximum() StopDurationExpression
+
+	// VehicleMaximum returns the maximum expression which defines the maximum
+	// accumulated time a vehicle can wait on a route. Returns nil if not set.
+	VehicleMaximum() VehicleTypeDurationExpression
 }
 
 // NewMaximumWaitConstraint returns a new MaximumWaitConstraint. The maximum
 // wait constraint limits the time a vehicle can wait between two stops. Wait
 // time is defined as the time a vehicle is neither moving nor serving a stop.
-func NewMaximumWaitConstraint(
-	maximum VehicleTypeDurationExpression,
-) (MaximumWaitConstraint, error) {
+func NewMaximumWaitConstraint() (MaximumWaitConstraint, error) {
 	connect.Connect(con, &newMaximumWaitConstraint)
-	return newMaximumWaitConstraint(maximum)
+	return newMaximumWaitConstraint()
 }
