@@ -131,10 +131,14 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
-	newVehicleTypeExpression func(
+	newVehicleTypeValueExpression func(
 		string,
 		float64,
-	) VehicleTypeExpression
+	) VehicleTypeValueExpression
+	newVehicleTypeDistanceExpression func(
+		string,
+		common.Distance,
+	) VehicleTypeDistanceExpression
 	newVehicleTypeFromToExpression func(
 		string,
 		float64,
