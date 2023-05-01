@@ -1,9 +1,5 @@
 package nextroute
 
-import (
-	"github.com/nextmv-io/sdk/connect"
-)
-
 // Copier is the interface that all objects that can be copied must implement.
 type Copier interface {
 	// Copy returns a copy of the object.
@@ -35,7 +31,7 @@ type ConstraintDataUpdater interface {
 	// can use them to update the constraint data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
 	// SolutionStop.ConstraintValue function.
-	UpdateConstraintData(s SolutionStop) Copier
+	UpdateConstraintData(s SolutionStop) (Copier, error)
 }
 
 // RegisteredModelExpressions is the interface that exposes the expressions
@@ -90,30 +86,13 @@ type SolutionViolationCheck interface {
 // check if a solution is valid after a move is executed or plan units have
 // been unplanned.
 type ModelConstraint interface {
-	RegisteredModelExpressions
-	// EstimateIsViolated estimates if the solution is changed by the given
-	// new positions described in stopPositions if it will be violated or not.
-	// The stopPositions is not  allowed to be nil. Should be a pure function,
-	// i.e. not change any state of the constraint. The stopPositionsHint can
-	// The stopPositionsHint can be used to speed up the estimation of the
-	// constraint violation.
-	EstimateIsViolated(Move) (isViolated bool, stopPositionsHint StopPositionsHint)
-
-	// Index returns the index of the constraint. The index should be
-	// unique for each constraint.
-	Index() int
-
-	// Name returns the name of the constraint.
-	Name() string
+	// EstimateIsViolated estimates if the given solution, when changed by the
+	// given move will be violated or not. The move is not allowed to be nil.
+	// It should be a pure function, i.e. not change any state of the
+	// constraint. The stopPositionsHint can be used to speed up the estimation
+	// of the constraint violation.
+	EstimateIsViolated(Move, Solution) (isViolated bool, stopPositionsHint StopPositionsHint)
 }
 
 // ModelConstraints is a slice of ModelConstraint.
 type ModelConstraints []ModelConstraint
-
-// NewModelConstraintIndex returns the next unique constraint index.
-// This function can be used to create a unique index for a custom
-// constraint.
-func NewModelConstraintIndex() int {
-	connect.Connect(con, &newModelConstraintIndex)
-	return newModelConstraintIndex()
-}

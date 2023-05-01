@@ -96,19 +96,15 @@ var (
 		measure.ByPoint,
 	) ModelExpression
 	newModel                func() (Model, error)
-	newModelConstraintIndex func() int
 	newModelExpressionIndex func() int
-	newModelObjectiveIndex  func() int
 	noPositionsHint         func() StopPositionsHint
 	newOperatorExpression   func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,
 	) BinaryExpression
-	skipVehiclePositionsHint func(
-		bool,
-	) StopPositionsHint
-	newStopExpression func(
+	skipVehiclePositionsHint func() StopPositionsHint
+	newStopExpression        func(
 		string,
 		float64,
 	) StopExpression
