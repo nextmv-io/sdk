@@ -33,7 +33,7 @@ type DurationGroups = measure.DurationGroups
 // attached to them.
 type DurationGroup = measure.DurationGroup
 
-// Times holds the estimated time of arrival (ETA), estimated time of when
+// Times holds the estimated time of arrival (ETA), the estimated time of when
 // service starts (ETS) and estimated time of departure (ETD).
 type Times = measure.Times
 

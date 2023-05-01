@@ -18,6 +18,16 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
+	// NextrouteMain is the main.go file in the nextroute template.
+	//go:embed nextroute/main.go
+	NextrouteMain string
+	// NextrouteInput is the input.json file in the nextroute template.
+	//go:embed nextroute/input.json
+	NextrouteInput string
+	// NextrouteReadme is the README.md file in the nextroute template.
+	//go:embed nextroute/README.md
+	NextrouteReadme string
+
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go
 	RoutingMatrixMain string
@@ -220,23 +230,23 @@ var (
 	//go:embed cluster-tsp/input.json
 	ClusterTspInput string
 
-	// TimeDependentMain is the main.go file in the routing template.
+	// TimeDependentMain is the main.go file in the routing time-dependent template.
 	//go:embed time-dependent-measure/main.go
 	TimeDependentMain string
-	// TimeDependentInput is the input.json file in the routing template.
+	// TimeDependentInput is the input.json file in the routing time-dependent template.
 	//go:embed time-dependent-measure/input.json
 	TimeDependentInput string
-	// TimeDependentReadme is the README.md file in the routing template.
+	// TimeDependentReadme is the README.md file in the routing time-dependent template.
 	//go:embed time-dependent-measure/README.md
 	TimeDependentReadme string
 
-	// UniqueMatrixMain is the main.go file in the routing template.
+	// UniqueMatrixMain is the main.go file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/main.go
 	UniqueMatrixMain string
-	// UniqueMatrixInput is the input.json file in the routing template.
+	// UniqueMatrixInput is the input.json file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/input.json
 	UniqueMatrixInput string
-	// UniqueMatrixReadme is the README.md file in the routing template.
+	// UniqueMatrixReadme is the README.md file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/README.md
 	UniqueMatrixReadme string
 )

@@ -54,7 +54,7 @@
         }
       ],
       "route_duration": 110,
-      "route_distance": 1077
+      "route_distance": 1079
     },
     {
       "id": "v2",
@@ -96,7 +96,7 @@
         }
       ],
       "route_duration": 155,
-      "route_distance": 1546
+      "route_distance": 1547
     }
   ]
 }

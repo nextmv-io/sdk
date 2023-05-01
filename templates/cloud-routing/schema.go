@@ -272,6 +272,8 @@ func (i *input) transform() routerInput {
 					End:   (*stop.HardWindow)[1],
 				},
 			})
+		} else {
+			windows = append(windows, route.Window{})
 		}
 
 		for _, p := range stop.precedes {

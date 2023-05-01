@@ -76,7 +76,7 @@
         }
       ],
       "route_duration": 5503,
-      "route_distance": 49020
+      "route_distance": 49023
     },
     {
       "id": "vehicle-2",
@@ -153,7 +153,7 @@
         }
       ],
       "route_duration": 5919,
-      "route_distance": 53182
+      "route_distance": 53184
     }
   ]
 }

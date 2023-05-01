@@ -15,8 +15,8 @@ func Indexed(m ByPoint, points []Point) ByIndex {
 }
 
 type byIndex struct {
-	points []Point
 	ByPoint
+	points []Point
 }
 
 func (m byIndex) Cost(from, to int) float64 {

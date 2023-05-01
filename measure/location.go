@@ -32,9 +32,9 @@ func Location(
 
 type location struct {
 	m              ByIndex
+	indexToGroup   map[int]DurationGroup // maps a location index to duration group
 	costs          []float64
 	durationGroups []DurationGroup
-	indexToGroup   map[int]DurationGroup // maps a location index to duration group
 }
 
 func (l location) Cost(from, to int) float64 {
