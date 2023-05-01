@@ -31,7 +31,7 @@ type ConstraintDataUpdater interface {
 	// can use them to update the constraint data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
 	// SolutionStop.ConstraintValue function.
-	UpdateConstraintData(s SolutionStop) Copier
+	UpdateConstraintData(s SolutionStop) (Copier, error)
 }
 
 // RegisteredModelExpressions is the interface that exposes the expressions

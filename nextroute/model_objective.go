@@ -8,7 +8,7 @@ type ObjectiveDataUpdater interface {
 	// can use them to update the objective data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
 	// SolutionStop.ObjectiveValue function.
-	UpdateObjectiveData(s SolutionStop) Copier
+	UpdateObjectiveData(s SolutionStop) (Copier, error)
 }
 
 // ModelObjective is an objective function that can be used to optimize a
