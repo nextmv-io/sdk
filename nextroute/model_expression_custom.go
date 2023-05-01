@@ -58,10 +58,9 @@ func NewVehicleTypeExpression(
 func NewVehicleTypeDistanceExpression(
 	name string,
 	defaultValue common.Distance,
-	defaultUnit common.DistanceUnit,
 ) VehicleTypeDistanceExpression {
 	connect.Connect(con, &newVehicleTypeDistanceExpression)
-	return newVehicleTypeDistanceExpression(name, defaultValue, defaultUnit)
+	return newVehicleTypeDistanceExpression(name, defaultValue)
 }
 
 // NewFromToExpression returns an expression whose value is based on the
