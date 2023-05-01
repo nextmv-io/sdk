@@ -62,6 +62,9 @@ type Move interface {
 	// how it will change the solution.
 	StopPositions() StopPositions
 
+	// NumberOfStops returns the number of stops in the move.
+	NumberOfStops() int
+
 	// TakeBest returns the best move between the given move and the
 	// current move. The best move is the move with the lowest score. If
 	// the scores are equal, a random uniform distribution is used to
