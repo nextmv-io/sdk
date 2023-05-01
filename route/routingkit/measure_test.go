@@ -11,7 +11,7 @@ import (
 
 type byPointConstantMeasure float64
 
-func (m byPointConstantMeasure) Cost(a route.Point, b route.Point) float64 {
+func (m byPointConstantMeasure) Cost(_ route.Point, _ route.Point) float64 {
 	return float64(m)
 }
 

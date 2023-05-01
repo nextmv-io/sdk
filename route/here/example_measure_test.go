@@ -33,7 +33,7 @@ func Example() {
 	// flow if the number of points requested is below HERE's size limit for
 	// synchronous API calls - otherwise, HERE's asynchronous flow will
 	// automatically be used.
-	dist, dur, err := client.DistanceDurationMatrices(ctx, points)
+	_, dur, err := client.DistanceDurationMatrices(ctx, points)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func Example() {
 	// configure how HERE will calculate the routes. For example, this code
 	// constructs a DistanceMeasure with a specific departure time for a
 	// bicycle:
-	dist, err = client.DistanceMatrix(
+	_, err = client.DistanceMatrix(
 		ctx,
 		points,
 		here.WithTransportMode(here.TransportModeBicycle),
@@ -53,7 +53,7 @@ func Example() {
 	}
 
 	// Or, you can configure a truck profile:
-	dist, err = client.DistanceMatrix(
+	dist, err := client.DistanceMatrix(
 		ctx,
 		points,
 		here.WithTransportMode(here.TransportModeTruck),

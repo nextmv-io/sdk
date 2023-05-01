@@ -165,6 +165,11 @@ func (c *client) fetchMatricesSync(
 	if err != nil {
 		return nil, nil, err
 	}
+	defer func() {
+		if tempErr := resp.Body.Close(); tempErr != nil {
+			err = tempErr
+		}
+	}()
 	if resp.StatusCode != http.StatusOK {
 		return nil, nil, badStatusError(resp)
 	}
@@ -348,6 +353,11 @@ func (c *client) startAsyncCalculation(
 	if err != nil {
 		return "", err
 	}
+	defer func() {
+		if tempErr := resp.Body.Close(); tempErr != nil {
+			err = tempErr
+		}
+	}()
 	if resp.StatusCode != http.StatusAccepted {
 		return "", badStatusError(resp)
 	}
