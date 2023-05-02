@@ -56,7 +56,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
-		err = errors.New("Encoder is not compatible with configured IOProducer")
+		err = errors.New("encoder is not compatible with configured IOProducer")
 		return err
 	}
 
