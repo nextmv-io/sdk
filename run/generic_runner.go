@@ -12,7 +12,7 @@ import (
 
 type start string
 
-// RunStart is the key for the start time of the run.
+// Start is the key for the start time of the run.
 const Start start = "start"
 
 // GenericRunner creates a new runner from the given components.
