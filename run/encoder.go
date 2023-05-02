@@ -56,7 +56,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
-		err = errors.New("Encoder is not compatible with configured IOProducer")
+		err = errors.New("encoder is not compatible with configured IOProducer")
 		return err
 	}
 
@@ -93,22 +93,14 @@ func (g *genericEncoder[Solution, Options]) Encode(
 		for solution := range solutions {
 			m.Solutions = append(m.Solutions, solution)
 		}
-		if err = g.encoder.Encode(ioWriter, m); err != nil {
-			return err
-		}
-
-		return nil
+		return g.encoder.Encode(ioWriter, m)
 	}
 
 	m := []Solution{}
 	for solution := range solutions {
 		m = append(m, solution)
 	}
-	if err = g.encoder.Encode(ioWriter, m); err != nil {
-		return err
-	}
-
-	return nil
+	return g.encoder.Encode(ioWriter, m)
 }
 
 func (g *genericEncoder[Solution, Options]) ContentType() string {

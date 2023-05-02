@@ -44,7 +44,7 @@ func (g *genericDecoder[Input]) Decoder(
 	ioReader, ok := reader.(io.Reader)
 	if !ok {
 		err = errors.New(
-			"Decoder is not compatible with configured IOProducer",
+			"decoder is not compatible with configured IOProducer",
 		)
 		return input, err
 	}
