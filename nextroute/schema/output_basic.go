@@ -26,4 +26,7 @@ type StopOutput struct {
 	EstimatedArrival   *time.Time `json:"estimated_arrival,omitempty"`
 	EstimatedDeparture *time.Time `json:"estimated_departure,omitempty"`
 	EstimatedService   *time.Time `json:"estimated_service,omitempty"`
+	TargetTime         *time.Time `json:"target_time,omitempty"`
+	Earliness          *float64   `json:"earliness,omitempty"`
+	Lateness           *float64   `json:"lateness,omitempty"`
 }
