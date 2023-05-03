@@ -169,7 +169,7 @@ func (h *httpRunner[Input, Option, Solution]) setRunnerOption(
 }
 
 func (h *httpRunner[Input, Option, Solution]) Run(
-	context context.Context,
+	_ context.Context,
 ) error {
 	httpRunnerConfig := h.Runner.RunnerConfig()
 	if httpRunnerConfig.Runner.HTTP.Certificate != "" ||

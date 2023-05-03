@@ -10,10 +10,10 @@ import (
 	"time"
 )
 
-type runStart string
+type start string
 
-// RunStart is the key for the start time of the run.
-const RunStart runStart = "start"
+// Start is the key for the start time of the run.
+const Start start = "start"
 
 // GenericRunner creates a new runner from the given components.
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
@@ -111,7 +111,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 	ctx context.Context,
 ) (retErr error) {
 	start := time.Now()
-	ctx = context.WithValue(ctx, RunStart, start)
+	ctx = context.WithValue(ctx, Start, start)
 	// handle CPU profile
 	deferFuncCPU, retErr := r.handleCPUProfile(r.runnerConfig)
 	if retErr != nil {

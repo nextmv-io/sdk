@@ -3,8 +3,6 @@ package nextroute
 import (
 	"context"
 	"time"
-
-	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // SolutionVehicle is a vehicle in a solution.
@@ -20,11 +18,6 @@ type SolutionVehicle interface {
 	// score. If there are no moves available for the given solution plan
 	// unit, a move is returned which is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
-
-	// Centroid returns the centroid of the vehicle. The centroid is the
-	// average location of all stops in the vehicle excluding the start and
-	// end stops.
-	Centroid() (common.Location, error)
 
 	// Duration returns the duration of the vehicle. The duration is the
 	// time the vehicle is on the road. The duration is the time between
