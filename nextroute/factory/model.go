@@ -42,6 +42,7 @@ type Options struct {
 			Groups          bool `json:"groups" usage:"ignore the groups constraint"`
 			MaximumDuration bool `json:"maximum_duration" usage:"ignore the maximum duration constraint"`
 			MaximumStops    bool `json:"maximum_stops" usage:"ignore the maximum stops constraint"`
+			MaximumWait     bool `json:"maximum_wait" usage:"ignore the maximum wait constraint"`
 			Precedence      bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			Shift           bool `json:"shift" usage:"ignore the shift constraint"`
 			Windows         bool `json:"windows" usage:"ignore the windows constraint"`
