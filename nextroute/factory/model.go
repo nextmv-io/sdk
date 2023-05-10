@@ -45,11 +45,11 @@ type Options struct {
 			Precedence      bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			Shift           bool `json:"shift" usage:"ignore the shift constraint"`
 			Windows         bool `json:"windows" usage:"ignore the windows constraint"`
-		}
+		} `json:"disable"`
 		Enable struct {
 			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
-		}
-	}
+		} `json:"enable"`
+	} `json:"constraints"`
 	Objectives struct {
 		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
 		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
@@ -57,10 +57,10 @@ type Options struct {
 		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
 		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
 		Cluster            float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
-	}
+	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
 			ServiceDurations bool `json:"service_durations" usage:"ignore the service durations of stops"`
-		}
-	}
+		} `json:"disable"`
+	} `json:"properties"`
 }
