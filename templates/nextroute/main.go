@@ -20,8 +20,8 @@ func main() {
 }
 
 type options struct {
-	Model factory.Options
-	Solve nextroute.ParallelSolveOptions
+	Model factory.Options                `json:"model,omitempty"`
+	Solve nextroute.ParallelSolveOptions `json:"solve,omitempty"`
 }
 
 func solver(
