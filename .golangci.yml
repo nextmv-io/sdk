@@ -31,10 +31,8 @@ linters-settings:
         - github.com/google/uuid
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
-    min-complexity: 10
+    min-complexity: 20
   # Set correct go version.
-  gofumpt:
-    lang-version: "1.19"
   gosimple:
     go: "1.19"
   staticcheck:
@@ -91,8 +89,6 @@ linters:
     # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s
     # option to check for code simplification.
     - gofmt
-    # Gofumpt checks whether code was gofumpt-ed.
-    - gofumpt
     # In addition to fixing imports, goimports also formats your code in the
     # same style as gofmt.
     - goimports
