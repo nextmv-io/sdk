@@ -49,7 +49,7 @@ type StopDefaults struct {
 	HardWindow              *[]time.Time `json:"hard_window,omitempty"`
 	MaxWait                 *int         `json:"max_wait,omitempty"`
 	StopDuration            *int         `json:"stop_duration,omitempty"`
-	TargetTime              *time.Time   `json:"target_time,omitempty"`
+	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
 	EarlinessPenalty        *float64     `json:"earliness_penalty,omitempty"`
 	LatenessPenalty         *float64     `json:"lateness_penalty,omitempty"`
 	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
@@ -81,7 +81,7 @@ type Stop struct {
 	Precedes                any            `json:"precedes,omitempty"`
 	Quantity                any            `json:"quantity,omitempty"`
 	Succeeds                any            `json:"succeeds,omitempty"`
-	TargetTime              *time.Time     `json:"target_time,omitempty"`
+	TargetArrivalTime       *time.Time     `json:"target_arrival_time,omitempty"`
 	HardWindow              *[]time.Time   `json:"hard_window,omitempty"`
 	MaxWait                 *int           `json:"max_wait,omitempty"`
 	StopDuration            *int           `json:"stop_duration,omitempty"`
