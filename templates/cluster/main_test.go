@@ -40,7 +40,7 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Get the solution.
-	got := output.Solution.(Output)
+	got := output[0].Solution.(Output)
 	if err := json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}

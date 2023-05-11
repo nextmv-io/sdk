@@ -79,7 +79,7 @@ type Output struct {
 func solver(
 	input incentiveAllocationProblem,
 	opts Option,
-) (schema.Output, error) {
+) ([]schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -107,7 +107,7 @@ func solver(
 	// We create a solver using the 'highs' provider.
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return schema.Output{}, err
+		return nil, err
 	}
 
 	// We create the solve options we will use.
@@ -116,13 +116,13 @@ func solver(
 	// Limit the solve to a maximum duration.
 	err = solveOptions.SetMaximumDuration(opts.Limits.Duration)
 	if err != nil {
-		return schema.Output{}, err
+		return nil, err
 	}
 
 	// Set the relative gap to 0% (highs' default is 5%).
 	err = solveOptions.SetMIPGapRelative(0)
 	if err != nil {
-		return schema.Output{}, err
+		return nil, err
 	}
 
 	// Set verbose level to see a more detailed output.
@@ -130,15 +130,15 @@ func solver(
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return schema.Output{}, err
+		return nil, err
 	}
 
 	output, err := format(solution, input, userIncentive, opts)
 	if err != nil {
-		return schema.Output{}, err
+		return nil, err
 	}
 
-	return output, nil
+	return []schema.Output{output}, nil
 }
 
 func format(
