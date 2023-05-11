@@ -18,7 +18,9 @@ type JSONSolution struct {
 // JSONObjective represents an objective as JSON.
 type JSONObjective struct {
 	Name       string          `json:"name"`
-	Objectives []JSONObjective `json:"objectives"`
+	Objectives []JSONObjective `json:"objectives,omitempty"`
+	Factor     float64         `json:"factor,omitempty"`
+	Base       float64         `json:"base,omitempty"`
 	Value      float64         `json:"value"`
 }
 
