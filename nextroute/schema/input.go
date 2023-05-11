@@ -9,16 +9,14 @@ import (
 
 // Input is the default input schema for nextroute.
 type Input struct {
-	Options        any                   `json:"options,omitempty"`
-	Defaults       *Defaults             `json:"defaults,omitempty"`
-	StopGroups     *[][]string           `json:"stop_groups,omitempty"`
-	AlternateStops *[]Stop               `json:"alternate_stops,omitempty"`
-	DurationGroups *[]route.ServiceGroup `json:"duration_groups,omitempty"`
-	DurationMatrix *[][]float64          `json:"duration_matrix,omitempty"`
-	DistanceMatrix *[][]float64          `json:"distance_matrix,omitempty"`
-	Vehicles       []Vehicle             `json:"vehicles,omitempty"`
-	Stops          []Stop                `json:"stops,omitempty"`
-	CustomData     any                   `json:"custom_data,omitempty"`
+	Options        any          `json:"options,omitempty"`
+	Defaults       *Defaults    `json:"defaults,omitempty"`
+	StopGroups     *[][]string  `json:"stop_groups,omitempty"`
+	DurationMatrix *[][]float64 `json:"duration_matrix,omitempty"`
+	DistanceMatrix *[][]float64 `json:"distance_matrix,omitempty"`
+	Vehicles       []Vehicle    `json:"vehicles,omitempty"`
+	Stops          []Stop       `json:"stops,omitempty"`
+	CustomData     any          `json:"custom_data,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -67,9 +65,6 @@ type Vehicle struct {
 	MaxStops                *int            `json:"max_stops,omitempty"`
 	MaxDistance             *int            `json:"max_distance,omitempty"`
 	MaxDuration             *int            `json:"max_duration,omitempty"`
-	StopDurationMultiplier  *float64        `json:"stop_duration_multiplier,omitempty"`
-	Backlog                 *[]string       `json:"backlog,omitempty"`
-	AlternateStops          *[]string       `json:"alternate_stops,omitempty"`
 	InitializationCost      *int            `json:"initialization_cost,omitempty"`
 	CustomData              any             `json:"custom_data,omitempty"`
 }
