@@ -27,6 +27,7 @@ type cluster struct {
 	Indices  []int           `json:"indices"`
 }
 
+// Version is a struct that holds the sdk version.
 type Version struct {
 	Sdk string `json:"sdk"`
 }

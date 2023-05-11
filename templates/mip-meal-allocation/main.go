@@ -68,6 +68,7 @@ type Option struct {
 	} `json:"limits"`
 }
 
+// Version is a struct that holds the sdk version.
 type Version struct {
 	Sdk string `json:"sdk"`
 }

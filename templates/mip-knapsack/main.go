@@ -56,6 +56,7 @@ type Option struct {
 	} `json:"limits"`
 }
 
+// Version is a struct that holds the sdk version.
 type Version struct {
 	Sdk string `json:"sdk"`
 }
@@ -67,7 +68,7 @@ type Output struct {
 	Solution MipOutput `json:"solution"`
 }
 
-// Output is the output of the solver.
+// MipOutput is the output of the solver.
 type MipOutput struct {
 	Status  string  `json:"status,omitempty"`
 	Runtime string  `json:"runtime,omitempty"`
