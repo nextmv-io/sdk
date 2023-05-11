@@ -14,7 +14,7 @@ The following command will be run:
     --app-id $APPID \\
     --version-id demo-routing-app-v2 \\
     --name "release candidate v2" \\
-    --description "INFORMS workshop v2 app" \\
+    --description "Routing demo v2 app" \\
     --json
 Press return to create the v2 version.
 EOF
@@ -24,7 +24,7 @@ nextmv app version create \
 --app-id "$APPID" \
 --version-id demo-routing-app-v2 \
 --name "release candidate v2" \
---description "INFORMS workshop v2 app" \
+--description "Routing demo v2 app" \
 --json
 
 cat << EOF
@@ -38,7 +38,7 @@ The following command will be run:
     --version-id demo-routing-app-v2 \\
     --instance-id staging \\
     --name "Staging instance" \\
-    --description "Staging instance of informs routing app
+    --description "Staging instance of routing demo app
 Press return to create the staging instance, with our updated version assigned.
 EOF
 read -r
@@ -48,7 +48,7 @@ nextmv app instance create \
 --version-id demo-routing-app-v2 \
 --instance-id staging \
 --name "Staging instance" \
---description "Staging instance of informs routing app"
+--description "Staging instance of routing demo app"
 
 
 cat << EOF

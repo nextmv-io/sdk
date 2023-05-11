@@ -24,8 +24,8 @@ are solving, such as binaries, versions, instances, and runs.
 The following command will be run:
   nextmv app create \\
     --app-id "$APPID"  \\
-    --name "INFORMS Farm share delivery app - $ID" \\
-    --description "App for INFORMS 2023 workshop for user $ID" \\
+    --name "Farm share delivery app - $ID" \\
+    --description "Routing app for user $ID" \\
     --json;
 Press return to create your application.
 EOF
@@ -33,8 +33,8 @@ read -r
 
 nextmv app create \
 --app-id "$APPID"  \
---name "INFORMS Farm share delivery app - $ID" \
---description "App for INFORMS 2023 workshop for user $ID" \
+--name "Farm share delivery app - $ID" \
+--description "Routing app for user $ID" \
 --json;
 
 cat << EOF
@@ -58,7 +58,7 @@ The following command will be run:
   nextmv app version create \\
     --app-id "$APPID"  \\
     --name "v1 release" \\
-    --description "INFORMS workshop v1 app" \\
+    --description "Routing demo v1 app" \\
     --version-id demo-routing-app-v1 \\
     --json
 Press return to create a version.
@@ -68,7 +68,7 @@ read -r
 nextmv app version create \
 --app-id "$APPID"  \
 --name "v1 release" \
---description "INFORMS workshop v1 app" \
+--description "Routing demo v1 app" \
 --version-id demo-routing-app-v1 \
 --json
 
@@ -86,7 +86,7 @@ The following command will be run:
     --version-id demo-routing-app-v1 \\
     --instance-id prod \\
     --name "Production instance" \\
-    --description "INFORMS workshop prod instance" \\
+    --description "Production instance of routing demo app" \\
     --json
 Press return to create the production instance.
 EOF
@@ -98,7 +98,7 @@ nextmv app instance create \
 --version-id demo-routing-app-v1 \
 --instance-id prod \
 --name "Production instance" \
---description "INFORMS workshop prod instance" \
+--description "Production instance of routing demo app" \
 --json
 
 
