@@ -25,6 +25,13 @@ type legacyEncoder[Solution, Options any] struct {
 	encoder encode.Encoder
 }
 
+// Output adds Output information by wrapping the solutions.
+type Output struct {
+	Options   any            `json:"options,omitempty"`
+	Version   schema.Version `json:"version,omitempty"`
+	Solutions []any          `json:"solutions"`
+}
+
 // Encode encodes the solution using the given encoder. If a given output path
 // ends in .gz, it will be gzipped after encoding. The writer needs to be an
 // io.Writer.
@@ -75,7 +82,7 @@ func (g *legacyEncoder[Solution, Options]) Encode(
 			solutions = tempSolutions
 		}
 	}
-	m := schema.Output{
+	m := Output{
 		Version: schema.Version{
 			Sdk: sdk.VERSION,
 		},
