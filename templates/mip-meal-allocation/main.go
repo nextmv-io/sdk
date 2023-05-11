@@ -9,6 +9,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
 )
@@ -67,8 +68,19 @@ type Option struct {
 	} `json:"limits"`
 }
 
-// Output is the output of the solver.
+type Version struct {
+	Sdk string `json:"sdk"`
+}
+
+// Output is the output wrapped with the version and options.
 type Output struct {
+	Version  Version   `json:"version"`
+	Options  Option    `json:"options"`
+	Solution MipOutput `json:"solution"`
+}
+
+// MipOutput is the output of the solver.
+type MipOutput struct {
 	Status  string         `json:"status,omitempty"`
 	Runtime string         `json:"runtime,omitempty"`
 	Binkies float64        `json:"binkies,omitempty"`
@@ -157,7 +169,7 @@ func solver(input input, opts Option) ([]Output, error) {
 		return nil, err
 	}
 
-	output, err := format(solution, nrMealsVars)
+	output, err := format(solution, nrMealsVars, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -168,16 +180,18 @@ func solver(input input, opts Option) ([]Output, error) {
 func format(
 	solution mip.Solution,
 	nrMealsVars map[string]mip.Int,
+	opts Option,
 ) (output Output, err error) {
-	output.Status = "infeasible"
-	output.Runtime = solution.RunTime().String()
+	o := MipOutput{}
+	o.Status = "infeasible"
+	o.Runtime = solution.RunTime().String()
 	if solution != nil && solution.HasValues() {
 		if solution.IsOptimal() {
-			output.Status = "optimal"
+			o.Status = "optimal"
 		} else {
-			output.Status = "suboptimal"
+			o.Status = "suboptimal"
 		}
-		output.Binkies = solution.ObjectiveValue()
+		o.Binkies = solution.ObjectiveValue()
 		meals := make([]MealQuantity, 0)
 		for name, nrMealsVar := range nrMealsVars {
 			meals = append(meals, MealQuantity{
@@ -185,9 +199,16 @@ func format(
 				Quantity: int(math.Round(solution.Value(nrMealsVar))),
 			})
 		}
-		output.Meals = meals
+		o.Meals = meals
 	} else {
-		return output, errors.New("no solution found")
+		return Output{}, errors.New("no solution found")
+	}
+	output = Output{
+		Version: Version{
+			Sdk: sdk.VERSION,
+		},
+		Options:  opts,
+		Solution: o,
 	}
 	return output, nil
 }

@@ -11,7 +11,6 @@ type HTTPRunnerConfig struct {
 		Log    *log.Logger
 		Output struct {
 			Solutions string `default:"last" usage:"Return all or last solution"`
-			Quiet     bool   `default:"false" usage:"Do not return statistics"`
 		}
 		HTTP struct {
 			Address           string        `default:":9000" usage:"The host address"`
@@ -21,11 +20,6 @@ type HTTPRunnerConfig struct {
 			MaxParallel       int           `default:"1" usage:"The max number of requests"`
 		}
 	}
-}
-
-// Quiet returns the quiet flag.
-func (c HTTPRunnerConfig) Quiet() bool {
-	return c.Runner.Output.Quiet
 }
 
 // Solutions returns the configured solutions.

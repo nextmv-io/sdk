@@ -9,6 +9,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
 )
@@ -67,8 +68,19 @@ type Option struct {
 	} `json:"limits"`
 }
 
-// Output is the output of the solver.
+type Version struct {
+	Sdk string `json:"sdk"`
+}
+
+// Output is the output wrapped with the version and options.
 type Output struct {
+	Version  Version   `json:"version"`
+	Options  Option    `json:"options"`
+	Solution MipOutput `json:"solution"`
+}
+
+// MipOutput is the output of the solver.
+type MipOutput struct {
 	Status      string        `json:"status,omitempty"`
 	Runtime     string        `json:"runtime,omitempty"`
 	Assignments []assignments `json:"assignments,omitempty"`
@@ -132,7 +144,7 @@ func solver(
 		return nil, err
 	}
 
-	output, err := format(solution, input, userIncentive)
+	output, err := format(solution, input, userIncentive, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -144,20 +156,22 @@ func format(
 	solution mip.Solution,
 	input incentiveAllocationProblem,
 	userIncentive map[string][]mip.Var,
+	opts Option,
 ) (output Output, err error) {
-	output.Status = "infeasible"
-	output.Runtime = solution.RunTime().String()
+	o := MipOutput{}
+	o.Status = "infeasible"
+	o.Runtime = solution.RunTime().String()
 
 	if solution != nil && solution.HasValues() {
 		if solution.IsOptimal() {
-			output.Status = "optimal"
+			o.Status = "optimal"
 		} else {
-			output.Status = "suboptimal"
+			o.Status = "suboptimal"
 		}
 
-		output.Value = solution.ObjectiveValue()
+		o.Value = solution.ObjectiveValue()
 
-		// We change the output so that it is easier to read.
+		// We change the o so that it is easier to read.
 		assigned := []assignments{}
 		for i, user := range input.Users {
 			for j := range user.Incentives {
@@ -175,10 +189,16 @@ func format(
 				assigned = append(assigned, oc)
 			}
 		}
-		output.Assignments = assigned
+		o.Assignments = assigned
 	} else {
-		return output, errors.New("no solution found")
+		return Output{}, errors.New("no solution found")
 	}
-
+	output = Output{
+		Version: Version{
+			Sdk: sdk.VERSION,
+		},
+		Options:  opts,
+		Solution: o,
+	}
 	return output, nil
 }

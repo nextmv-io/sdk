@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/cluster/kmeans"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/run"
@@ -26,8 +27,19 @@ type cluster struct {
 	Indices  []int           `json:"indices"`
 }
 
-// Output is the output of the solver.
+type Version struct {
+	Sdk string `json:"sdk"`
+}
+
+// Output is the output wrapped with the version and options.
 type Output struct {
+	Version  Version        `json:"version"`
+	Options  ClusterOptions `json:"options"`
+	Solution ClusterOutput  `json:"solution"`
+}
+
+// ClusterOutput is the output of the solver.
+type ClusterOutput struct {
 	Clusters          []cluster       `json:"clusters"`
 	Feasible          bool            `json:"feasible"`
 	Unassigned        []measure.Point `json:"unassigned"`
@@ -90,12 +102,12 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 		panic(err)
 	}
 
-	return []Output{format(solution)}, nil
+	return []Output{format(solution, opts)}, nil
 }
 
 // format returns a function to format the solution output.
-func format(solution kmeans.Solution) Output {
-	o := Output{
+func format(solution kmeans.Solution, opts ClusterOptions) Output {
+	clusterOutput := ClusterOutput{
 		Clusters:          make([]cluster, len(solution.Clusters())),
 		Feasible:          solution.Feasible(),
 		Unassigned:        solution.Unassigned(),
@@ -103,13 +115,19 @@ func format(solution kmeans.Solution) Output {
 	}
 
 	for idx, c := range solution.Clusters() {
-		o.Clusters[idx] = cluster{
+		clusterOutput.Clusters[idx] = cluster{
 			Index:    idx,
 			Centroid: c.Centroid(),
 			Points:   c.Points(),
 			Indices:  c.Indices(),
 		}
 	}
-
+	o := Output{
+		Version: Version{
+			Sdk: sdk.VERSION,
+		},
+		Options:  opts,
+		Solution: clusterOutput,
+	}
 	return o
 }
