@@ -36,16 +36,17 @@ var (
 type Options struct {
 	Constraints struct {
 		Disable struct {
-			Attributes      bool `json:"attributes" usage:"ignore the compatibility attributes constraint"`
-			Capacity        bool `json:"capacity" usage:"ignore the capacity constraint"`
-			DistanceLimit   bool `json:"distance_limit" usage:"ignore the distance limit constraint"`
-			Groups          bool `json:"groups" usage:"ignore the groups constraint"`
-			MaximumDuration bool `json:"maximum_duration" usage:"ignore the maximum duration constraint"`
-			MaximumStops    bool `json:"maximum_stops" usage:"ignore the maximum stops constraint"`
-			MaximumWait     bool `json:"maximum_wait" usage:"ignore the maximum wait constraint"`
-			Precedence      bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
-			Shift           bool `json:"shift" usage:"ignore the shift constraint"`
-			Windows         bool `json:"windows" usage:"ignore the windows constraint"`
+			Attributes         bool `json:"attributes" usage:"ignore the compatibility attributes constraint"`
+			Capacity           bool `json:"capacity" usage:"ignore the capacity constraint"`
+			DistanceLimit      bool `json:"distance_limit" usage:"ignore the distance limit constraint"`
+			Groups             bool `json:"groups" usage:"ignore the groups constraint"`
+			MaximumDuration    bool `json:"maximum_duration" usage:"ignore the maximum duration constraint"`
+			MaximumStops       bool `json:"maximum_stops" usage:"ignore the maximum stops constraint"`
+			MaximumWaitStop    bool `json:"maximum_wait_stop" usage:"ignore the maximum stop wait constraint"`
+			MaximumWaitVehicle bool `json:"maximum_wait_vehicle" usage:"ignore the maximum vehicle wait constraint"`
+			Precedence         bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
+			Shift              bool `json:"shift" usage:"ignore the shift constraint"`
+			Windows            bool `json:"windows" usage:"ignore the windows constraint"`
 		} `json:"disable"`
 		Enable struct {
 			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
