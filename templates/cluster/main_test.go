@@ -30,7 +30,7 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Get the expected solution.
-	want := ClusterOutput{}
+	want := Output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)
@@ -40,17 +40,17 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Get the solution.
-	got := output[0].Solution
+	got := output.Solution.(Output)
 	if err := json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
-	got = ClusterOutput{
+	got = Output{
 		Feasible:          got.Feasible,
 		UnassignedIndices: got.UnassignedIndices,
 	}
 
-	want = ClusterOutput{
+	want = Output{
 		Feasible:          want.Feasible,
 		UnassignedIndices: want.UnassignedIndices,
 	}

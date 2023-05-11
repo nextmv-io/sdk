@@ -9,9 +9,9 @@ import (
 	"math"
 	"time"
 
-	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -68,20 +68,8 @@ type Option struct {
 	} `json:"limits"`
 }
 
-// Version is a struct that holds the sdk version.
-type Version struct {
-	Sdk string `json:"sdk"`
-}
-
-// Output is the output wrapped with the version and options.
+// Output is the output of the solver.
 type Output struct {
-	Version  Version   `json:"version"`
-	Options  Option    `json:"options"`
-	Solution MipOutput `json:"solution"`
-}
-
-// MipOutput is the output of the solver.
-type MipOutput struct {
 	Status  string         `json:"status,omitempty"`
 	Runtime string         `json:"runtime,omitempty"`
 	Binkies float64        `json:"binkies,omitempty"`
@@ -94,7 +82,7 @@ type MealQuantity struct {
 	Quantity int    `json:"quantity,omitempty"`
 }
 
-func solver(input input, opts Option) ([]Output, error) {
+func solver(input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -135,7 +123,7 @@ func solver(input input, opts Option) ([]Output, error) {
 
 		for _, ingredient := range meal.Ingredients {
 			if _, present := itemInStockConstraints[ingredient.Name]; !present {
-				return nil,
+				return schema.Output{},
 					fmt.Errorf("meal %v, uses undefined item %v",
 						meal.Name,
 						ingredient.Name,
@@ -154,7 +142,7 @@ func solver(input input, opts Option) ([]Output, error) {
 	// We create a solver using the 'highs' provider
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use
@@ -162,28 +150,28 @@ func solver(input input, opts Option) ([]Output, error) {
 
 	// Limit the solve to a maximum duration
 	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	output, err := format(solution, nrMealsVars, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []Output{output}, nil
+	return output, nil
 }
 
 func format(
 	solution mip.Solution,
 	nrMealsVars map[string]mip.Int,
 	opts Option,
-) (output Output, err error) {
-	o := MipOutput{}
+) (output schema.Output, err error) {
+	o := Output{}
 	o.Status = "infeasible"
 	o.Runtime = solution.RunTime().String()
 	if solution != nil && solution.HasValues() {
@@ -202,14 +190,8 @@ func format(
 		}
 		o.Meals = meals
 	} else {
-		return Output{}, errors.New("no solution found")
+		return schema.Output{}, errors.New("no solution found")
 	}
-	output = Output{
-		Version: Version{
-			Sdk: sdk.VERSION,
-		},
-		Options:  opts,
-		Solution: o,
-	}
+	output = schema.NewOutput(o, opts)
 	return output, nil
 }

@@ -7,10 +7,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -56,27 +56,15 @@ type Option struct {
 	} `json:"limits"`
 }
 
-// Version is a struct that holds the sdk version.
-type Version struct {
-	Sdk string `json:"sdk"`
-}
-
-// Output is the output wrapped with the version and options.
+// Output is the output of the solver.
 type Output struct {
-	Version  Version   `json:"version"`
-	Options  Option    `json:"options"`
-	Solution MipOutput `json:"solution"`
-}
-
-// MipOutput is the output of the solver.
-type MipOutput struct {
 	Status  string  `json:"status,omitempty"`
 	Runtime string  `json:"runtime,omitempty"`
 	Items   []item  `json:"items,omitempty"`
 	Value   float64 `json:"value,omitempty"`
 }
 
-func solver(input input, opts Option) ([]Output, error) {
+func solver(input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -108,7 +96,7 @@ func solver(input input, opts Option) ([]Output, error) {
 	// We create a solver using the 'highs' provider
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use
@@ -116,12 +104,12 @@ func solver(input input, opts Option) ([]Output, error) {
 
 	// Limit the solve to a maximum duration
 	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set the relative gap to 0% (highs' default is 5%)
 	if err = solveOptions.SetMIPGapRelative(0); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set verbose level to see a more detailed output
@@ -129,15 +117,15 @@ func solver(input input, opts Option) ([]Output, error) {
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	output, err := format(solution, input, x, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []Output{output}, nil
+	return output, nil
 }
 
 func format(
@@ -145,8 +133,8 @@ func format(
 	input input,
 	x model.MultiMap[mip.Bool, item],
 	opts Option,
-) (output Output, err error) {
-	o := MipOutput{}
+) (output schema.Output, err error) {
+	o := Output{}
 	o.Status = "infeasible"
 	o.Runtime = solution.RunTime().String()
 
@@ -170,15 +158,9 @@ func format(
 		}
 		o.Items = items
 	} else {
-		return Output{}, errors.New("no solution found")
+		return schema.Output{}, errors.New("no solution found")
 	}
 
-	output = Output{
-		Version: Version{
-			Sdk: sdk.VERSION,
-		},
-		Options:  opts,
-		Solution: o,
-	}
+	output = schema.NewOutput(o, opts)
 	return output, nil
 }

@@ -9,19 +9,8 @@ import (
 
 	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/run/encode"
+	"github.com/nextmv-io/sdk/run/schema"
 )
-
-// version of the sdk.
-type version struct {
-	Sdk string `json:"sdk"`
-}
-
-// meta adds meta information by wrapping the solutions.
-type meta[Options, Solution any] struct {
-	Version   version    `json:"version"`
-	Options   Options    `json:"options"`
-	Solutions []Solution `json:"solutions"`
-}
 
 // LegacyEncoder returns a new Encoder that encodes the solution using the
 // given encoder.
@@ -86,8 +75,8 @@ func (g *legacyEncoder[Solution, Options]) Encode(
 			solutions = tempSolutions
 		}
 	}
-	m := meta[Options, Solution]{
-		Version: version{
+	m := schema.Output{
+		Version: schema.Version{
 			Sdk: sdk.VERSION,
 		},
 		Options: options,

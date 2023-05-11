@@ -27,13 +27,13 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got := output[0].Solution
+	got := output.Solution.(Output)
 	if err = json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}
 
 	// Get the expected solution.
-	want := MipOutput{}
+	want := Output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)

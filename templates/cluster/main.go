@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/cluster/kmeans"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 type input struct {
@@ -27,20 +27,8 @@ type cluster struct {
 	Indices  []int           `json:"indices"`
 }
 
-// Version is a struct that holds the sdk version.
-type Version struct {
-	Sdk string `json:"sdk"`
-}
-
-// Output is the output wrapped with the version and options.
+// Output is the output of the solver.
 type Output struct {
-	Version  Version        `json:"version"`
-	Options  ClusterOptions `json:"options"`
-	Solution ClusterOutput  `json:"solution"`
-}
-
-// ClusterOutput is the output of the solver.
-type ClusterOutput struct {
 	Clusters          []cluster       `json:"clusters"`
 	Feasible          bool            `json:"feasible"`
 	Unassigned        []measure.Point `json:"unassigned"`
@@ -61,7 +49,7 @@ func main() {
 	}
 }
 
-func solver(input input, opts ClusterOptions) ([]Output, error) {
+func solver(input input, opts ClusterOptions) (schema.Output, error) {
 	// We create a new model with the given points and number of clusters.
 	// We also pass the options to the model to set the maximum weight and
 	// maximum number of points per cluster.
@@ -83,13 +71,13 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 		kmeans.MaximumSumValue(maximumValues, values),
 	)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create a solver with the model.
 	solver, err := kmeans.NewSolver(model)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use and set the time limit
@@ -103,12 +91,12 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 		panic(err)
 	}
 
-	return []Output{format(solution, opts)}, nil
+	return format(solution, opts), nil
 }
 
 // format returns a function to format the solution output.
-func format(solution kmeans.Solution, opts ClusterOptions) Output {
-	clusterOutput := ClusterOutput{
+func format(solution kmeans.Solution, opts ClusterOptions) schema.Output {
+	output := Output{
 		Clusters:          make([]cluster, len(solution.Clusters())),
 		Feasible:          solution.Feasible(),
 		Unassigned:        solution.Unassigned(),
@@ -116,19 +104,13 @@ func format(solution kmeans.Solution, opts ClusterOptions) Output {
 	}
 
 	for idx, c := range solution.Clusters() {
-		clusterOutput.Clusters[idx] = cluster{
+		output.Clusters[idx] = cluster{
 			Index:    idx,
 			Centroid: c.Centroid(),
 			Points:   c.Points(),
 			Indices:  c.Indices(),
 		}
 	}
-	o := Output{
-		Version: Version{
-			Sdk: sdk.VERSION,
-		},
-		Options:  opts,
-		Solution: clusterOutput,
-	}
+	o := schema.NewOutput(output, opts)
 	return o
 }
