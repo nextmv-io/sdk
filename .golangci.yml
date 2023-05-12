@@ -236,6 +236,15 @@ issues:
     - path: templates/routing-informs/main\.go
       linters:
         - gocyclo
+    - path: templates/demo-routing/helper\.go
+      linters:
+        - gocyclo
+    - path: templates/demo-routing/schema\.go
+      linters:
+        - gocyclo
+    - path: templates/demo-routing/main\.go
+      linters:
+        - gocyclo
     - path: templates/pager-duty/main\.go
       linters:
         - gocyclo
@@ -266,7 +275,10 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
-
+    - path: templates/demo-routing/helper\.go
+      linters:
+        - gocritic
+      text: ifElseChain
     - path: templates/cluster-tsp/schema\.go
       linters:
         - unparam

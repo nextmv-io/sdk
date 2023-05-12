@@ -62,6 +62,40 @@ var (
 	//go:embed routing-informs/schema.go
 	RoutingInformsSchema string
 
+	// DemoRouting is the main.go file in the demo-routing template.
+	//go:embed demo-routing/main.go
+	DemoRouting string
+	// DemoRoutingInput1 is the input.json file in the demo-routing template.
+	//go:embed demo-routing/data/denv_l.json
+	DemoRoutingInput1 string
+	// DemoRoutingInput2 is the input.json file in the demo-routing template.
+	//go:embed demo-routing/data/denv_m.json
+	DemoRoutingInput2 string
+	// DemoRoutingInput3 is the input.json file in the demo-routing template.
+	//go:embed demo-routing/data/denv_s.json
+	DemoRoutingInput3 string
+	// DemoRoutingPart1 is the part1.sh file in the demo-routing template.
+	//go:embed demo-routing/part1.sh
+	DemoRoutingPart1 string
+	// DemoRoutingPart2 is the part2.sh file in the demo-routing template.
+	//go:embed demo-routing/part2.sh
+	DemoRoutingPart2 string
+	// DemoRoutingPart3 is the part3.sh file in the demo-routing template.
+	//go:embed demo-routing/part3.sh
+	DemoRoutingPart3 string
+	// DemoRoutingHelper is the helper.go file in the demo-routing template.
+	//go:embed demo-routing/helper.go
+	DemoRoutingHelper string
+	// DemoRoutingEncoder is the encoder.go file in the demo-routing template.
+	//go:embed demo-routing/encoder.go
+	DemoRoutingEncoder string
+	// DemoRoutingReadme is the README.md file in the demo-routing template.
+	//go:embed demo-routing/README.md
+	DemoRoutingReadme string
+	// DemoRoutingSchema is the schema.go file in the demo-Routing template.
+	//go:embed demo-routing/schema.go
+	DemoRoutingSchema string
+
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go
 	RoutingMatrixMain string
