@@ -161,75 +161,59 @@ func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 		}
 	}
 
+	m := meta[Options, Solution]{}
+	m.Version = version{
+		Sdk: sdk.VERSION,
+	}
+	m.Options = options
+	for solution := range solutions {
+		m.Solutions = append(m.Solutions, solution)
+	}
 	//nolint:nestif
-	if quieter, ok := runnerCfg.(run.Quieter); ok && !quieter.Quiet() {
-		m := meta[Options, Solution]{}
-		m.Version = version{
-			Sdk: sdk.VERSION,
+	if len(m.Solutions) > 0 {
+		s := output{}
+		b, err := json.Marshal(m.Solutions[0])
+		if err != nil {
+			return err
 		}
-		m.Options = options
-		for solution := range solutions {
-			m.Solutions = append(m.Solutions, solution)
-		}
-		if len(m.Solutions) > 0 {
-			s := output{}
-			b, err := json.Marshal(m.Solutions[0])
-			if err != nil {
-				return err
-			}
-			err = json.Unmarshal(b, &s)
-			if err != nil {
-				return err
-			}
-
-			assigned := 0
-			usedVehicles := 0
-			for _, v := range s.Store.Vehicles {
-				if len(v.Route) > 2 {
-					assigned += len(v.Route) - 2
-					usedVehicles++
-				}
-			}
-
-			unassigned := 0
-			if len(s.Store.Unassigned) > 0 {
-				unassigned = len(s.Store.Unassigned)
-			}
-			if s.Store.Vehicles != nil {
-				m.Statistics = statisticsOut{
-					Schema: "v1",
-					Result: result{
-						Value:   float64(*s.Statistics.Value),
-						Elapsed: s.Statistics.Time.Elapsed.Seconds(),
-						Custom: custom{
-							Routing: routing{
-								Stops: stops{
-									Unassigned: unassigned,
-									Assigned:   assigned,
-								},
-							},
-							UsedVehicles: usedVehicles,
-						},
-					},
-				}
-			}
-		}
-		if err = g.encoder.Encode(ioWriter, m); err != nil {
+		err = json.Unmarshal(b, &s)
+		if err != nil {
 			return err
 		}
 
-		return nil
-	}
+		assigned := 0
+		usedVehicles := 0
+		for _, v := range s.Store.Vehicles {
+			if len(v.Route) > 2 {
+				assigned += len(v.Route) - 2
+				usedVehicles++
+			}
+		}
 
-	m := []Solution{}
-	for solution := range solutions {
-		m = append(m, solution)
+		unassigned := 0
+		if len(s.Store.Unassigned) > 0 {
+			unassigned = len(s.Store.Unassigned)
+		}
+		if s.Store.Vehicles != nil {
+			m.Statistics = statisticsOut{
+				Schema: "v1",
+				Result: result{
+					Value:   float64(*s.Statistics.Value),
+					Elapsed: s.Statistics.Time.Elapsed.Seconds(),
+					Custom: custom{
+						Routing: routing{
+							Stops: stops{
+								Unassigned: unassigned,
+								Assigned:   assigned,
+							},
+						},
+						UsedVehicles: usedVehicles,
+					},
+				},
+			}
+		}
 	}
-	if err = g.encoder.Encode(ioWriter, m); err != nil {
-		return err
-	}
-
-	return nil
+	return g.encoder.Encode(ioWriter, m)
 }
 
 func (g *genericEncoder[Solution, Options]) ContentType() string {

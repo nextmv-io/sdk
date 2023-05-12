@@ -3,6 +3,7 @@ package run
 import (
 	"context"
 
+	"github.com/nextmv-io/sdk/run/encode"
 	"github.com/nextmv-io/sdk/store"
 )
 
@@ -26,6 +27,13 @@ func Run[Input any](solver func(
 		}
 		return nil
 	}
+	// this ensures that the output will be backwards compatible
+	options = append(
+		options,
+		Encode[CLIRunnerConfig, Input](
+			LegacyEncoder[store.Solution, store.Options](encode.JSON()),
+		),
+	)
 	runner := NewCLIRunner(algorithm, options...)
 	return runner.Run(context.Background())
 }

@@ -20,12 +20,6 @@ type OutputPather interface {
 	OutputPath() string
 }
 
-// Quieter is the interface a runner configuration can implement to enable a
-// runner to strip metadata from the output.
-type Quieter interface {
-	Quiet() bool
-}
-
 // SolutionLimiter is the interface a runner configuration can implement to
 // control whether all or only the last solution is returned.
 type SolutionLimiter interface {
@@ -45,7 +39,6 @@ type CLIRunnerConfig struct {
 		Output struct {
 			Path      string `usage:"The output file path"`
 			Solutions string `default:"last" usage:"{all, last}"`
-			Quiet     bool   `default:"false" usage:"only output solutions"`
 		}
 	}
 }
@@ -53,11 +46,6 @@ type CLIRunnerConfig struct {
 // OutputPath returns the output path.
 func (c CLIRunnerConfig) OutputPath() string {
 	return c.Runner.Output.Path
-}
-
-// Quiet returns the quiet flag.
-func (c CLIRunnerConfig) Quiet() bool {
-	return c.Runner.Output.Quiet
 }
 
 // CPUProfilePath returns the CPU profile path.

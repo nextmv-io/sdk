@@ -7,26 +7,35 @@ import (
 	"io"
 	"strings"
 
+	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/run/encode"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
-// GenericEncoder returns a new Encoder that encodes the solution using the
+// LegacyEncoder returns a new Encoder that encodes the solution using the
 // given encoder.
-func GenericEncoder[Solution, Options any](
+func LegacyEncoder[Solution, Options any](
 	encoder encode.Encoder,
 ) Encoder[Solution, Options] {
-	enc := genericEncoder[Solution, Options]{encoder}
+	enc := legacyEncoder[Solution, Options]{encoder}
 	return &enc
 }
 
-type genericEncoder[Solution, Options any] struct {
+type legacyEncoder[Solution, Options any] struct {
 	encoder encode.Encoder
+}
+
+// Output adds Output information by wrapping the solutions.
+type Output struct {
+	Options   any            `json:"options,omitempty"`
+	Version   schema.Version `json:"version,omitempty"`
+	Solutions []any          `json:"solutions"`
 }
 
 // Encode encodes the solution using the given encoder. If a given output path
 // ends in .gz, it will be gzipped after encoding. The writer needs to be an
 // io.Writer.
-func (g *genericEncoder[Solution, Options]) Encode(
+func (g *legacyEncoder[Solution, Options]) Encode(
 	_ context.Context,
 	solutions <-chan Solution,
 	writer any,
@@ -73,17 +82,19 @@ func (g *genericEncoder[Solution, Options]) Encode(
 			solutions = tempSolutions
 		}
 	}
-
-	for solution := range solutions {
-		err := g.encoder.Encode(ioWriter, solution)
-		if err != nil {
-			return err
-		}
+	m := Output{
+		Version: schema.Version{
+			Sdk: sdk.VERSION,
+		},
+		Options: options,
 	}
-	return nil
+	for solution := range solutions {
+		m.Solutions = append(m.Solutions, solution)
+	}
+	return g.encoder.Encode(ioWriter, m)
 }
 
-func (g *genericEncoder[Solution, Options]) ContentType() string {
+func (g *legacyEncoder[Solution, Options]) ContentType() string {
 	contentTyper, ok := g.encoder.(ContentTyper)
 	if !ok {
 		return "text/plain"
