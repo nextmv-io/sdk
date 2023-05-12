@@ -9,6 +9,7 @@ import (
 	"github.com/nextmv-io/sdk/cluster/kmeans"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 type input struct {
@@ -48,7 +49,7 @@ func main() {
 	}
 }
 
-func solver(input input, opts ClusterOptions) ([]Output, error) {
+func solver(input input, opts ClusterOptions) (schema.Output, error) {
 	// We create a new model with the given points and number of clusters.
 	// We also pass the options to the model to set the maximum weight and
 	// maximum number of points per cluster.
@@ -70,13 +71,13 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 		kmeans.MaximumSumValue(maximumValues, values),
 	)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create a solver with the model.
 	solver, err := kmeans.NewSolver(model)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use and set the time limit
@@ -90,12 +91,12 @@ func solver(input input, opts ClusterOptions) ([]Output, error) {
 		panic(err)
 	}
 
-	return []Output{format(solution)}, nil
+	return format(solution, opts), nil
 }
 
 // format returns a function to format the solution output.
-func format(solution kmeans.Solution) Output {
-	o := Output{
+func format(solution kmeans.Solution, opts ClusterOptions) schema.Output {
+	output := Output{
 		Clusters:          make([]cluster, len(solution.Clusters())),
 		Feasible:          solution.Feasible(),
 		Unassigned:        solution.Unassigned(),
@@ -103,13 +104,13 @@ func format(solution kmeans.Solution) Output {
 	}
 
 	for idx, c := range solution.Clusters() {
-		o.Clusters[idx] = cluster{
+		output.Clusters[idx] = cluster{
 			Index:    idx,
 			Centroid: c.Centroid(),
 			Points:   c.Points(),
 			Indices:  c.Indices(),
 		}
 	}
-
+	o := schema.NewOutput(opts, output)
 	return o
 }

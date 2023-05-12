@@ -11,6 +11,7 @@ import (
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -78,7 +79,7 @@ type Output struct {
 func solver(
 	input incentiveAllocationProblem,
 	opts Option,
-) ([]Output, error) {
+) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -106,7 +107,7 @@ func solver(
 	// We create a solver using the 'highs' provider.
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use.
@@ -115,13 +116,13 @@ func solver(
 	// Limit the solve to a maximum duration.
 	err = solveOptions.SetMaximumDuration(opts.Limits.Duration)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set the relative gap to 0% (highs' default is 5%).
 	err = solveOptions.SetMIPGapRelative(0)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set verbose level to see a more detailed output.
@@ -129,35 +130,37 @@ func solver(
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	output, err := format(solution, input, userIncentive)
+	output, err := format(solution, input, userIncentive, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []Output{output}, nil
+	return output, nil
 }
 
 func format(
 	solution mip.Solution,
 	input incentiveAllocationProblem,
 	userIncentive map[string][]mip.Var,
-) (output Output, err error) {
-	output.Status = "infeasible"
-	output.Runtime = solution.RunTime().String()
+	opts Option,
+) (output schema.Output, err error) {
+	o := Output{}
+	o.Status = "infeasible"
+	o.Runtime = solution.RunTime().String()
 
 	if solution != nil && solution.HasValues() {
 		if solution.IsOptimal() {
-			output.Status = "optimal"
+			o.Status = "optimal"
 		} else {
-			output.Status = "suboptimal"
+			o.Status = "suboptimal"
 		}
 
-		output.Value = solution.ObjectiveValue()
+		o.Value = solution.ObjectiveValue()
 
-		// We change the output so that it is easier to read.
+		// We change the o so that it is easier to read.
 		assigned := []assignments{}
 		for i, user := range input.Users {
 			for j := range user.Incentives {
@@ -175,10 +178,10 @@ func format(
 				assigned = append(assigned, oc)
 			}
 		}
-		output.Assignments = assigned
+		o.Assignments = assigned
 	} else {
-		return output, errors.New("no solution found")
+		return schema.Output{}, errors.New("no solution found")
 	}
-
+	output = schema.NewOutput(opts, o)
 	return output, nil
 }
