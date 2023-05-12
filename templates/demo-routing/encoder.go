@@ -161,7 +161,6 @@ func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 		}
 	}
 
-	//nolint:nestif
 	m := meta[Options, Solution]{}
 	m.Version = version{
 		Sdk: sdk.VERSION,
@@ -170,6 +169,7 @@ func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 	for solution := range solutions {
 		m.Solutions = append(m.Solutions, solution)
 	}
+	//nolint:nestif
 	if len(m.Solutions) > 0 {
 		s := output{}
 		b, err := json.Marshal(m.Solutions[0])
