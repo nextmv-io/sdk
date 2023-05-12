@@ -64,7 +64,7 @@ type Output struct {
 	Value   float64 `json:"value,omitempty"`
 }
 
-func solver(input input, opts Option) ([]schema.Output, error) {
+func solver(input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -96,7 +96,7 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 	// We create a solver using the 'highs' provider
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use
@@ -104,12 +104,12 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 
 	// Limit the solve to a maximum duration
 	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set the relative gap to 0% (highs' default is 5%)
 	if err = solveOptions.SetMIPGapRelative(0); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// Set verbose level to see a more detailed output
@@ -117,15 +117,15 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	output, err := format(solution, input, x, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []schema.Output{output}, nil
+	return output, nil
 }
 
 func format(
@@ -161,6 +161,6 @@ func format(
 		return schema.Output{}, errors.New("no solution found")
 	}
 
-	output = schema.NewOutput(o, opts)
+	output = schema.NewOutput(opts, o)
 	return output, nil
 }

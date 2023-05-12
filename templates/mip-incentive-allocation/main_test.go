@@ -27,7 +27,7 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got := output[0].Solution.(Output)
+	got := output.Solutions[0].(Output)
 	if err = json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}

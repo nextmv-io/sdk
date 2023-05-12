@@ -82,7 +82,7 @@ type MealQuantity struct {
 	Quantity int    `json:"quantity,omitempty"`
 }
 
-func solver(input input, opts Option) ([]schema.Output, error) {
+func solver(input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -123,7 +123,7 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 
 		for _, ingredient := range meal.Ingredients {
 			if _, present := itemInStockConstraints[ingredient.Name]; !present {
-				return nil,
+				return schema.Output{},
 					fmt.Errorf("meal %v, uses undefined item %v",
 						meal.Name,
 						ingredient.Name,
@@ -142,7 +142,7 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 	// We create a solver using the 'highs' provider
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use
@@ -150,20 +150,20 @@ func solver(input input, opts Option) ([]schema.Output, error) {
 
 	// Limit the solve to a maximum duration
 	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	output, err := format(solution, nrMealsVars, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []schema.Output{output}, nil
+	return output, nil
 }
 
 func format(
@@ -192,6 +192,6 @@ func format(
 	} else {
 		return schema.Output{}, errors.New("no solution found")
 	}
-	output = schema.NewOutput(o, opts)
+	output = schema.NewOutput(opts, o)
 	return output, nil
 }

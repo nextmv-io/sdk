@@ -15,15 +15,15 @@ type Version struct {
 type Output struct {
 	Statistics statistics.Statistics `json:"statistics,omitempty"`
 	Options    any                   `json:"options,omitempty"`
-	Solution   any                   `json:"solution"`
 	Version    Version               `json:"version,omitempty"`
+	Solutions  []any                 `json:"solutions,omitempty"`
 }
 
 // NewOutput creates a new Output.
-func NewOutput(solution, options any) Output {
+func NewOutput(options any, solutions ...any) Output {
 	return Output{
-		Solution: solution,
-		Options:  options,
+		Solutions: solutions,
+		Options:   options,
 		Version: Version{
 			Sdk: sdk.VERSION,
 		},

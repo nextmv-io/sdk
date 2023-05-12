@@ -49,7 +49,7 @@ func main() {
 	}
 }
 
-func solver(input input, opts ClusterOptions) ([]schema.Output, error) {
+func solver(input input, opts ClusterOptions) (schema.Output, error) {
 	// We create a new model with the given points and number of clusters.
 	// We also pass the options to the model to set the maximum weight and
 	// maximum number of points per cluster.
@@ -71,13 +71,13 @@ func solver(input input, opts ClusterOptions) ([]schema.Output, error) {
 		kmeans.MaximumSumValue(maximumValues, values),
 	)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create a solver with the model.
 	solver, err := kmeans.NewSolver(model)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use and set the time limit
@@ -91,7 +91,7 @@ func solver(input input, opts ClusterOptions) ([]schema.Output, error) {
 		panic(err)
 	}
 
-	return []schema.Output{format(solution, opts)}, nil
+	return format(solution, opts), nil
 }
 
 // format returns a function to format the solution output.
@@ -111,6 +111,6 @@ func format(solution kmeans.Solution, opts ClusterOptions) schema.Output {
 			Indices:  c.Indices(),
 		}
 	}
-	o := schema.NewOutput(output, opts)
+	o := schema.NewOutput(opts, output)
 	return o
 }
