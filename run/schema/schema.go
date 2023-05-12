@@ -13,10 +13,10 @@ type Version struct {
 
 // Output adds Output information by wrapping the solutions.
 type Output struct {
-	Statistics statistics.Statistics `json:"statistics,omitempty"`
-	Options    any                   `json:"options,omitempty"`
 	Version    Version               `json:"version,omitempty"`
+	Options    any                   `json:"options,omitempty"`
 	Solutions  []any                 `json:"solutions,omitempty"`
+	Statistics statistics.Statistics `json:"statistics,omitempty"`
 }
 
 // NewOutput creates a new Output.
