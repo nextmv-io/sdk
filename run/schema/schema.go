@@ -20,9 +20,14 @@ type Output struct {
 }
 
 // NewOutput creates a new Output.
-func NewOutput(options any, solutions ...any) Output {
+func NewOutput[Solution any](options any, solutions ...Solution) Output {
+	// convert solutions to any
+	solutionsAny := make([]any, len(solutions))
+	for i, solution := range solutions {
+		solutionsAny[i] = solution
+	}
 	return Output{
-		Solutions: solutions,
+		Solutions: solutionsAny,
 		Options:   options,
 		Version: Version{
 			Sdk: sdk.VERSION,
