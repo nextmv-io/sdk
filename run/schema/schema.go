@@ -13,16 +13,21 @@ type Version struct {
 
 // Output adds Output information by wrapping the solutions.
 type Output struct {
-	Statistics statistics.Statistics `json:"statistics,omitempty"`
-	Options    any                   `json:"options,omitempty"`
-	Version    Version               `json:"version,omitempty"`
-	Solutions  []any                 `json:"solutions,omitempty"`
+	Version    Version                `json:"version,omitempty"`
+	Options    any                    `json:"options,omitempty"`
+	Solutions  []any                  `json:"solutions,omitempty"`
+	Statistics *statistics.Statistics `json:"statistics,omitempty"`
 }
 
 // NewOutput creates a new Output.
-func NewOutput(options any, solutions ...any) Output {
+func NewOutput[Solution any](options any, solutions ...Solution) Output {
+	// convert solutions to any
+	solutionsAny := make([]any, len(solutions))
+	for i, solution := range solutions {
+		solutionsAny[i] = solution
+	}
 	return Output{
-		Solutions: solutions,
+		Solutions: solutionsAny,
 		Options:   options,
 		Version: Version{
 			Sdk: sdk.VERSION,
