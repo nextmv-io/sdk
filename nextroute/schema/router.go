@@ -51,7 +51,7 @@ type RouterInput struct {
 // - ServiceGroups
 
 // RouterToNextRoute transforms router input to nextroute input.
-func RouterToNextRoute(routerInput routerInput) Input {
+func RouterToNextRoute(routerInput RouterInput) Input {
 	// Convert stop defaults
 	stopDefaults := StopDefaults{}
 	if anyAndAllEqual(routerInput.Penalties) {
