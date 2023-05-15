@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"reflect"
@@ -24,7 +25,7 @@ func TestTemplate(t *testing.T) {
 	opt.Limits.Duration = 5 * time.Second
 
 	// Declare the solver.
-	output, err := solver(input, opt)
+	output, err := solver(context.Background(), input, opt)
 	if err != nil {
 		t.Fatal(err)
 	}

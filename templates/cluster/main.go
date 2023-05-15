@@ -49,7 +49,7 @@ func main() {
 	}
 }
 
-func solver(input input, opts ClusterOptions) (schema.Output, error) {
+func solver(_ context.Context, input input, opts ClusterOptions) (schema.Output, error) {
 	// We create a new model with the given points and number of clusters.
 	// We also pass the options to the model to set the maximum weight and
 	// maximum number of points per cluster.

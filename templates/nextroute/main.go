@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	runner := run.NewCLIRunner(solver)
+	runner := run.CLI(solver)
 	err := runner.Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
@@ -28,27 +28,21 @@ func solver(
 	ctx context.Context,
 	input schema.Input,
 	options options,
-	solutions chan<- any,
-) error {
+) (schema.SolutionOutput, error) {
 	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
-		return err
+		return schema.SolutionOutput{}, err
 	}
 
 	solver, err := nextroute.NewParallelSolver(model)
 	if err != nil {
-		return err
+		return schema.SolutionOutput{}, err
 	}
 
 	solverSolutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
-		return err
+		return schema.SolutionOutput{}, err
 	}
 
-	last := solverSolutions.Last()
-	if last != nil {
-		solutions <- nextroute.Format(last)
-	}
-
-	return nil
+	return nextroute.Format(solverSolutions.Last()), nil
 }
