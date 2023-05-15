@@ -8,6 +8,7 @@ import (
 )
 
 // RouterInput is the schema for the input of router.
+// nolint:unused
 type routerInput struct {
 	Stops               []route.Stop         `json:"stops"`
 	Vehicles            []string             `json:"vehicles"`
@@ -51,6 +52,7 @@ type routerInput struct {
 // - ServiceGroups
 
 // RouterToNextRoute transforms router input to nextroute input.
+// nolint:unused
 func routerToNextRoute(routerInput routerInput) Input {
 	// Convert stop defaults
 	stopDefaults := StopDefaults{}
@@ -140,6 +142,7 @@ func routerToNextRoute(routerInput routerInput) Input {
 	}
 }
 
+// nolint:unused
 func anyAndAllEqual[T any](v []T) bool {
 	if len(v) == 0 {
 		return false
