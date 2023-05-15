@@ -47,7 +47,7 @@ func solver(
 
 	last := solverSolutions.Last()
 	if last != nil {
-		solutions <- nextroute.NewBasicFormatter().ToOutput(last)
+		solutions <- nextroute.Format(last)
 	}
 
 	return nil
