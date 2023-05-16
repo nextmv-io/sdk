@@ -144,9 +144,12 @@ func setTimes(
 	stopOutput schema.PlannedStopOutput,
 	hasUserDefinedStartTime bool,
 ) schema.PlannedStopOutput {
-	arrival := solutionStop.Arrival()
-	departure := solutionStop.End()
-	service := solutionStop.Start()
+	// we need to access the timezone via the vehicle of the model
+	timezoneLocation := solutionStop.ModelStop().Model().
+		Vehicle(solutionStop.VehicleIndex()).Start().Location()
+	arrival := solutionStop.Arrival().In(timezoneLocation)
+	departure := solutionStop.End().In(timezoneLocation)
+	service := solutionStop.Start().In(timezoneLocation)
 	if hasUserDefinedStartTime {
 		stopOutput.ArrivalTime = &arrival
 		stopOutput.EndTime = &departure
@@ -163,7 +166,8 @@ func setTimes(
 	if !ok || inputStop.TargetArrivalTime == nil {
 		return stopOutput
 	}
-	stopOutput.TargetArrivalTime = inputStop.TargetArrivalTime
+	targetArrivalTime := inputStop.TargetArrivalTime.In(timezoneLocation)
+	stopOutput.TargetArrivalTime = &targetArrivalTime
 
 	if inputStop.EarlyArrivalTimePenalty != nil {
 		earliness := int(math.Max(inputStop.TargetArrivalTime.Sub(arrival).Seconds(), 0.0))
