@@ -18,39 +18,44 @@ func Format(
 	ctx context.Context,
 	options any,
 	progressioner alns.Progressioner,
-	s Solution,
+	solutions ...Solution,
 ) runSchema.Output {
-	// Process solutions of vehicles.
-	solutionVehicles := s.Vehicles()
-	vehicles := make([]schema.VehicleOutput, len(solutionVehicles))
-	for v, state := range solutionVehicles {
-		vehicles[v] = toVehicleOutput(state)
-	}
-
-	// Process unassigned stops.
-	unassigned := make([]schema.StopOutput, 0)
-
+	solutionOutputs := make([]schema.SolutionOutput, 0, len(solutions))
 	quit := make(chan struct{})
 	defer close(quit)
-
-	for u := range s.UnPlannedPlanUnits().Iterator(quit) {
-		for _, v := range u.ModelPlanUnit().Stops() {
-			unassigned = append(unassigned, schema.StopOutput{
-				ID: v.ID(),
-				Location: schema.Location{
-					Lon: v.Location().Longitude(),
-					Lat: v.Location().Latitude(),
-				},
-			})
+	for _, s := range solutions {
+		// Process solutions of vehicles.
+		solutionVehicles := s.Vehicles()
+		vehicles := make([]schema.VehicleOutput, len(solutionVehicles))
+		for v, state := range solutionVehicles {
+			vehicles[v] = toVehicleOutput(state)
 		}
+
+		// Process unassigned stops.
+		unassigned := make([]schema.StopOutput, 0)
+
+		for u := range s.UnPlannedPlanUnits().Iterator(quit) {
+			for _, v := range u.ModelPlanUnit().Stops() {
+				unassigned = append(unassigned, schema.StopOutput{
+					ID: v.ID(),
+					Location: schema.Location{
+						Lon: v.Location().Longitude(),
+						Lat: v.Location().Latitude(),
+					},
+				})
+			}
+		}
+
+		objective := makeObjective(s)
+		solutionOutput := schema.SolutionOutput{
+			Unplanned: unassigned,
+			Vehicles:  vehicles,
+			Objective: objective,
+		}
+		solutionOutputs = append(solutionOutputs, solutionOutput)
 	}
 
-	objective := makeObjective(s)
-	output := runSchema.NewOutput(options, schema.SolutionOutput{
-		Unplanned: unassigned,
-		Vehicles:  vehicles,
-		Objective: objective,
-	})
+	output := runSchema.NewOutput(options, solutionOutputs...)
 
 	// initialize statistics
 	output.Statistics = &statistics.Statistics{}
@@ -79,7 +84,7 @@ func Format(
 	lastProgressionValue := statistics.Float64(lastProgressionElement.Value)
 	output.Statistics.SeriesData = &statistics.SeriesData{
 		Value: statistics.Series{
-			Name:       objective.Name,
+			Name:       output.Solutions[len(output.Solutions)-1].(schema.SolutionOutput).Objective.Name,
 			DataPoints: seriesData,
 		},
 	}
@@ -143,9 +148,9 @@ func setTimes(
 	departure := solutionStop.End()
 	service := solutionStop.Start()
 	if hasUserDefinedStartTime {
-		stopOutput.EstimatedArrival = &arrival
-		stopOutput.EstimatedEnd = &departure
-		stopOutput.EstimatedStart = &service
+		stopOutput.ArrivalTime = &arrival
+		stopOutput.EndTime = &departure
+		stopOutput.StartTime = &service
 	}
 
 	stopOutput.TravelDuration = int(solutionStop.TravelDuration().Seconds())
@@ -162,12 +167,12 @@ func setTimes(
 
 	if inputStop.EarlyArrivalTimePenalty != nil {
 		earliness := int(math.Max(inputStop.TargetArrivalTime.Sub(arrival).Seconds(), 0.0))
-		stopOutput.EarlyArrivalDuration = &earliness
+		stopOutput.EarlyArrivalDuration = earliness
 	}
 
 	if inputStop.LateArrivalTimePenalty != nil {
 		lateness := int(math.Max(arrival.Sub(*inputStop.TargetArrivalTime).Seconds(), 0.0))
-		stopOutput.LateArrivalDuration = &lateness
+		stopOutput.LateArrivalDuration = lateness
 	}
 
 	return stopOutput
