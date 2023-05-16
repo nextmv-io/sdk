@@ -35,13 +35,13 @@ type PlannedStopOutput struct {
 	TravelDuration           int        `json:"travel_duration"`
 	CumulativeTravelDuration int        `json:"cumulative_travel_duration"`
 	TargetArrivalTime        *time.Time `json:"target_arrival_time,omitempty"`
-	EstimatedArrival         *time.Time `json:"estimated_arrival,omitempty"`
+	ArrivalTime              *time.Time `json:"arrival_time,omitempty"`
 	WaitingDuration          int        `json:"waiting_duration,omitempty"`
-	EstimatedStart           *time.Time `json:"estimated_start,omitempty"`
+	StartTime                *time.Time `json:"start_time,omitempty"`
 	Duration                 int        `json:"duration,omitempty"`
-	EstimatedEnd             *time.Time `json:"estimated_end,omitempty"`
-	EarlyArrivalDuration     *int       `json:"early_arrival_duration,omitempty"`
-	LateArrivalDuration      *int       `json:"late_arrival_duration,omitempty"`
+	EndTime                  *time.Time `json:"end_time,omitempty"`
+	EarlyArrivalDuration     int        `json:"early_arrival_duration,omitempty"`
+	LateArrivalDuration      int        `json:"late_arrival_duration,omitempty"`
 	CustomData               any        `json:"custom_data,omitempty"`
 }
 
