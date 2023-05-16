@@ -61,7 +61,7 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 		stopDefaults.Quantity = &routerInput.Quantities[0]
 	}
 	if anyAndAllEqual(routerInput.Windows) {
-		stopDefaults.HardWindow = &[]time.Time{
+		stopDefaults.StartTimeWindow = &[]time.Time{
 			routerInput.Windows[0].TimeWindow.Start,
 			routerInput.Windows[0].TimeWindow.End,
 		}
