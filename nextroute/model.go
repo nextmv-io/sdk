@@ -156,4 +156,7 @@ type Model interface {
 	// function uses the [Model.Epoch()] as a starting point and adds a large
 	// number to provide a large enough upper bound.
 	MaxTime() time.Time
+
+	// MaxDuration returns the maximum duration (upper bound) for any stop.
+	MaxDuration() time.Duration
 }

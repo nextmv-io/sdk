@@ -85,6 +85,9 @@ var (
 		VehicleTypeDurationExpression,
 	) (MaximumTravelDurationConstraint, error)
 
+	newMaximumWaitStopConstraint    func() (MaximumWaitStopConstraint, error)
+	newMaximumWaitVehicleConstraint func() (MaximumWaitVehicleConstraint, error)
+
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)

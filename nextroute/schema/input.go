@@ -34,6 +34,7 @@ type VehicleDefaults struct {
 	MaxStops                *int       `json:"max_stops,omitempty"`
 	MaxDistance             *int       `json:"max_distance,omitempty"`
 	MaxDuration             *int       `json:"max_duration,omitempty"`
+	MaxWait                 *int       `json:"max_wait,omitempty"`
 	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
 }
 
@@ -63,6 +64,7 @@ type Vehicle struct {
 	MaxStops                *int       `json:"max_stops,omitempty"`
 	MaxDistance             *int       `json:"max_distance,omitempty"`
 	MaxDuration             *int       `json:"max_duration,omitempty"`
+	MaxWait                 *int       `json:"max_wait,omitempty"`
 	InitializationCost      *int       `json:"initialization_cost,omitempty"`
 	CustomData              any        `json:"custom_data,omitempty"`
 }
