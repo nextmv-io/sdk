@@ -61,7 +61,7 @@ type Options struct {
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
-			ServiceDurations bool `json:"service_durations" usage:"ignore the service durations of stops"`
+			Durations bool `json:"durations" usage:"ignore the durations of stops"`
 		} `json:"disable"`
 	} `json:"properties"`
 }

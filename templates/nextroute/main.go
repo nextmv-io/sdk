@@ -21,8 +21,9 @@ func main() {
 }
 
 type options struct {
-	Model factory.Options                `json:"model,omitempty"`
-	Solve nextroute.ParallelSolveOptions `json:"solve,omitempty"`
+	Model  factory.Options                `json:"model,omitempty"`
+	Solve  nextroute.ParallelSolveOptions `json:"solve,omitempty"`
+	Format nextroute.FormatOptions        `json:"format,omitempty"`
 }
 
 func solver(

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"reflect"
 	"time"
 
 	"github.com/nextmv-io/sdk/alns"
@@ -12,6 +13,13 @@ import (
 	runSchema "github.com/nextmv-io/sdk/run/schema"
 	"github.com/nextmv-io/sdk/run/statistics"
 )
+
+// FormatOptions are the options that influence the format of the output.
+type FormatOptions struct {
+	Disable struct {
+		Progression bool `json:"progression" usage:"disable the progression series"`
+	} `json:"disable"`
+}
 
 // Format formats a solution in a basic format.
 func Format(
@@ -71,6 +79,14 @@ func Format(
 	progressionValues := progressioner.Progression()
 	if len(progressionValues) == 0 {
 		return output
+	}
+
+	r := reflect.ValueOf(options)
+	f := reflect.Indirect(r).FieldByName("Format")
+	if format, ok := f.Interface().(FormatOptions); ok {
+		if format.Disable.Progression {
+			return output
+		}
 	}
 
 	seriesData := make([]statistics.DataPoint, 0)
