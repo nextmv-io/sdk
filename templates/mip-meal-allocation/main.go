@@ -82,7 +82,7 @@ type MealQuantity struct {
 	Quantity int    `json:"quantity,omitempty"`
 }
 
-func solver(input input, opts Option) (schema.Output, error) {
+func solver(_ context.Context, input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 

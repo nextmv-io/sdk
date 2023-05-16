@@ -45,24 +45,25 @@ type Options struct {
 			MaximumWaitStop    bool `json:"maximum_wait_stop" usage:"ignore the maximum stop wait constraint"`
 			MaximumWaitVehicle bool `json:"maximum_wait_vehicle" usage:"ignore the maximum vehicle wait constraint"`
 			Precedence         bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
-			Shift              bool `json:"shift" usage:"ignore the shift constraint"`
-			Windows            bool `json:"windows" usage:"ignore the windows constraint"`
+			VehicleStartTime   bool `json:"vehicle_start_time" usage:"ignore the vehicle start time constraint"`
+			VehicleEndTime     bool `json:"vehicle_end_time" usage:"ignore the vehicle end time constraint"`
+			ArrivalTimeWindows bool `json:"arrival_time_windows" usage:"ignore the arrival time windows constraint"`
 		} `json:"disable"`
 		Enable struct {
 			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
 		} `json:"enable"`
 	} `json:"constraints"`
 	Objectives struct {
-		Earliness          float64 `json:"earliness" usage:"factor to weigh the earliness objective" default:"1.0"`
-		Lateness           float64 `json:"lateness" usage:"factor to weigh the lateness objective" default:"1.0"`
+		EarlyArrival       float64 `json:"early_arrival" usage:"factor to weigh the early arrival objective" default:"1.0"`
+		LateArrival        float64 `json:"late_arrival" usage:"factor to weigh the late arrival objective" default:"1.0"`
 		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
 		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
-		UnassignedStops    float64 `json:"unassigned_stops" usage:"factor to weigh the unplanned objective" default:"1.0"`
+		Unplanned          float64 `json:"unplanned" usage:"factor to weigh the unplanned objective" default:"1.0"`
 		Cluster            float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
-			ServiceDurations bool `json:"service_durations" usage:"ignore the service durations of stops"`
+			Durations bool `json:"durations" usage:"ignore the durations of stops"`
 		} `json:"disable"`
 	} `json:"properties"`
 }

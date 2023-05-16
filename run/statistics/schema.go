@@ -4,10 +4,10 @@ package statistics
 
 // Statistics is the structure of the statistics section of the output.
 type Statistics struct {
-	Result     *Result     `json:"result,omitempty"`
-	Run        *Run        `json:"run,omitempty"`
-	SeriesData *SeriesData `json:"series_data,omitempty"`
 	Schema     *string     `json:"schema,omitempty"`
+	Run        *Run        `json:"run,omitempty"`
+	Result     *Result     `json:"result,omitempty"`
+	SeriesData *SeriesData `json:"series_data,omitempty"`
 }
 
 // Run is the structure of the run section of the statistics.
@@ -25,8 +25,8 @@ type Result struct {
 
 // SeriesData is the structure of the series section of the statistics.
 type SeriesData struct {
-	Custom []Series `json:"custom,omitempty"`
 	Value  Series   `json:"value,omitempty"`
+	Custom []Series `json:"custom,omitempty"`
 }
 
 // Series is the structure of a time series.
@@ -37,6 +37,6 @@ type Series struct {
 
 // DataPoint is the structure of a time series datum.
 type DataPoint struct {
-	Y Float64 `json:"y"`
 	X Float64 `json:"x"`
+	Y Float64 `json:"y"`
 }

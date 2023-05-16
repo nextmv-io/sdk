@@ -18,11 +18,14 @@ type ModelVehicle interface {
 	// Model returns the model of the vehicle.
 	Model() Model
 
-	// Name returns the name of the vehicle.
-	Name() string
+	// ID returns the identifier of the vehicle.
+	ID() string
 
-	// SetName sets the name of the vehicle.
-	SetName(string)
+	// SetID sets the identifier of the vehicle. This identifier is not used by
+	// nextroute and therefore it does not have to be unique for nextroute
+	// internally. However to make this ID useful for debugging and reporting it
+	// should be made unique.
+	SetID(string)
 	// Start returns the start time of the vehicle.
 	Start() time.Time
 
