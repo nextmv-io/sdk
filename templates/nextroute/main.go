@@ -9,6 +9,7 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
+	runSchema "github.com/nextmv-io/sdk/run/schema"
 )
 
 func main() {
@@ -28,21 +29,21 @@ func solver(
 	ctx context.Context,
 	input schema.Input,
 	options options,
-) (schema.SolutionOutput, error) {
+) (runSchema.Output, error) {
 	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
-		return schema.SolutionOutput{}, err
+		return runSchema.Output{}, err
 	}
 
 	solver, err := nextroute.NewParallelSolver(model)
 	if err != nil {
-		return schema.SolutionOutput{}, err
+		return runSchema.Output{}, err
 	}
 
-	solverSolutions, err := solver.Solve(ctx, options.Solve)
+	solutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
-		return schema.SolutionOutput{}, err
+		return runSchema.Output{}, err
 	}
 
-	return nextroute.Format(solverSolutions.Last()), nil
+	return nextroute.Format(ctx, options, solver, solutions.Last()), nil
 }

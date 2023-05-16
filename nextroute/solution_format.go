@@ -1,14 +1,25 @@
 package nextroute
 
 import (
+	"context"
 	"fmt"
 	"math"
+	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/nextroute/schema"
+	"github.com/nextmv-io/sdk/run"
+	runSchema "github.com/nextmv-io/sdk/run/schema"
+	"github.com/nextmv-io/sdk/run/statistics"
 )
 
 // Format formats a solution in a basic format.
-func Format(s Solution) schema.SolutionOutput {
+func Format(
+	ctx context.Context,
+	options any,
+	progressioner alns.Progressioner,
+	s Solution,
+) runSchema.Output {
 	// Process solutions of vehicles.
 	solutionVehicles := s.Vehicles()
 	vehicles := make([]schema.VehicleOutput, len(solutionVehicles))
@@ -34,11 +45,50 @@ func Format(s Solution) schema.SolutionOutput {
 		}
 	}
 
-	return schema.SolutionOutput{
+	objective := makeObjective(s)
+	output := runSchema.NewOutput(options, schema.SolutionOutput{
 		Unplanned: unassigned,
 		Vehicles:  vehicles,
-		Objective: makeObjective(s),
+		Objective: objective,
+	})
+
+	// initialize statistics
+	output.Statistics = &statistics.Statistics{}
+
+	// set run duration if available
+	if start, ok := ctx.Value(run.Start).(time.Time); ok {
+		duration := time.Since(start).Seconds()
+		output.Statistics.Run = &statistics.Run{
+			Duration: &duration,
+		}
 	}
+
+	progressionValues := progressioner.Progression()
+	if len(progressionValues) == 0 {
+		return output
+	}
+
+	seriesData := make([]statistics.DataPoint, 0)
+	for _, progression := range progressionValues {
+		seriesData = append(seriesData, statistics.DataPoint{
+			X: statistics.Float64(progression.ElapsedSeconds),
+			Y: statistics.Float64(progression.Value),
+		})
+	}
+	lastProgressionElement := progressionValues[len(progressionValues)-1]
+	lastProgressionValue := statistics.Float64(lastProgressionElement.Value)
+	output.Statistics.SeriesData = &statistics.SeriesData{
+		Value: statistics.Series{
+			Name:       objective.Name,
+			DataPoints: seriesData,
+		},
+	}
+	output.Statistics.Result = &statistics.Result{
+		Duration: &lastProgressionElement.ElapsedSeconds,
+		Value:    &lastProgressionValue,
+	}
+
+	return output
 }
 
 // toVehicleOutput constructs the output state of a vehicle.
