@@ -22,19 +22,22 @@ type ModelVehicleType interface {
 	// Model returns the model of the vehicle type.
 	Model() Model
 
-	// Name returns the name of the vehicle.
-	Name() string
+	// ID returns the identifier of the vehicle.
+	ID() string
 
-	// ProcessDurationExpression returns the process duration expression of the
+	// DurationExpression returns the process duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
 	// Model.NewVehicleType.
-	ProcessDurationExpression() DurationExpression
-	// SetProcessDurationExpression modifies the process duration expression of
+	DurationExpression() DurationExpression
+	// SetDurationExpression modifies the process duration expression of
 	// the vehicle type.
-	SetProcessDurationExpression(expression DurationExpression) error
+	SetDurationExpression(expression DurationExpression) error
 
-	// SetName sets the name of the vehicle.
-	SetName(string)
+	// SetID sets the identifier of the stop. This identifier is not used by
+	// nextroute and therefore it does not have to be unique for nextroute
+	// internally. However to make this ID useful for debugging and reporting it
+	// should be made unique.
+	SetID(string)
 
 	// TravelDurationExpression returns the duration expression of the
 	// vehicle type. Is set in the factory method of the vehicle type
