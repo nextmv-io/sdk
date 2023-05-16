@@ -77,6 +77,7 @@ type Output struct {
 }
 
 func solver(
+	_ context.Context,
 	input incentiveAllocationProblem,
 	opts Option,
 ) (schema.Output, error) {
