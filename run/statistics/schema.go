@@ -2,9 +2,16 @@
 // output.
 package statistics
 
+// NewStatistics creates new statistics.
+func NewStatistics() *Statistics {
+	return &Statistics{
+		Schema: "v1",
+	}
+}
+
 // Statistics is the structure of the statistics section of the output.
 type Statistics struct {
-	Schema     *string     `json:"schema,omitempty"`
+	Schema     string      `json:"schema,omitempty"`
 	Run        *Run        `json:"run,omitempty"`
 	Result     *Result     `json:"result,omitempty"`
 	SeriesData *SeriesData `json:"series_data,omitempty"`
