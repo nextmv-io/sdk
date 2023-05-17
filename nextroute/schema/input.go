@@ -42,7 +42,7 @@ type VehicleDefaults struct {
 type StopDefaults struct {
 	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`
 	Quantity                any          `json:"quantity,omitempty"`
-	HardWindow              *[]time.Time `json:"hard_window,omitempty"`
+	StartTimeWindow         *[]time.Time `json:"start_time_window,omitempty"`
 	MaxWait                 *int         `json:"max_wait,omitempty"`
 	Duration                *int         `json:"duration,omitempty"`
 	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
@@ -75,7 +75,7 @@ type Stop struct {
 	Quantity                any          `json:"quantity,omitempty"`
 	Succeeds                any          `json:"succeeds,omitempty"`
 	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
-	HardWindow              *[]time.Time `json:"hard_window,omitempty"`
+	StartTimeWindow         *[]time.Time `json:"start_time_window,omitempty"`
 	MaxWait                 *int         `json:"max_wait,omitempty"`
 	Duration                *int         `json:"duration,omitempty"`
 	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`

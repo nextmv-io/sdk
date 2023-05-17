@@ -204,7 +204,7 @@ func makeObjective(s Solution) schema.ObjectiveOutput {
 	for i, term := range sumObjective.Terms() {
 		value := s.ObjectiveValue(term.Objective())
 		terms[i] = schema.ObjectiveOutput{
-			Name:   fmt.Sprintf("%v", term),
+			Name:   fmt.Sprintf("%v", term.Objective()),
 			Factor: term.Factor(),
 			Base:   value / term.Factor(),
 			Value:  value,
