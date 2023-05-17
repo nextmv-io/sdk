@@ -66,7 +66,7 @@ func Format(
 	output := runSchema.NewOutput(options, solutionOutputs...)
 
 	// initialize statistics
-	output.Statistics = &statistics.Statistics{}
+	output.Statistics = statistics.NewStatistics()
 
 	// set run duration if available
 	if start, ok := ctx.Value(run.Start).(time.Time); ok {
