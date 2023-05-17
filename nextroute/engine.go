@@ -2,6 +2,7 @@
 package nextroute
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
@@ -13,8 +14,8 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
-	newRandomSolution             func(Model) (Solution, error)
-	newSweepSolution              func(Model) (Solution, error)
+	newRandomSolution             func(context.Context, Model) (Solution, error)
+	newSweepSolution              func(context.Context, Model) (Solution, error)
 	newConstantDurationExpression func(
 		string,
 		time.Duration,

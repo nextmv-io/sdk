@@ -22,19 +22,21 @@ func NewSolution(
 // a random plan unit to a random vehicle. The remaining plan units
 // are added to the solution in a random order at the best possible position.
 func NewRandomSolution(
+	ctx context.Context,
 	m Model,
 ) (Solution, error) {
 	connect.Connect(con, &newRandomSolution)
-	return newRandomSolution(m)
+	return newRandomSolution(ctx, m)
 }
 
 // NewSweepSolution creates a new solution. The solution is created from the
 // given model using a sweep construction heuristic.
 func NewSweepSolution(
+	ctx context.Context,
 	m Model,
 ) (Solution, error) {
 	connect.Connect(con, &newSweepSolution)
-	return newSweepSolution(m)
+	return newSweepSolution(ctx, m)
 }
 
 // Solution is a solution to a model.
