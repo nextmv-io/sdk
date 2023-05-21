@@ -83,6 +83,9 @@ func Format(
 
 	r := reflect.ValueOf(options)
 	f := reflect.Indirect(r).FieldByName("Format")
+	if !f.IsValid() || !f.CanInterface() {
+		return output
+	}
 	if format, ok := f.Interface().(FormatOptions); ok {
 		if format.Disable.Progression {
 			return output
