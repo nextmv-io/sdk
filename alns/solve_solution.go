@@ -52,4 +52,5 @@ type Progressioner interface {
 type ProgressionEntry struct {
 	ElapsedSeconds float64 `json:"elapsed_seconds"`
 	Value          float64 `json:"value"`
+	Iterations     int     `json:"iterations"`
 }
