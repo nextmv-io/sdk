@@ -61,6 +61,11 @@ type TimeDependentDurationExpression interface {
 	// minute boundary. Expression is not allowed to contain negative values.
 	SetExpression(start, end time.Time, expression DurationExpression) error
 
+	// Expressions returns all expressions defined to be valid in a time
+	// interval. The returned slice is a defensive copy of the internal slice,
+	// so modifying it will not affect the collection.
+	Expressions() []DurationExpression
+
 	// ExpressionAtTime returns the expression for the given time.
 	ExpressionAtTime(time.Time) DurationExpression
 	// ExpressionAtValue returns the expression for the given value.
