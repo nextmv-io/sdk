@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 	"sync"
 	"time"
 )
@@ -295,10 +296,39 @@ func DefineLazy[T any](f func() T) Lazy[T] {
 }
 
 // Values returns a slice of all values in the given map.
-func Values[M ~map[K]V, K comparable, V any](m M) []V {
+func Values[M ~map[K]V, K Comparable, V any](m M) []V {
 	r := make([]V, 0, len(m))
-	for _, v := range m {
+	RangeMap(m, func(_ K, v V) bool {
 		r = append(r, v)
-	}
+		return false
+	})
 	return r
+}
+
+// Comparable is a type constraint for three types: int, int64, and string. By
+// using this type constraint for a generic parameter, the parameter can be used
+// as a map key and it can be sorted.
+type Comparable interface {
+	int | int64 | string
+}
+
+// RangeMap ranges over a map in deterministic order by first sorting the
+// keys. It provides a function which will be called for each key/value pair.
+// The function should return true to stop iteration.
+func RangeMap[M ~map[K]V, K Comparable, V any](
+	m M,
+	f func(key K, value V) bool,
+) {
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] < keys[j]
+	})
+	for _, k := range keys {
+		if f(k, m[k]) {
+			break
+		}
+	}
 }

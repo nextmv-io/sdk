@@ -93,10 +93,15 @@ func Format(
 	}
 
 	seriesData := make([]statistics.DataPoint, 0)
+	iterationsSeriesData := make([]statistics.DataPoint, 0)
 	for _, progression := range progressionValues {
 		seriesData = append(seriesData, statistics.DataPoint{
 			X: statistics.Float64(progression.ElapsedSeconds),
 			Y: statistics.Float64(progression.Value),
+		})
+		iterationsSeriesData = append(iterationsSeriesData, statistics.DataPoint{
+			X: statistics.Float64(progression.ElapsedSeconds),
+			Y: statistics.Float64(progression.Iterations),
 		})
 	}
 	lastProgressionElement := progressionValues[len(progressionValues)-1]
@@ -107,6 +112,10 @@ func Format(
 			DataPoints: seriesData,
 		},
 	}
+	output.Statistics.SeriesData.Custom = append(output.Statistics.SeriesData.Custom, statistics.Series{
+		Name:       "iterations",
+		DataPoints: iterationsSeriesData,
+	})
 	output.Statistics.Result = &statistics.Result{
 		Duration: &lastProgressionElement.ElapsedSeconds,
 		Value:    &lastProgressionValue,
