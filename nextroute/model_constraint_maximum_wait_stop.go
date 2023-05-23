@@ -3,7 +3,9 @@ package nextroute
 import "github.com/nextmv-io/sdk/connect"
 
 // MaximumWaitStopConstraint is a constraint that limits the time a vehicle can
-// wait between two stops.
+// wait between two stops. Wait is defined as the time between arriving at a
+// location of a stop and starting (to work),
+// [SolutionStop.StartValue()] - [SolutionStop.ArrivalValue()].
 type MaximumWaitStopConstraint interface {
 	ModelConstraint
 
@@ -12,9 +14,11 @@ type MaximumWaitStopConstraint interface {
 	Maximum() StopDurationExpression
 }
 
-// NewMaximumWaitStopConstraint returns a new MaximumWaitStopConstraint. The maximum
-// wait constraint limits the time a vehicle can wait between two stops. Wait
-// time is defined as the time a vehicle is neither moving nor serving a stop.
+// NewMaximumWaitStopConstraint returns a new MaximumWaitStopConstraint. The
+// maximum wait constraint limits the time a vehicle can wait between two stops.
+// Wait is defined as the time between arriving at a location of a stop and
+// starting (to work), [SolutionStop.StartValue()] -
+// [SolutionStop.ArrivalValue()].
 func NewMaximumWaitStopConstraint() (MaximumWaitStopConstraint, error) {
 	connect.Connect(con, &newMaximumWaitStopConstraint)
 	return newMaximumWaitStopConstraint()
