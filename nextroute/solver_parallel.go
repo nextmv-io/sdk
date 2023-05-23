@@ -11,7 +11,7 @@ import (
 type ParallelSolveOptions struct {
 	Iterations           int           `json:"iterations"  usage:"maximum number of iterations, -1 assumes no limit; iterations are counted after start solutions are generated" default:"-1"`
 	Duration             time.Duration `json:"duration" usage:"maximum duration of the solver" default:"30s"`
-	ParallelRuns         int           `json:"parallel_runs" usage:"maximum number of parallel runs, -1 results in using all available resources" default:"100"`
+	ParallelRuns         int           `json:"parallel_runs" usage:"maximum number of parallel runs, -1 results in using all available resources" default:"-1"`
 	StartSolutions       int           `json:"start_solutions" usage:"number of solutions to generate on top of those passed in; one solution generated with sweep algorithm, the rest generated randomly" default:"-1"`
 	RunDeterministically bool          `json:"run_deterministically"  usage:"run the parallel solver deterministically"`
 }
