@@ -206,7 +206,7 @@ func RandomElements[T any](
 		return []T{}
 	}
 	if n >= len(elements) {
-		return elements
+		return DefensiveCopy(elements)
 	}
 	result := make([]T, 0, n)
 	indicesUsed := make(map[int]bool, 0)
