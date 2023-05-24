@@ -26,6 +26,7 @@ type Defaults struct {
 // VehicleDefaults contains default values for vehicles.
 type VehicleDefaults struct {
 	Capacity                any        `json:"capacity,omitempty"`
+	StartLevel              any        `json:"start_level,omitempty"`
 	StartLocation           *Location  `json:"start_location,omitempty"`
 	EndLocation             *Location  `json:"end_location,omitempty"`
 	Speed                   *float64   `json:"speed,omitempty"`
@@ -54,6 +55,7 @@ type StopDefaults struct {
 // Vehicle represents a vehicle.
 type Vehicle struct {
 	Capacity                any        `json:"capacity,omitempty"`
+	StartLevel              any        `json:"start_level,omitempty"`
 	StartLocation           *Location  `json:"start_location,omitempty"`
 	EndLocation             *Location  `json:"end_location,omitempty"`
 	Speed                   *float64   `json:"speed,omitempty"`
