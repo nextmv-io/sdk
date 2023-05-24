@@ -28,6 +28,18 @@ type ModelStop interface {
 	// Index returns the index of the stop.
 	Index() int
 
+	// IsFirstOrLast returns true if the stop is the first or last stop of one
+	// or more vehicles. A stop which is the first or last stop of one or more
+	// vehicles is not allowed to be part of a plan unit. A stop which is the
+	// first or last stop of one or more vehicles is by definition fixed.
+	IsFirstOrLast() bool
+
+	// IsFixed returns true if fixed.
+	IsFixed() bool
+
+	// IsFixedToPrevious returns true if the stop is fixed to previous.
+	IsFixedToPrevious() bool
+
 	// Location returns the location of the stop.
 	Location() common.Location
 

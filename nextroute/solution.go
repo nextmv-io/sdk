@@ -49,6 +49,12 @@ type Solution interface {
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
 
+	// FixedPlanUnits returns the solution plan units that are fixed.
+	// Fixed plan units are plan units that are not allowed to be planned or
+	// unplanned. The union of fixed, planned and unplanned plan units
+	// is the set of all plan units in the model.
+	FixedPlanUnits() ImmutableSolutionPlanUnitCollection
+
 	// Model returns the model of the solution.
 	Model() Model
 

@@ -54,21 +54,28 @@ type StopDefaults struct {
 
 // Vehicle represents a vehicle.
 type Vehicle struct {
-	Capacity                any        `json:"capacity,omitempty"`
-	StartLevel              any        `json:"start_level,omitempty"`
-	StartLocation           *Location  `json:"start_location,omitempty"`
-	EndLocation             *Location  `json:"end_location,omitempty"`
-	Speed                   *float64   `json:"speed,omitempty"`
-	ID                      string     `json:"id,omitempty"`
-	StartTime               *time.Time `json:"start_time,omitempty"`
-	EndTime                 *time.Time `json:"end_time,omitempty"`
-	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
-	MaxStops                *int       `json:"max_stops,omitempty"`
-	MaxDistance             *int       `json:"max_distance,omitempty"`
-	MaxDuration             *int       `json:"max_duration,omitempty"`
-	MaxWait                 *int       `json:"max_wait,omitempty"`
-	InitializationCost      *int       `json:"initialization_cost,omitempty"`
-	CustomData              any        `json:"custom_data,omitempty"`
+	Capacity                any            `json:"capacity,omitempty"`
+	StartLevel              any            `json:"start_level,omitempty"`
+	StartLocation           *Location      `json:"start_location,omitempty"`
+	EndLocation             *Location      `json:"end_location,omitempty"`
+	Speed                   *float64       `json:"speed,omitempty"`
+	ID                      string         `json:"id,omitempty"`
+	StartTime               *time.Time     `json:"start_time,omitempty"`
+	EndTime                 *time.Time     `json:"end_time,omitempty"`
+	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty"`
+	MaxStops                *int           `json:"max_stops,omitempty"`
+	MaxDistance             *int           `json:"max_distance,omitempty"`
+	MaxDuration             *int           `json:"max_duration,omitempty"`
+	MaxWait                 *int           `json:"max_wait,omitempty"`
+	InitializationCost      *int           `json:"initialization_cost,omitempty"`
+	CustomData              any            `json:"custom_data,omitempty"`
+	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
+}
+
+// InitialStop represents an initial stop.
+type InitialStop struct {
+	ID     string `json:"id"`
+	Status string `json:"status"`
 }
 
 // Stop represents a stop.
