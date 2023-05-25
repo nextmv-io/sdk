@@ -192,7 +192,7 @@ func RandomElement[T any](
 // given slice. If n is greater than the length of the slice, all elements are
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
-// FIXME: this func is inefficient when n is not very small comparing to len(elements)
+// Note: this func is inefficient when n is not very small comparing to len(elements).
 func RandomElements[T any](
 	source *rand.Rand,
 	elements []T,
@@ -229,7 +229,7 @@ func RandomElements[T any](
 // given slice. If n is greater than the length of the slice, all indices are
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
-// FIXME: this func is inefficient when n is not very small comparing to len(elements)
+// Note: this func is inefficient when n is not very small comparing to len(elements).
 func RandomElementIndices[T any](
 	source *rand.Rand,
 	elements []T,
@@ -269,7 +269,7 @@ func RandomElementIndices[T any](
 // RandomIndex returns a random index from the given size. If the index has
 // already been used, a new index is generated. If source is nil, a new source
 // is created using the current time.
-// FIXME: this func is inefficient when many indices have already been used
+// Note: this func is inefficient when many indices have already been used.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
 		// using unsafe math/rand is just a unlikely fallback, we can ignore the gosec issue here
@@ -287,6 +287,9 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	}
 }
 
+// RandIntnWithFallback returns a random integer from 0 to max using crypto/rand. If an error
+// occurs, it will fallback to a random number from 0 to max using math/rand. If rand source
+// is nil, a new source is created using the current time.
 func RandIntnWithFallback(source *rand.Rand, max int) int {
 	b, err := safeRand.Int(safeRand.Reader, big.NewInt(int64(max)))
 	if err == nil {
