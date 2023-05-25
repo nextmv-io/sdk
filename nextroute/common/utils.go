@@ -287,9 +287,9 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	}
 }
 
-// RandIntnWithFallback returns a random integer from 0 to max using crypto/rand. If an error
-// occurs, it will fallback to a random number from 0 to max using math/rand. If rand source
-// is nil, a new source is created using the current time.
+// RandIntnWithFallback returns a random integer in [0, max) using crypto/rand.
+// If an error occurs, it will fallback to use math/rand.
+// If source is nil, a new source is created using the current time.
 func RandIntnWithFallback(source *rand.Rand, max int) int {
 	b, err := safeRand.Int(safeRand.Reader, big.NewInt(int64(max)))
 	if err == nil {
