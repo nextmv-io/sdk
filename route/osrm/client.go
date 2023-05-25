@@ -2,7 +2,7 @@ package osrm
 
 import (
 	"context"
-	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -128,7 +128,7 @@ func (c *client) get(uri string) (data []byte, err error) {
 	var key string
 
 	if c.useCache {
-		key = fmt.Sprintf("%x", sha1.Sum([]byte(uri)))
+		key = fmt.Sprintf("%x", sha256.Sum256([]byte(uri)))
 		if result, ok := c.cache.Get(key); ok {
 			if b, ok := result.([]byte); ok {
 				return b, err

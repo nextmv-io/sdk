@@ -13,7 +13,7 @@ jobs:
         with:
           # For now, exclude some rules that we currently have issues with, so that PR merges won't be blocked.
           # After we address those issues, we shall remove the excluded rules.
-          args: "-no-fail -exclude=G306,G401,G404,G505 -fmt csv -out results.csv -stdout -verbose=text -exclude-generated -exclude-dir=template.go -exclude-dir=sample_code -exclude-dir=node_modules/aws-cdk -exclude-dir=cdk.out ./..."
+          args: "-no-fail -fmt csv -out results.csv -stdout -verbose=text -exclude-generated -exclude-dir=template.go -exclude-dir=sample_code -exclude-dir=node_modules/aws-cdk -exclude-dir=cdk.out ./..."
       - name: Check results for issues
         # csv file does not include "golang errors." If the scan finds no issue, the csv file size will be 0.
         # The follow command will fail if gosec finds some issues.
