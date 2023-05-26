@@ -1,10 +1,8 @@
 package common
 
 import (
-	safeRand "crypto/rand"
 	"fmt"
 	"math"
-	"math/big"
 	"math/rand"
 	"sort"
 	"sync"
@@ -185,22 +183,31 @@ func RandomElement[T any](
 	if len(elements) == 0 {
 		panic(fmt.Errorf("cannot select random element from empty slice"))
 	}
-	return elements[RandIntnWithFallback(source, len(elements))]
+	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+	return elements[source.Intn(len(elements))]
 }
 
 // RandomElements returns a slice of n random elements from the
 // given slice. If n is greater than the length of the slice, all elements are
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
-// Note: this func is inefficient when n is not very small comparing to len(elements).
 func RandomElements[T any](
 	source *rand.Rand,
 	elements []T,
 	n int,
 ) []T {
 	if source == nil {
-		// using unsafe math/rand is just a unlikely fallback, we can ignore the gosec issue here
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand)
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -229,15 +236,16 @@ func RandomElements[T any](
 // given slice. If n is greater than the length of the slice, all indices are
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
-// Note: this func is inefficient when n is not very small comparing to len(elements).
 func RandomElementIndices[T any](
 	source *rand.Rand,
 	elements []T,
 	n int,
 ) []int {
 	if source == nil {
-		// using unsafe math/rand is just a unlikely fallback, we can ignore the gosec issue here
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand)
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -272,38 +280,21 @@ func RandomElementIndices[T any](
 // Note: this func is inefficient when many indices have already been used.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
-		// using unsafe math/rand is just a unlikely fallback, we can ignore the gosec issue here
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand)
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
 	for {
-		index := RandIntnWithFallback(source, size)
+		index := source.Intn(size)
 		if used, ok := indicesUsed[index]; !ok || !used {
 			indicesUsed[index] = true
 			return index
 		}
 	}
-}
-
-// RandIntnWithFallback returns a random integer in [0, max) using crypto/rand.
-// If an error occurs, it will fallback to use math/rand.
-// If source is nil, a new source is created using the current time.
-func RandIntnWithFallback(source *rand.Rand, max int) int {
-	b, err := safeRand.Int(safeRand.Reader, big.NewInt(int64(max)))
-	if err == nil {
-		return int(b.Int64())
-	}
-
-	// we don't want to fail on this call, so just fallback to a unsafe random number
-	if source == nil {
-		// using unsafe math/rand is just a unlikely fallback, we can ignor the gosec issue here
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand)
-		/* #nosec */
-		source = rand.New(rand.NewSource(time.Now().UnixNano()))
-	}
-	return source.Intn(max)
 }
 
 // Lazy is a function that returns a value of type T. The value is only
