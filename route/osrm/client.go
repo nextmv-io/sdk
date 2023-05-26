@@ -135,7 +135,7 @@ func (c *client) get(uri string) (data []byte, err error) {
 		// The chance of hash colision is extremely low for sha1.
 		// The cache is local to the user, which won't become a secrity threat even when key colides.
 		// G401 (CWE-326): Use of weak cryptographic primitive.
-		/* #nosec */ 
+		/* #nosec */
 		key = fmt.Sprintf("%x", sha1.Sum([]byte(uri)))
 		if result, ok := c.cache.Get(key); ok {
 			if b, ok := result.([]byte); ok {
