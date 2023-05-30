@@ -67,6 +67,10 @@ type SolutionObserved interface {
 	// observed.
 	AddSolutionObserver(observer SolutionObserver)
 
+	// RemoveSolutionObserver remove the given solution observer from the
+	// solution observed.
+	RemoveSolutionObserver(observer SolutionObserver)
+
 	// SolutionObservers returns the solution observers.
 	SolutionObservers() SolutionObservers
 }

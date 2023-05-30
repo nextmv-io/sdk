@@ -8,12 +8,8 @@ type ModelVehicle interface {
 
 	// AddStop adds a stop to the vehicle. The stop is added to the end of the
 	// vehicle, before the last stop. If fixed is true stop will be fixed and
-	// can not be unplanned. If frozen is true the stop will be frozen, the stop
-	// before the stop will be fixed. An error is returned if the stop is
-	// already added to another vehicle or if the model is locked. All stops of
-	// model plan unit must be added to the same vehicle before a solution can
-	// be generated.
-	AddStop(stop ModelStop, fixed, frozen bool) error
+	// can not be unplanned.
+	AddStop(stop ModelStop, fixed bool) error
 
 	// First returns the first stop of the vehicle.
 	First() ModelStop

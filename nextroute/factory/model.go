@@ -63,7 +63,8 @@ type Options struct {
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
-			Durations bool `json:"durations" usage:"ignore the durations of stops"`
+			Durations       bool `json:"durations" usage:"ignore the durations of stops"`
+			InitialSolution bool `json:"initial_solution" usage:"ignore the initial solution"`
 		} `json:"disable"`
 	} `json:"properties"`
 }

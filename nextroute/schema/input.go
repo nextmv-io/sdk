@@ -74,8 +74,8 @@ type Vehicle struct {
 
 // InitialStop represents an initial stop.
 type InitialStop struct {
-	ID     string `json:"id"`
-	Status string `json:"status"`
+	ID    string `json:"id"`
+	Fixed *bool  `json:"fixed,omitempty"`
 }
 
 // Stop represents a stop.

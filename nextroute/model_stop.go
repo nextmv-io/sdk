@@ -37,9 +37,6 @@ type ModelStop interface {
 	// IsFixed returns true if fixed.
 	IsFixed() bool
 
-	// IsFixedToPrevious returns true if the stop is fixed to previous.
-	IsFixedToPrevious() bool
-
 	// Location returns the location of the stop.
 	Location() common.Location
 
@@ -59,9 +56,9 @@ type ModelStop interface {
 	SetEarliestStart(time time.Time)
 
 	// SetID sets the identifier of the stop. This identifier is not used by
-	// nextroute and therefore it does not have to be unique for nextroute
-	// internally. However to make this ID useful for debugging and reporting it
-	// should be made unique.
+	// nextroute, and therefore it does not have to be unique for nextroute
+	// internally. However, to make this ID useful for debugging and reporting
+	// it should be made unique.
 	SetID(string)
 }
 
