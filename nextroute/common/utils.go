@@ -286,7 +286,6 @@ func RandomElementIndices[T any](
 // RandomIndex returns a random index from the given size. If the index has
 // already been used, a new index is generated. If source is nil, a new source
 // is created using the current time.
-// Note: this func is inefficient when many indices have already been used.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
 		// math/rand is about 50 to 100 times faster than crypto/rand.
