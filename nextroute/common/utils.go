@@ -51,11 +51,10 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 
 // GroupBy groups the elements of a slice by a key function.
 func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
-	inResult := make(map[K]bool)
 	result := make(map[K][]T)
 	for _, instance := range s {
 		key := f(instance)
-		if _, ok := inResult[key]; !ok {
+		if _, ok := result[key]; !ok {
 			result[key] = make([]T, 0)
 		}
 		result[key] = append(result[key], instance)
@@ -133,6 +132,16 @@ func Has[E any](s []E, condition bool, predicate func(E) bool) bool {
 		}
 	}
 	return false
+}
+
+// CopyMap copies all key/value pairs in source adding them to destination.
+// If a key exists in both maps, the value in destination is overwritten.
+func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](
+	destination M1,
+	source M2) {
+	for k, v := range source {
+		destination[k] = v
+	}
 }
 
 // DefensiveCopy returns a defensive copy of a slice.
@@ -293,6 +302,16 @@ func DefineLazy[T any](f func() T) Lazy[T] {
 		})
 		return value
 	}
+}
+
+// Keys returns a slice of all values in the given map.
+func Keys[M ~map[K]V, K Comparable, V any](m M) []K {
+	r := make([]K, 0, len(m))
+	RangeMap(m, func(k K, _ V) bool {
+		r = append(r, k)
+		return false
+	})
+	return r
 }
 
 // Values returns a slice of all values in the given map.
