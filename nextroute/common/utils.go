@@ -193,6 +193,11 @@ func RandomElement[T any](
 		panic(fmt.Errorf("cannot select random element from empty slice"))
 	}
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 	return elements[source.Intn(len(elements))]
@@ -208,6 +213,11 @@ func RandomElements[T any](
 	n int,
 ) []T {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
@@ -241,6 +251,11 @@ func RandomElementIndices[T any](
 	n int,
 ) []int {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
@@ -273,6 +288,11 @@ func RandomElementIndices[T any](
 // is created using the current time.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 

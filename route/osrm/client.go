@@ -2,6 +2,9 @@ package osrm
 
 import (
 	"context"
+	// Ignore the gosec issue, see comments in the usage of sha1 down below.
+	// G505 (CWE-327): Blocklisted import crypto/sha1: weak cryptographic primitive.
+	/* #nosec */
 	"crypto/sha1"
 	"encoding/json"
 	"errors"
@@ -128,6 +131,11 @@ func (c *client) get(uri string) (data []byte, err error) {
 	var key string
 
 	if c.useCache {
+		// sha1 is used to shorten the key for faster cache lookup than directly using the lenthy uri as key.
+		// The chance of hash colision is extremely low for sha1.
+		// The cache is local to the user, which won't become a security threat even when key colides.
+		// G401 (CWE-326): Use of weak cryptographic primitive.
+		/* #nosec */
 		key = fmt.Sprintf("%x", sha1.Sum([]byte(uri)))
 		if result, ok := c.cache.Get(key); ok {
 			if b, ok := result.([]byte); ok {
