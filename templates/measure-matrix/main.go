@@ -110,11 +110,6 @@ func main() {
 	// Write the output.
 	file, _ := json.MarshalIndent(out, "", " ")
 
-	// [gosec issue] G306 (CWE-276): Expect WriteFile permissions to be 0600 or less
-	// macOS default file permission is 0644 -rw-r--r--
-	// Linux default file permission is 0660 -rw-rw-r--
-	// This file we created contains no secret or credential. 0644 permission should not have any security risk.
-	// If a user adds sensitive content in this file later, it is the user's responsibility to protect it.
 	/* #nosec */
 	err = os.WriteFile("routing-input.json", file, 0o644)
 	if err != nil {
