@@ -3,6 +3,9 @@ package nextroute
 // SolutionPlanUnit is a set of stops that are planned to be visited by
 // a vehicle.
 type SolutionPlanUnit interface {
+	// IsFixed returns true if any of stops are fixed.
+	IsFixed() bool
+
 	// IsPlanned returns true if all the stops are planned.
 	IsPlanned() bool
 
