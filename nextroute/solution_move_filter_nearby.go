@@ -1,8 +1,9 @@
 package nextroute
 
 import (
-	"github.com/nextmv-io/sdk/connect"
 	"time"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // SolutionMoveFilterNearby is a SolutionMoveFilter that filters out moves
@@ -39,7 +40,6 @@ type SolutionMoveFilterNearby interface {
 }
 
 // NewSolutionMoveFilterNearby returns a new SolutionMoveFilterNearby.
-
 func NewSolutionMoveFilterNearby(
 	maxDuration time.Duration,
 	maxFirstLegDuration time.Duration,
