@@ -54,12 +54,12 @@ type Options struct {
 		} `json:"enable"`
 	} `json:"constraints"`
 	Objectives struct {
-		EarlyArrival       float64 `json:"early_arrival" usage:"factor to weigh the early arrival objective" default:"1.0"`
-		LateArrival        float64 `json:"late_arrival" usage:"factor to weigh the late arrival objective" default:"1.0"`
-		InitializationCost float64 `json:"initialization_cost" usage:"factor to weigh the initialization cost objective" default:"1.0"`
-		TravelDuration     float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
-		Unplanned          float64 `json:"unplanned" usage:"factor to weigh the unplanned objective" default:"1.0"`
-		Cluster            float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
+		EarlyArrivalPenalty      float64 `json:"early_arrival_penalty" usage:"factor to weigh the early arrival objective" default:"1.0"`
+		LateArrivalPenalty       float64 `json:"late_arrival_penalty" usage:"factor to weigh the late arrival objective" default:"1.0"`
+		VehicleActivationPenalty float64 `json:"vehicle_activation_penalty" usage:"factor to weigh the vehicle activation objective" default:"1.0"`
+		TravelDuration           float64 `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
+		UnplannedPenalty         float64 `json:"unplanned_penalty" usage:"factor to weigh the unplanned objective" default:"1.0"`
+		Cluster                  float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {

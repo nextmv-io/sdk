@@ -18,5 +18,5 @@ func NewVehiclesObjective(expression VehicleTypeExpression) VehiclesObjective {
 type VehiclesObjective interface {
 	ModelObjective
 	// InitializationCost returns the initialization cost expression.
-	InitializationCost() VehicleTypeExpression
+	ActivationPenalty() VehicleTypeExpression
 }
