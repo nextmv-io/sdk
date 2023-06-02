@@ -371,3 +371,28 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 		}
 	}
 }
+
+// Numeric type constraint
+type Numeric interface {
+	int | int64 | float32 | float64
+}
+
+// Sum returns the sum of all values in the given slice. The slice must contain
+// only numeric types.
+func Sum[T Numeric](s []T) T {
+	var result T
+	for _, v := range s {
+		result += v
+	}
+	return result
+}
+
+// SumDefined returns the sum of all values in the given slice defined by the
+// given function.
+func SumDefined[T any, R Numeric](s []T, f func(T) R) R {
+	var result R
+	for _, v := range s {
+		result += f(v)
+	}
+	return result
+}

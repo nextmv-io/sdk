@@ -187,4 +187,13 @@ var (
 	newTimeIndependentDurationExpression func(
 		DurationExpression,
 	) TimeDependentDurationExpression
+
+	newSolutionMoveFilterNearby func(
+		time.Duration,
+		time.Duration,
+		time.Duration,
+		time.Duration,
+	) SolutionMoveFilterNearby
+
+	newSolutionFilterComposition func(...interface{}) SolutionFilterComposition
 )

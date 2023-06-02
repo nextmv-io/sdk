@@ -46,8 +46,10 @@ type Solution interface {
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan unit, a move is returned which
-	// is not executable, Move.IsExecutable.
-	BestMove(context.Context, SolutionPlanUnit) Move
+	// is not executable, Move.IsExecutable. The third argument of type
+	// interface{} is used to pass in filters defined by the interfaces
+	// [SolutionMoveFilter] and [SolutionVehicleFilter].
+	BestMove(context.Context, SolutionPlanUnit, interface{}) Move
 
 	// FixedPlanUnits returns the solution plan units that are fixed.
 	// Fixed plan units are plan units that are not allowed to be planned or

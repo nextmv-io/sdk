@@ -45,9 +45,14 @@ type SolutionObserver interface {
 	)
 	// OnBestMove is called when the solution is asked for it's best move.
 	OnBestMove(solution Solution)
+	// OnBestMoveVehicle is called when the solution is asked for it's best move.
+	OnBestMoveVehicle(move Move)
 	// OnBestMoveFound is called when the solution has found it's best move.
 	OnBestMoveFound(move Move)
-
+	// OnBestMoveFoundVehicle is called when the vehicle has found it's best move.
+	OnBestMoveFoundVehicle(move Move, vehicle SolutionVehicle)
+	// OnFilteredMove is called when a move is going to be filtered.
+	OnFilteredMove(move Move)
 	// OnPlan is called when a move is going to be planned.
 	OnPlan(move Move)
 	// OnPlanFailed is called when a move has failed to be planned.
