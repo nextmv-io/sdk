@@ -26,7 +26,11 @@ type SolutionStopGenerator interface {
 //		  for solutionStop := generator.Next(); solutionStop != nil; solutionStop = generator.Next() {
 //			  // Do something with solutionStop
 //	   }
-func NewSolutionStopGenerator() SolutionStopGenerator {
+func NewSolutionStopGenerator(
+	move Move,
+	startAtFirst bool,
+	endAtLast bool,
+) SolutionStopGenerator {
 	connect.Connect(con, &newSolutionStopGenerator)
-	return newSolutionStopGenerator()
+	return newSolutionStopGenerator(move, startAtFirst, endAtLast)
 }

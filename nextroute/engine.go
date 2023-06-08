@@ -100,9 +100,13 @@ var (
 	) ModelExpression
 	newModel                 func() (Model, error)
 	newModelExpressionIndex  func() int
-	newSolutionStopGenerator func() SolutionStopGenerator
-	noPositionsHint          func() StopPositionsHint
-	newOperatorExpression    func(
+	newSolutionStopGenerator func(
+		Move,
+		bool,
+		bool,
+	) SolutionStopGenerator
+	noPositionsHint       func() StopPositionsHint
+	newOperatorExpression func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,
