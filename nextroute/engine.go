@@ -98,10 +98,11 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel                func() (Model, error)
-	newModelExpressionIndex func() int
-	noPositionsHint         func() StopPositionsHint
-	newOperatorExpression   func(
+	newModel                 func() (Model, error)
+	newModelExpressionIndex  func() int
+	newSolutionStopGenerator func() SolutionStopGenerator
+	noPositionsHint          func() StopPositionsHint
+	newOperatorExpression    func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,
