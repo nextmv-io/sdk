@@ -39,24 +39,29 @@ func Format(
 			vehicles[v] = toVehicleOutput(state)
 		}
 
-		// Process unassigned stops.
-		unassigned := make([]schema.StopOutput, 0)
+		// Process unplanned stops.
+		unplanned := make([]schema.StopOutput, 0)
 
 		for u := range s.UnPlannedPlanUnits().Iterator(quit) {
-			for _, v := range u.ModelPlanUnit().Stops() {
-				unassigned = append(unassigned, schema.StopOutput{
-					ID: v.ID(),
+			for _, modelStop := range u.ModelPlanUnit().Stops() {
+				stop := schema.StopOutput{
+					ID: modelStop.ID(),
 					Location: schema.Location{
-						Lon: v.Location().Longitude(),
-						Lat: v.Location().Latitude(),
+						Lon: modelStop.Location().Longitude(),
+						Lat: modelStop.Location().Latitude(),
 					},
-				})
+				}
+				inputStop := modelStop.Data().(schema.Stop)
+				if inputStop.CustomData != nil {
+					stop.CustomData = inputStop.CustomData
+				}
+				unplanned = append(unplanned, stop)
 			}
 		}
 
 		objective := makeObjective(s)
 		solutionOutput := schema.SolutionOutput{
-			Unplanned: unassigned,
+			Unplanned: unplanned,
 			Vehicles:  vehicles,
 			Objective: objective,
 		}
@@ -146,6 +151,13 @@ func toVehicleOutput(vehicle SolutionVehicle) schema.VehicleOutput {
 				},
 			},
 		}
+
+		if inputStop, ok := solutionStop.ModelStop().Data().(schema.Stop); ok {
+			if inputStop.CustomData != nil {
+				stop.Stop.CustomData = inputStop.CustomData
+			}
+		}
+
 		stop = setTimes(solutionStop, stop, hasUserDefinedStartTime)
 		stops = append(stops, stop)
 		cumulativeStopsDuration += int(solutionStop.End().Sub(solutionStop.Start()).Seconds())
@@ -158,6 +170,12 @@ func toVehicleOutput(vehicle SolutionVehicle) schema.VehicleOutput {
 		RouteTravelDuration: int(vehicle.Last().CumulativeTravelDuration().Seconds()),
 		RouteStopsDuration:  cumulativeStopsDuration,
 	}
+
+	inputVehicle := vehicle.ModelVehicle().Data().(schema.Vehicle)
+	if inputVehicle.CustomData != nil {
+		vehicleOutput.CustomData = inputVehicle.CustomData
+	}
+
 	vehicleOutput.RouteWaitingDuration = vehicleOutput.RouteDuration -
 		vehicleOutput.RouteTravelDuration -
 		vehicleOutput.RouteStopsDuration

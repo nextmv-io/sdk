@@ -67,7 +67,7 @@ type Vehicle struct {
 	MaxDistance             *int           `json:"max_distance,omitempty"`
 	MaxDuration             *int           `json:"max_duration,omitempty"`
 	MaxWait                 *int           `json:"max_wait,omitempty"`
-	InitializationCost      *int           `json:"initialization_cost,omitempty"`
+	ActivationPenalty       *int           `json:"activation_penalty,omitempty"`
 	CustomData              any            `json:"custom_data,omitempty"`
 	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
 }

@@ -1,4 +1,32 @@
 {
+  "defaults": {
+    "vehicles": {
+      "capacity": {
+        "bunnies": 20,
+        "rabbits": 10
+      },
+      "start_location": {
+        "lat": 35.791729813680874,
+        "lon": -78.7401685145487
+      },
+      "end_location": {
+        "lat": 35.791729813680874,
+        "lon": -78.7401685145487
+      },
+      "speed": 10
+    },
+    "stops": {
+      "duration": 300,
+      "quantity": {
+        "bunnies": -1,
+        "rabbits": -1
+      },
+      "unplanned_penalty": 200000,
+      "target_arrival_time": "2023-01-01T10:00:00Z",
+      "early_arrival_time_penalty": 1.5,
+      "late_arrival_time_penalty": 1.5
+    }
+  },
   "stops": [
     {
       "id": "s1",
@@ -176,8 +204,8 @@
         "lat": 35.84616
       },
       "start_time_window": [
-        "2021-10-17T09:00:00-06:00",
-        "2021-10-17T09:30:00-06:00"
+        "2023-01-01T09:00:00-06:00",
+        "2023-01-01T09:30:00-06:00"
       ]
     },
     {
@@ -187,8 +215,8 @@
         "lat": 35.740605
       },
       "start_time_window": [
-        "2021-10-17T09:00:00-06:00",
-        "2021-10-17T09:30:00-06:00"
+        "2023-01-01T09:00:00-06:00",
+        "2023-01-01T09:30:00-06:00"
       ],
       "succeeds": "s25"
     },
@@ -199,8 +227,8 @@
         "lat": 35.887575
       },
       "start_time_window": [
-        "2021-10-17T09:00:00-06:00",
-        "2021-10-17T09:30:00-06:00"
+        "2023-01-01T09:00:00-06:00",
+        "2023-01-01T09:30:00-06:00"
       ],
       "precedes": "s26"
     },
@@ -211,50 +239,25 @@
         "lat": 35.823865
       },
       "start_time_window": [
-        "2021-10-17T09:00:00-06:00",
-        "2021-10-17T09:30:00-06:00"
+        "2023-01-01T09:00:00-06:00",
+        "2023-01-01T09:30:00-06:00"
       ]
     }
   ],
   "vehicles": [
     {
       "id": "vehicle-0",
-      "start_time": "2021-10-17T06:00:00-06:00",
-      "end_time": "2021-10-17T10:00:00-06:00",
-      "initialization_cost": 4000,
+      "start_time": "2023-01-01T06:00:00-06:00",
+      "end_time": "2023-01-01T10:00:00-06:00",
+      "activation_penalty": 4000,
       "compatibility_attributes": ["premium"]
     },
     {
       "id": "vehicle-1",
-      "start_time": "2021-10-17T10:00:00-06:00",
-      "end_time": "2021-10-17T12:00:00-06:00",
-      "max_duration": 7000,
+      "start_time": "2023-01-01T10:00:00-06:00",
+      "end_time": "2023-01-01T16:00:00-06:00",
+      "max_duration": 21000,
       "compatibility_attributes": ["basic"]
     }
-  ],
-  "defaults": {
-    "vehicles": {
-      "capacity": {
-        "bunnies": 20,
-        "rabbits": 10
-      },
-      "start_location": {
-        "lat": 35.791729813680874,
-        "lon": -78.7401685145487
-      },
-      "end_location": {
-        "lat": 35.791729813680874,
-        "lon": -78.7401685145487
-      },
-      "speed": 10
-    },
-    "stops": {
-      "duration": 300,
-      "quantity": {
-        "bunnies": -1,
-        "rabbits": -1
-      },
-      "unplanned_penalty": 200000
-    }
-  }
+  ]
 }
