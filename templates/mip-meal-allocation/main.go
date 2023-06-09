@@ -11,6 +11,7 @@ import (
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 // This template demonstrates how to solve a Mixed Integer Programming problem.
@@ -81,7 +82,7 @@ type MealQuantity struct {
 	Quantity int    `json:"quantity,omitempty"`
 }
 
-func solver(input input, opts Option) ([]Output, error) {
+func solver(_ context.Context, input input, opts Option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -122,7 +123,7 @@ func solver(input input, opts Option) ([]Output, error) {
 
 		for _, ingredient := range meal.Ingredients {
 			if _, present := itemInStockConstraints[ingredient.Name]; !present {
-				return nil,
+				return schema.Output{},
 					fmt.Errorf("meal %v, uses undefined item %v",
 						meal.Name,
 						ingredient.Name,
@@ -141,7 +142,7 @@ func solver(input input, opts Option) ([]Output, error) {
 	// We create a solver using the 'highs' provider
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	// We create the solve options we will use
@@ -149,35 +150,37 @@ func solver(input input, opts Option) ([]Output, error) {
 
 	// Limit the solve to a maximum duration
 	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	output, err := format(solution, nrMealsVars)
+	output, err := format(solution, nrMealsVars, opts)
 	if err != nil {
-		return nil, err
+		return schema.Output{}, err
 	}
 
-	return []Output{output}, nil
+	return output, nil
 }
 
 func format(
 	solution mip.Solution,
 	nrMealsVars map[string]mip.Int,
-) (output Output, err error) {
-	output.Status = "infeasible"
-	output.Runtime = solution.RunTime().String()
+	opts Option,
+) (output schema.Output, err error) {
+	o := Output{}
+	o.Status = "infeasible"
+	o.Runtime = solution.RunTime().String()
 	if solution != nil && solution.HasValues() {
 		if solution.IsOptimal() {
-			output.Status = "optimal"
+			o.Status = "optimal"
 		} else {
-			output.Status = "suboptimal"
+			o.Status = "suboptimal"
 		}
-		output.Binkies = solution.ObjectiveValue()
+		o.Binkies = solution.ObjectiveValue()
 		meals := make([]MealQuantity, 0)
 		for name, nrMealsVar := range nrMealsVars {
 			meals = append(meals, MealQuantity{
@@ -185,9 +188,10 @@ func format(
 				Quantity: int(math.Round(solution.Value(nrMealsVar))),
 			})
 		}
-		output.Meals = meals
+		o.Meals = meals
 	} else {
-		return output, errors.New("no solution found")
+		return schema.Output{}, errors.New("no solution found")
 	}
+	output = schema.NewOutput(opts, o)
 	return output, nil
 }

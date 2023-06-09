@@ -7,18 +7,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/run/encode"
 )
-
-type version struct {
-	Sdk string `json:"sdk"`
-}
-type meta[Options, Solution any] struct {
-	Version   version    `json:"version"`
-	Options   Options    `json:"options"`
-	Solutions []Solution `json:"solutions"`
-}
 
 // GenericEncoder returns a new Encoder that encodes the solution using the
 // given encoder.
@@ -56,7 +46,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 
 	ioWriter, ok := writer.(io.Writer)
 	if !ok {
-		err = errors.New("Encoder is not compatible with configured IOProducer")
+		err = errors.New("encoder is not compatible with configured IOProducer")
 		return err
 	}
 
@@ -83,31 +73,13 @@ func (g *genericEncoder[Solution, Options]) Encode(
 			solutions = tempSolutions
 		}
 	}
-	if quieter, ok := runnerCfg.(Quieter); ok && !quieter.Quiet() {
-		m := meta[Options, Solution]{
-			Version: version{
-				Sdk: sdk.VERSION,
-			},
-			Options: options,
-		}
-		for solution := range solutions {
-			m.Solutions = append(m.Solutions, solution)
-		}
-		if err = g.encoder.Encode(ioWriter, m); err != nil {
+
+	for solution := range solutions {
+		err := g.encoder.Encode(ioWriter, solution)
+		if err != nil {
 			return err
 		}
-
-		return nil
 	}
-
-	m := []Solution{}
-	for solution := range solutions {
-		m = append(m, solution)
-	}
-	if err = g.encoder.Encode(ioWriter, m); err != nil {
-		return err
-	}
-
 	return nil
 }
 

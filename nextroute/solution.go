@@ -22,19 +22,21 @@ func NewSolution(
 // a random plan unit to a random vehicle. The remaining plan units
 // are added to the solution in a random order at the best possible position.
 func NewRandomSolution(
+	ctx context.Context,
 	m Model,
 ) (Solution, error) {
 	connect.Connect(con, &newRandomSolution)
-	return newRandomSolution(m)
+	return newRandomSolution(ctx, m)
 }
 
 // NewSweepSolution creates a new solution. The solution is created from the
 // given model using a sweep construction heuristic.
 func NewSweepSolution(
+	ctx context.Context,
 	m Model,
 ) (Solution, error) {
 	connect.Connect(con, &newSweepSolution)
-	return newSweepSolution(m)
+	return newSweepSolution(ctx, m)
 }
 
 // Solution is a solution to a model.
@@ -46,6 +48,12 @@ type Solution interface {
 	// available for the given solution plan unit, a move is returned which
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
+
+	// FixedPlanUnits returns the solution plan units that are fixed.
+	// Fixed plan units are plan units that are not allowed to be planned or
+	// unplanned. The union of fixed, planned and unplanned plan units
+	// is the set of all plan units in the model.
+	FixedPlanUnits() ImmutableSolutionPlanUnitCollection
 
 	// Model returns the model of the solution.
 	Model() Model

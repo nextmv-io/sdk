@@ -109,6 +109,8 @@ func main() {
 
 	// Write the output.
 	file, _ := json.MarshalIndent(out, "", " ")
+
+	/* #nosec */
 	err = os.WriteFile("routing-input.json", file, 0o644)
 	if err != nil {
 		panic(err)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 	"sync"
 	"time"
 )
@@ -50,11 +51,10 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 
 // GroupBy groups the elements of a slice by a key function.
 func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
-	inResult := make(map[K]bool)
 	result := make(map[K][]T)
 	for _, instance := range s {
 		key := f(instance)
-		if _, ok := inResult[key]; !ok {
+		if _, ok := result[key]; !ok {
 			result[key] = make([]T, 0)
 		}
 		result[key] = append(result[key], instance)
@@ -134,6 +134,16 @@ func Has[E any](s []E, condition bool, predicate func(E) bool) bool {
 	return false
 }
 
+// CopyMap copies all key/value pairs in source adding them to destination.
+// If a key exists in both maps, the value in destination is overwritten.
+func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](
+	destination M1,
+	source M2) {
+	for k, v := range source {
+		destination[k] = v
+	}
+}
+
 // DefensiveCopy returns a defensive copy of a slice.
 func DefensiveCopy[T any](v []T) []T {
 	c := make([]T, len(v))
@@ -183,6 +193,11 @@ func RandomElement[T any](
 		panic(fmt.Errorf("cannot select random element from empty slice"))
 	}
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 	return elements[source.Intn(len(elements))]
@@ -198,6 +213,11 @@ func RandomElements[T any](
 	n int,
 ) []T {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
@@ -205,7 +225,7 @@ func RandomElements[T any](
 		return []T{}
 	}
 	if n >= len(elements) {
-		return elements
+		return DefensiveCopy(elements)
 	}
 	result := make([]T, 0, n)
 	indicesUsed := make(map[int]bool, 0)
@@ -231,6 +251,11 @@ func RandomElementIndices[T any](
 	n int,
 ) []int {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
@@ -263,6 +288,11 @@ func RandomElementIndices[T any](
 // is created using the current time.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
+		// math/rand is about 50 to 100 times faster than crypto/rand.
+		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
+		// The rand use case here has no security concern.
+		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
+		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
 
@@ -294,11 +324,50 @@ func DefineLazy[T any](f func() T) Lazy[T] {
 	}
 }
 
-// Values returns a slice of all values in the given map.
-func Values[M ~map[K]V, K comparable, V any](m M) []V {
-	r := make([]V, 0, len(m))
-	for _, v := range m {
-		r = append(r, v)
-	}
+// Keys returns a slice of all values in the given map.
+func Keys[M ~map[K]V, K Comparable, V any](m M) []K {
+	r := make([]K, 0, len(m))
+	RangeMap(m, func(k K, _ V) bool {
+		r = append(r, k)
+		return false
+	})
 	return r
+}
+
+// Values returns a slice of all values in the given map.
+func Values[M ~map[K]V, K Comparable, V any](m M) []V {
+	r := make([]V, 0, len(m))
+	RangeMap(m, func(_ K, v V) bool {
+		r = append(r, v)
+		return false
+	})
+	return r
+}
+
+// Comparable is a type constraint for three types: int, int64, and string. By
+// using this type constraint for a generic parameter, the parameter can be used
+// as a map key and it can be sorted.
+type Comparable interface {
+	int | int64 | string
+}
+
+// RangeMap ranges over a map in deterministic order by first sorting the
+// keys. It provides a function which will be called for each key/value pair.
+// The function should return true to stop iteration.
+func RangeMap[M ~map[K]V, K Comparable, V any](
+	m M,
+	f func(key K, value V) bool,
+) {
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] < keys[j]
+	})
+	for _, k := range keys {
+		if f(k, m[k]) {
+			break
+		}
+	}
 }

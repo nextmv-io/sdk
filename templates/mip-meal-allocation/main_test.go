@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"reflect"
@@ -22,12 +23,12 @@ func TestTemplate(t *testing.T) {
 	// Declare the output.
 	options := Option{}
 	options.Limits.Duration = 5 * time.Second
-	output, err := solver(input, options)
+	output, err := solver(context.Background(), input, options)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got := output[0]
+	got := output.Solutions[0].(Output)
 	if err = json.Unmarshal(b, &got); err != nil {
 		t.Fatal(err)
 	}

@@ -22,17 +22,26 @@ type ModelStop interface {
 	// start and end stops of a vehicle do not belong to a plan unit.
 	HasPlanUnit() bool
 
+	// ID returns the identifier of the stop.
+	ID() string
+
 	// Index returns the index of the stop.
 	Index() int
+
+	// IsFirstOrLast returns true if the stop is the first or last stop of one
+	// or more vehicles. A stop which is the first or last stop of one or more
+	// vehicles is not allowed to be part of a plan unit. A stop which is the
+	// first or last stop of one or more vehicles is by definition fixed.
+	IsFirstOrLast() bool
+
+	// IsFixed returns true if fixed.
+	IsFixed() bool
 
 	// Location returns the location of the stop.
 	Location() common.Location
 
 	// Model returns the model of the stop.
 	Model() Model
-
-	// Name returns the name of the stop.
-	Name() string
 
 	// EarliestStart returns the earliest start time of the stop. Can be set
 	// using the EarliestStart StopOption or using SetEarliestStart.
@@ -45,8 +54,12 @@ type ModelStop interface {
 
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(time time.Time)
-	// SetName sets the name of the stop.
-	SetName(name string)
+
+	// SetID sets the identifier of the stop. This identifier is not used by
+	// nextroute, and therefore it does not have to be unique for nextroute
+	// internally. However, to make this ID useful for debugging and reporting
+	// it should be made unique.
+	SetID(string)
 }
 
 // ModelStops is a slice of stops.

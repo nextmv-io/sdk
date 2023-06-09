@@ -12,8 +12,8 @@ type RouterInput struct {
 	Stops               []route.Stop         `json:"stops"`
 	Vehicles            []string             `json:"vehicles"`
 	InitializationCosts []float64            `json:"initialization_costs"`
-	Starts              []route.Position     `json:"starts"`
-	Ends                []route.Position     `json:"ends"`
+	Starts              []Location           `json:"starts"`
+	Ends                []Location           `json:"ends"`
 	Quantities          []int                `json:"quantities"`
 	Capacities          []int                `json:"capacities"`
 	Precedences         []route.Job          `json:"precedences"`
@@ -55,20 +55,20 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 	// Convert stop defaults
 	stopDefaults := StopDefaults{}
 	if anyAndAllEqual(routerInput.Penalties) {
-		stopDefaults.UnassignedPenalty = &routerInput.Penalties[0]
+		stopDefaults.UnplannedPenalty = &routerInput.Penalties[0]
 	}
 	if anyAndAllEqual(routerInput.Quantities) {
 		stopDefaults.Quantity = &routerInput.Quantities[0]
 	}
 	if anyAndAllEqual(routerInput.Windows) {
-		stopDefaults.HardWindow = &[]time.Time{
+		stopDefaults.StartTimeWindow = &[]time.Time{
 			routerInput.Windows[0].TimeWindow.Start,
 			routerInput.Windows[0].TimeWindow.End,
 		}
 		stopDefaults.MaxWait = &routerInput.Windows[0].MaxWait
 	}
 	if anyAndAllEqual(routerInput.ServiceTimes) {
-		stopDefaults.StopDuration = &routerInput.ServiceTimes[0].Duration
+		stopDefaults.Duration = &routerInput.ServiceTimes[0].Duration
 	}
 	if anyAndAllEqual(routerInput.StopAttributes) {
 		stopDefaults.CompatibilityAttributes = &routerInput.StopAttributes[0].Attributes
@@ -80,17 +80,17 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 		vehicleDefaults.Capacity = &routerInput.Capacities[0]
 	}
 	if anyAndAllEqual(routerInput.Starts) {
-		vehicleDefaults.Start = &routerInput.Starts[0]
+		vehicleDefaults.StartLocation = &routerInput.Starts[0]
 	}
 	if anyAndAllEqual(routerInput.Ends) {
-		vehicleDefaults.End = &routerInput.Ends[0]
+		vehicleDefaults.EndLocation = &routerInput.Ends[0]
 	}
 	if anyAndAllEqual(routerInput.Velocities) {
 		vehicleDefaults.Speed = &routerInput.Velocities[0]
 	}
 	if anyAndAllEqual(routerInput.Shifts) {
-		vehicleDefaults.ShiftStart = &routerInput.Shifts[0].Start
-		vehicleDefaults.ShiftEnd = &routerInput.Shifts[0].End
+		vehicleDefaults.StartTime = &routerInput.Shifts[0].Start
+		vehicleDefaults.EndTime = &routerInput.Shifts[0].End
 	}
 	if anyAndAllEqual(routerInput.VehicleAttributes) {
 		vehicleDefaults.CompatibilityAttributes = &routerInput.VehicleAttributes[0].Attributes
@@ -107,11 +107,11 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 		vehicles[i] = Vehicle{
 			ID:       v,
 			Capacity: routerInput.Capacities[i],
-			Start: &route.Position{
+			StartLocation: &Location{
 				Lon: routerInput.Starts[i].Lon,
 				Lat: routerInput.Starts[i].Lat,
 			},
-			End: &route.Position{
+			EndLocation: &Location{
 				Lon: routerInput.Ends[i].Lon,
 				Lat: routerInput.Ends[i].Lat,
 			},
@@ -124,12 +124,12 @@ func RouterToNextRoute(routerInput RouterInput) Input {
 	for i, s := range routerInput.Stops {
 		stops[i] = Stop{
 			ID: s.ID,
-			Position: route.Position{
+			Location: Location{
 				Lon: s.Position.Lon,
 				Lat: s.Position.Lat,
 			},
-			Quantity:          &routerInput.Quantities[i],
-			UnassignedPenalty: &routerInput.Penalties[i],
+			Quantity:         &routerInput.Quantities[i],
+			UnplannedPenalty: &routerInput.Penalties[i],
 		}
 	}
 

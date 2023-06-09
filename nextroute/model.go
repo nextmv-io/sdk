@@ -100,11 +100,14 @@ type Model interface {
 		first ModelStop,
 		last ModelStop,
 	) (ModelVehicle, error)
-	// NewVehicleType creates a new vehicle type. The vehicle type is used
-	// to create vehicles.
+	// NewVehicleType creates a new vehicle type. The vehicle type is used to
+	// create vehicles. The travelDuration defines the travel duration going
+	// from one stop to another if the stops are planned on a vehicle of the
+	// constructed type. The duration defines the duration of a stop that gets
+	// planned on a vehicle of the constructed type.
 	NewVehicleType(
 		travelDuration TimeDependentDurationExpression,
-		processDuration DurationExpression,
+		duration DurationExpression,
 	) (ModelVehicleType, error)
 
 	// NumberOfStops returns the number of stops in the model.
@@ -153,4 +156,7 @@ type Model interface {
 	// function uses the [Model.Epoch()] as a starting point and adds a large
 	// number to provide a large enough upper bound.
 	MaxTime() time.Time
+
+	// MaxDuration returns the maximum duration (upper bound) for any stop.
+	MaxDuration() time.Duration
 }

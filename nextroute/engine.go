@@ -2,10 +2,10 @@
 package nextroute
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -14,8 +14,8 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
-	newRandomSolution             func(Model) (Solution, error)
-	newSweepSolution              func(Model) (Solution, error)
+	newRandomSolution             func(context.Context, Model) (Solution, error)
+	newSweepSolution              func(context.Context, Model) (Solution, error)
 	newConstantDurationExpression func(
 		string,
 		time.Duration,
@@ -86,6 +86,9 @@ var (
 		VehicleTypeDurationExpression,
 	) (MaximumTravelDurationConstraint, error)
 
+	newMaximumWaitStopConstraint    func() (MaximumWaitStopConstraint, error)
+	newMaximumWaitVehicleConstraint func() (MaximumWaitVehicleConstraint, error)
+
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
@@ -95,10 +98,15 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel                func() (Model, error)
-	newModelExpressionIndex func() int
-	noPositionsHint         func() StopPositionsHint
-	newOperatorExpression   func(
+	newModel                 func() (Model, error)
+	newModelExpressionIndex  func() int
+	newSolutionStopGenerator func(
+		Move,
+		bool,
+		bool,
+	) SolutionStopGenerator
+	noPositionsHint       func() StopPositionsHint
+	newOperatorExpression func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,
@@ -131,10 +139,14 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
-	newVehicleTypeExpression func(
+	newVehicleTypeValueExpression func(
 		string,
 		float64,
-	) VehicleTypeExpression
+	) VehicleTypeValueExpression
+	newVehicleTypeDistanceExpression func(
+		string,
+		common.Distance,
+	) VehicleTypeDistanceExpression
 	newVehicleTypeFromToExpression func(
 		string,
 		float64,
@@ -148,9 +160,6 @@ var (
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
-
-	newBasicFormatter   func() Formatter
-	newVerboseFormatter func([]alns.ProgressionEntry) Formatter
 
 	newSolutionPlanUnitCollection func(
 		*rand.Rand,

@@ -9,10 +9,11 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
+	runSchema "github.com/nextmv-io/sdk/run/schema"
 )
 
 func main() {
-	runner := run.NewCLIRunner(solver)
+	runner := run.CLI(solver)
 	err := runner.Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
@@ -20,35 +21,30 @@ func main() {
 }
 
 type options struct {
-	Model factory.Options
-	Solve nextroute.ParallelSolveOptions
+	Model  factory.Options                `json:"model,omitempty"`
+	Solve  nextroute.ParallelSolveOptions `json:"solve,omitempty"`
+	Format nextroute.FormatOptions        `json:"format,omitempty"`
 }
 
 func solver(
 	ctx context.Context,
 	input schema.Input,
 	options options,
-	solutions chan<- any,
-) error {
+) (runSchema.Output, error) {
 	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
-		return err
+		return runSchema.Output{}, err
 	}
 
 	solver, err := nextroute.NewParallelSolver(model)
 	if err != nil {
-		return err
+		return runSchema.Output{}, err
 	}
 
-	solverSolutions, err := solver.Solve(ctx, options.Solve)
+	solutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
-		return err
+		return runSchema.Output{}, err
 	}
 
-	last := solverSolutions.Last()
-	if last != nil {
-		solutions <- nextroute.NewBasicFormatter().ToOutput(last)
-	}
-
-	return nil
+	return nextroute.Format(ctx, options, solver, solutions.Last()), nil
 }

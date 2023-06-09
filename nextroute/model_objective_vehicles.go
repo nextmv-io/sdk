@@ -17,4 +17,6 @@ func NewVehiclesObjective(expression VehicleTypeExpression) VehiclesObjective {
 // and last visit).
 type VehiclesObjective interface {
 	ModelObjective
+	// ActivationPenalty returns the activation penalty expression.
+	ActivationPenalty() VehicleTypeExpression
 }

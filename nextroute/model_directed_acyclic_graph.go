@@ -22,6 +22,11 @@ type Arcs []Arc
 type DirectedAcyclicGraph interface {
 	// Arcs returns all [Arcs] in the graph.
 	Arcs() Arcs
+
+	// IsAllowed returns true if the sequence of stops is allowed by the DAG,
+	// otherwise returns false.
+	IsAllowed(stops ModelStops) (bool, error)
+
 	// ModelStops returns all [ModelStops] in the graph.
 	ModelStops() ModelStops
 	// NewArc creates a new [Arc] in the graph. The new [Arc] should not be

@@ -31,10 +31,8 @@ linters-settings:
         - github.com/google/uuid
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
-    min-complexity: 10
+    min-complexity: 20
   # Set correct go version.
-  gofumpt:
-    lang-version: "1.19"
   gosimple:
     go: "1.19"
   staticcheck:
@@ -91,8 +89,6 @@ linters:
     # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s
     # option to check for code simplification.
     - gofmt
-    # Gofumpt checks whether code was gofumpt-ed.
-    - gofumpt
     # In addition to fixing imports, goimports also formats your code in the
     # same style as gofmt.
     - goimports
@@ -171,15 +167,6 @@ issues:
       linters:
         - dupl
 
-    # Complexity in LessClockwise is high due to multiple cases, fine for now.
-    - path: measure/sort\.go
-      linters:
-        - gocyclo
-
-    # Complexity in TestBin is high due to multiple cases, fine for now.
-    - path: measure/bin_test\.go
-      linters:
-        - gocyclo
     # Deactivate line length in solver.go because of go tags
     - path: nextroute/solver\.go
       linters:
@@ -188,10 +175,6 @@ issues:
     - path: nextroute/solver_parallel\.go
       linters:
         - lll
-    # Deactivate gocyclo in router.go due to many if statements.
-    - path: nextroute/schema/router\.go
-      linters:
-        - gocyclo
     # Deactivate lll in schema due to go tags.
     - path: nextroute/schema
       linters:
@@ -212,25 +195,6 @@ issues:
     - path: nextroute/factory/model\.go
       linters:
         - lll
-    # Complexity in NewAlias is high due to multiple cases, fine for now.
-    - path: nextroute/common/alias\.go
-      linters:
-        - gocyclo
-    # Complexity in statistics is high due to multiple cases, fine for now.
-    - path: nextroute/common/statistics\.go
-      linters:
-        - gocyclo
-    - path: nextroute/common/statistics_test\.go
-      linters:
-        - gocyclo
-    - path: nextroute/common/nsmallest_test\.go
-      linters:
-        - gocyclo
-    # Complexity in UnmarshalJSON is high due to multiple cases, fine for now.
-    - path: route/load\.go
-      linters:
-        - gocyclo
-      text: ByIndexLoader
 
     # Tag should be 'measure' in both cases ByPoint and ByIndex
     - path: route/load\.go
@@ -272,6 +236,15 @@ issues:
     - path: templates/routing-informs/main\.go
       linters:
         - gocyclo
+    - path: templates/demo-routing/helper\.go
+      linters:
+        - gocyclo
+    - path: templates/demo-routing/schema\.go
+      linters:
+        - gocyclo
+    - path: templates/demo-routing/main\.go
+      linters:
+        - gocyclo
     - path: templates/pager-duty/main\.go
       linters:
         - gocyclo
@@ -302,7 +275,10 @@ issues:
       linters:
         - gocritic
       text: ifElseChain
-
+    - path: templates/demo-routing/helper\.go
+      linters:
+        - gocritic
+      text: ifElseChain
     - path: templates/cluster-tsp/schema\.go
       linters:
         - unparam
@@ -322,17 +298,7 @@ issues:
       linters:
         - gocritic
       text: newDeref
-    # Deactivate gocyclo for CustomEncoder in run.go
-    - path: run/encoder\.go
-      linters:
-        - gocyclo
-      source: ^func \(g \*genericEncoder.*$
     # Deactivate line length in http_runner_config.go because of go tags
     - path: run/http_runner_config\.go
       linters:
         - lll
-    # Deactivate gocyclo for GenericRunner in generic_runner.go
-    - path: run/generic_runner\.go
-      linters:
-        - gocyclo
-      source: ^func \(r \*genericRunner.*$

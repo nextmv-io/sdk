@@ -27,15 +27,15 @@ func NewNotExecutableMove() Move {
 // stop in the stop positions. The last stop in the unit is the last
 // stop in the stop positions.
 type Move interface {
-	// AfterStop returns the planned stop after which the first to be planned
-	// stop is supposed to be planned. AfterStop is the same stop as the
-	// after stop of the first stop position.
-	AfterStop() SolutionStop
+	// Previous returns previous stop of the first to be planned
+	// stop if it would be planned. Previous is the same stop as the
+	// previous stop of the first stop position.
+	Previous() SolutionStop
 
-	// BeforeStop returns the planned stop before which the last to be planned
-	// stop is supposed to be planned. BeforeStop is the same stop as the
-	// before stop of the last stop position.
-	BeforeStop() SolutionStop
+	// Next returns the next stop of the last to be planned
+	// stop if it would be planned. Next is the same stop as the
+	// next stop of the last stop position.
+	Next() SolutionStop
 
 	// Execute executes the move. Returns true if the move was executed
 	// successfully, false if the move was not executed successfully. A
@@ -91,22 +91,22 @@ type Move interface {
 }
 
 // StopPosition is the definition of the change in the solution for a
-// specific stop. The change is defined by a BeforeStop and a Stop. The
-// BeforeStop is a stop which is already part of the solution (it is planned)
+// specific stop. The change is defined by a Next and a Stop. The
+// Next is a stop which is already part of the solution (it is planned)
 // and the Stop is a stop which is not yet part of the solution (it is not
 // planned). A stop position states that the stop should be moved from the
 // unplanned set to the planned set by positioning it directly before the
-// BeforeStop.
+// Next.
 type StopPosition interface {
-	// AfterStop returns the stop after which Stop will be inserted. AfterStop
-	// does not have to be planned yet if the invoking stop position is not the
-	// first stop position of a move.
-	AfterStop() SolutionStop
+	// Previous denotes the upcoming stop's previous stop if the associated move
+	// involving the stop position is executed. It's worth noting that
+	// the previous stop may not have been planned yet.
+	Previous() SolutionStop
 
-	// BeforeStop returns the stop which is already part of the solution.
-	// BeforeStop does not have to be planned yet if the invoking stop position
-	// is not the last stop position of a move.
-	BeforeStop() SolutionStop
+	// Next denotes the upcoming stop's next stop if the associated move
+	// involving the stop position is executed. It's worth noting that
+	// the next stop may not have been planned yet.
+	Next() SolutionStop
 
 	// Stop returns the stop which is not yet part of the solution. This stop
 	// is not planned yet if the move where the invoking stop position belongs
