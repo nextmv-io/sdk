@@ -31,7 +31,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 	solutions <-chan Solution,
 	writer any,
 	runnerCfg any,
-	options Options,
+	_ Options,
 ) (err error) {
 	closer, ok := writer.(io.Closer)
 	if ok {
