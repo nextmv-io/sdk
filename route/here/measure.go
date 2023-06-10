@@ -162,6 +162,11 @@ func (c *client) fetchMatricesSync(
 ) (distances, durations route.ByIndex, err error) {
 	resp, err := c.calculate(
 		ctx, points, false, includeDistance, includeDuration, opts...)
+	defer func() {
+		if tempErr := resp.Body.Close(); tempErr != nil {
+			err = tempErr
+		}
+	}()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -345,6 +350,11 @@ func (c *client) startAsyncCalculation(
 ) (string, error) {
 	resp, err := c.calculate(
 		ctx, points, true, includeDistance, includeDuration, opts...)
+	defer func() {
+		if tempErr := resp.Body.Close(); tempErr != nil {
+			err = tempErr
+		}
+	}()
 	if err != nil {
 		return "", err
 	}
