@@ -37,6 +37,7 @@ func Example() {
 	if err != nil {
 		panic(err)
 	}
+	_ = dist // We don't use the distance matrix in this example.
 
 	// The matrix functions also take a variadic list of `MatrixOption`s that
 	// configure how HERE will calculate the routes. For example, this code
@@ -51,6 +52,7 @@ func Example() {
 	if err != nil {
 		panic(err)
 	}
+	_ = dist // We don't use the distance matrix in this example.
 
 	// Or, you can configure a truck profile:
 	dist, err = client.DistanceMatrix(
