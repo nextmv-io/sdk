@@ -25,7 +25,7 @@ const (
 	Day
 )
 
-// String returns the string representation of the distance unit.
+// String returns the string representation of the duration unit.
 func (d DurationUnit) String() string {
 	switch d {
 	case NanoSecond:
@@ -47,6 +47,7 @@ func (d DurationUnit) String() string {
 	return fmt.Sprintf("unknown duration unit %v", int(d))
 }
 
+// NewDuration returns a new duration by unit.
 func NewDuration(unit DurationUnit) time.Duration {
 	switch unit {
 	case NanoSecond:
