@@ -9,11 +9,12 @@ import (
 
 // NewDurationExpression creates a new duration expression.
 func NewDurationExpression(
+	name string,
 	expression ModelExpression,
-	multiplier time.Duration,
+	unit common.DurationUnit,
 ) DurationExpression {
 	connect.Connect(con, &newDurationExpression)
-	return newDurationExpression(expression, multiplier)
+	return newDurationExpression(name, expression, unit)
 }
 
 // NewTravelDurationExpression creates a new travel duration expression.

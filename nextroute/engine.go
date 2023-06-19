@@ -30,8 +30,13 @@ var (
 		common.DistanceUnit,
 	) DistanceExpression
 	newDurationExpression func(
+		string,
 		ModelExpression,
-		time.Duration,
+		common.DurationUnit,
+	) DurationExpression
+	newScaledDurationExpression func(
+		DurationExpression,
+		float64,
 	) DurationExpression
 	newNotExecutableMove  func() Move
 	newFromStopExpression func(
