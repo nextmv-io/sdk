@@ -42,7 +42,6 @@ func (d DurationUnit) String() string {
 		return "hours"
 	case Day:
 		return "days"
-
 	}
 	return fmt.Sprintf("unknown duration unit %v", int(d))
 }
