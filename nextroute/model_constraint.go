@@ -42,6 +42,16 @@ type RegisteredModelExpressions interface {
 	ModelExpressions() ModelExpressions
 }
 
+// ConstraintTemporal is the interface that is implemented by constraints that
+// are temporal. This interface is used to determine if the constraint is
+// using temporal expressions, specifically travel durations. Temporal
+// constraints require special handling when adding initial stops to a
+// new solution because of the triangular inequality.
+type ConstraintTemporal interface {
+	// IsTemporal returns true if the constraint is temporal.
+	IsTemporal() bool
+}
+
 // SolutionStopViolationCheck is the interface that will be invoked on every
 // update of a planned solution stop. The method DoesStopHaveViolations will be
 // called to check if the stop violates the constraint. If the method returns
