@@ -1,9 +1,10 @@
 package nextroute
 
 import (
+	"math"
+
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/common"
-	"math"
 )
 
 // MaximumConstraint is a constraint that limits the maximum cumulative
