@@ -3,6 +3,7 @@ package nextroute
 import (
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute/common"
+	"math"
 )
 
 // MaximumConstraint is a constraint that limits the maximum cumulative
@@ -57,5 +58,81 @@ func NewCompareBySolutionVehicleMaximumConstraint(
 			constraint.Maximum().ValueForVehicleType(a.ModelVehicle().VehicleType()),
 			constraint.Maximum().ValueForVehicleType(b.ModelVehicle().VehicleType()),
 		)
+	}
+}
+
+// NewCompareModelStopMaximumConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// model stops by their consumption/production.
+func NewCompareModelStopMaximumConstraint(
+	constraint MaximumConstraint,
+) common.CompareFunction[ModelStop] {
+	return func(a, b ModelStop) int {
+		if _, ok := constraint.Expression().(StopExpression); ok {
+			return common.Compare(
+				constraint.Expression().Value(nil, nil, a),
+				constraint.Expression().Value(nil, nil, b),
+			)
+		}
+		return 0
+	}
+}
+
+// NewCompareSolutionStopMaximumConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// solution stops by their consumption/production.
+func NewCompareSolutionStopMaximumConstraint(
+	constraint MaximumConstraint,
+) common.CompareFunction[SolutionStop] {
+	return func(a, b SolutionStop) int {
+		if _, ok := constraint.Expression().(StopExpression); ok {
+			return common.Compare(
+				constraint.Expression().Value(nil, nil, a.ModelStop()),
+				constraint.Expression().Value(nil, nil, b.ModelStop()),
+			)
+		}
+		return 0
+	}
+}
+
+// NewCompareModelPlanUnitMaximumConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// model stops by their sum of absolute consumption/production.
+func NewCompareModelPlanUnitMaximumConstraint(
+	constraint MaximumConstraint,
+) common.CompareFunction[ModelPlanUnit] {
+	return func(a, b ModelPlanUnit) int {
+		if _, ok := constraint.Expression().(StopExpression); ok {
+			return common.Compare(
+				common.SumDefined(a.Stops(), func(t ModelStop) float64 {
+					return math.Abs(constraint.Expression().Value(nil, nil, t))
+				}),
+				common.SumDefined(b.Stops(), func(t ModelStop) float64 {
+					return math.Abs(constraint.Expression().Value(nil, nil, t))
+				}),
+			)
+		}
+		return 0
+	}
+}
+
+// NewCompareSolutionPlanUnitMaximumConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// solution plan units by their sum of absolute consumption/production.
+func NewCompareSolutionPlanUnitMaximumConstraint(
+	constraint MaximumConstraint,
+) common.CompareFunction[SolutionPlanUnit] {
+	return func(a, b SolutionPlanUnit) int {
+		if _, ok := constraint.Expression().(StopExpression); ok {
+			return common.Compare(
+				common.SumDefined(a.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
+					return math.Abs(constraint.Expression().Value(nil, nil, t))
+				}),
+				common.SumDefined(b.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
+					return math.Abs(constraint.Expression().Value(nil, nil, t))
+				}),
+			)
+		}
+		return 0
 	}
 }

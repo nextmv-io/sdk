@@ -1,5 +1,7 @@
 package nextroute
 
+import "github.com/nextmv-io/sdk/nextroute/common"
+
 // Copier is the interface that all objects that can be copied must implement.
 type Copier interface {
 	// Copy returns a copy of the object.
@@ -106,3 +108,16 @@ type ModelConstraint interface {
 
 // ModelConstraints is a slice of ModelConstraint.
 type ModelConstraints []ModelConstraint
+
+// Constraints returns all the instance of T in the model.
+// For example, to get all the MaximumConstraint from a model:
+//
+//	maximumConstraints := Constraints[MaximumConstraint](model)
+func Constraints[T any](model Model) []T {
+	return common.MapSlice(model.Constraints(), func(constraint ModelConstraint) []T {
+		if t, ok := constraint.(T); ok {
+			return []T{t}
+		}
+		return []T{}
+	})
+}

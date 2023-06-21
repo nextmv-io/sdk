@@ -41,12 +41,12 @@ type ModelObjectiveSum interface {
 	Terms() ModelObjectiveTerms
 }
 
-// Objectives returns all the instance of T in the sum objective.
+// Objectives returns all the instance of T in the objective.
 // For example, to get all the VehiclesObjective from a model:
 //
-//	vehicleObjectives := Objectives[VehiclesObjective](model.Objective())
-func Objectives[T any](objectiveSum ModelObjectiveSum) []T {
-	return common.MapSlice(objectiveSum.Terms(), func(term ModelObjectiveTerm) []T {
+//	vehicleObjectives := Objectives[VehiclesObjective](model)
+func Objectives[T any](model Model) []T {
+	return common.MapSlice(model.Objective().Terms(), func(term ModelObjectiveTerm) []T {
 		if t, ok := term.Objective().(T); ok {
 			return []T{t}
 		}
