@@ -195,7 +195,18 @@ issues:
     - path: nextroute/factory/model\.go
       linters:
         - lll
-
+    # Deactivate duplicate code errors
+    - path: nextroute/model_latest_arrival\.go
+      linters:
+        - dupl
+    # Deactivate duplicate code errors
+    - path: nextroute/model_latest_end\.go
+      linters:
+        - dupl
+    # Deactivate duplicate code errors
+    - path: nextroute/model_latest_start\.go
+      linters:
+        - dupl
     # Tag should be 'measure' in both cases ByPoint and ByIndex
     - path: route/load\.go
       linters:

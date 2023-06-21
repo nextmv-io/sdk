@@ -113,6 +113,7 @@ func TestSort(t *testing.T) {
 	)
 
 	singleItem = append(singleItem, item{"a", 1, 1.0})
+	_ = singleItem
 
 	if len(sorted) != 1 {
 		t.Error("singleItem")
