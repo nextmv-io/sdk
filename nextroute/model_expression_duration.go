@@ -68,6 +68,9 @@ type StopDurationExpression interface {
 	DurationExpression
 	// SetDuration sets the duration for the given stop.
 	SetDuration(ModelStop, time.Duration)
+
+	// DurationForStop returns the duration for the given stop.
+	DurationForStop(stop ModelStop) time.Duration
 }
 
 // VehicleTypeDurationExpression is a ModelExpression that returns a duration

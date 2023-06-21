@@ -1,5 +1,9 @@
 package nextroute
 
+import (
+	"github.com/nextmv-io/sdk/nextroute/common"
+)
+
 // ObjectiveDataUpdater is the interface than can be used by an objective if
 // it wants to store data with each stop in a solution.
 type ObjectiveDataUpdater interface {
@@ -35,6 +39,19 @@ type ModelObjectiveSum interface {
 
 	// ObjectiveTerms returns the model objectives that are part of the sum.
 	Terms() ModelObjectiveTerms
+}
+
+// Objectives returns all the instance of T in the sum objective.
+// For example, to get all the VehiclesObjective from a model:
+//
+//	vehicleObjectives := Objectives[VehiclesObjective](model.Objective())
+func Objectives[T any](objectiveSum ModelObjectiveSum) []T {
+	return common.MapSlice(objectiveSum.Terms(), func(term ModelObjectiveTerm) []T {
+		if t, ok := term.Objective().(T); ok {
+			return []T{t}
+		}
+		return []T{}
+	})
 }
 
 // ModelObjectiveTerm is a term in a model objective sum.

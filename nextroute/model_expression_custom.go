@@ -134,6 +134,9 @@ type StopExpression interface {
 		stop ModelStop,
 		value float64,
 	)
+
+	// ValueForStop returns the value of the expression for the given to stop.
+	ValueForStop(ModelStop) float64
 }
 
 // VehicleTypeExpression is the base expression for

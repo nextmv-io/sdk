@@ -1,6 +1,9 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/common"
+)
 
 // MaximumWaitVehicleConstraint is a constraint that limits the accumulated time
 // a vehicle can wait at stops on its route. Wait is defined as the time between
@@ -22,4 +25,32 @@ type MaximumWaitVehicleConstraint interface {
 func NewMaximumWaitVehicleConstraint() (MaximumWaitVehicleConstraint, error) {
 	connect.Connect(con, &newMaximumWaitVehicleConstraint)
 	return newMaximumWaitVehicleConstraint()
+}
+
+// NewCompareByModelVehicleMaximumWaitVehicleConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two model vehicles
+// by their maximum wait.
+func NewCompareByModelVehicleMaximumWaitVehicleConstraint(
+	constraint MaximumWaitVehicleConstraint,
+) common.CompareFunction[ModelVehicle] {
+	return func(a, b ModelVehicle) int {
+		return common.Compare(
+			constraint.Maximum().ValueForVehicleType(a.VehicleType()),
+			constraint.Maximum().ValueForVehicleType(b.VehicleType()),
+		)
+	}
+}
+
+// NewCompareBySolutionVehicleMaximumWaitVehicleConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two solution
+// vehicles by their maximum wait.
+func NewCompareBySolutionVehicleMaximumWaitVehicleConstraint(
+	constraint MaximumWaitVehicleConstraint,
+) common.CompareFunction[SolutionVehicle] {
+	return func(a, b SolutionVehicle) int {
+		return common.Compare(
+			constraint.Maximum().ValueForVehicleType(a.ModelVehicle().VehicleType()),
+			constraint.Maximum().ValueForVehicleType(b.ModelVehicle().VehicleType()),
+		)
+	}
 }

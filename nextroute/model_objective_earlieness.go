@@ -2,6 +2,7 @@ package nextroute
 
 import (
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 // TemporalReference is a representation of OnArrival, OnEnd or OnStart as an
@@ -49,4 +50,68 @@ func NewEarlinessObjective(
 ) (EarlinessObjective, error) {
 	connect.Connect(con, &newEarlinessObjective)
 	return newEarlinessObjective(targetTime, earlinessFactor, temporalReference)
+}
+
+// NewCompareModelStopByEarlinessObjective returns a new CompareFunction
+// for the given objective. The returned function compares two model stops by
+// their target time.
+func NewCompareModelStopByEarlinessObjective(
+	objective EarlinessObjective,
+) common.CompareFunction[ModelStop] {
+	return func(a, b ModelStop) int {
+		return common.Compare(
+			objective.TargetTime().Time(a).Unix(),
+			objective.TargetTime().Time(b).Unix(),
+		)
+	}
+}
+
+// NewCompareSolutionStopByEarlinessObjective returns a new CompareFunction
+// for the given objective. The returned function compares two solution stops by
+// their target time.
+func NewCompareSolutionStopByEarlinessObjective(
+	objective EarlinessObjective,
+) common.CompareFunction[SolutionStop] {
+	return func(a, b SolutionStop) int {
+		return common.Compare(
+			objective.TargetTime().Time(a.ModelStop()).Unix(),
+			objective.TargetTime().Time(b.ModelStop()).Unix(),
+		)
+	}
+}
+
+// NewCompareModelPlanUnitsByEarlinessObjective returns a new CompareFunction
+// for the given objective. The returned function compares two plan units by
+// the sum of the target times.
+func NewCompareModelPlanUnitsByEarlinessObjective(
+	objective EarlinessObjective,
+) common.CompareFunction[ModelPlanUnit] {
+	return func(a, b ModelPlanUnit) int {
+		return common.Compare(
+			common.SumDefined(a.Stops(), func(t ModelStop) float64 {
+				return float64(objective.TargetTime().Time(t).Unix()) / 93600.0
+			}),
+			common.SumDefined(b.Stops(), func(t ModelStop) float64 {
+				return float64(objective.TargetTime().Time(t).Unix()) / 93600.0
+			}),
+		)
+	}
+}
+
+// NewCompareSolutionPlanUnitsByEarlinessObjective returns a new CompareFunction
+// for the given objective. The returned function compares two plan units by
+// the sum of the target times.
+func NewCompareSolutionPlanUnitsByEarlinessObjective(
+	objective EarlinessObjective,
+) common.CompareFunction[SolutionPlanUnit] {
+	return func(a, b SolutionPlanUnit) int {
+		return common.Compare(
+			common.SumDefined(a.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
+				return float64(objective.TargetTime().Time(t).Unix()) / 93600.0
+			}),
+			common.SumDefined(b.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
+				return float64(objective.TargetTime().Time(t).Unix()) / 93600.0
+			}),
+		)
+	}
 }

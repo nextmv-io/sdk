@@ -1,6 +1,9 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/nextroute/common"
+)
 
 // AttributesConstraint is a constraint that limits the vehicles a plan unit
 // can be added to. The Attribute constraint configures compatibility
@@ -43,4 +46,98 @@ type AttributesConstraint interface {
 func NewAttributesConstraint() (AttributesConstraint, error) {
 	connect.Connect(con, &newAttributesConstraint)
 	return newAttributesConstraint()
+}
+
+// NewCompareModelStopCountAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// model stops by the count of attributes.
+func NewCompareModelStopCountAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[ModelStop] {
+	return func(a, b ModelStop) int {
+		return common.Compare(
+			len(constraint.StopAttributes(a)),
+			len(constraint.StopAttributes(b)),
+		)
+	}
+}
+
+// NewCompareSolutionStopCountAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// solution stops by the count of attributes.
+func NewCompareSolutionStopCountAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[SolutionStop] {
+	return func(a, b SolutionStop) int {
+		return common.Compare(
+			len(constraint.StopAttributes(a.ModelStop())),
+			len(constraint.StopAttributes(b.ModelStop())),
+		)
+	}
+}
+
+// NewCompareModelPlanUnitCountAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// model plan units by the sum of the count of attributes of the stops of the
+// unit.
+func NewCompareModelPlanUnitCountAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[ModelPlanUnit] {
+	return func(a, b ModelPlanUnit) int {
+		return common.Compare(
+			common.SumDefined(a.Stops(), func(t ModelStop) int {
+				return len(constraint.StopAttributes(t))
+			}),
+			common.SumDefined(b.Stops(), func(t ModelStop) int {
+				return len(constraint.StopAttributes(t))
+			}),
+		)
+	}
+}
+
+// NewCompareSolutionPlanUnitCountAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two
+// solution plan units by the sum of the count of attributes of the stops of the
+// unit.
+func NewCompareSolutionPlanUnitCountAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[SolutionPlanUnit] {
+	return func(a, b SolutionPlanUnit) int {
+		return common.Compare(
+			common.SumDefined(a.ModelPlanUnit().Stops(), func(t ModelStop) int {
+				return len(constraint.StopAttributes(t))
+			}),
+			common.SumDefined(b.ModelPlanUnit().Stops(), func(t ModelStop) int {
+				return len(constraint.StopAttributes(t))
+			}),
+		)
+	}
+}
+
+// NewCompareByModelVehicleAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two model vehicles
+// by their number of attributes.
+func NewCompareByModelVehicleAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[ModelVehicle] {
+	return func(a, b ModelVehicle) int {
+		return common.Compare(
+			len(constraint.VehicleTypeAttributes(a.VehicleType())),
+			len(constraint.VehicleTypeAttributes(b.VehicleType())),
+		)
+	}
+}
+
+// NewCompareBySolutionVehicleAttributesConstraint returns a new CompareFunction
+// for the given constraint. The returned function compares two solution
+// vehicles  their number of attributes.
+func NewCompareBySolutionVehicleAttributesConstraint(
+	constraint AttributesConstraint,
+) common.CompareFunction[SolutionVehicle] {
+	return func(a, b SolutionVehicle) int {
+		return common.Compare(
+			len(constraint.VehicleTypeAttributes(a.ModelVehicle().VehicleType())),
+			len(constraint.VehicleTypeAttributes(b.ModelVehicle().VehicleType())),
+		)
+	}
 }
