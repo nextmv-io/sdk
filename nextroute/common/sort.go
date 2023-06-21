@@ -59,6 +59,8 @@ func ComposeCompare[T any](c CompareFunction[T], compares ...CompareFunction[T])
 	}
 }
 
+// Sort sorts the elements of a slice in increasing order using one or more
+// CompareFunctions.
 func Sort[T any](
 	elements []T,
 	compare CompareFunction[T],

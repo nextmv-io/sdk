@@ -57,12 +57,12 @@ func NewCompareModelStopByLatestStart(
 // for the given latest construct. The returned function compares two
 // solution stops by their latest time.
 func NewCompareSolutionStopByLatestStart(
-	latest LatestStart,
+	latestStart LatestStart,
 ) common.CompareFunction[SolutionStop] {
 	return func(a, b SolutionStop) int {
 		return common.Compare(
-			latest.Latest().Time(a.ModelStop()).Unix(),
-			latest.Latest().Time(b.ModelStop()).Unix(),
+			latestStart.Latest().Time(a.ModelStop()).Unix(),
+			latestStart.Latest().Time(b.ModelStop()).Unix(),
 		)
 	}
 }
@@ -71,15 +71,15 @@ func NewCompareSolutionStopByLatestStart(
 // for the given latest construct. The returned function compares two plan units
 // by the sum of the latest times.
 func NewCompareModelPlanUnitsByLatestStart(
-	latest LatestStart,
+	latestStart LatestStart,
 ) common.CompareFunction[ModelPlanUnit] {
 	return func(a, b ModelPlanUnit) int {
 		return common.Compare(
 			common.SumDefined(a.Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestStart.Latest().Time(t).Unix()) / 93600.0
 			}),
 			common.SumDefined(b.Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestStart.Latest().Time(t).Unix()) / 93600.0
 			}),
 		)
 	}
@@ -89,15 +89,15 @@ func NewCompareModelPlanUnitsByLatestStart(
 // for the given latest construct. The returned function compares two plan units
 // by the sum of the latest times.
 func NewCompareSolutionPlanUnitsByLatestStart(
-	latest LatestStart,
+	latestStart LatestStart,
 ) common.CompareFunction[SolutionPlanUnit] {
 	return func(a, b SolutionPlanUnit) int {
 		return common.Compare(
 			common.SumDefined(a.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestStart.Latest().Time(t).Unix()) / 93600.0
 			}),
 			common.SumDefined(b.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestStart.Latest().Time(t).Unix()) / 93600.0
 			}),
 		)
 	}

@@ -98,12 +98,14 @@ func TestSort(t *testing.T) {
 	)
 
 	emptyItems = append(emptyItems, item{"a", 1, 1.0})
+	_ = emptyItems
 
 	if len(sorted) != 0 {
 		t.Error("emptyItems")
 	}
 
 	singleItem := []item{{"a", 1, 1.0}}
+	_ = singleItem
 
 	sorted = Sort(
 		singleItem,

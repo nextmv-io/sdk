@@ -43,12 +43,12 @@ func NewLatestArrival(
 // for the given latest construct. The returned function compares two
 // model stops by their latest time.
 func NewCompareModelStopByLatestArrival(
-	latest LatestArrival,
+	latestArrival LatestArrival,
 ) common.CompareFunction[ModelStop] {
 	return func(a, b ModelStop) int {
 		return common.Compare(
-			latest.Latest().Time(a).Unix(),
-			latest.Latest().Time(b).Unix(),
+			latestArrival.Latest().Time(a).Unix(),
+			latestArrival.Latest().Time(b).Unix(),
 		)
 	}
 }
@@ -57,12 +57,12 @@ func NewCompareModelStopByLatestArrival(
 // for the given latest construct. The returned function compares two
 // solution stops by their latest time.
 func NewCompareSolutionStopByLatestArrival(
-	latest LatestArrival,
+	latestArrival LatestArrival,
 ) common.CompareFunction[SolutionStop] {
 	return func(a, b SolutionStop) int {
 		return common.Compare(
-			latest.Latest().Time(a.ModelStop()).Unix(),
-			latest.Latest().Time(b.ModelStop()).Unix(),
+			latestArrival.Latest().Time(a.ModelStop()).Unix(),
+			latestArrival.Latest().Time(b.ModelStop()).Unix(),
 		)
 	}
 }
@@ -71,15 +71,15 @@ func NewCompareSolutionStopByLatestArrival(
 // for the given latest construct. The returned function compares two plan units
 // by the sum of the latest times.
 func NewCompareModelPlanUnitsByLatestArrival(
-	latest LatestArrival,
+	latestArrival LatestArrival,
 ) common.CompareFunction[ModelPlanUnit] {
 	return func(a, b ModelPlanUnit) int {
 		return common.Compare(
 			common.SumDefined(a.Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestArrival.Latest().Time(t).Unix()) / 93600.0
 			}),
 			common.SumDefined(b.Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestArrival.Latest().Time(t).Unix()) / 93600.0
 			}),
 		)
 	}
@@ -89,15 +89,15 @@ func NewCompareModelPlanUnitsByLatestArrival(
 // for the given latest construct. The returned function compares two plan units
 // by the sum of the latest times.
 func NewCompareSolutionPlanUnitsByLatestArrival(
-	latest LatestArrival,
+	latestArrival LatestArrival,
 ) common.CompareFunction[SolutionPlanUnit] {
 	return func(a, b SolutionPlanUnit) int {
 		return common.Compare(
 			common.SumDefined(a.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestArrival.Latest().Time(t).Unix()) / 93600.0
 			}),
 			common.SumDefined(b.ModelPlanUnit().Stops(), func(t ModelStop) float64 {
-				return float64(latest.Latest().Time(t).Unix()) / 93600.0
+				return float64(latestArrival.Latest().Time(t).Unix()) / 93600.0
 			}),
 		)
 	}
