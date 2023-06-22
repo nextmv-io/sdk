@@ -42,6 +42,7 @@ func NewSweepSolution(
 // Solution is a solution to a model.
 type Solution interface {
 	alns.Solution[Solution]
+	SolutionData
 
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
