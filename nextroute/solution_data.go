@@ -7,6 +7,4 @@ type SolutionData interface {
 	Data() Copier
 	// SetData sets the data.
 	SetData(Copier)
-	// CopyData returns a deep copy of the data.
-	CopyData() SolutionData
 }
