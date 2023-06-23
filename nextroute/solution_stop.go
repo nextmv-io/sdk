@@ -15,10 +15,10 @@ type SolutionStop interface {
 	ArrivalValue() float64
 
 	// ConstraintData returns the value of the constraint for the stop. The
-	// constraint value of a stop is set by the ConstraintDataUpdater.Update
-	// method of the constraint. If the constraint is not set on the stop,
-	// nil is returned. If the stop is unplanned, the constraint value has no
-	// semantic meaning.
+	// constraint value of a stop is set by the ConstraintStopDataUpdater.
+	// Update method of the constraint. If the constraint is not set on the
+	// stop, nil is returned. If the stop is unplanned, the constraint value has
+	// no semantic meaning.
 	ConstraintData(constraint ModelConstraint) any
 	// CumulativeTravelDurationValue returns the cumulative travel duration of
 	// the stop as a float64. The cumulative travel duration is the sum of the
@@ -79,10 +79,10 @@ type SolutionStop interface {
 	NextIndex() int
 
 	// ObjectiveData returns the value of the objective for the stop. The
-	// objective value of a stop is set by the ObjectiveDataUpdater.Update
-	// method of the objective. If the objective is not set on the stop,
-	// nil is returned. If the stop is unplanned, the objective value has no
-	// semantic meaning.
+	// objective value of a stop is set by the
+	// ObjectiveStopDataUpdater.UpdateObjectiveStopData method of the objective.
+	// If the objective is not set on the stop, nil is returned. If the stop is
+	// unplanned, the objective value has no semantic meaning.
 	ObjectiveData(objective ModelObjective) any
 
 	// PlanUnit returns the [SolutionPlanUnit] that the stop is associated with.

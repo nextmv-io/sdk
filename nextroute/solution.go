@@ -42,13 +42,18 @@ func NewSweepSolution(
 // Solution is a solution to a model.
 type Solution interface {
 	alns.Solution[Solution]
-	SolutionData
 
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan unit, a move is returned which
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
+
+	// ConstraintData returns the value of the constraint for the solution. The
+	// constraint value of a solution is set by the
+	// ConstraintSolutionDataUpdater.UpdateConstraintSolutionData method of the
+	// constraint.
+	ConstraintData(constraint ModelConstraint) any
 
 	// FixedPlanUnits returns the solution plan units that are fixed.
 	// Fixed plan units are plan units that are not allowed to be planned or
@@ -59,6 +64,11 @@ type Solution interface {
 	// Model returns the model of the solution.
 	Model() Model
 
+	// ObjectiveData returns the value of the objective for the solution. The
+	// objective value of a solution is set by the
+	// ObjectiveSolutionDataUpdater.UpdateObjectiveSolutionData method of the
+	// objective. If the objective is not set on the solution, nil is returned.
+	ObjectiveData(objective ModelObjective) any
 	// ObjectiveValue returns the objective value for the objective in the
 	// solution. Also returns 0.0 if the objective is not part of the solution.
 	ObjectiveValue(objective ModelObjective) float64
