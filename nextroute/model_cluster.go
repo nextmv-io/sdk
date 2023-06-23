@@ -10,7 +10,7 @@ import (
 // cluster than the centroid of any other vehicle. In case of using it as an
 // objective, those vehicles will be preferred.
 type Cluster interface {
-	ConstraintDataUpdater
+	ConstraintStopDataUpdater
 	ModelConstraint
 	ModelObjective
 }

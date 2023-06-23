@@ -49,6 +49,12 @@ type Solution interface {
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
 
+	// ConstraintData returns the data of the constraint for the solution. The
+	// constraint data of a solution is set by the
+	// ConstraintSolutionDataUpdater.UpdateConstraintSolutionData method of the
+	// constraint.
+	ConstraintData(constraint ModelConstraint) any
+
 	// FixedPlanUnits returns the solution plan units that are fixed.
 	// Fixed plan units are plan units that are not allowed to be planned or
 	// unplanned. The union of fixed, planned and unplanned plan units
@@ -58,6 +64,11 @@ type Solution interface {
 	// Model returns the model of the solution.
 	Model() Model
 
+	// ObjectiveData returns the value of the objective for the solution. The
+	// objective value of a solution is set by the
+	// ObjectiveSolutionDataUpdater.UpdateObjectiveSolutionData method of the
+	// objective. If the objective is not set on the solution, nil is returned.
+	ObjectiveData(objective ModelObjective) any
 	// ObjectiveValue returns the objective value for the objective in the
 	// solution. Also returns 0.0 if the objective is not part of the solution.
 	ObjectiveValue(objective ModelObjective) float64
