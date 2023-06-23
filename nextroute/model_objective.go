@@ -3,7 +3,7 @@ package nextroute
 // ObjectiveStopDataUpdater is the interface than can be used by an objective if
 // it wants to store data with each stop in a solution.
 type ObjectiveStopDataUpdater interface {
-	// UpdateObjectiveData is called when a stop is added to a solution.
+	// UpdateObjectiveStopData is called when a stop is added to a solution.
 	// The solutionStop has all it's expression values set and this function
 	// can use them to update the objective data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
@@ -14,7 +14,7 @@ type ObjectiveStopDataUpdater interface {
 // ObjectiveSolutionDataUpdater is the interface than can be used by an
 // objective if it wants to store data with each solution.
 type ObjectiveSolutionDataUpdater interface {
-	// UpdateObjectiveData is called when a solution has been modified.
+	// UpdateObjectiveSolutionData is called when a solution has been modified.
 	// The solution has all it's expression values set and this function
 	// can use them to update the objective data for the solution. The data
 	// returned can be used by the estimate function and can be retrieved by the

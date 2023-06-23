@@ -49,8 +49,8 @@ type Solution interface {
 	// is not executable, Move.IsExecutable.
 	BestMove(context.Context, SolutionPlanUnit) Move
 
-	// ConstraintData returns the value of the constraint for the solution. The
-	// constraint value of a solution is set by the
+	// ConstraintData returns the data of the constraint for the solution. The
+	// constraint data of a solution is set by the
 	// ConstraintSolutionDataUpdater.UpdateConstraintSolutionData method of the
 	// constraint.
 	ConstraintData(constraint ModelConstraint) any
