@@ -58,14 +58,16 @@ func newMockOSRM(
 	durations [][]float64,
 ) *httptest.Server {
 	return httptest.NewServer(
-		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-			_ = json.NewEncoder(w).Encode(map[string]any{
-				"code":      "Ok",
-				"distances": distances,
-				"durations": durations,
-				"message":   "Everything worked",
-			})
-		}),
+		http.AllowQuerySemicolons(
+			http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				_ = json.NewEncoder(w).Encode(map[string]any{
+					"code":      "Ok",
+					"distances": distances,
+					"durations": durations,
+					"message":   "Everything worked",
+				})
+			}),
+		),
 	)
 }
 
