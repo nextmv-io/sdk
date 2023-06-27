@@ -67,4 +67,13 @@ type Options struct {
 			InitialSolution bool `json:"initial_solution" usage:"ignore the initial solution"`
 		} `json:"disable"`
 	} `json:"properties"`
+	Validate struct {
+		Disable struct {
+			StartTime bool `json:"start_time" usage:"disable the start time validation" default:"false"`
+		} `json:"disable"`
+		Enable struct {
+			Matrix                   bool `json:"matrix" usage:"enable matrix validation" default:"false"`
+			MatrixAsymmetryTolerance int  `json:"matrix_asymmetry_tolerance" usage:"percentage of acceptable matrix asymmetry, requires matrix validation enabled" default:"20"`
+		} `json:"enable"`
+	} `json:"validate"`
 }
