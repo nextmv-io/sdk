@@ -7,14 +7,15 @@ import (
 
 // Input is the default input schema for nextroute.
 type Input struct {
-	Options        any          `json:"options,omitempty"`
-	Defaults       *Defaults    `json:"defaults,omitempty"`
-	StopGroups     *[][]string  `json:"stop_groups,omitempty"`
-	DurationMatrix *[][]float64 `json:"duration_matrix,omitempty"`
-	DistanceMatrix *[][]float64 `json:"distance_matrix,omitempty"`
-	Vehicles       []Vehicle    `json:"vehicles,omitempty"`
-	Stops          []Stop       `json:"stops,omitempty"`
-	CustomData     any          `json:"custom_data,omitempty"`
+	Options        any              `json:"options,omitempty"`
+	Defaults       *Defaults        `json:"defaults,omitempty"`
+	StopGroups     *[][]string      `json:"stop_groups,omitempty"`
+	DurationMatrix *[][]float64     `json:"duration_matrix,omitempty"`
+	DistanceMatrix *[][]float64     `json:"distance_matrix,omitempty"`
+	Vehicles       []Vehicle        `json:"vehicles,omitempty"`
+	Stops          []Stop           `json:"stops,omitempty"`
+	DurationGroups *[]DurationGroup `json:"duration_groups,omitempty"`
+	CustomData     any              `json:"custom_data,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -100,4 +101,11 @@ type Stop struct {
 type Location struct {
 	Lon float64 `json:"lon"`
 	Lat float64 `json:"lat"`
+}
+
+// DurationGroup represents a group of stops that get additional process time
+// (duration) whenever a stop of the group is approached for the first time.
+type DurationGroup struct {
+	Group    []string `json:"group,omitempty"`
+	Duration int      `json:"duration,omitempty"`
 }
