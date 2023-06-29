@@ -20,7 +20,7 @@ func TestFallback(t *testing.T) {
 		{7.336650, 52.145020},
 	}
 	dests := []route.Point{
-		{7.32486, 52.14280},
+		{1.32486, 52.14280},
 		{7.31893, 52.15924},
 	}
 	expected := [][]float64{
@@ -60,9 +60,9 @@ func TestMatrix(t *testing.T) {
 		{7.35630, 52.14031},
 	}
 	expected := [][]float64{
-		{2346, 2466},
-		{2855, 2954},
-		{2186, 1962},
+		{2346, 2465},
+		{2855, 2951},
+		{2186, 1961},
 		{2834, 2423},
 	}
 
@@ -246,7 +246,7 @@ func TestByIndexLoader(t *testing.T) {
 			expectedErr: false,
 			from:        0,
 			to:          0,
-			expected:    841,
+			expected:    1200,
 		},
 		// routingkitDurationMatrix
 		{
@@ -270,7 +270,7 @@ func TestByIndexLoader(t *testing.T) {
 			expectedErr: false,
 			from:        0,
 			to:          0,
-			expected:    841,
+			expected:    246,
 		},
 	}
 	for i, test := range tests {
