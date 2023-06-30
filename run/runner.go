@@ -10,6 +10,8 @@ type Runner[RunnerConfig, Input, Option, Solution any] interface {
 	SetIOProducer(IOProducer[RunnerConfig])
 	// SetInputDecoder sets the inputDecoder of a runner.
 	SetInputDecoder(Decoder[Input])
+	// SetInputValidator sets the inputValidator of a runner.
+	SetInputValidator(Validator[Input])
 	// SetOptionDecoder sets the optionDecoder of a runner.
 	SetOptionDecoder(Decoder[Option])
 	// SetAlgorithm sets the algorithm of a runner.
@@ -29,6 +31,9 @@ type IOProducer[RunnerConfig any] func(
 
 // Decoder is a function that decodes a reader into a struct.
 type Decoder[Input any] func(context.Context, any) (Input, error)
+
+// Validator is a function that validates the input.
+type Validator[Input any] func(context.Context, any) error
 
 // Algorithm is a function that runs an algorithm.
 type Algorithm[Input, Option, Solution any] func(

@@ -3,6 +3,7 @@ package run
 import (
 	"github.com/nextmv-io/sdk/run/decode"
 	"github.com/nextmv-io/sdk/run/encode"
+	"github.com/nextmv-io/sdk/run/validate"
 )
 
 // NewCLIRunner is the default CLI runner. It reads the input from stdin or a
@@ -16,6 +17,7 @@ func NewCLIRunner[Input, Option, Solution any](
 	runner := GenericRunner(
 		CliIOProducer,
 		GenericDecoder[Input](decode.JSON()),
+		validate.JSON[Input](nil),
 		NoopOptionsDecoder[Option],
 		algorithm,
 		GenericEncoder[Solution, Option](encode.JSON()),

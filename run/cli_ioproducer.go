@@ -14,7 +14,7 @@ func CliIOProducer(_ context.Context, cfg CLIRunnerConfig) (IOData, error) {
 	if cfg.Runner.Input.Path != "" {
 		r, err := os.Open(cfg.Runner.Input.Path)
 		if err != nil {
-			return NewIOData(nil, nil, nil), err
+			return NewIOData(nil, nil, nil)
 		}
 		reader = r
 	}
@@ -22,7 +22,7 @@ func CliIOProducer(_ context.Context, cfg CLIRunnerConfig) (IOData, error) {
 	if cfg.Runner.Output.Path != "" {
 		w, err := os.Create(cfg.Runner.Output.Path)
 		if err != nil {
-			return NewIOData(nil, nil, nil), err
+			return NewIOData(nil, nil, nil)
 		}
 		writer = w
 	}
@@ -30,5 +30,5 @@ func CliIOProducer(_ context.Context, cfg CLIRunnerConfig) (IOData, error) {
 		reader,
 		nil,
 		writer,
-	), nil
+	)
 }

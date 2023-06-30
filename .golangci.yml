@@ -29,6 +29,7 @@ linters-settings:
         - github.com/itzg/go-flagsfiller
         - github.com/gorilla/schema
         - github.com/google/uuid
+        - github.com/xeipuuv/gojsonschema
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20
