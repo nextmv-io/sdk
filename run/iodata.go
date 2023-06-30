@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
-	"errors"
 	"io"
 )
 
@@ -30,7 +29,11 @@ func NewIOData(input any, option any, writer any) (data IOData, err error) {
 
 	if closer, ok := reader.(io.Closer); ok {
 		defer func() {
-			err = errors.Join(err, closer.Close())
+			tempErr := closer.Close()
+			// the first error is the most important
+			if err == nil {
+				err = tempErr
+			}
 		}()
 	}
 

@@ -4,10 +4,10 @@ package validate
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/xeipuuv/gojsonschema"
 )
@@ -64,11 +64,11 @@ func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr err
 	}
 
 	if !result.Valid() {
-		errs := make([]error, 0)
+		sb := strings.Builder{}
 		for _, desc := range result.Errors() {
-			errs = append(errs, errors.New(desc.String()))
+			sb.WriteString(desc.String() + "\n")
 		}
-		return errors.Join(errs...)
+		return fmt.Errorf(sb.String())
 	}
 	return nil
 }
