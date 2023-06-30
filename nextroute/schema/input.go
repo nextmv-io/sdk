@@ -103,8 +103,8 @@ type Location struct {
 	Lat float64 `json:"lat"`
 }
 
-// DurationGroup represents a group of stops that get additional process time
-// (duration) whenever a stop of the group is approached for the first time.
+// DurationGroup represents a group of stops that get additional duration
+// whenever a stop of the group is approached for the first time.
 type DurationGroup struct {
 	Group    []string `json:"group,omitempty"`
 	Duration int      `json:"duration,omitempty"`
