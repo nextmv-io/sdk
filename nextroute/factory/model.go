@@ -70,6 +70,7 @@ type Options struct {
 	Validate struct {
 		Disable struct {
 			StartTime bool `json:"start_time" usage:"disable the start time validation" default:"false"`
+			Resources bool `json:"resources" usage:"disable the resources validation" default:"false"`
 		} `json:"disable"`
 		Enable struct {
 			Matrix                   bool `json:"matrix" usage:"enable matrix validation" default:"false"`
