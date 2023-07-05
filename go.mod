@@ -5,6 +5,7 @@ go 1.19
 replace github.com/nextmv-io/sdk/route/osrm => ./route/osrm
 
 require (
+	github.com/danielgtaylor/huma v1.14.1
 	github.com/nextmv-io/sdk/route/osrm v0.21.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 )

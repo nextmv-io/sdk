@@ -4,11 +4,15 @@ package validate
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
-	"os"
+	"log"
+	"reflect"
 	"strings"
 
+	humaSchema "github.com/danielgtaylor/huma/schema"
+	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -30,15 +34,15 @@ type JSONValidator[Input any] struct {
 func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr error) {
 	// no schema is given
 	if len(j.schema) == 0 {
-		// the file schema.json is not present
-		if _, err := os.Stat("schema.json"); err != nil {
-			// this means we do not validate and therefore return nil
-			//nolint:nilerr
-			return nil
-		}
-		schema, err := os.ReadFile("schema.json")
+		// generate schema for input struct
+		s, err := humaSchema.Generate(reflect.TypeOf(schema.Input{}))
 		if err != nil {
-			return fmt.Errorf("failed to read schema.json: %w", err)
+			log.Fatal(err)
+		}
+		// serialize s to json
+		schema, err := json.Marshal(s)
+		if err != nil {
+			log.Fatal(err)
 		}
 		j.schema = schema
 	}
