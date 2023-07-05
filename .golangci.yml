@@ -30,6 +30,7 @@ linters-settings:
         - github.com/gorilla/schema
         - github.com/google/uuid
         - github.com/xeipuuv/gojsonschema
+        - github.com/danielgtaylor/huma/schema
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20

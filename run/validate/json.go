@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	humaSchema "github.com/danielgtaylor/huma/schema"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -35,7 +34,7 @@ func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr err
 	// no schema is given
 	if len(j.schema) == 0 {
 		// generate schema for input struct
-		s, err := humaSchema.Generate(reflect.TypeOf(schema.Input{}))
+		s, err := humaSchema.Generate(reflect.TypeOf(new(Input)))
 		if err != nil {
 			log.Fatal(err)
 		}
