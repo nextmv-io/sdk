@@ -138,8 +138,8 @@ type Alternate struct {
 // attribute defines what the allowed time is for vehicles arriving to stops
 // before the window is open.
 type Window struct {
-	TimeWindow TimeWindow `json:"time_window"`
-	MaxWait    int        `json:"max_wait"`
+	TimeWindow TimeWindow `json:"time_window,omitempty"`
+	MaxWait    int        `json:"max_wait,omitempty"`
 }
 
 // ServiceGroup holds a group of stops and the service time duration (in
