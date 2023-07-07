@@ -56,6 +56,5 @@
       "weight": 4
     }
   ],
-  "weight_capacity": 50,
-  "volume_capacity": 15
+  "weight_capacity": 50
 }
