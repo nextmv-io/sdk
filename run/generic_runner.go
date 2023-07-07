@@ -133,9 +133,11 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 		return retErr
 	}
 
-	retErr = r.InputValidator(ctx, ioData.Input())
-	if retErr != nil {
-		return retErr
+	if r.InputValidator != nil {
+		retErr = r.InputValidator(ctx, ioData.Input())
+		if retErr != nil {
+			return retErr
+		}
 	}
 
 	// decode input
