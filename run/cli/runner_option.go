@@ -30,8 +30,8 @@ func Encode[Input, Option, Solution any, Encoder encode.Encoder](
 }
 
 // Validate sets the validator of a CLIRunner.
-func Validate[Input, Option, Solution any, Validator run.Validator[Input]](
-	v Validator,
+func Validate[Input, Option, Solution any](
+	v run.Validator[Input],
 ) func(
 	run.Runner[run.CLIRunnerConfig, Input, Option, Solution],
 ) {
