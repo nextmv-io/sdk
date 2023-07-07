@@ -21,6 +21,17 @@ func InputDecode[
 	}
 }
 
+// InputValidate sets the input validator of a runner.
+func InputValidate[
+	RunnerConfig, Input, Option, Solution any,
+](v Validator[Input]) func(
+	Runner[RunnerConfig, Input, Option, Solution],
+) {
+	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
+		r.SetInputValidator(v)
+	}
+}
+
 // Decode sets the decoder of a runner. This is a legacy function. Alternatively
 // use InputDecode.
 func Decode[RunnerConfig, Input any, Decoder decode.Decoder](

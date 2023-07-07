@@ -50,7 +50,7 @@ type StopDefaults struct {
 	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
 	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
 	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
 // Vehicle represents a vehicle.
@@ -91,7 +91,7 @@ type Stop struct {
 	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`
 	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
 	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 	ID                      string       `json:"id,omitempty"`
 	Location                Location     `json:"location,omitempty"`
 	CustomData              any          `json:"custom_data,omitempty"`
