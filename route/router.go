@@ -117,8 +117,8 @@ type Stop struct {
 
 // TimeWindow represents a time window for a shift of a vehicle or a stop.
 type TimeWindow struct {
-	Start time.Time `json:"start"`
-	End   time.Time `json:"end"`
+	Start time.Time `json:"start,omitempty"`
+	End   time.Time `json:"end,omitempty"`
 }
 
 // Backlog represents the backlog, a list of stops for a vehicle.
@@ -151,8 +151,8 @@ type ServiceGroup struct {
 
 // Position represents a geographical location.
 type Position struct {
-	Lon float64 `json:"lon"`
-	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon,omitempty"`
+	Lat float64 `json:"lat,omitempty"`
 }
 
 // Job represents a combination of one pick-up and one drop-off that must be
