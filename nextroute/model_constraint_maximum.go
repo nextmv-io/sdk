@@ -20,11 +20,13 @@ type MaximumConstraint interface {
 }
 
 // NewMaximumConstraint creates a new maximum constraint. The constraint
-// needs to be added to the model to be taken into account.
+// needs to be added to the model to be taken into account. Furthermore, a name
+// identifying the constraint needs to be provided.
 func NewMaximumConstraint(
 	expression ModelExpression,
 	maximum VehicleTypeExpression,
+	name string,
 ) (MaximumConstraint, error) {
 	connect.Connect(con, &newMaximumConstraint)
-	return newMaximumConstraint(expression, maximum)
+	return newMaximumConstraint(expression, maximum, name)
 }

@@ -62,6 +62,7 @@ var (
 	newMaximumConstraint func(
 		ModelExpression,
 		VehicleTypeExpression,
+		string,
 	) (MaximumConstraint, error)
 	newComposedPerVehicleTypeExpression func(
 		ModelExpression,
