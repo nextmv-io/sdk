@@ -81,20 +81,20 @@ type InitialStop struct {
 
 // Stop represents a stop.
 type Stop struct {
-	Precedes                any          `json:"precedes,omitempty"`
-	Quantity                any          `json:"quantity,omitempty"`
-	Succeeds                any          `json:"succeeds,omitempty"`
-	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
-	StartTimeWindow         *[]time.Time `json:"start_time_window,omitempty"`
-	MaxWait                 *int         `json:"max_wait,omitempty"`
-	Duration                *int         `json:"duration,omitempty"`
-	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`
-	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
-	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
-	ID                      string       `json:"id,omitempty"`
-	Location                Location     `json:"location,omitempty"`
-	CustomData              any          `json:"custom_data,omitempty"`
+	Precedes                any        `json:"precedes,omitempty"`
+	Quantity                any        `json:"quantity,omitempty"`
+	Succeeds                any        `json:"succeeds,omitempty"`
+	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
+	StartTimeWindow         any        `json:"start_time_window,omitempty"`
+	MaxWait                 *int       `json:"max_wait,omitempty"`
+	Duration                *int       `json:"duration,omitempty"`
+	UnplannedPenalty        *int       `json:"unplanned_penalty,omitempty"`
+	EarlyArrivalTimePenalty *float64   `json:"early_arrival_time_penalty,omitempty"`
+	LateArrivalTimePenalty  *float64   `json:"late_arrival_time_penalty,omitempty"`
+	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	ID                      string     `json:"id,omitempty"`
+	Location                Location   `json:"location,omitempty"`
+	CustomData              any        `json:"custom_data,omitempty"`
 }
 
 // Location represents a geographical location.
