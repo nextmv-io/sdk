@@ -63,9 +63,10 @@ type Options struct {
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
-			Durations       bool `json:"durations" usage:"ignore the durations of stops"`
-			DurationGroups  bool `json:"duration_groups" usage:"ignore the durations groups of stops"`
-			InitialSolution bool `json:"initial_solution" usage:"ignore the initial solution"`
+			Durations               bool `json:"durations" usage:"ignore the durations of stops"`
+			StopDurationMultipliers bool `json:"stop_duration_multipliers" usage:"ignore the stop duration multipliers defined on vehicles"`
+			DurationGroups          bool `json:"duration_groups" usage:"ignore the durations groups of stops"`
+			InitialSolution         bool `json:"initial_solution" usage:"ignore the initial solution"`
 		} `json:"disable"`
 	} `json:"properties"`
 }
