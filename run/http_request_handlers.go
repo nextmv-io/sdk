@@ -19,7 +19,7 @@ func SyncHTTPRequestHandler(
 				req.Body,
 				req.URL.Query(),
 				w,
-			), nil
+			)
 		}, nil
 }
 
@@ -111,6 +111,6 @@ func (a asyncHTTPHandler) Handler(
 			bytes.NewReader(body),
 			req.URL.Query(),
 			buf,
-		), nil
+		)
 	}, nil
 }

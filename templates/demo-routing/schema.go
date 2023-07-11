@@ -22,7 +22,7 @@ type input struct {
 	AlternateStops []stop          `json:"alternate_stops,omitempty"`
 	DurationGroups []durationGroup `json:"duration_groups,omitempty"`
 	// internal duration groups representation
-	durationGroupsDomains route.DurationGroups
+	durationGroupsDomains route.DurationGroups `json:"-" required:"false"`
 }
 
 type options struct {
@@ -100,7 +100,7 @@ type stopDefaults struct {
 	TargetTime              *time.Time   `json:"target_time,omitempty"`
 	EarlinessPenalty        *float64     `json:"earliness_penalty,omitempty"`
 	LatenessPenalty         *float64     `json:"lateness_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
 type vehicle struct {
@@ -142,7 +142,7 @@ type stop struct {
 	TargetTime              *time.Time   `json:"target_time,omitempty"`
 	EarlinessPenalty        *float64     `json:"earliness_penalty,omitempty"`
 	LatenessPenalty         *float64     `json:"lateness_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
 type position struct {
