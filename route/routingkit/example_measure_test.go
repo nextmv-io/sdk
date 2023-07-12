@@ -169,5 +169,5 @@ func Example_customProfile() {
 	)
 	fmt.Println(int(cost))
 	// Output:
-	// 1229
+	// 1194
 }

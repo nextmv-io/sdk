@@ -268,7 +268,7 @@ func (c *client) tableRequests( //nolint:gocyclo
 	convertedPoints := make([][]float64, len(points))
 	for i, point := range handleUnroutablePoints(points) {
 		convertedPoints[i] = []float64{
-			point[1], point[0],
+			point[0], point[1],
 		}
 	}
 	pointChunks := chunkBy(convertedPoints, c.maxTableSize)
@@ -278,8 +278,16 @@ func (c *client) tableRequests( //nolint:gocyclo
 			resultingChunk := make([][]float64, len(pointChunk1)+len(pointChunk2))
 			copy(resultingChunk, pointChunk1)
 			copy(resultingChunk[len(pointChunk1):], pointChunk2)
-			pointsParameter := polyline.EncodeCoords(resultingChunk)
-			path, err := getPath(TableEndpoint, "polyline("+string(pointsParameter)+")")
+
+			// Create points string and assemble path.
+			sb := strings.Builder{}
+			for i, point := range resultingChunk {
+				sb.WriteString(fmt.Sprintf("%f,%f", point[0], point[1]))
+				if i != len(resultingChunk)-1 {
+					sb.WriteString(";")
+				}
+			}
+			path, err := getPath(TableEndpoint, sb.String())
 			if err != nil {
 				return nil, err
 			}

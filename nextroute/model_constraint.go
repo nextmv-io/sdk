@@ -23,15 +23,26 @@ type Locker interface {
 	Lock(model Model) error
 }
 
-// ConstraintDataUpdater is the interface than can be used by a constraint if
+// ConstraintStopDataUpdater is the interface than can be used by a constraint if
 // it wants to store data with each stop in a solution.
-type ConstraintDataUpdater interface {
+type ConstraintStopDataUpdater interface {
 	// UpdateConstraintData is called when a stop is added to a solution.
 	// The solutionStop has all it's expression values set and this function
 	// can use them to update the constraint data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
-	// SolutionStop.ConstraintValue function.
-	UpdateConstraintData(s SolutionStop) (Copier, error)
+	// SolutionStop.ConstraintData function.
+	UpdateConstraintStopData(s SolutionStop) (Copier, error)
+}
+
+// ConstraintSolutionDataUpdater is the interface than can be used by a
+// constraint if it wants to store data with each solution.
+type ConstraintSolutionDataUpdater interface {
+	// UpdateConstraintSolutionData is called when a solution has been modified.
+	// The solution has all it's expression values set and this function
+	// can use them to update the constraint data for the solution. The data
+	// returned can be used by the estimate function and can be retrieved by the
+	// Solution.ConstraintData function.
+	UpdateConstraintSolutionData(s Solution) (Copier, error)
 }
 
 // RegisteredModelExpressions is the interface that exposes the expressions
@@ -40,6 +51,16 @@ type RegisteredModelExpressions interface {
 	// ModelExpressions registers the expressions that are registered with the
 	// model.
 	ModelExpressions() ModelExpressions
+}
+
+// ConstraintTemporal is the interface that is implemented by constraints that
+// are temporal. This interface is used to determine if the constraint is
+// using temporal expressions, specifically travel durations. Temporal
+// constraints require special handling when adding initial stops to a
+// new solution because of the triangular inequality.
+type ConstraintTemporal interface {
+	// IsTemporal returns true if the constraint is temporal.
+	IsTemporal() bool
 }
 
 // SolutionStopViolationCheck is the interface that will be invoked on every
@@ -96,3 +117,10 @@ type ModelConstraint interface {
 
 // ModelConstraints is a slice of ModelConstraint.
 type ModelConstraints []ModelConstraint
+
+// ConstraintDataUpdater is a deprecated interface. Please use
+// ConstraintStopDataUpdater instead.
+type ConstraintDataUpdater interface {
+	// UpdateConstraintData is deprecated.
+	UpdateConstraintData(s SolutionStop) (Copier, error)
+}

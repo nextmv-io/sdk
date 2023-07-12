@@ -30,8 +30,13 @@ var (
 		common.DistanceUnit,
 	) DistanceExpression
 	newDurationExpression func(
+		string,
 		ModelExpression,
-		time.Duration,
+		common.DurationUnit,
+	) DurationExpression
+	newScaledDurationExpression func(
+		DurationExpression,
+		float64,
 	) DurationExpression
 	newNotExecutableMove  func() Move
 	newFromStopExpression func(
@@ -98,10 +103,15 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel                func() (Model, error)
-	newModelExpressionIndex func() int
-	noPositionsHint         func() StopPositionsHint
-	newOperatorExpression   func(
+	newModel                 func() (Model, error)
+	newModelExpressionIndex  func() int
+	newSolutionStopGenerator func(
+		Move,
+		bool,
+		bool,
+	) SolutionStopGenerator
+	noPositionsHint       func() StopPositionsHint
+	newOperatorExpression func(
 		ModelExpression,
 		ModelExpression,
 		BinaryFunction,

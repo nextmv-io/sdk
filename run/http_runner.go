@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/nextmv-io/sdk/run/decode"
 	"github.com/nextmv-io/sdk/run/encode"
+	"github.com/nextmv-io/sdk/run/validate"
 )
 
 // Callback is a function that is called after the request is processed. It is
@@ -102,6 +103,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 		Runner: GenericRunner[HTTPRunnerConfig](
 			nil,
 			GenericDecoder[Input](decode.JSON()),
+			validate.JSON[Input](nil),
 			QueryParamDecoder[Option],
 			algorithm,
 			GenericEncoder[Solution, Option](encode.JSON()),

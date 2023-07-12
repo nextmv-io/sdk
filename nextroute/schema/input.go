@@ -7,14 +7,15 @@ import (
 
 // Input is the default input schema for nextroute.
 type Input struct {
-	Options        any          `json:"options,omitempty"`
-	Defaults       *Defaults    `json:"defaults,omitempty"`
-	StopGroups     *[][]string  `json:"stop_groups,omitempty"`
-	DurationMatrix *[][]float64 `json:"duration_matrix,omitempty"`
-	DistanceMatrix *[][]float64 `json:"distance_matrix,omitempty"`
-	Vehicles       []Vehicle    `json:"vehicles,omitempty"`
-	Stops          []Stop       `json:"stops,omitempty"`
-	CustomData     any          `json:"custom_data,omitempty"`
+	Options        any              `json:"options,omitempty"`
+	Defaults       *Defaults        `json:"defaults,omitempty"`
+	StopGroups     *[][]string      `json:"stop_groups,omitempty"`
+	DurationMatrix *[][]float64     `json:"duration_matrix,omitempty"`
+	DistanceMatrix *[][]float64     `json:"distance_matrix,omitempty"`
+	Vehicles       []Vehicle        `json:"vehicles,omitempty"`
+	Stops          []Stop           `json:"stops,omitempty"`
+	DurationGroups *[]DurationGroup `json:"duration_groups,omitempty"`
+	CustomData     any              `json:"custom_data,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -49,7 +50,7 @@ type StopDefaults struct {
 	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
 	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
 	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
 // Vehicle represents a vehicle.
@@ -67,9 +68,10 @@ type Vehicle struct {
 	MaxDistance             *int           `json:"max_distance,omitempty"`
 	MaxDuration             *int           `json:"max_duration,omitempty"`
 	MaxWait                 *int           `json:"max_wait,omitempty"`
-	InitializationCost      *int           `json:"initialization_cost,omitempty"`
+	ActivationPenalty       *int           `json:"activation_penalty,omitempty"`
 	CustomData              any            `json:"custom_data,omitempty"`
 	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
+	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
 }
 
 // InitialStop represents an initial stop.
@@ -90,7 +92,7 @@ type Stop struct {
 	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`
 	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
 	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes"`
+	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 	ID                      string       `json:"id,omitempty"`
 	Location                Location     `json:"location,omitempty"`
 	CustomData              any          `json:"custom_data,omitempty"`
@@ -100,4 +102,11 @@ type Stop struct {
 type Location struct {
 	Lon float64 `json:"lon"`
 	Lat float64 `json:"lat"`
+}
+
+// DurationGroup represents a group of stops that get additional duration
+// whenever a stop of the group is approached for the first time.
+type DurationGroup struct {
+	Group    []string `json:"group,omitempty"`
+	Duration int      `json:"duration,omitempty"`
 }

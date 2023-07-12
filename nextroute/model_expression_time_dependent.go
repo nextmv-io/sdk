@@ -55,11 +55,23 @@ type TimeDependentDurationExpression interface {
 	// for all time intervals.
 	IsDependentOnTime() bool
 
+	// SatisfiesTriangleInequality returns true if the expression satisfies
+	// the triangle inequality. The triangular inequality states that for any
+	// three points A, B, and C, the distance from A to C cannot be greater
+	// than the sum of the distances from A to B and from B to C.
+	SatisfiesTriangleInequality() bool
+
 	// SetExpression sets the expression for the given time interval
 	// [start, end). If the interval overlaps with an existing interval,
 	// the existing interval is replaced. Both start and end must be on the
 	// minute boundary. Expression is not allowed to contain negative values.
 	SetExpression(start, end time.Time, expression DurationExpression) error
+
+	// SetSatisfiesTriangleInequality sets whether the expression satisfies
+	// the triangle inequality. The triangular inequality states that for any
+	// three points A, B, and C, the distance from A to C cannot be greater
+	// than the sum of the distances from A to B and from B to C.
+	SetSatisfiesTriangleInequality(satisfies bool)
 
 	// Expressions returns all expressions defined to be valid in a time
 	// interval. The returned slice is a defensive copy of the internal slice,

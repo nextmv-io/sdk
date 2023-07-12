@@ -1,5 +1,6 @@
 {
   "defaults": {
+    "some_attribute": "some_value",
     "vehicles": {
       "capacity": {
         "bunnies": 20,

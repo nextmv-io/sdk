@@ -1,6 +1,5 @@
 {
   "vehicles": ["v1", "v2", "v3"],
-  "velocities": [1.0, 1.0],
   "unique_points": [
     {
       "lon": -74.04866,
