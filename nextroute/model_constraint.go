@@ -23,14 +23,6 @@ type Locker interface {
 	Lock(model Model) error
 }
 
-// Identifier is an interface that can be used for identifying objects.
-type Identifier interface {
-	// ID returns the identifier of the object.
-	ID() string
-	// SetID sets the identifier of the object.
-	SetID(string)
-}
-
 // ConstraintStopDataUpdater is the interface than can be used by a constraint if
 // it wants to store data with each stop in a solution.
 type ConstraintStopDataUpdater interface {
