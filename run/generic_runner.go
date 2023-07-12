@@ -19,6 +19,7 @@ const Start start = "start"
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
 	ioHandler IOProducer[RunnerConfig],
 	inputDecoder Decoder[Input],
+	inputValidator Validator[Input],
 	optionDecoder Decoder[Option],
 	handler Algorithm[Input, Option, Solution],
 	encoder Encoder[Solution, Option],
@@ -32,6 +33,7 @@ func GenericRunner[RunnerConfig, Input, Option, Solution any](
 	return &genericRunner[RunnerConfig, Input, Option, Solution]{
 		IOProducer:       ioHandler,
 		InputDecoder:     inputDecoder,
+		InputValidator:   inputValidator,
 		OptionDecoder:    optionDecoder,
 		Algorithm:        handler,
 		Encoder:          encoder,
@@ -43,6 +45,7 @@ func GenericRunner[RunnerConfig, Input, Option, Solution any](
 type genericRunner[RunnerConfig, Input, Option, Solution any] struct {
 	IOProducer       IOProducer[RunnerConfig]
 	InputDecoder     Decoder[Input]
+	InputValidator   Validator[Input]
 	OptionDecoder    Decoder[Option]
 	Algorithm        Algorithm[Input, Option, Solution]
 	Encoder          Encoder[Solution, Option]
@@ -130,6 +133,13 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 		return retErr
 	}
 
+	if r.InputValidator != nil {
+		retErr = r.InputValidator(ctx, ioData.Input())
+		if retErr != nil {
+			return retErr
+		}
+	}
+
 	// decode input
 	decodedInput, retErr := r.InputDecoder(ctx, ioData.Input())
 	if retErr != nil {
@@ -198,6 +208,12 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetInputDecoder(
 	decoder Decoder[Input],
 ) {
 	r.InputDecoder = decoder
+}
+
+func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetInputValidator(
+	validator Validator[Input],
+) {
+	r.InputValidator = validator
 }
 
 func (r *genericRunner[RunnerConfig, Input, Option, Solution]) SetOptionDecoder(
