@@ -121,6 +121,14 @@ type Model interface {
 	// single unit.
 	PlanUnits() ModelPlanUnits
 
+	// SequenceSampleSize returns the number of samples to take from all
+	// possible permutations of the stops in a PlanUnit.
+	SequenceSampleSize() int
+
+	// SetSequenceSampleSize sets the number of samples to take from all
+	// possible permutations of the stops in a PlanUnit.
+	SetSequenceSampleSize(sequenceSampleSize int)
+
 	// Random returns a random number generator.
 	Random() *rand.Rand
 

@@ -71,6 +71,7 @@ type Vehicle struct {
 	ActivationPenalty       *int           `json:"activation_penalty,omitempty"`
 	CustomData              any            `json:"custom_data,omitempty"`
 	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
+	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
 }
 
 // InitialStop represents an initial stop.
