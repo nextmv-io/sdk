@@ -43,9 +43,10 @@ type ModelStop interface {
 	// Model returns the model of the stop.
 	Model() Model
 
-	// EarliestStart returns the earliest start time of the stop. Can be set
-	// using the EarliestStart StopOption or using SetEarliestStart.
-	EarliestStart() time.Time
+	// EarliestStart returns the earliest start time and valid intervals of the
+	// stop. Can be set using the EarliestStart StopOption or using
+	// SetEarliestStart.
+	EarliestStart() (intervals [][2]time.Time, t time.Time)
 
 	// PlanUnit returns the [ModelPlanUnit] associated with the stop. A stop
 	// is associated with at most one plan unit. Can be nil if the stop is not
