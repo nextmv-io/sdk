@@ -86,18 +86,8 @@ func Format(
 		return output
 	}
 
-	r := reflect.ValueOf(options)
-	f := reflect.Indirect(r).FieldByName("Format")
-	if f.IsValid() && f.CanInterface() {
-		if format, ok := f.Interface().(FormatOptions); ok {
-			if format.Disable.Progression {
-				return output
-			}
-		}
-	}
-
-	seriesData := make([]statistics.DataPoint, 0)
-	iterationsSeriesData := make([]statistics.DataPoint, 0)
+	seriesData := make([]statistics.DataPoint, 0, len(progressionValues))
+	iterationsSeriesData := make([]statistics.DataPoint, 0, len(progressionValues))
 	for _, progression := range progressionValues {
 		seriesData = append(seriesData, statistics.DataPoint{
 			X: statistics.Float64(progression.ElapsedSeconds),
@@ -110,6 +100,22 @@ func Format(
 	}
 	lastProgressionElement := progressionValues[len(progressionValues)-1]
 	lastProgressionValue := statistics.Float64(lastProgressionElement.Value)
+
+	output.Statistics.Result = &statistics.Result{
+		Duration: &lastProgressionElement.ElapsedSeconds,
+		Value:    &lastProgressionValue,
+	}
+
+	r := reflect.ValueOf(options)
+	f := reflect.Indirect(r).FieldByName("Format")
+	if f.IsValid() && f.CanInterface() {
+		if format, ok := f.Interface().(FormatOptions); ok {
+			if format.Disable.Progression {
+				return output
+			}
+		}
+	}
+
 	output.Statistics.SeriesData = &statistics.SeriesData{
 		Value: statistics.Series{
 			Name:       output.Solutions[len(output.Solutions)-1].(schema.SolutionOutput).Objective.Name,
@@ -120,10 +126,6 @@ func Format(
 		Name:       "iterations",
 		DataPoints: iterationsSeriesData,
 	})
-	output.Statistics.Result = &statistics.Result{
-		Duration: &lastProgressionElement.ElapsedSeconds,
-		Value:    &lastProgressionValue,
-	}
 
 	return output
 }
