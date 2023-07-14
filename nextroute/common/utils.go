@@ -49,6 +49,35 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	return result
 }
 
+// NotUnique returns the instances for which f returns identical values.
+func NotUnique[T comparable](s []T) []T {
+	inResult := make(map[T]bool)
+	var result []T
+	for _, str := range s {
+		if _, ok := inResult[str]; !ok {
+			inResult[str] = true
+		} else {
+			result = append(result, str)
+		}
+	}
+	return result
+}
+
+// NotUniqueDefined returns the instances for which f returns identical
+// values.
+func NotUniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
+	inResult := make(map[I]bool)
+	var result []T
+	for _, item := range items {
+		if _, ok := inResult[f(item)]; !ok {
+			inResult[f(item)] = true
+		} else {
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
 // GroupBy groups the elements of a slice by a key function.
 func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
 	result := make(map[K][]T)
