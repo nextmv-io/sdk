@@ -21,6 +21,19 @@ type FormatOptions struct {
 	} `json:"disable"`
 }
 
+// CustomStatistics is an example of custom statistics that can be added to the
+// output and used in experiments.
+type CustomStatistics struct {
+	UsedVehicles      int `json:"used_vehicles,omitempty"`
+	UnplannedStops    int `json:"unplanned_stops,omitempty"`
+	MaxTravelDuration int `json:"max_travel_duration,omitempty"`
+	MaxDuration       int `json:"max_duration,omitempty"`
+	MinTravelDuration int `json:"min_travel_duration,omitempty"`
+	MinDuration       int `json:"min_duration,omitempty"`
+	MaxStopsInRoute   int `json:"max_stops_in_route,omitempty"`
+	MinStopsInRoute   int `json:"min_stops_in_route,omitempty"`
+}
+
 // Format formats a solution in a basic format.
 func Format(
 	ctx context.Context,
@@ -128,6 +141,58 @@ func Format(
 	})
 
 	return output
+}
+
+// DefaultStatistics creates default custom statistics for a given solution.
+func DefaultStatistics(solution Solution) CustomStatistics {
+	vehicleCount := 0
+	maxTravelDuration := 0
+	minTravelDuration := math.MaxInt64
+	maxDuration := 0
+	minDuration := math.MaxInt64
+	maxStops := 0
+	minStops := math.MaxInt64
+	for _, vehicle := range solution.Vehicles() {
+		if vehicle.IsEmpty() {
+			continue
+		}
+
+		vehicleCount++
+		duration := vehicle.Duration().Seconds()
+		if int(duration) > maxDuration {
+			maxDuration = int(duration)
+		}
+		if int(duration) < minDuration {
+			minDuration = int(duration)
+		}
+
+		travelDuration := int(vehicle.Last().CumulativeTravelDuration().Seconds())
+		if travelDuration > maxTravelDuration {
+			maxTravelDuration = travelDuration
+		}
+		if travelDuration < minTravelDuration {
+			minTravelDuration = travelDuration
+		}
+
+		stops := vehicle.NumberOfStops()
+		if stops > maxStops {
+			maxStops = stops
+		}
+		if stops < minStops {
+			minStops = stops
+		}
+	}
+
+	return CustomStatistics{
+		UsedVehicles:      vehicleCount,
+		UnplannedStops:    solution.UnPlannedPlanUnits().Size(),
+		MaxTravelDuration: maxTravelDuration,
+		MaxDuration:       maxDuration,
+		MinTravelDuration: minTravelDuration,
+		MinDuration:       minDuration,
+		MaxStopsInRoute:   maxStops,
+		MinStopsInRoute:   minStops,
+	}
 }
 
 // toVehicleOutput constructs the output state of a vehicle.

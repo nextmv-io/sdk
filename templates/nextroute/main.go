@@ -45,6 +45,10 @@ func solver(
 	if err != nil {
 		return runSchema.Output{}, err
 	}
+	last := solutions.Last()
 
-	return nextroute.Format(ctx, options, solver, solutions.Last()), nil
+	output := nextroute.Format(ctx, options, solver, last)
+	output.Statistics.Result.Custom = nextroute.DefaultStatistics(last)
+
+	return output, nil
 }
