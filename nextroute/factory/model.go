@@ -47,7 +47,7 @@ type Options struct {
 			Precedence         bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			VehicleStartTime   bool `json:"vehicle_start_time" usage:"ignore the vehicle start time constraint"`
 			VehicleEndTime     bool `json:"vehicle_end_time" usage:"ignore the vehicle end time constraint"`
-			ArrivalTimeWindows bool `json:"arrival_time_windows" usage:"ignore the arrival time windows constraint"`
+			StartTimeWindows   bool `json:"start_time_windows" usage:"ignore the start time windows constraint"`
 		} `json:"disable"`
 		Enable struct {
 			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
