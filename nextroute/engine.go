@@ -144,6 +144,7 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
+	newVehiclesDurationObjective  func() VehiclesDurationObjective
 	newVehicleTypeValueExpression func(
 		string,
 		float64,
