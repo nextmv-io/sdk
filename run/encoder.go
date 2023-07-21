@@ -64,8 +64,13 @@ func (g *genericEncoder[Solution, Options]) Encode(
 
 		if solutionFlag == Last {
 			var last Solution
+			lastIsSet := false
 			for solution := range solutions {
 				last = solution
+				lastIsSet = true
+			}
+			if !lastIsSet {
+				return nil
 			}
 			tempSolutions := make(chan Solution, 1)
 			tempSolutions <- last
