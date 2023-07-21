@@ -21,19 +21,6 @@ type FormatOptions struct {
 	} `json:"disable"`
 }
 
-// CustomStatistics is an example of custom statistics that can be added to the
-// output and used in experiments.
-type CustomStatistics struct {
-	UsedVehicles      int `json:"used_vehicles,omitempty"`
-	UnplannedStops    int `json:"unplanned_stops,omitempty"`
-	MaxTravelDuration int `json:"max_travel_duration,omitempty"`
-	MaxDuration       int `json:"max_duration,omitempty"`
-	MinTravelDuration int `json:"min_travel_duration,omitempty"`
-	MinDuration       int `json:"min_duration,omitempty"`
-	MaxStopsInRoute   int `json:"max_stops_in_route,omitempty"`
-	MinStopsInRoute   int `json:"min_stops_in_route,omitempty"`
-}
-
 // Format formats a solution in a basic format.
 func Format(
 	ctx context.Context,
@@ -143,8 +130,9 @@ func Format(
 	return output
 }
 
-// DefaultStatistics creates default custom statistics for a given solution.
-func DefaultStatistics(solution Solution) CustomStatistics {
+// DefaultCustomResultStatistics creates default custom statistics for a given
+// solution.
+func DefaultCustomResultStatistics(solution Solution) schema.CustomResultStatistics {
 	vehicleCount := 0
 	maxTravelDuration := 0
 	minTravelDuration := math.MaxInt64
@@ -183,15 +171,15 @@ func DefaultStatistics(solution Solution) CustomStatistics {
 		}
 	}
 
-	return CustomStatistics{
-		UsedVehicles:      vehicleCount,
+	return schema.CustomResultStatistics{
+		ActivatedVehicles: vehicleCount,
 		UnplannedStops:    solution.UnPlannedPlanUnits().Size(),
 		MaxTravelDuration: maxTravelDuration,
 		MaxDuration:       maxDuration,
 		MinTravelDuration: minTravelDuration,
 		MinDuration:       minDuration,
-		MaxStopsInRoute:   maxStops,
-		MinStopsInRoute:   minStops,
+		MaxStopsInVehicle: maxStops,
+		MinStopsInVehicle: minStops,
 	}
 }
 

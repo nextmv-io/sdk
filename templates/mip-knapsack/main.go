@@ -111,7 +111,7 @@ func solver(_ context.Context, input input, options options) (schema.Output, err
 	// Format the solution into the desired output format and add custom
 	// statistics.
 	output := mip.Format(options, format(input, solution, itemVariables), solution)
-	output.Statistics.Result.Custom = mip.DefaultStatistics(m, solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
 
 	return output, nil
 }

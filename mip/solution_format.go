@@ -5,12 +5,15 @@ import (
 	"github.com/nextmv-io/sdk/run/statistics"
 )
 
-// CustomResult is an example of custom statistics that can be added to the
-// output and used in experiments.
-type CustomResult struct {
-	Columns int    `json:"columns,omitempty"`
-	Rows    int    `json:"rows,omitempty"`
-	Status  string `json:"status,omitempty"`
+// CustomResultStatistics is an example of custom statistics that can be added
+// to the output and used in experiments.
+type CustomResultStatistics struct {
+	// Columns in the matrix, i.e. the number of variables.
+	Columns int `json:"columns,omitempty"`
+	// Rows in the matrix, i.e. the number of constraints.
+	Rows int `json:"rows,omitempty"`
+	// Status of the solution.
+	Status string `json:"status,omitempty"`
 }
 
 // Format the MIP solution into the output format that the runner expects. The
@@ -41,8 +44,9 @@ func Format(
 	return output
 }
 
-// DefaultStatistics creates default custom statistics for a given solution.
-func DefaultStatistics(model Model, solution Solution) CustomResult {
+// DefaultCustomResultStatistics creates default custom statistics for a given
+// solution.
+func DefaultCustomResultStatistics(model Model, solution Solution) CustomResultStatistics {
 	status := "unknown"
 	switch {
 	case solution.IsOptimal():
@@ -55,7 +59,7 @@ func DefaultStatistics(model Model, solution Solution) CustomResult {
 		status = "infeasible"
 	}
 
-	return CustomResult{
+	return CustomResultStatistics{
 		Status:  status,
 		Columns: len(model.Vars()),
 		Rows:    len(model.Constraints()),
