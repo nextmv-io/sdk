@@ -304,3 +304,7 @@ issues:
     - path: run/http_runner_config\.go
       linters:
         - lll
+    # Deactivate line length because of go tags.
+    - path: mip/options\.go
+      linters:
+        - lll

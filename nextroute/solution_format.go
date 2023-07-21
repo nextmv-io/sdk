@@ -130,6 +130,59 @@ func Format(
 	return output
 }
 
+// DefaultCustomResultStatistics creates default custom statistics for a given
+// solution.
+func DefaultCustomResultStatistics(solution Solution) schema.CustomResultStatistics {
+	vehicleCount := 0
+	maxTravelDuration := 0
+	minTravelDuration := math.MaxInt64
+	maxDuration := 0
+	minDuration := math.MaxInt64
+	maxStops := 0
+	minStops := math.MaxInt64
+	for _, vehicle := range solution.Vehicles() {
+		if vehicle.IsEmpty() {
+			continue
+		}
+
+		vehicleCount++
+		duration := vehicle.Duration().Seconds()
+		if int(duration) > maxDuration {
+			maxDuration = int(duration)
+		}
+		if int(duration) < minDuration {
+			minDuration = int(duration)
+		}
+
+		travelDuration := int(vehicle.Last().CumulativeTravelDuration().Seconds())
+		if travelDuration > maxTravelDuration {
+			maxTravelDuration = travelDuration
+		}
+		if travelDuration < minTravelDuration {
+			minTravelDuration = travelDuration
+		}
+
+		stops := vehicle.NumberOfStops()
+		if stops > maxStops {
+			maxStops = stops
+		}
+		if stops < minStops {
+			minStops = stops
+		}
+	}
+
+	return schema.CustomResultStatistics{
+		ActivatedVehicles: vehicleCount,
+		UnplannedStops:    solution.UnPlannedPlanUnits().Size(),
+		MaxTravelDuration: maxTravelDuration,
+		MaxDuration:       maxDuration,
+		MinTravelDuration: minTravelDuration,
+		MinDuration:       minDuration,
+		MaxStopsInVehicle: maxStops,
+		MinStopsInVehicle: minStops,
+	}
+}
+
 // toVehicleOutput constructs the output state of a vehicle.
 func toVehicleOutput(vehicle SolutionVehicle) schema.VehicleOutput {
 	solutionStops := vehicle.SolutionStops()
