@@ -86,18 +86,8 @@ func Format(
 		return output
 	}
 
-	r := reflect.ValueOf(options)
-	f := reflect.Indirect(r).FieldByName("Format")
-	if f.IsValid() && f.CanInterface() {
-		if format, ok := f.Interface().(FormatOptions); ok {
-			if format.Disable.Progression {
-				return output
-			}
-		}
-	}
-
-	seriesData := make([]statistics.DataPoint, 0)
-	iterationsSeriesData := make([]statistics.DataPoint, 0)
+	seriesData := make([]statistics.DataPoint, 0, len(progressionValues))
+	iterationsSeriesData := make([]statistics.DataPoint, 0, len(progressionValues))
 	for _, progression := range progressionValues {
 		seriesData = append(seriesData, statistics.DataPoint{
 			X: statistics.Float64(progression.ElapsedSeconds),
@@ -110,6 +100,22 @@ func Format(
 	}
 	lastProgressionElement := progressionValues[len(progressionValues)-1]
 	lastProgressionValue := statistics.Float64(lastProgressionElement.Value)
+
+	output.Statistics.Result = &statistics.Result{
+		Duration: &lastProgressionElement.ElapsedSeconds,
+		Value:    &lastProgressionValue,
+	}
+
+	r := reflect.ValueOf(options)
+	f := reflect.Indirect(r).FieldByName("Format")
+	if f.IsValid() && f.CanInterface() {
+		if format, ok := f.Interface().(FormatOptions); ok {
+			if format.Disable.Progression {
+				return output
+			}
+		}
+	}
+
 	output.Statistics.SeriesData = &statistics.SeriesData{
 		Value: statistics.Series{
 			Name:       output.Solutions[len(output.Solutions)-1].(schema.SolutionOutput).Objective.Name,
@@ -120,12 +126,61 @@ func Format(
 		Name:       "iterations",
 		DataPoints: iterationsSeriesData,
 	})
-	output.Statistics.Result = &statistics.Result{
-		Duration: &lastProgressionElement.ElapsedSeconds,
-		Value:    &lastProgressionValue,
-	}
 
 	return output
+}
+
+// DefaultCustomResultStatistics creates default custom statistics for a given
+// solution.
+func DefaultCustomResultStatistics(solution Solution) schema.CustomResultStatistics {
+	vehicleCount := 0
+	maxTravelDuration := 0
+	minTravelDuration := math.MaxInt64
+	maxDuration := 0
+	minDuration := math.MaxInt64
+	maxStops := 0
+	minStops := math.MaxInt64
+	for _, vehicle := range solution.Vehicles() {
+		if vehicle.IsEmpty() {
+			continue
+		}
+
+		vehicleCount++
+		duration := vehicle.Duration().Seconds()
+		if int(duration) > maxDuration {
+			maxDuration = int(duration)
+		}
+		if int(duration) < minDuration {
+			minDuration = int(duration)
+		}
+
+		travelDuration := int(vehicle.Last().CumulativeTravelDuration().Seconds())
+		if travelDuration > maxTravelDuration {
+			maxTravelDuration = travelDuration
+		}
+		if travelDuration < minTravelDuration {
+			minTravelDuration = travelDuration
+		}
+
+		stops := vehicle.NumberOfStops()
+		if stops > maxStops {
+			maxStops = stops
+		}
+		if stops < minStops {
+			minStops = stops
+		}
+	}
+
+	return schema.CustomResultStatistics{
+		ActivatedVehicles: vehicleCount,
+		UnplannedStops:    solution.UnPlannedPlanUnits().Size(),
+		MaxTravelDuration: maxTravelDuration,
+		MaxDuration:       maxDuration,
+		MinTravelDuration: minTravelDuration,
+		MinDuration:       minDuration,
+		MaxStopsInVehicle: maxStops,
+		MinStopsInVehicle: minStops,
+	}
 }
 
 // toVehicleOutput constructs the output state of a vehicle.

@@ -4,10 +4,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"log"
 	"math"
-	"time"
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run"
@@ -25,62 +23,44 @@ func main() {
 	}
 }
 
-// incentiveAllocationProblem describes the needed input data to run the model.
-// There is a fixed budget that must not be exceeded, a fixed number of users
-// that may receive incentives, and a description of the available incentives.
-type incentiveAllocationProblem struct {
-	Users  []user `json:"users"`
-	Budget int    `json:"budget"`
+// The options for the solver.
+type options struct {
+	Limits mip.Limits `json:"limits,omitempty"`
 }
 
-// incentive contains a Cost, Effect, and Availability.
-type incentive struct {
-	ID     string `json:"id"`
-	Effect int    `json:"effect"`
-	Cost   int    `json:"cost"`
+// Input of the problem.
+type input struct {
+	// Users for the problem including name and a cost/effect pair per
+	// available incentive.
+	Users []struct {
+		ID string `json:"id"`
+		// Incentives that can be applied to the user.
+		Incentives []struct {
+			ID string `json:"id"`
+			// Positive effect of the incentive.
+			Effect float64 `json:"effect"`
+			// Cost of the incentive that will be subtracted from the budget.
+			Cost float64 `json:"cost"`
+		} `json:"incentives"`
+	} `json:"users"`
+	Budget int `json:"budget"`
 }
 
-// user represents the user for the problem including its name and a
-// cost/effect pair per available incentive.
-type user struct {
-	ID         string      `json:"id"`
-	Incentives []incentive `json:"incentives"`
-}
-
-// assignments is used to print the solution and represents the
+// assignments is used to print the solutio∑n and represents the
 // combination of a user with the assigned incentive.
 type assignments struct {
-	User        string `json:"user"`
-	IncentiveID string `json:"incentive_id"`
-	Cost        int    `json:"cost"`
-	Effect      int    `json:"effect"`
+	User        string  `json:"user"`
+	IncentiveID string  `json:"incentive_id"`
+	Cost        float64 `json:"cost"`
+	Effect      float64 `json:"effect"`
 }
 
-// The Option for the solver.
-type Option struct {
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
-	Limits struct {
-		Duration time.Duration `json:"duration" default:"10s"`
-	} `json:"limits"`
-}
-
-// Output is the output of the solver.
-type Output struct {
-	Status      string        `json:"status,omitempty"`
-	Runtime     string        `json:"runtime,omitempty"`
+// solution represents the decisions made by the solver.
+type solution struct {
 	Assignments []assignments `json:"assignments,omitempty"`
-	Value       float64       `json:"value,omitempty"`
 }
 
-func solver(
-	_ context.Context,
-	input incentiveAllocationProblem,
-	opts Option,
-) (schema.Output, error) {
+func solver(_ context.Context, input input, options options) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -89,19 +69,42 @@ func solver(
 
 	// This constraint ensures the budget of the will not be exceeded.
 	budgetConstraint := m.NewConstraint(
-		mip.LessThanOrEqual, float64(input.Budget),
+		mip.LessThanOrEqual,
+		float64(input.Budget),
 	)
 
-	userIncentive := make(map[string][]mip.Var, len(input.Users))
+	// Create a map of user ID to a slice of decision variables, one for each
+	// incentive.
+	userIncentiveVariables := make(map[string][]mip.Var, len(input.Users))
 	for _, user := range input.Users {
-		userIncentive[user.ID] = make([]mip.Var, len(user.Incentives))
-		atMostOne := m.NewConstraint(mip.LessThanOrEqual, 1.0)
+		// For each user, create the slice of variables based on the number of
+		// incentives.
+		userIncentiveVariables[user.ID] = make([]mip.Var, len(user.Incentives))
+
+		// This constraint ensures that each user is assigned at most one
+		// incentive.
+		oneIncentiveConstraint := m.NewConstraint(mip.LessThanOrEqual, 1.0)
 		for i, incentive := range user.Incentives {
-			x := m.NewBool()
-			userIncentive[user.ID][i] = x
-			m.Objective().NewTerm(float64(incentive.Effect), x)
-			budgetConstraint.NewTerm(float64(incentive.Cost), x)
-			atMostOne.NewTerm(1, x)
+			// For each incentive, create a binary decision variable.
+			userIncentiveVariables[user.ID][i] = m.NewBool()
+
+			// Set the term of the variable on the objective, based on the
+			// effect the incentive has on the user.
+			m.Objective().NewTerm(
+				incentive.Effect,
+				userIncentiveVariables[user.ID][i],
+			)
+
+			// Set the term of the variable on the budget constraint, based on
+			// the cost of the incentive for the user.
+			budgetConstraint.NewTerm(
+				incentive.Cost,
+				userIncentiveVariables[user.ID][i],
+			)
+
+			// Set the term of the variable on the constraint that controls the
+			// number of incentives per user.
+			oneIncentiveConstraint.NewTerm(1, userIncentiveVariables[user.ID][i])
 		}
 	}
 
@@ -115,74 +118,65 @@ func solver(
 	solveOptions := mip.NewSolveOptions()
 
 	// Limit the solve to a maximum duration.
-	err = solveOptions.SetMaximumDuration(opts.Limits.Duration)
-	if err != nil {
+	if err = solveOptions.SetMaximumDuration(options.Limits.Duration); err != nil {
 		return schema.Output{}, err
 	}
 
-	// Set the relative gap to 0% (highs' default is 5%).
-	err = solveOptions.SetMIPGapRelative(0)
-	if err != nil {
+	// Set the relative gap to 0% (highs' default is 5%)
+	if err = solveOptions.SetMIPGapRelative(0); err != nil {
 		return schema.Output{}, err
 	}
 
-	// Set verbose level to see a more detailed output.
+	// Set verbose level to see a more detailed output
 	solveOptions.SetVerbosity(mip.Off)
 
+	// Solve the model and get the solution.
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
 		return schema.Output{}, err
 	}
 
-	output, err := format(solution, input, userIncentive, opts)
-	if err != nil {
-		return schema.Output{}, err
-	}
+	// Format the solution into the desired output format and add custom
+	// statistics.
+	output := mip.Format(options, format(input, solution, userIncentiveVariables), solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
 
 	return output, nil
 }
 
+// format the solution from the solver into the desired output format.
 func format(
-	solution mip.Solution,
-	input incentiveAllocationProblem,
-	userIncentive map[string][]mip.Var,
-	opts Option,
-) (output schema.Output, err error) {
-	o := Output{}
-	o.Status = "infeasible"
-	o.Runtime = solution.RunTime().String()
+	input input,
+	solverSolution mip.Solution,
+	userIncentiveVariables map[string][]mip.Var,
+) solution {
+	if !solverSolution.IsOptimal() && !solverSolution.IsSubOptimal() {
+		return solution{}
+	}
 
-	if solution != nil && solution.HasValues() {
-		if solution.IsOptimal() {
-			o.Status = "optimal"
-		} else {
-			o.Status = "suboptimal"
-		}
+	assigned := []assignments{}
+	for i, user := range input.Users {
+		for j := range user.Incentives {
+			// If the variable is not assigned, skip it.
+			if int(math.Round(
+				solverSolution.Value(userIncentiveVariables[user.ID][j])),
+			) < 1 {
+				continue
+			}
 
-		o.Value = solution.ObjectiveValue()
-
-		// We change the o so that it is easier to read.
-		assigned := []assignments{}
-		for i, user := range input.Users {
-			for j := range user.Incentives {
-				if int(math.Round(
-					solution.Value(userIncentive[user.ID][j])),
-				) < 1 {
-					continue
-				}
-				oc := assignments{
+			assigned = append(
+				assigned,
+				assignments{
 					Cost:        input.Users[i].Incentives[j].Cost,
 					Effect:      input.Users[i].Incentives[j].Effect,
 					User:        user.ID,
 					IncentiveID: input.Users[i].Incentives[j].ID,
-				}
-				assigned = append(assigned, oc)
-			}
+				},
+			)
 		}
-		o.Assignments = assigned
-	} else {
-		return schema.Output{}, errors.New("no solution found")
 	}
-	output = schema.NewOutput(opts, o)
-	return output, nil
+
+	return solution{
+		Assignments: assigned,
+	}
 }

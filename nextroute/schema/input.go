@@ -8,14 +8,14 @@ import (
 // Input is the default input schema for nextroute.
 type Input struct {
 	Options        any              `json:"options,omitempty"`
+	CustomData     any              `json:"custom_data,omitempty"`
 	Defaults       *Defaults        `json:"defaults,omitempty"`
 	StopGroups     *[][]string      `json:"stop_groups,omitempty"`
 	DurationMatrix *[][]float64     `json:"duration_matrix,omitempty"`
 	DistanceMatrix *[][]float64     `json:"distance_matrix,omitempty"`
+	DurationGroups *[]DurationGroup `json:"duration_groups,omitempty"`
 	Vehicles       []Vehicle        `json:"vehicles,omitempty"`
 	Stops          []Stop           `json:"stops,omitempty"`
-	DurationGroups *[]DurationGroup `json:"duration_groups,omitempty"`
-	CustomData     any              `json:"custom_data,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -38,6 +38,7 @@ type VehicleDefaults struct {
 	MaxDuration             *int       `json:"max_duration,omitempty"`
 	MaxWait                 *int       `json:"max_wait,omitempty"`
 	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	ActivationPenalty       *int       `json:"activation_penalty,omitempty"`
 }
 
 // StopDefaults contains default values for stops.
@@ -57,27 +58,27 @@ type StopDefaults struct {
 type Vehicle struct {
 	Capacity                any            `json:"capacity,omitempty"`
 	StartLevel              any            `json:"start_level,omitempty"`
-	StartLocation           *Location      `json:"start_location,omitempty"`
-	EndLocation             *Location      `json:"end_location,omitempty"`
-	Speed                   *float64       `json:"speed,omitempty"`
-	ID                      string         `json:"id,omitempty"`
+	CustomData              any            `json:"custom_data,omitempty"`
+	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty"`
+	MaxDistance             *int           `json:"max_distance,omitempty"`
+	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
 	StartTime               *time.Time     `json:"start_time,omitempty"`
 	EndTime                 *time.Time     `json:"end_time,omitempty"`
-	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty"`
+	EndLocation             *Location      `json:"end_location,omitempty"`
 	MaxStops                *int           `json:"max_stops,omitempty"`
-	MaxDistance             *int           `json:"max_distance,omitempty"`
+	Speed                   *float64       `json:"speed,omitempty"`
 	MaxDuration             *int           `json:"max_duration,omitempty"`
 	MaxWait                 *int           `json:"max_wait,omitempty"`
 	ActivationPenalty       *int           `json:"activation_penalty,omitempty"`
-	CustomData              any            `json:"custom_data,omitempty"`
+	StartLocation           *Location      `json:"start_location,omitempty"`
 	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
-	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
+	ID                      string         `json:"id,omitempty"`
 }
 
 // InitialStop represents an initial stop.
 type InitialStop struct {
-	ID    string `json:"id"`
 	Fixed *bool  `json:"fixed,omitempty"`
+	ID    string `json:"id"`
 }
 
 // Stop represents a stop.
@@ -85,17 +86,17 @@ type Stop struct {
 	Precedes                any        `json:"precedes,omitempty"`
 	Quantity                any        `json:"quantity,omitempty"`
 	Succeeds                any        `json:"succeeds,omitempty"`
-	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
-	StartTimeWindow         any        `json:"start_time_window,omitempty"`
-	MaxWait                 *int       `json:"max_wait,omitempty"`
+	CustomData              any        `json:"custom_data,omitempty"`
 	Duration                *int       `json:"duration,omitempty"`
+	MaxWait                 *int       `json:"max_wait,omitempty"`
+	StartTimeWindow         any        `json:"start_time_window,omitempty"`
 	UnplannedPenalty        *int       `json:"unplanned_penalty,omitempty"`
 	EarlyArrivalTimePenalty *float64   `json:"early_arrival_time_penalty,omitempty"`
 	LateArrivalTimePenalty  *float64   `json:"late_arrival_time_penalty,omitempty"`
 	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
 	ID                      string     `json:"id,omitempty"`
 	Location                Location   `json:"location,omitempty"`
-	CustomData              any        `json:"custom_data,omitempty"`
 }
 
 // Location represents a geographical location.

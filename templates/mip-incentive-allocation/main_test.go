@@ -7,11 +7,13 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 func TestTemplate(t *testing.T) {
 	// Read the input from the file.
-	input := incentiveAllocationProblem{}
+	input := input{}
 	b, err := os.ReadFile("input.json")
 	if err != nil {
 		t.Fatal(err)
@@ -21,30 +23,27 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Declare the output.
-	options := Option{}
+	options := options{}
 	options.Limits.Duration = 5 * time.Second
 	output, err := solver(context.Background(), input, options)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got := output.Solutions[0].(Output)
-	if err = json.Unmarshal(b, &got); err != nil {
-		t.Fatal(err)
-	}
-
-	// Get the expected solution.
-	want := Output{}
+	expectedOutput := schema.Output{}
 	b, err = os.ReadFile("testdata/output.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := json.Unmarshal(b, &want); err != nil {
+	if err := json.Unmarshal(b, &expectedOutput); err != nil {
 		t.Fatal(err)
 	}
 
+	got := output.Statistics.Result.Value
+	want := expectedOutput.Statistics.Result.Value
+
 	// Compare against expected.
-	if !reflect.DeepEqual(got.Value, want.Value) {
-		t.Errorf("got %+v, want %+v", got.Value, want.Value)
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }
