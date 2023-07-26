@@ -16,7 +16,6 @@ var (
 	newModel func(
 		schema.Input,
 		Options,
-		...nextroute.Option,
 	) (nextroute.Model, error)
 
 	format func(

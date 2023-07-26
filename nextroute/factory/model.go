@@ -16,10 +16,9 @@ import (
 func NewModel(
 	input schema.Input,
 	modelOptions Options,
-	options ...nextroute.Option,
 ) (nextroute.Model, error) {
 	connect.Connect(con, &newModel)
-	return newModel(input, modelOptions, options...)
+	return newModel(input, modelOptions)
 }
 
 // Options configure how the [NewModel] function builds [nextroute.Model].
