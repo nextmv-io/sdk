@@ -22,16 +22,6 @@ func NewModel(
 	return newModel(input, modelOptions, options...)
 }
 
-var (
-	con = connect.NewConnector("sdk", "NextRouteFactory")
-
-	newModel func(
-		schema.Input,
-		Options,
-		...nextroute.Option,
-	) (nextroute.Model, error)
-)
-
 // Options configure how the [NewModel] function builds [nextroute.Model].
 type Options struct {
 	Constraints struct {

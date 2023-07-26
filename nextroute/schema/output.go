@@ -23,6 +23,7 @@ type VehicleOutput struct {
 	ID                   string              `json:"id"`
 	Route                []PlannedStopOutput `json:"route"`
 	RouteTravelDuration  int                 `json:"route_travel_duration"`
+	RouteTravelDistance  int                 `json:"route_travel_distance,omitempty"`
 	RouteStopsDuration   int                 `json:"route_stops_duration,omitempty"`
 	RouteWaitingDuration int                 `json:"route_waiting_duration,omitempty"`
 	RouteDuration        int                 `json:"route_duration"`
@@ -34,6 +35,8 @@ type PlannedStopOutput struct {
 	Stop                     StopOutput `json:"stop"`
 	TravelDuration           int        `json:"travel_duration"`
 	CumulativeTravelDuration int        `json:"cumulative_travel_duration"`
+	TravelDistance           int        `json:"travel_distance,omitempty"`
+	CumulativeTravelDistance int        `json:"cumulative_travel_distance,omitempty"`
 	TargetArrivalTime        *time.Time `json:"target_arrival_time,omitempty"`
 	ArrivalTime              *time.Time `json:"arrival_time,omitempty"`
 	WaitingDuration          int        `json:"waiting_duration,omitempty"`
