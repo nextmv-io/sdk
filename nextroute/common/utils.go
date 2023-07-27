@@ -103,7 +103,7 @@ func Map[T any, R any](v []T, f func(T) R) []R {
 // MapSlice maps a slice of type T to a slice of type R using the function f
 // returning a slice of R.
 func MapSlice[T any, R any](v []T, f func(T) []R) []R {
-	var r []R
+	r := make([]R, 0)
 	for _, x := range v {
 		r = append(r, f(x)...)
 	}
