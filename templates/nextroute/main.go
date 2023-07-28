@@ -47,8 +47,8 @@ func solver(
 	}
 	last := solutions.Last()
 
-	output := nextroute.Format(ctx, options, solver, last)
-	output.Statistics.Result.Custom = nextroute.DefaultCustomResultStatistics(last)
+	output := factory.Format(ctx, options, solver, last)
+	output.Statistics.Result.Custom = factory.DefaultCustomResultStatistics(last)
 
 	return output, nil
 }

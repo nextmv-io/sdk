@@ -16,21 +16,10 @@ import (
 func NewModel(
 	input schema.Input,
 	modelOptions Options,
-	options ...nextroute.Option,
 ) (nextroute.Model, error) {
 	connect.Connect(con, &newModel)
-	return newModel(input, modelOptions, options...)
+	return newModel(input, modelOptions)
 }
-
-var (
-	con = connect.NewConnector("sdk", "NextRouteFactory")
-
-	newModel func(
-		schema.Input,
-		Options,
-		...nextroute.Option,
-	) (nextroute.Model, error)
-)
 
 // Options configure how the [NewModel] function builds [nextroute.Model].
 type Options struct {

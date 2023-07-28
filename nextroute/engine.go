@@ -6,9 +6,11 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 var (
@@ -198,4 +200,12 @@ var (
 	newTimeIndependentDurationExpression func(
 		DurationExpression,
 	) TimeDependentDurationExpression
+
+	format func(
+		context.Context,
+		any,
+		alns.Progressioner,
+		func(Solution) any,
+		...Solution,
+	) schema.Output
 )
