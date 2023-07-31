@@ -56,7 +56,7 @@ type Move interface {
 	IsImprovement() bool
 
 	// PlanUnit returns the [SolutionPlanUnit] that is affected by the move.
-	PlanUnit() SolutionPlanUnit
+	PlanStopsUnit() SolutionPlanStopsUnit
 
 	// StopPositions returns the [StopPositions] that define the move and
 	// how it will change the solution.

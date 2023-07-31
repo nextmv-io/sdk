@@ -77,9 +77,9 @@ type Solution interface {
 	// a collection of solution plan units.
 	PlannedPlanUnits() ImmutableSolutionPlanUnitCollection
 
-	// SolutionPlanUnit returns the [SolutionPlanUnit] for the given
+	// SolutionPlanStopsUnit returns the [SolutionPlanStopsUnit] for the given
 	// model plan unit.
-	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
+	SolutionPlanStopsUnit(planUnit ModelPlanStopsUnit) SolutionPlanStopsUnit
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.

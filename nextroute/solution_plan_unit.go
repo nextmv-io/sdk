@@ -9,21 +9,12 @@ type SolutionPlanUnit interface {
 	// IsPlanned returns true if all the stops are planned.
 	IsPlanned() bool
 
-	// ModelPlanUnit returns the [ModelPlanUnit] this unit is
-	// based upon.
+	// ModelPlanUnit returns the model plan unit associated with the
+	// solution plan unit.
 	ModelPlanUnit() ModelPlanUnit
 
 	// Solution returns the solution this unit is part of.
 	Solution() Solution
-	// SolutionStop returns the solution stop for the given model stop.
-	// Will panic if the stop is not part of the unit.
-	SolutionStop(stop ModelStop) SolutionStop
-	// SolutionStops returns the solution stops in this unit.
-	SolutionStops() SolutionStops
-	// StopPositions returns the stop positions of the invoking plan unit.
-	// The stop positions are the positions of the stops in the solution.
-	// If the unit is unplanned, the stop positions will be empty.
-	StopPositions() StopPositions
 
 	// UnPlan un-plans the unit by removing the underlying solution stops
 	// from the solution. Returns true if the unit was unplanned

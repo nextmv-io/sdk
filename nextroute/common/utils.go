@@ -133,6 +133,9 @@ func AllFalse[E any](s []E, predicate func(E) bool) bool {
 // All returns true if all the given predicate evaluations evaluate to
 // condition.
 func All[E any](s []E, condition bool, predicate func(E) bool) bool {
+	if len(s) == 0 {
+		return false
+	}
 	for _, v := range s {
 		if predicate(v) != condition {
 			return false
