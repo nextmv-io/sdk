@@ -60,6 +60,11 @@ type ModelStop interface {
 	// SetWindows sets the time windows of the stop.
 	SetWindows(windows [][2]time.Time) error
 
+	// ToEarliestStartValue returns the earliest start time if the vehicle
+	// arrives at the stop at the given arrival time in seconds since
+	// [Model.Epoch].
+	ToEarliestStartValue(arrival float64) float64
+
 	// SetID sets the identifier of the stop. This identifier is not used by
 	// nextroute, and therefore it does not have to be unique for nextroute
 	// internally. However, to make this ID useful for debugging and reporting
