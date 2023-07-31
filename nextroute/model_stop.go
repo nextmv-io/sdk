@@ -43,10 +43,11 @@ type ModelStop interface {
 	// Model returns the model of the stop.
 	Model() Model
 
-	// EarliestStart returns the earliest start time and valid intervals of the
-	// stop. Can be set using the EarliestStart StopOption or using
-	// SetEarliestStart.
-	EarliestStart() (intervals [][2]time.Time, t time.Time)
+	// EarliestStart returns the earliest start time of the stop.
+	EarliestStart() (t time.Time)
+
+	// Windows returns the time windows of the stop.
+	Windows() [][2]time.Time
 
 	// PlanUnit returns the [ModelPlanUnit] associated with the stop. A stop
 	// is associated with at most one plan unit. Can be nil if the stop is not
@@ -54,12 +55,10 @@ type ModelStop interface {
 	PlanUnit() ModelPlanUnit
 
 	// SetEarliestStart sets the earliest start time of the stop.
-	// The start of a stop will either be later than t or within one of
-	// the intervals defined in intervals. The intervals are not allowed
-	// to overlap and must be strictly increasing. t must be larger than
-	// the end of the last interval. If the intervals are empty, the
-	// earliest start time is set to t.
-	SetEarliestStart(intervals [][2]time.Time, t time.Time) error
+	SetEarliestStart(t time.Time) error
+
+	// SetWindows sets the time windows of the stop.
+	SetWindows(windows [][2]time.Time) error
 
 	// SetID sets the identifier of the stop. This identifier is not used by
 	// nextroute, and therefore it does not have to be unique for nextroute
