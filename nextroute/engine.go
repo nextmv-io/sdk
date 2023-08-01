@@ -40,7 +40,7 @@ var (
 		DurationExpression,
 		float64,
 	) DurationExpression
-	newNotExecutableMove  func() Move
+	newNotExecutableMove  func() SolutionMove
 	newFromStopExpression func(
 		string,
 		float64,
@@ -108,7 +108,7 @@ var (
 	newModel                 func() (Model, error)
 	newModelExpressionIndex  func() int
 	newSolutionStopGenerator func(
-		Move,
+		SolutionMoveStops,
 		bool,
 		bool,
 	) SolutionStopGenerator

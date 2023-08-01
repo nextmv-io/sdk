@@ -46,8 +46,8 @@ type Solution interface {
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan unit, a move is returned which
-	// is not executable, Move.IsExecutable.
-	BestMove(context.Context, SolutionPlanUnit) Move
+	// is not executable, SolutionMoveStops.IsExecutable.
+	BestMove(context.Context, SolutionPlanUnit) SolutionMove
 
 	// ConstraintData returns the data of the constraint for the solution. The
 	// constraint data of a solution is set by the
