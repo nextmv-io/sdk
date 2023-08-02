@@ -43,6 +43,7 @@ type Options struct {
 		} `json:"enable"`
 	} `json:"constraints"`
 	Objectives struct {
+		MinStops                 float64 `json:"min_stops" usage:"factor to weigh the min stops objective" default:"0.0"`
 		EarlyArrivalPenalty      float64 `json:"early_arrival_penalty" usage:"factor to weigh the early arrival objective" default:"1.0"`
 		LateArrivalPenalty       float64 `json:"late_arrival_penalty" usage:"factor to weigh the late arrival objective" default:"1.0"`
 		VehicleActivationPenalty float64 `json:"vehicle_activation_penalty" usage:"factor to weigh the vehicle activation objective" default:"1.0"`

@@ -33,6 +33,8 @@ type VehicleDefaults struct {
 	Speed                   *float64   `json:"speed,omitempty"`
 	StartTime               *time.Time `json:"start_time,omitempty"`
 	EndTime                 *time.Time `json:"end_time,omitempty"`
+	MinStops                *int       `json:"min_stops,omitempty"`
+	MinStopsPenalty         *float64   `json:"min_stops_penalty,omitempty"`
 	MaxStops                *int       `json:"max_stops,omitempty"`
 	MaxDistance             *int       `json:"max_distance,omitempty"`
 	MaxDuration             *int       `json:"max_duration,omitempty"`
@@ -65,6 +67,8 @@ type Vehicle struct {
 	StartTime               *time.Time     `json:"start_time,omitempty"`
 	EndTime                 *time.Time     `json:"end_time,omitempty"`
 	EndLocation             *Location      `json:"end_location,omitempty"`
+	MinStops                *int           `json:"min_stops,omitempty"`
+	MinStopsPenalty         *float64       `json:"min_stops_penalty,omitempty"`
 	MaxStops                *int           `json:"max_stops,omitempty"`
 	Speed                   *float64       `json:"speed,omitempty"`
 	MaxDuration             *int           `json:"max_duration,omitempty"`
