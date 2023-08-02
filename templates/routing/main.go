@@ -26,26 +26,26 @@ func main() {
 type input struct {
 	Stops               []route.Stop         `json:"stops"`
 	Vehicles            []string             `json:"vehicles"`
-	InitializationCosts []float64            `json:"initialization_costs"`
-	Starts              []route.Position     `json:"starts"`
-	Ends                []route.Position     `json:"ends"`
-	Quantities          []int                `json:"quantities"`
-	Capacities          []int                `json:"capacities"`
-	Precedences         []route.Job          `json:"precedences"`
-	Windows             []route.Window       `json:"windows"`
-	Shifts              []route.TimeWindow   `json:"shifts"`
-	Penalties           []int                `json:"penalties"`
-	Backlogs            []route.Backlog      `json:"backlogs"`
-	VehicleAttributes   []route.Attributes   `json:"vehicle_attributes"`
-	StopAttributes      []route.Attributes   `json:"stop_attributes"`
-	Velocities          []float64            `json:"velocities"`
-	Groups              [][]string           `json:"groups"`
-	ServiceTimes        []route.Service      `json:"service_times"`
-	AlternateStops      []route.Alternate    `json:"alternate_stops"`
-	Limits              []route.Limit        `json:"limits"`
-	DurationLimits      []float64            `json:"duration_limits"`
-	DistanceLimits      []float64            `json:"distance_limits"`
-	ServiceGroups       []route.ServiceGroup `json:"service_groups"`
+	InitializationCosts []float64            `json:"initialization_costs,omitempty"`
+	Starts              []route.Position     `json:"starts,omitempty"`
+	Ends                []route.Position     `json:"ends,omitempty"`
+	Quantities          []int                `json:"quantities,omitempty"`
+	Capacities          []int                `json:"capacities,omitempty"`
+	Precedences         []route.Job          `json:"precedences,omitempty"`
+	Windows             []route.Window       `json:"windows,omitempty"`
+	Shifts              []route.TimeWindow   `json:"shifts,omitempty"`
+	Penalties           []int                `json:"penalties,omitempty"`
+	Backlogs            []route.Backlog      `json:"backlogs,omitempty"`
+	VehicleAttributes   []route.Attributes   `json:"vehicle_attributes,omitempty"`
+	StopAttributes      []route.Attributes   `json:"stop_attributes,omitempty"`
+	Velocities          []float64            `json:"velocities,omitempty"`
+	Groups              [][]string           `json:"groups,omitempty"`
+	ServiceTimes        []route.Service      `json:"service_times,omitempty"`
+	AlternateStops      []route.Alternate    `json:"alternate_stops,omitempty"`
+	Limits              []route.Limit        `json:"limits,omitempty"`
+	DurationLimits      []float64            `json:"duration_limits,omitempty"`
+	DistanceLimits      []float64            `json:"distance_limits,omitempty"`
+	ServiceGroups       []route.ServiceGroup `json:"service_groups,omitempty"`
 }
 
 // solver takes the input and solver options and constructs a routing solver.

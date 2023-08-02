@@ -6,9 +6,11 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/run/schema"
 )
 
 var (
@@ -30,8 +32,13 @@ var (
 		common.DistanceUnit,
 	) DistanceExpression
 	newDurationExpression func(
+		string,
 		ModelExpression,
-		time.Duration,
+		common.DurationUnit,
+	) DurationExpression
+	newScaledDurationExpression func(
+		DurationExpression,
+		float64,
 	) DurationExpression
 	newNotExecutableMove  func() Move
 	newFromStopExpression func(
@@ -139,6 +146,7 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
+	newVehiclesDurationObjective  func() VehiclesDurationObjective
 	newVehicleTypeValueExpression func(
 		string,
 		float64,
@@ -192,4 +200,12 @@ var (
 	newTimeIndependentDurationExpression func(
 		DurationExpression,
 	) TimeDependentDurationExpression
+
+	format func(
+		context.Context,
+		any,
+		alns.Progressioner,
+		func(Solution) any,
+		...Solution,
+	) schema.Output
 )

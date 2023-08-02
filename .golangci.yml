@@ -29,6 +29,8 @@ linters-settings:
         - github.com/itzg/go-flagsfiller
         - github.com/gorilla/schema
         - github.com/google/uuid
+        - github.com/xeipuuv/gojsonschema
+        - github.com/danielgtaylor/huma
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20
@@ -300,5 +302,9 @@ issues:
       text: newDeref
     # Deactivate line length in http_runner_config.go because of go tags
     - path: run/http_runner_config\.go
+      linters:
+        - lll
+    # Deactivate line length because of go tags.
+    - path: mip/options\.go
       linters:
         - lll

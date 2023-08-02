@@ -51,13 +51,15 @@ func newTestServer(t *testing.T, endpoint osrm.Endpoint) *testServer {
 		responseOk = string(resp)
 	}
 	ts.s = httptest.NewServer(
-		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-			ts.reqCount++
-			_, err := io.WriteString(w, responseOk)
-			if err != nil {
-				t.Errorf("could not write resp: %v", err)
-			}
-		}),
+		http.AllowQuerySemicolons(
+			http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				ts.reqCount++
+				_, err := io.WriteString(w, responseOk)
+				if err != nil {
+					t.Errorf("could not write resp: %v", err)
+				}
+			}),
+		),
 	)
 	return ts
 }

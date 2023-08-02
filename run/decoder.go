@@ -1,8 +1,6 @@
 package run
 
 import (
-	"bufio"
-	"compress/gzip"
 	"context"
 	"errors"
 	"io"
@@ -30,39 +28,12 @@ type genericDecoder[Input any] struct {
 func (g *genericDecoder[Input]) Decoder(
 	_ context.Context, reader any) (input Input, err error,
 ) {
-	closer, ok := reader.(io.Closer)
-	if ok {
-		defer func() {
-			tempErr := closer.Close()
-			// the first error is the most important
-			if err == nil {
-				err = tempErr
-			}
-		}()
-	}
-
 	ioReader, ok := reader.(io.Reader)
 	if !ok {
 		err = errors.New(
 			"decoder is not compatible with configured IOProducer",
 		)
 		return input, err
-	}
-
-	// Convert to buffered reader and read magic bytes
-	bufferedReader := bufio.NewReader(ioReader)
-	testBytes, err := bufferedReader.Peek(2)
-
-	// Test for gzip magic bytes and use corresponding reader, if given
-	if err == nil && testBytes[0] == 31 && testBytes[1] == 139 {
-		var gzipReader *gzip.Reader
-		if gzipReader, err = gzip.NewReader(bufferedReader); err != nil {
-			return input, err
-		}
-		ioReader = gzipReader
-	} else {
-		// Default case: assume text input
-		ioReader = bufferedReader
 	}
 
 	err = g.decoder.Decode(ioReader, &input)

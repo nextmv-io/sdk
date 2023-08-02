@@ -31,7 +31,7 @@ func (g *genericEncoder[Solution, Options]) Encode(
 	solutions <-chan Solution,
 	writer any,
 	runnerCfg any,
-	options Options,
+	_ Options,
 ) (err error) {
 	closer, ok := writer.(io.Closer)
 	if ok {
@@ -64,8 +64,13 @@ func (g *genericEncoder[Solution, Options]) Encode(
 
 		if solutionFlag == Last {
 			var last Solution
+			lastIsSet := false
 			for solution := range solutions {
 				last = solution
+				lastIsSet = true
+			}
+			if !lastIsSet {
+				return nil
 			}
 			tempSolutions := make(chan Solution, 1)
 			tempSolutions <- last

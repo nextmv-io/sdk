@@ -20,6 +20,9 @@ type ModelPlanUnit interface {
 	// Index returns the index of the invoking unit.
 	Index() int
 
+	// IsFixed returns true if the PlanUnit is fixed.
+	IsFixed() bool
+
 	// NumberOfStops returns the number of stops in the invoking unit.
 	NumberOfStops() int
 

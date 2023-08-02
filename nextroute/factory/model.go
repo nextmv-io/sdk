@@ -16,21 +16,10 @@ import (
 func NewModel(
 	input schema.Input,
 	modelOptions Options,
-	options ...nextroute.Option,
 ) (nextroute.Model, error) {
 	connect.Connect(con, &newModel)
-	return newModel(input, modelOptions, options...)
+	return newModel(input, modelOptions)
 }
-
-var (
-	con = connect.NewConnector("sdk", "NextRouteFactory")
-
-	newModel func(
-		schema.Input,
-		Options,
-		...nextroute.Option,
-	) (nextroute.Model, error)
-)
 
 // Options configure how the [NewModel] function builds [nextroute.Model].
 type Options struct {
@@ -47,7 +36,7 @@ type Options struct {
 			Precedence         bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			VehicleStartTime   bool `json:"vehicle_start_time" usage:"ignore the vehicle start time constraint"`
 			VehicleEndTime     bool `json:"vehicle_end_time" usage:"ignore the vehicle end time constraint"`
-			ArrivalTimeWindows bool `json:"arrival_time_windows" usage:"ignore the arrival time windows constraint"`
+			StartTimeWindows   bool `json:"start_time_windows" usage:"ignore the start time windows constraint"`
 		} `json:"disable"`
 		Enable struct {
 			Cluster bool `json:"cluster" usage:"enable the cluster constraint"`
@@ -58,16 +47,29 @@ type Options struct {
 		EarlyArrivalPenalty      float64      `json:"early_arrival_penalty" usage:"factor to weigh the early arrival objective" default:"1.0"`
 		LateArrivalPenalty       float64      `json:"late_arrival_penalty" usage:"factor to weigh the late arrival objective" default:"1.0"`
 		VehicleActivationPenalty float64      `json:"vehicle_activation_penalty" usage:"factor to weigh the vehicle activation objective" default:"1.0"`
-		TravelDuration           float64      `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"1.0"`
+		TravelDuration           float64      `json:"travel_duration" usage:"factor to weigh the travel duration objective" default:"0.0"`
+		VehiclesDuration         float64      `json:"vehicles_duration" usage:"factor to weigh the vehicles duration objective" default:"1.0"`
 		UnplannedPenalty         float64      `json:"unplanned_penalty" usage:"factor to weigh the unplanned objective" default:"1.0"`
 		Cluster                  float64      `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
-			Durations       bool `json:"durations" usage:"ignore the durations of stops"`
-			InitialSolution bool `json:"initial_solution" usage:"ignore the initial solution"`
+			Durations               bool `json:"durations" usage:"ignore the durations of stops"`
+			StopDurationMultipliers bool `json:"stop_duration_multipliers" usage:"ignore the stop duration multipliers defined on vehicles"`
+			DurationGroups          bool `json:"duration_groups" usage:"ignore the durations groups of stops"`
+			InitialSolution         bool `json:"initial_solution" usage:"ignore the initial solution"`
 		} `json:"disable"`
 	} `json:"properties"`
+	Validate struct {
+		Disable struct {
+			StartTime bool `json:"start_time" usage:"disable the start time validation" default:"false"`
+			Resources bool `json:"resources" usage:"disable the resources validation" default:"false"`
+		} `json:"disable"`
+		Enable struct {
+			Matrix                   bool `json:"matrix" usage:"enable matrix validation" default:"false"`
+			MatrixAsymmetryTolerance int  `json:"matrix_asymmetry_tolerance" usage:"percentage of acceptable matrix asymmetry, requires matrix validation enabled" default:"20"`
+		} `json:"enable"`
+	} `json:"validate"`
 }
 
 // BalanceStops is the configuration for the balance stops objective.

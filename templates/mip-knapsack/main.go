@@ -3,12 +3,9 @@ package main
 
 import (
 	"context"
-	"errors"
 	"log"
-	"time"
 
 	"github.com/nextmv-io/sdk/mip"
-	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/run/schema"
 )
@@ -24,8 +21,18 @@ func main() {
 	}
 }
 
-// An item has a Value, Weight and Volume. ItemID is optional and can be any
-// type.
+// The options for the solver.
+type options struct {
+	Limits mip.Limits `json:"limits,omitempty"`
+}
+
+// Input of the problem.
+type input struct {
+	Items          []item  `json:"items"`
+	WeightCapacity float64 `json:"weight_capacity"`
+}
+
+// An item has a Value and Weight. ItemID is used to identify the item.
 type item struct {
 	ItemID string  `json:"item_id,omitempty"`
 	Value  float64 `json:"value"`
@@ -37,73 +44,53 @@ func (i item) ID() string {
 	return i.ItemID
 }
 
-// A knapsack holds the most valuable set of items possible while not exceeding
-// its carrying capacity.
-type input struct {
-	Items          []item `json:"items"`
-	WeightCapacity int    `json:"weight_capacity"`
+// solution represents the decisions made by the solver.
+type solution struct {
+	Items []item `json:"items,omitempty"`
 }
 
-// The Option for the solver.
-type Option struct {
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
-	Limits struct {
-		Duration time.Duration `json:"duration" default:"10s"`
-	} `json:"limits"`
-}
-
-// Output is the output of the solver.
-type Output struct {
-	Status  string  `json:"status,omitempty"`
-	Runtime string  `json:"runtime,omitempty"`
-	Items   []item  `json:"items,omitempty"`
-	Value   float64 `json:"value,omitempty"`
-}
-
-func solver(_ context.Context, input input, opts Option) (schema.Output, error) {
+func solver(_ context.Context, input input, options options) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
-	// x is a multimap representing a set of variables. It is initialized with a
-	// create function and, in this case one set of elements. The elements can
-	// be used as an index to the multimap. To retrieve a variable, call
-	// x.Get(element) where element is an element from the index set
-	// (input.Items).
-	x := model.NewMultiMap(
-		func(...item) mip.Bool {
-			return m.NewBool()
-		}, input.Items)
+	// Create a map of ID to decision variables for each item in the knapsack.
+	itemVariables := make(map[string]mip.Bool, len(input.Items))
+	for _, item := range input.Items {
+		// Create a new binary decision variable for each item in the knapsack.
+		itemVariables[item.ItemID] = m.NewBool()
+	}
 
 	// We want to maximize the value of the knapsack.
 	m.Objective().SetMaximize()
 
-	// This constraint ensures the weightCapacity of the knapsack will not be
+	// This constraint ensures the weight capacity of the knapsack will not be
 	// exceeded.
-	weightCapacity := m.NewConstraint(
+	capacityConstraint := m.NewConstraint(
 		mip.LessThanOrEqual,
-		float64(input.WeightCapacity),
+		input.WeightCapacity,
 	)
 
+	// For each item, set the term in the objective function and in the
+	// constraint.
 	for _, item := range input.Items {
-		m.Objective().NewTerm(item.Value, x.Get(item))
-		weightCapacity.NewTerm(item.Weight, x.Get(item))
+		// Sets the value of the item in the objective function.
+		m.Objective().NewTerm(item.Value, itemVariables[item.ItemID])
+
+		// Sets the weight of the item in the constraint.
+		capacityConstraint.NewTerm(item.Weight, itemVariables[item.ItemID])
 	}
 
-	// We create a solver using the 'highs' provider
+	// We create a solver using the 'highs' provider.
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
 		return schema.Output{}, err
 	}
 
-	// We create the solve options we will use
+	// We create the solve options we will use.
 	solveOptions := mip.NewSolveOptions()
 
-	// Limit the solve to a maximum duration
-	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
+	// Limit the solve to a maximum duration.
+	if err = solveOptions.SetMaximumDuration(options.Limits.Duration); err != nil {
 		return schema.Output{}, err
 	}
 
@@ -115,52 +102,35 @@ func solver(_ context.Context, input input, opts Option) (schema.Output, error) 
 	// Set verbose level to see a more detailed output
 	solveOptions.SetVerbosity(mip.Off)
 
+	// Solve the model and get the solution.
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
 		return schema.Output{}, err
 	}
 
-	output, err := format(solution, input, x, opts)
-	if err != nil {
-		return schema.Output{}, err
-	}
+	// Format the solution into the desired output format and add custom
+	// statistics.
+	output := mip.Format(options, format(input, solution, itemVariables), solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
 
 	return output, nil
 }
 
-func format(
-	solution mip.Solution,
-	input input,
-	x model.MultiMap[mip.Bool, item],
-	opts Option,
-) (output schema.Output, err error) {
-	o := Output{}
-	o.Status = "infeasible"
-	o.Runtime = solution.RunTime().String()
-
-	if solution != nil && solution.HasValues() {
-		if solution.IsOptimal() {
-			o.Status = "optimal"
-		} else {
-			o.Status = "suboptimal"
-		}
-
-		o.Value = solution.ObjectiveValue()
-
-		items := make([]item, 0)
-
-		for _, item := range input.Items {
-			// if the value of x for an item is 1 it means it is in the
-			// knapsack
-			if solution.Value(x.Get(item)) == 1 {
-				items = append(items, item)
-			}
-		}
-		o.Items = items
-	} else {
-		return schema.Output{}, errors.New("no solution found")
+// format the solution from the solver into the desired output format.
+func format(input input, solverSolution mip.Solution, itemVariables map[string]mip.Bool) solution {
+	if !solverSolution.IsOptimal() && !solverSolution.IsSubOptimal() {
+		return solution{}
 	}
 
-	output = schema.NewOutput(opts, o)
-	return output, nil
+	items := make([]item, 0)
+	for _, item := range input.Items {
+		if solverSolution.Value(itemVariables[item.ItemID]) < 1 {
+			continue
+		}
+		items = append(items, item)
+	}
+
+	return solution{
+		Items: items,
+	}
 }

@@ -213,11 +213,7 @@ func (g *genericEncoder[Solution, Options]) Encode( //nolint:gocyclo
 			}
 		}
 	}
-	if err = g.encoder.Encode(ioWriter, m); err != nil {
-		return err
-	}
-
-	return nil
+	return g.encoder.Encode(ioWriter, m)
 }
 
 func (g *genericEncoder[Solution, Options]) ContentType() string {
