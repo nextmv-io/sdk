@@ -11,6 +11,15 @@ type ModelPlanUnit interface {
 
 	// IsFixed returns true if the PlanUnit is fixed.
 	IsFixed() bool
+
+	// IsProposition returns true if the unit is a proposition of
+	// a plan units unit.
+	IsProposition() bool
+
+	// PlanUnitsUnit returns the [ModelPlanUnitsUnit] associated with the unit.
+	// A unit is associated with at most one plan units unit. Can be nil if the
+	// unit is not part of a plan units unit.
+	PlanUnitsUnit() ModelPlanUnitsUnit
 }
 
 // ModelPlanUnits is a slice of plan units .

@@ -19,5 +19,5 @@ type SolutionPlanStopsUnit interface {
 	StopPositions() StopPositions
 }
 
-// SolutionPlanUnits is a slice of [SolutionPlanUnit].
+// SolutionPlanStopsUnits is a slice of [SolutionPlanStopsUnit].
 type SolutionPlanStopsUnits []SolutionPlanStopsUnit

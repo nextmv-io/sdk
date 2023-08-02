@@ -168,7 +168,6 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
-
     # Deactivate line length in solver.go because of go tags
     - path: nextroute/solver\.go
       linters:

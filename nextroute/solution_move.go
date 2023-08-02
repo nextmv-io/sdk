@@ -2,6 +2,7 @@ package nextroute
 
 import (
 	"context"
+
 	"github.com/nextmv-io/sdk/connect"
 )
 
@@ -63,3 +64,6 @@ type SolutionMove interface {
 	// being selected.
 	IncrementValueSeen(inc int) SolutionMove
 }
+
+// SolutionMoves is a slice of SolutionMove.
+type SolutionMoves []SolutionMove

@@ -245,10 +245,6 @@ func RandomElements[T any](
 	n int,
 ) []T {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -283,10 +279,6 @@ func RandomElementIndices[T any](
 	n int,
 ) []int {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -320,10 +312,6 @@ func RandomElementIndices[T any](
 // is created using the current time.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -335,6 +323,21 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 			return index
 		}
 	}
+}
+
+// Shuffle returns a shuffled copy of the given slice. If source is nil, a new
+// source is created using the current time.
+func Shuffle[T any](source *rand.Rand, slice []T) []T {
+	s := DefensiveCopy(slice)
+	if source == nil {
+		/* #nosec */
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+	for i := range slice {
+		j := source.Intn(i + 1)
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
 }
 
 // Lazy is a function that returns a value of type T. The value is only
@@ -402,4 +405,13 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 			break
 		}
 	}
+}
+
+// Reverse reverses the given slice in place and returns it.
+func Reverse[T any](slice []T) []T {
+	n := len(slice)
+	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
+		slice[i], slice[j] = slice[j], slice[i]
+	}
+	return slice
 }
