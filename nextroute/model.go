@@ -95,13 +95,13 @@ type Model interface {
 	// The plan units can only be part of one conjunction plan units unit.
 	NewConjunctionPlanUnits(
 		sameVehicle bool,
-		planUnits ...ModelPlanStopsUnit,
+		planUnits ...ModelPlanUnit,
 	) (ModelPlanUnitsUnit, error)
 
 	// NewDisjunctionPlanUnits creates a new plan units unit. A disjunction plan
 	// units unit is a collection of plan units from which exactly one has to
 	// be planned.
-	NewDisjunctionPlanUnits(planUnits ...ModelPlanStopsUnit) (ModelPlanUnitsUnit, error)
+	NewDisjunctionPlanUnits(planUnits ...ModelPlanUnit) (ModelPlanUnitsUnit, error)
 
 	// NewStop creates a new stop. The stop is used to create plan units or can
 	// be used to create a first or last stop of a vehicle.

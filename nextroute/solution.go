@@ -80,6 +80,11 @@ type Solution interface {
 	// SolutionPlanStopsUnit returns the [SolutionPlanStopsUnit] for the given
 	// model plan unit.
 	SolutionPlanStopsUnit(planUnit ModelPlanStopsUnit) SolutionPlanStopsUnit
+
+	// SolutionPlanUnit returns the [ModelPlanUnit] for the given
+	// model plan unit.
+	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
+
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.

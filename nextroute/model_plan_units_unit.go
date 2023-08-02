@@ -5,17 +5,18 @@ package nextroute
 type ModelPlanUnitsUnit interface {
 	ModelPlanUnit
 
-	// PlanStopsUnits returns the plan units in the invoking unit.
-	PlanStopsUnits() ModelPlanStopsUnits
+	// PlanUnits returns the plan units in the invoking unit.
+	PlanUnits() ModelPlanUnits
 
-	// IsDisjunction returns true if the plan unit is a disjunction.
-	// A disjunction is a set of plan units of which exactly one must be
-	// planned.
-	IsDisjunction() bool
+	// PlanOneOf returns true if the plan unit only has to plan exactly one of
+	// the associated plan units. If PlanOneOf returns true, then PlanAll will
+	// return false and vice versa.
+	PlanOneOf() bool
 
-	// IsConjunction returns true if the plan unit is a conjunction.
-	// A conjunction is a set of plan units of which all must be planned.
-	IsConjunction() bool
+	// PlanAll returns true if the plan unit has to plan all the associated
+	// plan units. If PlanAll returns true, then PlanOneOf will return false
+	// and vice versa.
+	PlanAll() bool
 
 	// SameVehicle returns true if all the plan units in this unit have to be
 	// planned on the same vehicle. If this unit is a conjunction, then
