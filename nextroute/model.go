@@ -87,21 +87,21 @@ type Model interface {
 		sequence DirectedAcyclicGraph,
 	) (ModelPlanStopsUnit, error)
 
-	// NewConjunctionPlanUnits creates a new plan units unit. A conjunction plan
+	// NewPlanAllPlanUnits creates a new plan units unit. A plan all plan
 	// units unit is a collection of plan units which are always planned and
 	// unplanned as a single unit. The sameVehicle argument specifies if the
 	// plan units have to be planned on the same vehicle or not. If sameVehicle
 	// is true, the plan units have to be planned on the same vehicle.
-	// The plan units can only be part of one conjunction plan units unit.
-	NewConjunctionPlanUnits(
+	// The plan units can only be part of one plan units unit.
+	NewPlanAllPlanUnits(
 		sameVehicle bool,
 		planUnits ...ModelPlanUnit,
 	) (ModelPlanUnitsUnit, error)
 
-	// NewDisjunctionPlanUnits creates a new plan units unit. A disjunction plan
+	// NewPlanOneOfPlanUnits creates a new plan units unit. A plan one of plan
 	// units unit is a collection of plan units from which exactly one has to
 	// be planned.
-	NewDisjunctionPlanUnits(planUnits ...ModelPlanUnit) (ModelPlanUnitsUnit, error)
+	NewPlanOneOfPlanUnits(planUnits ...ModelPlanUnit) (ModelPlanUnitsUnit, error)
 
 	// NewStop creates a new stop. The stop is used to create plan units or can
 	// be used to create a first or last stop of a vehicle.

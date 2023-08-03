@@ -49,15 +49,15 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	return result
 }
 
-// NotUnique returns the instances for which f returns identical values.
+// NotUnique returns the duplicate instances.
 func NotUnique[T comparable](s []T) []T {
 	inResult := make(map[T]bool)
 	var result []T
 	for _, str := range s {
-		if _, ok := inResult[str]; !ok {
-			inResult[str] = true
-		} else {
+		if _, ok := inResult[str]; ok {
 			result = append(result, str)
+		} else {
+			inResult[str] = true
 		}
 	}
 	return result
@@ -69,10 +69,10 @@ func NotUniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	inResult := make(map[I]bool)
 	var result []T
 	for _, item := range items {
-		if _, ok := inResult[f(item)]; !ok {
-			inResult[f(item)] = true
-		} else {
+		if _, ok := inResult[f(item)]; ok {
 			result = append(result, item)
+		} else {
+			inResult[f(item)] = true
 		}
 	}
 	return result
