@@ -5,10 +5,12 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/osrm"
+	"github.com/nextmv-io/sdk/types"
 )
 
 type testServer struct {
@@ -60,6 +62,21 @@ func newTestServer(t *testing.T, endpoint osrm.Endpoint) *testServer {
 				}
 			}),
 		),
+	)
+	return ts
+}
+
+func newErrorServer(_ *testing.T, statusCode int, statusMsg string, causeErr bool) *testServer {
+	ts := &testServer{}
+	ts.s = httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			ts.reqCount++
+			if causeErr {
+				panic("causing error")
+			}
+			w.WriteHeader(statusCode)
+			_, _ = io.WriteString(w, statusMsg)
+		}),
 	)
 	return ts
 }
@@ -126,6 +143,70 @@ func TestMatrixCall(t *testing.T) {
 	}
 	if v := m.Cost(0, 1); v != 17699.1 {
 		t.Errorf("want: 0; got: %v", v)
+	}
+}
+
+func TestTableErrorHandling(t *testing.T) {
+	smallTable := []route.Point{{0, 0}, {1, 1}}
+	largeTable := make([]route.Point, 101)
+	for i := range largeTable {
+		largeTable[i] = route.Point{float64(i), float64(i)}
+	}
+
+	tests := map[string]struct {
+		statusCode int
+		statusMsg  string
+		causeErr   bool
+		isUserErr  bool
+		table      []route.Point
+	}{
+		"bad request": {
+			statusCode: http.StatusBadRequest,
+			statusMsg:  "Invalid segment",
+			causeErr:   false,
+			isUserErr:  true,
+			table:      smallTable,
+		},
+		"internal server error": {
+			statusCode: http.StatusInternalServerError,
+			statusMsg:  "",
+			causeErr:   false,
+			isUserErr:  false,
+			table:      smallTable,
+		},
+		"cause request err": {
+			statusCode: 0, // not used
+			statusMsg:  "",
+			causeErr:   true,
+			isUserErr:  false,
+			table:      smallTable,
+		},
+		"cause multiple user errs": {
+			statusCode: http.StatusBadRequest,
+			statusMsg:  "Invalid segment",
+			causeErr:   false,
+			isUserErr:  true,
+			table:      largeTable,
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newErrorServer(t, tc.statusCode, tc.statusMsg, tc.causeErr)
+			defer ts.s.Close()
+			c := osrm.DefaultClient(ts.s.URL, true)
+			_, _, err := c.Table(tc.table)
+			if err == nil {
+				t.Errorf("expected error, got nil")
+			}
+			uerr, ok := err.(types.UserError)
+			if ok != tc.isUserErr {
+				t.Errorf("expected UserError, got %T", err)
+			}
+			if tc.isUserErr && !strings.Contains(uerr.Error(), tc.statusMsg) {
+				t.Errorf("want: %v; got: %v", tc.statusMsg, uerr.Error())
+			}
+		})
 	}
 }
 
