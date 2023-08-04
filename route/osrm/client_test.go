@@ -10,7 +10,6 @@ import (
 
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/osrm"
-	"github.com/nextmv-io/sdk/types"
 )
 
 type testServer struct {
@@ -199,9 +198,12 @@ func TestTableErrorHandling(t *testing.T) {
 			if err == nil {
 				t.Errorf("expected error, got nil")
 			}
-			uerr, ok := err.(types.UserError)
-			if ok != tc.isUserErr {
-				t.Errorf("expected UserError, got %T", err)
+			uerr, ok := err.(osrm.Error)
+			if !ok {
+				t.Errorf("expected osrm.Error, got %T", err)
+			}
+			if uerr.IsInputError() != tc.isUserErr {
+				t.Errorf("expected input error, got %T", err)
 			}
 			if tc.isUserErr && !strings.Contains(uerr.Error(), tc.statusMsg) {
 				t.Errorf("want: %v; got: %v", tc.statusMsg, uerr.Error())

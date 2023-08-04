@@ -209,10 +209,9 @@ func BuildMatrixRequestPoints(
 			"if ends are given, they must match the number of vehicles",
 		)
 	}
-	count := len(ends) + len(starts) + len(stops)
-
+	count := len(stops)
 	// Create points array of the expected size
-	points := make([]Point, count)
+	points := make([]Point, count+2*vehiclesCount)
 	for i := range points {
 		// Set default values
 		points[i] = Point{0, 0}

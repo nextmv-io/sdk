@@ -18,7 +18,6 @@ import (
 
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/nextmv-io/sdk/route"
-	"github.com/nextmv-io/sdk/types"
 	polyline "github.com/twpayne/go-polyline"
 )
 
@@ -139,9 +138,9 @@ func handleErrorStatus(resp *http.Response) error {
 	}
 	if resp.StatusCode == http.StatusBadRequest {
 		errMsg := fmt.Sprintf("Error in input data when getting maps: %s", body)
-		return types.NewUserError(errMsg)
+		return NewError(errMsg, true)
 	}
-	return fmt.Errorf("error response from OSRM: %s", body)
+	return NewError(fmt.Sprintf("error response from OSRM: %s", body), false)
 }
 
 // get performs a GET.
@@ -283,17 +282,17 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 		errMsgs := make([]string, len(errs))
 
 		for _, err := range errs {
-			_, ok := errs[0].(types.UserError)
-			if ok {
+			e, ok := errs[0].(Error)
+			if ok && e.IsInputError() {
 				hasUserErrs = true
 			}
 			errMsgs = append(errMsgs, err.Error())
 		}
 		errs := strings.Join(errMsgs, "\n")
 		if hasUserErrs {
-			return nil, nil, types.NewUserError(errs)
+			return nil, nil, NewError(errs, true)
 		}
-		return nil, nil, fmt.Errorf("internal failure: %v", errs)
+		return nil, nil, NewError(errs, false)
 	}
 
 	// Stitch responses together.
