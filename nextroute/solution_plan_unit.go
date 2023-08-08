@@ -13,6 +13,10 @@ type SolutionPlanUnit interface {
 	// solution plan unit.
 	ModelPlanUnit() ModelPlanUnit
 
+	// PlannedPlanStopsUnits returns the plan stops units associated with the
+	// invoking plan unit which are planned.
+	PlannedPlanStopsUnits() SolutionPlanStopsUnits
+
 	// Solution returns the solution this unit is part of.
 	Solution() Solution
 
