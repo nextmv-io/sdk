@@ -45,15 +45,15 @@ type VehicleDefaults struct {
 
 // StopDefaults contains default values for stops.
 type StopDefaults struct {
-	UnplannedPenalty        *int         `json:"unplanned_penalty,omitempty"`
-	Quantity                any          `json:"quantity,omitempty"`
-	StartTimeWindow         *[]time.Time `json:"start_time_window,omitempty"`
-	MaxWait                 *int         `json:"max_wait,omitempty"`
-	Duration                *int         `json:"duration,omitempty"`
-	TargetArrivalTime       *time.Time   `json:"target_arrival_time,omitempty"`
-	EarlyArrivalTimePenalty *float64     `json:"early_arrival_time_penalty,omitempty"`
-	LateArrivalTimePenalty  *float64     `json:"late_arrival_time_penalty,omitempty"`
-	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
+	UnplannedPenalty        *int       `json:"unplanned_penalty,omitempty"`
+	Quantity                any        `json:"quantity,omitempty"`
+	StartTimeWindow         any        `json:"start_time_window,omitempty"`
+	MaxWait                 *int       `json:"max_wait,omitempty"`
+	Duration                *int       `json:"duration,omitempty"`
+	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
+	EarlyArrivalTimePenalty *float64   `json:"early_arrival_time_penalty,omitempty"`
+	LateArrivalTimePenalty  *float64   `json:"late_arrival_time_penalty,omitempty"`
+	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
 }
 
 // Vehicle represents a vehicle.
