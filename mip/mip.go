@@ -1,6 +1,8 @@
 package mip
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+)
 
 // NewSolveOptions returns default solver options.
 func NewSolveOptions() SolveOptions {
