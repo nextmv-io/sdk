@@ -9,7 +9,17 @@ import (
 	"github.com/dgraph-io/ristretto"
 	"github.com/nextmv-io/go-routingkit/routingkit"
 	"github.com/nextmv-io/sdk/route"
+	polyline "github.com/twpayne/go-polyline"
 )
+
+// RoutingKitClient is the interface that offers extended functionality of the
+// underlying routingkit client.
+type RoutingKitClient interface {
+	// Polyline requests polylines for the given points. The first parameter
+	// returns a polyline from start to end and the second parameter returns a
+	// list of polylines, one per leg.
+	Polyline(points []route.Point) (string, []string, error)
+}
 
 const cacheItemCost int64 = 80
 
@@ -188,6 +198,29 @@ func (b byPoint) Cost(p1, p2 route.Point) float64 {
 	// the cost of an entry is cacheItemCost
 	b.cache.Set(key, float64(d), cacheItemCost)
 	return float64(d)
+}
+
+// Creates polylines for the given points. First return parameter is a polyline
+// from start to end, second parameter is a list of polylines per leg in the
+// route.
+func (b byPoint) Polyline(points []route.Point) (string, []string, error) {
+	encodedPolylines := make([]string, len(points)-1)
+	completePolyline := [][]float64{}
+	for i := 0; i < len(points)-1; i++ {
+		p1 := points[i]
+		p2 := points[i+1]
+		dist, poly32 := b.client.Route(coords(p1), coords(p2))
+		poly64 := make([][]float64, len(poly32))
+		for i, p := range poly32 {
+			poly64[i] = []float64{float64(p[0]), float64(p[1])}
+		}
+		encodedPolylines[i] = string(polyline.EncodeCoords(poly64))
+		if b.m != nil && dist == routingkit.MaxDistance {
+			return "", []string{}, fmt.Errorf("no route found between %v and %v", p1, p2)
+		}
+		completePolyline = append(completePolyline, poly64...)
+	}
+	return string(polyline.EncodeCoords(completePolyline)), encodedPolylines, nil
 }
 
 // Triangular indicates that the measure does have the triangularity property.
