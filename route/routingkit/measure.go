@@ -12,9 +12,9 @@ import (
 	polyline "github.com/twpayne/go-polyline"
 )
 
-// RoutingKitClient is the interface that offers extended functionality of the
+// EnrichedClient is the interface that offers extended functionality of the
 // underlying routingkit client.
-type RoutingKitClient interface {
+type EnrichedClient interface {
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
