@@ -12,13 +12,104 @@ import (
 	polyline "github.com/twpayne/go-polyline"
 )
 
-// EnrichedClient is the interface that offers extended functionality of the
-// underlying routingkit client.
-type EnrichedClient interface {
+// >>> DistanceClient implementation
+
+// DistanceClient represents a RoutingKit distance client.
+type DistanceClient interface {
+	// Measure returns a route.ByPoint that can calculate the road network
+	// distance between any two points found within the provided mapFile.
+	Measure() route.ByPoint
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
 	Polyline(points []route.Point) (string, []string, error)
+}
+
+// NewDistanceClient returns a new RoutingKit client.
+func NewDistanceClient(
+	mapFile string,
+	radius float64,
+	cacheSize int64,
+	profile routingkit.Profile,
+	fallback route.ByPoint) (DistanceClient, error) {
+	m, err := ByPoint(mapFile, radius, cacheSize, profile, fallback)
+	if err != nil {
+		return nil, err
+	}
+	bp, ok := m.(byPoint)
+	if !ok {
+		return nil, fmt.Errorf("measure has wrong type")
+	}
+	return distanceClient{
+		measure: bp,
+	}, nil
+}
+
+type distanceClient struct {
+	measure byPoint
+}
+
+// Measure returns a route.ByPoint that can calculate the road network distance
+// between any two points found within the provided mapFile.
+func (c distanceClient) Measure() route.ByPoint {
+	return c.measure
+}
+
+// Polyline requests polylines for the given points. The first parameter
+// returns a polyline from start to end and the second parameter returns a list
+// of polylines, one per leg.
+func (c distanceClient) Polyline(points []route.Point) (string, []string, error) {
+	return c.measure.Polyline(points)
+}
+
+// >>> DurationClient implementation
+
+// DurationClient represents a RoutingKit duration client.
+type DurationClient interface {
+	// Measure returns a route.ByPoint that can calculate the road network
+	// travel time between any two points found within the provided mapFile.
+	Measure() route.ByPoint
+	// Polyline requests polylines for the given points. The first parameter
+	// returns a polyline from start to end and the second parameter returns a
+	// list of polylines, one per leg.
+	Polyline(points []route.Point) (string, []string, error)
+}
+
+// NewDurationClient returns a new RoutingKit client.
+func NewDurationClient(
+	mapFile string,
+	radius float64,
+	cacheSize int64,
+	profile routingkit.Profile,
+	fallback route.ByPoint) (DistanceClient, error) {
+	m, err := DurationByPoint(mapFile, radius, cacheSize, profile, fallback)
+	if err != nil {
+		return nil, err
+	}
+	bp, ok := m.(byPoint)
+	if !ok {
+		return nil, fmt.Errorf("measure has wrong type")
+	}
+	return distanceClient{
+		measure: bp,
+	}, nil
+}
+
+type durationClient struct {
+	measure byPoint
+}
+
+// Measure returns a route.ByPoint that can calculate the road network distance
+// between any two points found within the provided mapFile.
+func (c durationClient) Measure() route.ByPoint {
+	return c.measure
+}
+
+// Polyline requests polylines for the given points. The first parameter
+// returns a polyline from start to end and the second parameter returns a list
+// of polylines, one per leg.
+func (c durationClient) Polyline(points []route.Point) (string, []string, error) {
+	return c.measure.Polyline(points)
 }
 
 const cacheItemCost int64 = 80
