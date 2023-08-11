@@ -86,17 +86,17 @@ func NewDurationClient(
 	if err != nil {
 		return nil, err
 	}
-	bp, ok := m.(byPoint)
+	bp, ok := m.(durationByPoint)
 	if !ok {
 		return nil, fmt.Errorf("measure has wrong type")
 	}
-	return distanceClient{
+	return durationClient{
 		measure: bp,
 	}, nil
 }
 
 type durationClient struct {
-	measure byPoint
+	measure durationByPoint
 }
 
 // Measure returns a route.ByPoint that can calculate the road network distance
