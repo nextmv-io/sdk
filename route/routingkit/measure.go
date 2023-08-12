@@ -9,7 +9,7 @@ import (
 	"github.com/dgraph-io/ristretto"
 	"github.com/nextmv-io/go-routingkit/routingkit"
 	"github.com/nextmv-io/sdk/route"
-	polyline "github.com/twpayne/go-polyline"
+	"github.com/twpayne/go-polyline"
 )
 
 // >>> DistanceClient implementation
@@ -201,6 +201,13 @@ func (b durationByPoint) Cost(p1, p2 route.Point) float64 {
 	return dInSeconds
 }
 
+// Creates polylines for the given points. First return parameter is a polyline
+// from start to end, second parameter is a list of polylines per leg in the
+// route.
+func (b durationByPoint) Polyline(points []route.Point) (string, []string, error) {
+	return getPolyLine(points, b.client.Route)
+}
+
 // Triangular indicates that the measure does have the triangularity property.
 func (b durationByPoint) Triangular() bool {
 	return true
@@ -295,23 +302,7 @@ func (b byPoint) Cost(p1, p2 route.Point) float64 {
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
 func (b byPoint) Polyline(points []route.Point) (string, []string, error) {
-	encodedPolylines := make([]string, len(points)-1)
-	completePolyline := [][]float64{}
-	for i := 0; i < len(points)-1; i++ {
-		p1 := points[i]
-		p2 := points[i+1]
-		dist, poly32 := b.client.Route(coords(p1), coords(p2))
-		poly64 := make([][]float64, len(poly32))
-		for i, p := range poly32 {
-			poly64[i] = []float64{float64(p[0]), float64(p[1])}
-		}
-		encodedPolylines[i] = string(polyline.EncodeCoords(poly64))
-		if b.m != nil && dist == routingkit.MaxDistance {
-			return "", []string{}, fmt.Errorf("no route found between %v and %v", p1, p2)
-		}
-		completePolyline = append(completePolyline, poly64...)
-	}
-	return string(polyline.EncodeCoords(completePolyline)), encodedPolylines, nil
+	return getPolyLine(points, b.client.Route)
 }
 
 // Triangular indicates that the measure does have the triangularity property.
@@ -463,4 +454,29 @@ func float64Matrix(m [][]uint32,
 		}
 	}
 	return fM
+}
+
+// getPolyLine requests the polylines for the given route from the routingkit
+// client. It returns the complete polyline and a list of polylines per leg.
+func getPolyLine(
+	points []route.Point,
+	router func(from []float32, to []float32) (uint32, [][]float32),
+) (string, []string, error) {
+	encodedPolylines := make([]string, len(points)-1)
+	completePolyline := [][]float64{}
+	for i := 0; i < len(points)-1; i++ {
+		p1 := points[i]
+		p2 := points[i+1]
+		dist, poly32 := router(coords(p1), coords(p2))
+		poly64 := make([][]float64, len(poly32))
+		for i, p := range poly32 {
+			poly64[i] = []float64{float64(p[0]), float64(p[1])}
+		}
+		encodedPolylines[i] = string(polyline.EncodeCoords(poly64))
+		if dist == routingkit.MaxDistance {
+			return "", []string{}, fmt.Errorf("no route found between %v and %v", p1, p2)
+		}
+		completePolyline = append(completePolyline, poly64...)
+	}
+	return string(polyline.EncodeCoords(completePolyline)), encodedPolylines, nil
 }
