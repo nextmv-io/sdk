@@ -180,7 +180,6 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 			Succeeds:                s.Succeeds,
 			Duration:                s.StopDuration,
 			MaxWait:                 s.MaxWait,
-			StartTimeWindow:         s.HardWindow,
 			UnplannedPenalty:        s.UnassignedPenalty,
 			EarlyArrivalTimePenalty: s.EarlinessPenalty,
 			LateArrivalTimePenalty:  s.LatenessPenalty,
@@ -189,6 +188,9 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 			ID:                      s.ID,
 			Location:                s.Position,
 			CustomData:              nil,
+		}
+		if s.HardWindow != nil {
+			stops[i].StartTimeWindow = s.HardWindow
 		}
 	}
 
