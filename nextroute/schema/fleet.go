@@ -80,49 +80,57 @@ type FleetStop struct {
 	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
+// FleetToNextRoute takes a legacy cloud fleet input and converts it into
+// nextroute input format.
 func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 	input := Input{}
 	stopCompats := make([]string, 0)
 	vehicleCompats := make([]string, 0)
-	if fleetInput.Defaults != nil {
+	// Use default values and add special handling for CompatibilityAttributes
+	// and HardWindows.
+	if fleetInput.Defaults != nil && fleetInput.Defaults.Stops != nil {
 		input.Defaults = &Defaults{}
-		if fleetInput.Defaults.Stops != nil {
-			if fleetInput.Defaults.Stops.CompatibilityAttributes != nil {
-				stopCompats = *fleetInput.Defaults.Stops.CompatibilityAttributes
-			}
-			input.Defaults.Stops = &StopDefaults{
-				UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
-				Quantity:                fleetInput.Defaults.Stops.Quantity,
-				StartTimeWindow:         fleetInput.Defaults.Stops.HardWindow,
-				MaxWait:                 fleetInput.Defaults.Stops.MaxWait,
-				Duration:                fleetInput.Defaults.Vehicles.MaxDuration,
-				TargetArrivalTime:       fleetInput.Defaults.Stops.TargetTime,
-				EarlyArrivalTimePenalty: fleetInput.Defaults.Stops.EarlinessPenalty,
-				LateArrivalTimePenalty:  fleetInput.Defaults.Stops.LatenessPenalty,
-			}
+		input.Defaults.Stops = &StopDefaults{
+			UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
+			Quantity:                fleetInput.Defaults.Stops.Quantity,
+			MaxWait:                 fleetInput.Defaults.Stops.MaxWait,
+			Duration:                fleetInput.Defaults.Vehicles.MaxDuration,
+			TargetArrivalTime:       fleetInput.Defaults.Stops.TargetTime,
+			EarlyArrivalTimePenalty: fleetInput.Defaults.Stops.EarlinessPenalty,
+			LateArrivalTimePenalty:  fleetInput.Defaults.Stops.LatenessPenalty,
 		}
-
-		if fleetInput.Defaults.Vehicles != nil {
-			vehicleCompats = fleetInput.Defaults.Vehicles.CompatibilityAttributes
-			input.Defaults.Vehicles = &VehicleDefaults{
-				Capacity:          fleetInput.Defaults.Vehicles.Capacity,
-				StartLocation:     fleetInput.Defaults.Vehicles.Start,
-				EndLocation:       fleetInput.Defaults.Vehicles.End,
-				Speed:             fleetInput.Defaults.Vehicles.Speed,
-				StartTime:         fleetInput.Defaults.Vehicles.ShiftStart,
-				EndTime:           fleetInput.Defaults.Vehicles.ShiftEnd,
-				MaxStops:          fleetInput.Defaults.Vehicles.MaxStops,
-				MaxDistance:       fleetInput.Defaults.Vehicles.MaxDistance,
-				MaxDuration:       fleetInput.Defaults.Vehicles.MaxDuration,
-				StartLevel:        nil,
-				MinStops:          nil,
-				MinStopsPenalty:   nil,
-				MaxWait:           nil,
-				ActivationPenalty: nil,
-			}
+		if fleetInput.Defaults.Stops.CompatibilityAttributes != nil {
+			stopCompats = *fleetInput.Defaults.Stops.CompatibilityAttributes
+		}
+		if fleetInput.Defaults.Stops.HardWindow != nil {
+			input.Defaults.Stops.StartTimeWindow = *fleetInput.Defaults.Stops.HardWindow
 		}
 	}
 
+	// Use default values. nil values are not compatible between fleet and
+	// nextroute.
+	if fleetInput.Defaults != nil && fleetInput.Defaults.Vehicles != nil {
+		vehicleCompats = fleetInput.Defaults.Vehicles.CompatibilityAttributes
+		input.Defaults.Vehicles = &VehicleDefaults{
+			Capacity:          fleetInput.Defaults.Vehicles.Capacity,
+			StartLocation:     fleetInput.Defaults.Vehicles.Start,
+			EndLocation:       fleetInput.Defaults.Vehicles.End,
+			Speed:             fleetInput.Defaults.Vehicles.Speed,
+			StartTime:         fleetInput.Defaults.Vehicles.ShiftStart,
+			EndTime:           fleetInput.Defaults.Vehicles.ShiftEnd,
+			MaxStops:          fleetInput.Defaults.Vehicles.MaxStops,
+			MaxDistance:       fleetInput.Defaults.Vehicles.MaxDistance,
+			MaxDuration:       fleetInput.Defaults.Vehicles.MaxDuration,
+			StartLevel:        nil,
+			MinStops:          nil,
+			MinStopsPenalty:   nil,
+			MaxWait:           nil,
+			ActivationPenalty: nil,
+		}
+	}
+
+	// Handle special case of compatibility attributes, to use them to make
+	// legacy backlogs more or less work like in legacy fleet.
 	for _, s := range fleetInput.Stops {
 		if s.CompatibilityAttributes != nil {
 			ca := append(*s.CompatibilityAttributes, stopCompats...)
@@ -136,16 +144,27 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 		v.CompatibilityAttributes = append(v.CompatibilityAttributes, vehicleCompats...)
 	}
 
+	// Create vehicles with special logic for backlog legacy needs.
 	vehicles := make([]Vehicle, len(fleetInput.Vehicles))
 	for i, v := range fleetInput.Vehicles {
+		newAttributes := make([]string, len(v.CompatibilityAttributes))
+		copy(newAttributes, v.CompatibilityAttributes)
 		for _, ca := range v.CompatibilityAttributes {
 			for _, b := range v.Backlog {
-				v.CompatibilityAttributes = append(v.CompatibilityAttributes, fmt.Sprintf("%s_%s", ca, b))
+				newAttributes = append(newAttributes, fmt.Sprintf("%s_%s", ca, b))
+			}
+		}
+		newBacklog := make([]InitialStop, len(v.Backlog))
+		falseBool := false
+		for i, b := range v.Backlog {
+			newBacklog[i] = InitialStop{
+				Fixed: &falseBool,
+				ID:    b,
 			}
 		}
 		vehicles[i] = Vehicle{
 			Capacity:                v.Capacity,
-			CompatibilityAttributes: &v.CompatibilityAttributes,
+			CompatibilityAttributes: &newAttributes,
 			MaxDistance:             v.MaxDistance,
 			StopDurationMultiplier:  v.StopDurationMultiplier,
 			StartTime:               v.ShiftStart,
@@ -155,9 +174,9 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 			MaxStops:                v.MaxStops,
 			Speed:                   v.Speed,
 			MaxDuration:             v.MaxDuration,
+			InitialStops:            &newBacklog,
 			ActivationPenalty:       &v.InitializationCost,
 			ID:                      v.ID,
-			InitialStops:            nil,
 			StartLevel:              nil,
 			CustomData:              nil,
 			MinStops:                nil,
@@ -166,6 +185,7 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 		}
 	}
 
+	// Create stops with legacy backlog feature.
 	stops := make([]Stop, len(fleetInput.Stops))
 	for i, s := range fleetInput.Stops {
 		compats := make([]string, 0)
@@ -190,10 +210,11 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 			CustomData:              nil,
 		}
 		if s.HardWindow != nil {
-			stops[i].StartTimeWindow = s.HardWindow
+			stops[i].StartTimeWindow = *s.HardWindow
 		}
 	}
 
+	// Put new input format together and return it.
 	input.StopGroups = &fleetInput.StopGroups
 	input.DurationGroups = &fleetInput.DurationGroups
 	input.Vehicles = vehicles
