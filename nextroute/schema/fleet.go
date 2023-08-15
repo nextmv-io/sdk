@@ -87,7 +87,9 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 	if fleetInput.Defaults != nil {
 		input.Defaults = &Defaults{}
 		if fleetInput.Defaults.Stops != nil {
-			stopCompats = *fleetInput.Defaults.Stops.CompatibilityAttributes
+			if fleetInput.Defaults.Stops.CompatibilityAttributes != nil {
+				stopCompats = *fleetInput.Defaults.Stops.CompatibilityAttributes
+			}
 			input.Defaults.Stops = &StopDefaults{
 				UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
 				Quantity:                fleetInput.Defaults.Stops.Quantity,
@@ -167,8 +169,10 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 	stops := make([]Stop, len(fleetInput.Stops))
 	for i, s := range fleetInput.Stops {
 		compats := make([]string, 0)
-		for _, ca := range *s.CompatibilityAttributes {
-			compats = append(compats, fmt.Sprintf("%s_%s", ca, s.ID))
+		if s.CompatibilityAttributes != nil {
+			for _, ca := range *s.CompatibilityAttributes {
+				compats = append(compats, fmt.Sprintf("%s_%s", ca, s.ID))
+			}
 		}
 		stops[i] = Stop{
 			Precedes:                s.Precedes,
