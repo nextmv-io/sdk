@@ -1,6 +1,6 @@
 # Nextmv nextroute template
 
-`routing-legacy` is a modeling kit for vehicle routing problems (VRP). This 
+`routing-legacy` is a modeling kit for vehicle routing problems (VRP). This
 template will get you up to speed deploying your own solution.
 
 The most important files created are `main.go` and `input.json`.
