@@ -94,7 +94,7 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 			UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
 			Quantity:                fleetInput.Defaults.Stops.Quantity,
 			MaxWait:                 fleetInput.Defaults.Stops.MaxWait,
-			Duration:                fleetInput.Defaults.Vehicles.MaxDuration,
+			Duration:                fleetInput.Defaults.Stops.StopDuration,
 			TargetArrivalTime:       fleetInput.Defaults.Stops.TargetTime,
 			EarlyArrivalTimePenalty: fleetInput.Defaults.Stops.EarlinessPenalty,
 			LateArrivalTimePenalty:  fleetInput.Defaults.Stops.LatenessPenalty,
@@ -145,6 +145,7 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 	}
 
 	// Create vehicles with special logic for backlog legacy needs.
+	backlogStops := make(map[string]struct{})
 	vehicles := make([]Vehicle, len(fleetInput.Vehicles))
 	for i, v := range fleetInput.Vehicles {
 		newAttributes := make([]string, len(v.CompatibilityAttributes))
@@ -157,6 +158,7 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 		newBacklog := make([]InitialStop, len(v.Backlog))
 		falseBool := false
 		for i, b := range v.Backlog {
+			backlogStops[b] = struct{}{}
 			newBacklog[i] = InitialStop{
 				Fixed: &falseBool,
 				ID:    b,
@@ -190,8 +192,12 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 	for i, s := range fleetInput.Stops {
 		compats := make([]string, 0)
 		if s.CompatibilityAttributes != nil {
-			for _, ca := range *s.CompatibilityAttributes {
-				compats = append(compats, fmt.Sprintf("%s_%s", ca, s.ID))
+			if _, ok := backlogStops[s.ID]; ok {
+				for _, ca := range *s.CompatibilityAttributes {
+					compats = append(compats, fmt.Sprintf("%s_%s", ca, s.ID))
+				}
+			} else {
+				compats = *s.CompatibilityAttributes
 			}
 		}
 		stops[i] = Stop{
