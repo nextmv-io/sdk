@@ -388,7 +388,7 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 	m M,
 	f func(key K, value V) bool,
 ) {
-	keys := make([]K, 0, len(m))
+	keys := make([]K, len(m))
 	i := 0
 	for k := range m {
 		keys[i] = k
