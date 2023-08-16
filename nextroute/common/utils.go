@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"sort"
 	"sync"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 // Filter filters a slice using a predicate function.
@@ -388,12 +389,12 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 	f func(key K, value V) bool,
 ) {
 	keys := make([]K, 0, len(m))
+	i := 0
 	for k := range m {
-		keys = append(keys, k)
+		keys[i] = k
+		i++
 	}
-	sort.Slice(keys, func(i, j int) bool {
-		return keys[i] < keys[j]
-	})
+	slices.Sort(keys)
 	for _, k := range keys {
 		if f(k, m[k]) {
 			break
