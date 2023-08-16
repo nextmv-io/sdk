@@ -18,6 +18,16 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
+	// RoutingLegacyMain is the main.go file in the routing-legacy template.
+	//go:embed routing-legacy/main.go
+	RoutingLegacyMain string
+	// RoutingLegacyInput is the input.json file in the routing-legacy template.
+	//go:embed routing-legacy/input.json
+	RoutingLegacyInput string
+	// RoutingLegacyReadme is the README.md file in the routing-legacy template.
+	//go:embed routing-legacy/README.md
+	RoutingLegacyReadme string
+
 	// NextrouteMain is the main.go file in the nextroute template.
 	//go:embed nextroute/main.go
 	NextrouteMain string
