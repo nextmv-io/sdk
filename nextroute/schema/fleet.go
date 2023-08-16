@@ -16,11 +16,13 @@ type FleetInput struct {
 	DurationGroups []DurationGroup `json:"duration_groups,omitempty"`
 }
 
+// FleetDefaults holds the fleet input default data.
 type FleetDefaults struct {
 	Vehicles *FleetVehicleDefaults `json:"vehicles,omitempty"`
 	Stops    *FleetStopDefaults    `json:"stops,omitempty"`
 }
 
+// FleetVehicleDefaults holds the fleet input vehicle default data.
 type FleetVehicleDefaults struct {
 	Start                   *Location  `json:"start,omitempty"`
 	End                     *Location  `json:"end,omitempty"`
@@ -34,6 +36,7 @@ type FleetVehicleDefaults struct {
 	MaxDuration             *int       `json:"max_duration,omitempty"`
 }
 
+// FleetStopDefaults holds the fleet input stop default data.
 type FleetStopDefaults struct {
 	UnassignedPenalty       *int         `json:"unassigned_penalty,omitempty"`
 	Quantity                any          `json:"quantity,omitempty"`
@@ -46,6 +49,7 @@ type FleetStopDefaults struct {
 	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
+// FleetVehicle holds the fleet input vehicle data.
 type FleetVehicle struct {
 	ID                      string     `json:"id,omitempty"`
 	Start                   *Location  `json:"start,omitempty"`
@@ -64,6 +68,7 @@ type FleetVehicle struct {
 	InitializationCost      int        `json:"initialization_cost,omitempty"`
 }
 
+// FleetStop holds the fleet input stop data.
 type FleetStop struct {
 	ID                      string       `json:"id,omitempty"`
 	Position                Location     `json:"position,omitempty"`

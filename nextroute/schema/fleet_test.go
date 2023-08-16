@@ -7,6 +7,7 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
+// TestFleetConverter tests the fleet to nextroute input converter.
 func TestFleetConverter(t *testing.T) {
 	// Read fleet input.
 	fleetInput := schema.FleetInput{}
