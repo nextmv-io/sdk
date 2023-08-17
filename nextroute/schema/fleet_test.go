@@ -216,7 +216,7 @@ const nextrouteInputWant = `{
 		},
 		"speed": 14,
 		"max_duration": 55000,
-		"activation_penalty": 0,
+		"activation_penalty": 2,
 		"start_location": {
 		  "lon": -96.659222,
 		  "lat": 33.122746
