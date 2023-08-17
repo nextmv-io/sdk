@@ -348,7 +348,7 @@ func TestDurationByPointMarshal(t *testing.T) {
 	}
 }
 
-func TestDistancePolyline(t *testing.T) {
+func TestDistanceClient(t *testing.T) {
 	testRoute := []route.Point{
 		{7.336189, 52.146548},
 		{7.335031, 52.146057},
@@ -381,14 +381,23 @@ func TestDistancePolyline(t *testing.T) {
 	}
 
 	c, err := routingkit.NewDistanceClient(
-		"testdata/rk_test.osm.pbf", 1000, 1<<30, routingkit.Car(), nil)
+		"testdata/rk_test.osm.pbf", routingkit.Car())
 	if err != nil {
 		t.Fatalf("constructing measure: %v", err)
 	}
+	m, err := c.Measure(1000, 1<<30, nil)
+	if err != nil {
+		t.Fatalf("constructing measure: %v", err)
+	}
+	mat, err := c.Matrix(testRoute, testRoute)
+	if err != nil {
+		t.Fatalf("constructing matrix: %v", err)
+	}
 
-	checkRoutePolyline(
+	checkClient(
 		t,
-		c.Measure(),
+		m,
+		mat,
 		func(points []measure.Point) (string, []string, error) {
 			return c.Polyline(points)
 		},
@@ -399,7 +408,7 @@ func TestDistancePolyline(t *testing.T) {
 	)
 }
 
-func TestDurationPolyline(t *testing.T) {
+func TestDurationClient(t *testing.T) {
 	testRoute := []route.Point{
 		{7.336189, 52.146548},
 		{7.335031, 52.146057},
@@ -432,14 +441,23 @@ func TestDurationPolyline(t *testing.T) {
 	}
 
 	c, err := routingkit.NewDurationClient(
-		"testdata/rk_test.osm.pbf", 1000, 1<<30, routingkit.Car(), nil)
+		"testdata/rk_test.osm.pbf", routingkit.Car())
 	if err != nil {
 		t.Fatalf("constructing measure: %v", err)
 	}
+	m, err := c.Measure(1000, 1<<30, nil)
+	if err != nil {
+		t.Fatalf("constructing measure: %v", err)
+	}
+	mat, err := c.Matrix(testRoute, testRoute)
+	if err != nil {
+		t.Fatalf("constructing matrix: %v", err)
+	}
 
-	checkRoutePolyline(
+	checkClient(
 		t,
-		c.Measure(),
+		m,
+		mat,
 		func(points []measure.Point) (string, []string, error) {
 			return c.Polyline(points)
 		},
@@ -450,20 +468,22 @@ func TestDurationPolyline(t *testing.T) {
 	)
 }
 
-// checkRoutePolyline implements re-usable checks for testing polyline
+// checkClient implements re-usable checks for testing polyline
 // generation functionality. It takes a measure, a function that generates a
 // polyline, a test route, and expected values for the cost matrix, the whole
 // polyline (start of route to end), and the leg polylines (legs for each pair
 // of points in the route).
-func checkRoutePolyline(
+func checkClient(
 	t *testing.T,
 	m measure.ByPoint,
+	mat measure.ByIndex,
 	polyliner func(points []measure.Point) (string, []string, error),
 	testRoute []route.Point,
 	expectedCosts [][]float64,
 	expectedWholePoly [][]float64,
 	expectedLegPolys [][][]float64,
 ) {
+	// Test by point measure
 	for i, p := range testRoute {
 		for j, q := range testRoute {
 			if v := m.Cost(p, q); v != expectedCosts[i][j] {
@@ -472,6 +492,16 @@ func checkRoutePolyline(
 		}
 	}
 
+	// Test by index measure / matrix
+	for i := range testRoute {
+		for j := range testRoute {
+			if v := mat.Cost(i, j); v != expectedCosts[i][j] {
+				t.Errorf("got %v; want %v", v, expectedCosts[i][j])
+			}
+		}
+	}
+
+	// Test polyline generation
 	poly, legs, err := polyliner(testRoute)
 	if err != nil {
 		t.Fatalf("error getting polyline: %v", err)
