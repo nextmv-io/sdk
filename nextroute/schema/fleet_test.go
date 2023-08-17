@@ -288,9 +288,7 @@ const nextrouteInputWant = `{
           "2021-10-17T09:30:00-06:00",
           "2021-10-17T12:00:00-06:00"
         ],
-        "compatibility_attributes": [
-          "A_order-24-dropoff"
-        ],
+        "compatibility_attributes": [],
         "target_arrival_time": "2021-10-17T10:55:00-06:00",
         "id": "order-24-dropoff",
         "location": {
