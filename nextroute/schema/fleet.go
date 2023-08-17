@@ -7,7 +7,10 @@ import (
 )
 
 // FleetInput schema.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [Input] instead.
 type FleetInput struct {
+	Options        *Options        `json:"options,omitempty"`
 	Defaults       *FleetDefaults  `json:"defaults,omitempty"`
 	Vehicles       []FleetVehicle  `json:"vehicles,omitempty"`
 	Stops          []FleetStop     `json:"stops,omitempty"`
@@ -17,12 +20,18 @@ type FleetInput struct {
 }
 
 // FleetDefaults holds the fleet input default data.
+// FleetInput schema.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [Defaults] instead.
 type FleetDefaults struct {
 	Vehicles *FleetVehicleDefaults `json:"vehicles,omitempty"`
 	Stops    *FleetStopDefaults    `json:"stops,omitempty"`
 }
 
 // FleetVehicleDefaults holds the fleet input vehicle default data.
+// FleetInput schema.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [VehicleDefaults] instead.
 type FleetVehicleDefaults struct {
 	Start                   *Location  `json:"start,omitempty"`
 	End                     *Location  `json:"end,omitempty"`
@@ -37,6 +46,8 @@ type FleetVehicleDefaults struct {
 }
 
 // FleetStopDefaults holds the fleet input stop default data.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [StopDefaults] instead.
 type FleetStopDefaults struct {
 	UnassignedPenalty       *int         `json:"unassigned_penalty,omitempty"`
 	Quantity                any          `json:"quantity,omitempty"`
@@ -50,6 +61,8 @@ type FleetStopDefaults struct {
 }
 
 // FleetVehicle holds the fleet input vehicle data.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [Vehilce] instead.
 type FleetVehicle struct {
 	ID                      string     `json:"id,omitempty"`
 	Start                   *Location  `json:"start,omitempty"`
@@ -69,6 +82,8 @@ type FleetVehicle struct {
 }
 
 // FleetStop holds the fleet input stop data.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [Stop] instead.
 type FleetStop struct {
 	ID                      string       `json:"id,omitempty"`
 	Position                Location     `json:"position,omitempty"`
@@ -85,10 +100,39 @@ type FleetStop struct {
 	CompatibilityAttributes *[]string    `json:"compatibility_attributes,omitempty"`
 }
 
-// FleetToNextRoute takes a legacy cloud fleet input and converts it into
-// nextroute input format.
-func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
-	input := Input{}
+// Options adds solver options to the input.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+type Options struct {
+	Solver *SolverOptions `json:"solver,omitempty"`
+}
+
+// SolverOptions represent the solver runtime duration in legacy fleet.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+type SolverOptions struct {
+	Limits *Limits `json:"limits,omitempty"`
+}
+
+// Limits represent the solver runtime limitation in fleet.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+type Limits struct {
+	Duration *CloudDuration `json:"duration,omitempty"`
+}
+
+// CloudDuration is a custom type to represent duration.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+type CloudDuration struct {
+	time.Duration
+}
+
+// ToNextRoute converters a legacy cloud fleet input into nextroute input format.
+func (fleetInput FleetInput) ToNextRoute() (Input, error) {
+	input := Input{
+		Defaults: &Defaults{},
+	}
 	stopCompats := make([]string, 0)
 	vehicleCompats := make([]string, 0)
 	// Use default values and add special handling for CompatibilityAttributes
