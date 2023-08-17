@@ -31,9 +31,15 @@ func solver(
 	input schema.FleetInput,
 	options options,
 ) (runSchema.Output, error) {
-	nextrouteInput, err := schema.FleetToNextRoute(input)
+	nextrouteInput, err := input.ToNextRoute()
 	if err != nil {
 		panic(err)
+	}
+
+	opt := options.Solve
+	if input.Options != nil || input.Options.Solver != nil &&
+		input.Options.Solver.Limits != nil && input.Options.Solver.Limits.Duration != nil {
+		opt.Duration = input.Options.Solver.Limits.Duration.Duration
 	}
 
 	model, err := factory.NewModel(nextrouteInput, options.Model)
@@ -46,7 +52,7 @@ func solver(
 		return runSchema.Output{}, err
 	}
 
-	solutions, err := solver.Solve(ctx, options.Solve)
+	solutions, err := solver.Solve(ctx, opt)
 	if err != nil {
 		return runSchema.Output{}, err
 	}
