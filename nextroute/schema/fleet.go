@@ -163,6 +163,7 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 		newBacklog := make([]InitialStop, len(v.Backlog))
 		falseBool := false
 		for i, b := range v.Backlog {
+			b := b
 			backlogStops[b] = struct{}{}
 			newBacklog[i] = InitialStop{
 				Fixed: &falseBool,
