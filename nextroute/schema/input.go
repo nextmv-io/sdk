@@ -16,7 +16,6 @@ type Input struct {
 	DurationGroups *[]DurationGroup `json:"duration_groups,omitempty"`
 	Vehicles       []Vehicle        `json:"vehicles,omitempty"`
 	Stops          []Stop           `json:"stops,omitempty"`
-	AlternateStops *[]Stop          `json:"alternate_stops,omitempty"`
 }
 
 // Defaults contains default values for vehicles and stops.
@@ -40,7 +39,6 @@ type VehicleDefaults struct {
 	MaxWait                 *int       `json:"max_wait,omitempty"`
 	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
 	ActivationPenalty       *int       `json:"activation_penalty,omitempty"`
-	AlternateStops          *[]string  `json:"alternate_stops,omitempty"`
 }
 
 // StopDefaults contains default values for stops.
