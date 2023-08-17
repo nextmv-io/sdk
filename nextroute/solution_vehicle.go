@@ -7,6 +7,12 @@ import (
 
 // SolutionVehicle is a vehicle in a solution.
 type SolutionVehicle interface {
+	// FirstMove creates a move that adds the given plan unit to the
+	// vehicle after the first solution stop of the vehicle. The move is
+	// first feasible move after the first solution stop based on the
+	// estimates of the constraint, this move is not necessarily executable.
+	FirstMove(SolutionPlanUnit) SolutionMove
+
 	// BestMove returns the best move for the given solution plan unit on
 	// the invoking vehicle. The best move is the move that has the lowest
 	// score. If there are no moves available for the given solution plan

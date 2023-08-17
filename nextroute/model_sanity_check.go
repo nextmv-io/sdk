@@ -56,11 +56,11 @@ type SanityCheckInitialSolution struct {
 	StopsPlanned int `json:"stops_planned"`
 	// StopsPlannedFixed is the number of fixed stops planned.
 	StopsPlannedFixed int `json:"stops_planned_fixed"`
-	// StopsUnplanned is the number of stops unplanned, those are the initial
-	// stops that are not fixed.
-	StopsUnplanned int `json:"stops_unplanned"`
-	// StopsUnplannedFixed is the number of fixed stops unplanned.
-	StopsUnplannedFixed int `json:"stops_unplanned_fixed"`
+	// PlanUnitsUnplanned is the number of units unplanned, those are the
+	// initial plan units that are not fixed.
+	PlanUnitsUnplanned int `json:"plan_units_unplanned"`
+	// PlanUnitsUnplannedFixed is the number of fixed stops unplanned.
+	PlanUnitsUnplannedFixed int `json:"plan_units_unplanned_fixed"`
 	// VehiclesUsed is the number of vehicles used in the initial solution.
 	VehiclesUsed int `json:"vehicles_used"`
 	// VehiclesNotUsed is the number of vehicles not used in the initial, the
