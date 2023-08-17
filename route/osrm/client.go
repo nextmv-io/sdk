@@ -126,6 +126,23 @@ func (c *client) ScaleFactor(factor float64) error {
 	return nil
 }
 
+func handleErrorStatus(resp *http.Response) error {
+	defer func() {
+		// there is nothing we can really do with an error here.
+		_ = resp.Body.Close()
+	}()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode == http.StatusBadRequest {
+		errMsg := fmt.Sprintf("Error in input data when getting maps: %s", body)
+		return NewError(errMsg, true)
+	}
+	return NewError(fmt.Sprintf("error response from OSRM: %s", body), false)
+}
+
 // get performs a GET.
 func (c *client) get(uri string) (data []byte, err error) {
 	var key string
@@ -171,6 +188,10 @@ func (c *client) get(uri string) (data []byte, err error) {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return data, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, handleErrorStatus(resp)
 	}
 
 	data, err = io.ReadAll(resp.Body)
@@ -221,11 +242,13 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 			body, err := c.get(req.path)
 			if err != nil {
 				out <- result{res: nil, err: err}
+				return
 			}
 
 			var tableResp tableResponse
 			if err := json.Unmarshal(body, &tableResp); err != nil {
 				out <- result{res: nil, err: err}
+				return
 			}
 
 			if c := tableResp.Code; c != "Ok" {
@@ -234,6 +257,7 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 					res: nil,
 					err: fmt.Errorf(fmtString, c, tableResp.Message),
 				}
+				return
 			}
 			tableResp.row = req.row
 			tableResp.column = req.column
@@ -243,12 +267,32 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 
 	// Empty chan to a list of responses.
 	var responses []tableResponse
+	var errs []error
 	for i := 0; i < len(requests); i++ {
 		r := <-out
 		if r.err != nil {
-			return nil, nil, r.err
+			errs = append(errs, r.err)
+			continue
 		}
 		responses = append(responses, *r.res)
+	}
+
+	if len(errs) > 0 {
+		hasUserErrs := false
+		errMsgs := make([]string, len(errs))
+
+		for _, err := range errs {
+			e, ok := errs[0].(Error)
+			if ok && e.IsInputError() {
+				hasUserErrs = true
+			}
+			errMsgs = append(errMsgs, err.Error())
+		}
+		errs := strings.Join(errMsgs, "\n")
+		if hasUserErrs {
+			return nil, nil, NewError(errs, true)
+		}
+		return nil, nil, NewError(errs, false)
 	}
 
 	// Stitch responses together.

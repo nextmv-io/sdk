@@ -7,7 +7,8 @@ replace github.com/nextmv-io/sdk => ../../.
 require (
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/nextmv-io/go-routingkit v0.1.13
-	github.com/nextmv-io/sdk v0.26.0
+	github.com/nextmv-io/sdk v0.27.3
+	github.com/twpayne/go-polyline v1.1.1
 )
 
 require (
@@ -19,7 +20,6 @@ require (
 	github.com/paulmach/osm v0.7.1 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
 	go.mongodb.org/mongo-driver v1.11.2 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

@@ -22,7 +22,7 @@ func DistanceMatrix(
 ) (route.ByIndex, error) {
 	p1, _, err := c.Table(points, WithDistance(), ParallelRuns(parallelQueries))
 	if err != nil {
-		return nil, fmt.Errorf("fetching matrix: %v", err)
+		return nil, err
 	}
 
 	return overrideZeroes(route.Matrix(p1), points), nil

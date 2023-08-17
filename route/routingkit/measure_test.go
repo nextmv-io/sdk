@@ -2,11 +2,14 @@ package routingkit_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 	"unicode"
 
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/routingkit"
+	"github.com/twpayne/go-polyline"
 )
 
 type byPointConstantMeasure float64
@@ -343,6 +346,182 @@ func TestDurationByPointMarshal(t *testing.T) {
 	if v := string(b); v != w {
 		t.Errorf("got %q; want %q", v, w)
 	}
+}
+
+func TestDistancePolyline(t *testing.T) {
+	testRoute := []route.Point{
+		{7.336189, 52.146548},
+		{7.335031, 52.146057},
+		{7.335073697312962, 52.145657185840214},
+	}
+	expectedCosts := [][]float64{
+		{0, 165, 217},
+		{165, 0, 52},
+		{217, 52, 0},
+	}
+	expectedWholePoly := [][]float64{
+		{7.3362, 52.14631},
+		{7.3358799999999995, 52.14691},
+		{7.3353399999999995, 52.146499999999996},
+		{7.3350599999999995, 52.146209999999996},
+		{7.3350599999999995, 52.146209999999996},
+		{7.334689999999999, 52.14579},
+	}
+	expectedLegPolys := [][][]float64{
+		{
+			{7.3362, 52.14631},
+			{7.3358799999999995, 52.14691},
+			{7.3353399999999995, 52.146499999999996},
+			{7.3350599999999995, 52.146209999999996},
+		},
+		{
+			{7.33506, 52.14621},
+			{7.33469, 52.145790000000005},
+		},
+	}
+
+	c, err := routingkit.NewDistanceClient(
+		"testdata/rk_test.osm.pbf", 1000, 1<<30, routingkit.Car(), nil)
+	if err != nil {
+		t.Fatalf("constructing measure: %v", err)
+	}
+
+	checkRoutePolyline(
+		t,
+		c.Measure(),
+		func(points []measure.Point) (string, []string, error) {
+			return c.Polyline(points)
+		},
+		testRoute,
+		expectedCosts,
+		expectedWholePoly,
+		expectedLegPolys,
+	)
+}
+
+func TestDurationPolyline(t *testing.T) {
+	testRoute := []route.Point{
+		{7.336189, 52.146548},
+		{7.335031, 52.146057},
+		{7.335073697312962, 52.145657185840214},
+	}
+	expectedCosts := [][]float64{
+		{0, 11.88, 15.624},
+		{11.88, 0, 3.744},
+		{15.624, 3.744, 0},
+	}
+	expectedWholePoly := [][]float64{
+		{7.3362, 52.14631},
+		{7.3358799999999995, 52.14691},
+		{7.3353399999999995, 52.146499999999996},
+		{7.3350599999999995, 52.146209999999996},
+		{7.3350599999999995, 52.146209999999996},
+		{7.334689999999999, 52.14579},
+	}
+	expectedLegPolys := [][][]float64{
+		{
+			{7.3362, 52.14631},
+			{7.3358799999999995, 52.14691},
+			{7.3353399999999995, 52.146499999999996},
+			{7.3350599999999995, 52.146209999999996},
+		},
+		{
+			{7.33506, 52.14621},
+			{7.33469, 52.145790000000005},
+		},
+	}
+
+	c, err := routingkit.NewDurationClient(
+		"testdata/rk_test.osm.pbf", 1000, 1<<30, routingkit.Car(), nil)
+	if err != nil {
+		t.Fatalf("constructing measure: %v", err)
+	}
+
+	checkRoutePolyline(
+		t,
+		c.Measure(),
+		func(points []measure.Point) (string, []string, error) {
+			return c.Polyline(points)
+		},
+		testRoute,
+		expectedCosts,
+		expectedWholePoly,
+		expectedLegPolys,
+	)
+}
+
+// checkRoutePolyline implements re-usable checks for testing polyline
+// generation functionality. It takes a measure, a function that generates a
+// polyline, a test route, and expected values for the cost matrix, the whole
+// polyline (start of route to end), and the leg polylines (legs for each pair
+// of points in the route).
+func checkRoutePolyline(
+	t *testing.T,
+	m measure.ByPoint,
+	polyliner func(points []measure.Point) (string, []string, error),
+	testRoute []route.Point,
+	expectedCosts [][]float64,
+	expectedWholePoly [][]float64,
+	expectedLegPolys [][][]float64,
+) {
+	for i, p := range testRoute {
+		for j, q := range testRoute {
+			if v := m.Cost(p, q); v != expectedCosts[i][j] {
+				t.Errorf("got %v; want %v", v, expectedCosts[i][j])
+			}
+		}
+	}
+
+	poly, legs, err := polyliner(testRoute)
+	if err != nil {
+		t.Fatalf("error getting polyline: %v", err)
+	}
+	wholePoly, _, err := polyline.DecodeCoords([]byte(poly))
+	legPolys := make([][][]float64, len(legs))
+	for i, leg := range legs {
+		legPolys[i], _, err = polyline.DecodeCoords([]byte(leg))
+		if err != nil {
+			t.Fatalf("error decoding leg polyline: %v", err)
+		}
+	}
+	fmt.Println(wholePoly)
+	fmt.Println(legPolys)
+	if err != nil {
+		t.Fatalf("error decoding polyline: %v", err)
+	}
+	if len(wholePoly) != len(expectedWholePoly) {
+		t.Fatalf("got %d points; want %d", len(wholePoly), len(expectedWholePoly))
+	}
+	for i, p := range wholePoly {
+		if !equalPoint(p, expectedWholePoly[i]) {
+			t.Errorf("got %v polygon point at index %d; want %v", p, i, expectedWholePoly[i])
+		}
+	}
+	if len(legPolys) != len(expectedLegPolys) {
+		t.Fatalf("got %d legs; want %d", len(legPolys), len(expectedLegPolys))
+	}
+	for i, leg := range legPolys {
+		if len(leg) != len(expectedLegPolys[i]) {
+			t.Errorf("got %d points in leg %d; want %d", len(leg), i, len(expectedLegPolys[i]))
+		}
+		for j, p := range leg {
+			if !equalPoint(p, expectedLegPolys[i][j]) {
+				t.Errorf("got %v point at index %d in leg at index %d; want %v", p, j, i, expectedLegPolys[i][j])
+			}
+		}
+	}
+}
+
+func equalPoint(a, b []float64) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, ai := range a {
+		if ai != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func removeSpace(s string) string {
