@@ -17,7 +17,7 @@ func TestFleetConverter(t *testing.T) {
 	}
 
 	// Convert fleet input to nextroute input.
-	input, err := schema.FleetToNextRoute(fleetInput)
+	input, err := fleetInput.ToNextRoute()
 	if err != nil {
 		t.Error(err)
 	}
