@@ -136,17 +136,15 @@ func FleetToNextRoute(fleetInput FleetInput) (Input, error) {
 
 	// Handle special case of compatibility attributes, to use them to make
 	// legacy backlogs more or less work like in legacy fleet.
-	for _, s := range fleetInput.Stops {
-		if s.CompatibilityAttributes != nil {
-			ca := append(*s.CompatibilityAttributes, stopCompats...)
-			s.CompatibilityAttributes = &ca
-		} else {
-			s.CompatibilityAttributes = &stopCompats
+	for i, s := range fleetInput.Stops {
+		if s.CompatibilityAttributes == nil {
+			fleetInput.Stops[i].CompatibilityAttributes = &stopCompats
 		}
 	}
 
-	for _, v := range fleetInput.Vehicles {
-		v.CompatibilityAttributes = append(v.CompatibilityAttributes, vehicleCompats...)
+	for i := range fleetInput.Vehicles {
+		fleetInput.Vehicles[i].CompatibilityAttributes =
+			append(fleetInput.Vehicles[i].CompatibilityAttributes, vehicleCompats...)
 	}
 
 	// Create vehicles with special logic for backlog legacy needs.

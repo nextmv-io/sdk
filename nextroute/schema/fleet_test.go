@@ -154,145 +154,149 @@ const fleetInputData = `{
   }`
 
 const nextrouteInputWant = `{
-	"defaults": {
-	  "vehicles": {
-		"capacity": 10,
-		"start_location": {
-		  "lon": -96.659222,
-		  "lat": 33.122746
-		},
-		"end_location": {
-		  "lon": -96.659222,
-		  "lat": 33.122746
-		},
-		"speed": 20,
-		"start_time": "2021-10-17T09:00:00-06:00",
-		"end_time": "2021-10-17T11:00:00-06:00",
-		"max_stops": 15,
-		"max_distance": 100000,
-		"max_duration": 50000
-	  },
-	  "stops": {
-		"unplanned_penalty": 200000,
-		"quantity": -5,
-		"start_time_window": [
-		  "2021-10-17T09:00:00-06:00",
-		  "2021-10-17T10:00:00-06:00"
-		],
-		"max_wait": 300,
-		"duration": 120,
-		"early_arrival_time_penalty": 2,
-		"late_arrival_time_penalty": 5
-	  }
-	},
-	"stop_groups": [
-	  [
-		"order-24-pickup-1",
-		"order-24-dropoff"
-	  ]
-	],
-	"duration_groups": [
-	  {
-		"group": [
-		  "order-24-pickup-1",
-		  "order-24-dropoff"
-		],
-		"duration": 10
-	  }
-	],
-	"vehicles": [
-	  {
-		"capacity": 105,
-		"compatibility_attributes": [
-		  "vehicle-1",
-		  "vehicle-1_order-24-pickup-1",
-		  "vehicle-1_order-24-dropoff"
-		],
-		"max_distance": 200000,
-		"stop_duration_multiplier": 1,
-		"end_location": {
-		  "lon": -96.659222,
-		  "lat": 33.122746
-		},
-		"speed": 14,
-		"max_duration": 55000,
-		"activation_penalty": 2,
-		"start_location": {
-		  "lon": -96.659222,
-		  "lat": 33.122746
-		},
-		"initial_stops": [
-		  {
-			"fixed": false,
-			"id": "order-24-pickup-1"
-		  },
-		  {
-			"fixed": false,
-			"id": "order-24-dropoff"
-		  }
-		],
-		"id": "vehicle-1"
-	  },
-	  {
-		"capacity": 95,
-		"compatibility_attributes": [],
-		"activation_penalty": 0,
-		"initial_stops": [],
-		"id": "vehicle-2"
-	  }
-	],
-	"stops": [
-	  {
-		"precedes": "order-1-dropoff",
-		"quantity": -27,
-		"compatibility_attributes": [
-		  "vehicle-1"
-		],
-		"id": "order-1-pickup-1",
-		"location": {
-		  "lon": -96.827094,
-		  "lat": 33.004745
-		}
-	  },
-	  {
-		"quantity": 27,
-		"start_time_window": [
-		  "2021-10-17T09:00:00-06:00",
-		  "2021-10-17T10:00:00-06:00"
-		],
-		"compatibility_attributes": [],
-		"target_arrival_time": "2021-10-17T09:45:00-06:00",
-		"id": "order-1-dropoff",
-		"location": {
-		  "lon": -96.86074,
-		  "lat": 33.005741
-		}
-	  },
-	  {
-		"precedes": "order-24-dropoff",
-		"quantity": -9,
-		"compatibility_attributes": [
-		  "vehicle-1_order-24-pickup-1"
-		],
-		"id": "order-24-pickup-1",
-		"location": {
-		  "lon": -96.690515,
-		  "lat": 32.995981
-		}
-	  },
-	  {
-		"quantity": 9,
-		"start_time_window": [
-		  "2021-10-17T09:30:00-06:00",
-		  "2021-10-17T12:00:00-06:00"
-		],
-		"compatibility_attributes": [],
-		"target_arrival_time": "2021-10-17T10:55:00-06:00",
-		"id": "order-24-dropoff",
-		"location": {
-		  "lon": -96.783115,
-		  "lat": 32.95055
-		}
-	  }
-	]
+    "defaults": {
+      "vehicles": {
+        "capacity": 10,
+        "start_location": {
+          "lon": -96.659222,
+          "lat": 33.122746
+        },
+        "end_location": {
+          "lon": -96.659222,
+          "lat": 33.122746
+        },
+        "speed": 20,
+        "start_time": "2021-10-17T09:00:00-06:00",
+        "end_time": "2021-10-17T11:00:00-06:00",
+        "max_stops": 15,
+        "max_distance": 100000,
+        "max_duration": 50000
+      },
+      "stops": {
+        "unplanned_penalty": 200000,
+        "quantity": -5,
+        "start_time_window": [
+          "2021-10-17T09:00:00-06:00",
+          "2021-10-17T10:00:00-06:00"
+        ],
+        "max_wait": 300,
+        "duration": 120,
+        "early_arrival_time_penalty": 2,
+        "late_arrival_time_penalty": 5
+      }
+    },
+    "stop_groups": [
+      [
+        "order-24-pickup-1",
+        "order-24-dropoff"
+      ]
+    ],
+    "duration_groups": [
+      {
+        "group": [
+          "order-24-pickup-1",
+          "order-24-dropoff"
+        ],
+        "duration": 10
+      }
+    ],
+    "vehicles": [
+      {
+        "capacity": 105,
+        "compatibility_attributes": [
+          "vehicle-1",
+          "vehicle-1_order-24-pickup-1",
+          "vehicle-1_order-24-dropoff"
+        ],
+        "max_distance": 200000,
+        "stop_duration_multiplier": 1,
+        "end_location": {
+          "lon": -96.659222,
+          "lat": 33.122746
+        },
+        "speed": 14,
+        "max_duration": 55000,
+        "activation_penalty": 2,
+        "start_location": {
+          "lon": -96.659222,
+          "lat": 33.122746
+        },
+        "initial_stops": [
+          {
+            "fixed": false,
+            "id": "order-24-pickup-1"
+          },
+          {
+            "fixed": false,
+            "id": "order-24-dropoff"
+          }
+        ],
+        "id": "vehicle-1"
+      },
+      {
+        "capacity": 95,
+        "compatibility_attributes": [],
+        "activation_penalty": 0,
+        "initial_stops": [],
+        "id": "vehicle-2"
+      }
+    ],
+    "stops": [
+      {
+        "precedes": "order-1-dropoff",
+        "quantity": -27,
+        "compatibility_attributes": [
+          "vehicle-1"
+        ],
+        "id": "order-1-pickup-1",
+        "location": {
+          "lon": -96.827094,
+          "lat": 33.004745
+        }
+      },
+      {
+        "quantity": 27,
+        "start_time_window": [
+          "2021-10-17T09:00:00-06:00",
+          "2021-10-17T10:00:00-06:00"
+        ],
+        "compatibility_attributes": [
+          "A"
+        ],
+        "target_arrival_time": "2021-10-17T09:45:00-06:00",
+        "id": "order-1-dropoff",
+        "location": {
+          "lon": -96.86074,
+          "lat": 33.005741
+        }
+      },
+      {
+        "precedes": "order-24-dropoff",
+        "quantity": -9,
+        "compatibility_attributes": [
+          "vehicle-1_order-24-pickup-1"
+        ],
+        "id": "order-24-pickup-1",
+        "location": {
+          "lon": -96.690515,
+          "lat": 32.995981
+        }
+      },
+      {
+        "quantity": 9,
+        "start_time_window": [
+          "2021-10-17T09:30:00-06:00",
+          "2021-10-17T12:00:00-06:00"
+        ],
+        "compatibility_attributes": [
+          "A_order-24-dropoff"
+        ],
+        "target_arrival_time": "2021-10-17T10:55:00-06:00",
+        "id": "order-24-dropoff",
+        "location": {
+          "lon": -96.783115,
+          "lat": 32.95055
+        }
+      }
+    ]
   }`
