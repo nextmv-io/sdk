@@ -1,8 +1,6 @@
 package osrm
 
 import (
-	"fmt"
-
 	"github.com/nextmv-io/sdk/route"
 )
 
@@ -22,6 +20,7 @@ func DistanceMatrix(
 ) (route.ByIndex, error) {
 	p1, _, err := c.Table(points, WithDistance(), ParallelRuns(parallelQueries))
 	if err != nil {
+		// preserve the error type for callers
 		return nil, err
 	}
 
@@ -38,7 +37,8 @@ func DurationMatrix(
 ) (route.ByIndex, error) {
 	_, p2, err := c.Table(points, WithDuration(), ParallelRuns(parallelQueries))
 	if err != nil {
-		return nil, fmt.Errorf("fetching matrix: %v", err)
+		// preserve the error type for callers
+		return nil, err
 	}
 
 	return overrideZeroes(route.Matrix(p2), points), nil
@@ -63,7 +63,8 @@ func DistanceDurationMatrices(
 		ParallelRuns(parallelQueries),
 	)
 	if err != nil {
-		return nil, nil, fmt.Errorf("fetching matrices: %v", err)
+		// preserve the error type for callers
+		return nil, nil, err
 	}
 
 	return overrideZeroes(
