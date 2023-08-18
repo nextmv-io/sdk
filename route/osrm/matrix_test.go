@@ -271,7 +271,7 @@ func TestDeflate(t *testing.T) {
 
 	// Extend base matrix to include a 0,0 point
 	points := make([]measure.Point, len(p)+1)
-	copy(points, p[:])
+	copy(points, p)
 	points[len(p)] = measure.Point{0, 0}
 	expDistances := make([][]float64, len(points))
 	for i := range expectedDistances {
