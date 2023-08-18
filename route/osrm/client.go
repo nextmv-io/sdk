@@ -44,6 +44,10 @@ type Client interface {
 	// Get performs a GET against the OSRM server returning the response
 	// body and an error.
 	Get(uri string) ([]byte, error)
+	// IgnoreEmpty removes empty / zero points from the request before sending
+	// it to the OSRM server. The indices of the points will be maintained.
+	// Distances / durations for these points will be set to 0.
+	IgnoreEmpty(ignore bool)
 	// SnapRadius limits snapping a point to the street network to given radius
 	// in meters.
 	// Setting the snap radius to a value = 0 results in an unlimited snapping
@@ -96,10 +100,15 @@ type client struct {
 	httpClient   *http.Client
 	cache        *lru.Cache
 	host         string
+	removeEmpty  bool
 	snapRadius   int
 	scaleFactor  float64
 	maxTableSize int
 	useCache     bool
+}
+
+func (c *client) IgnoreEmpty(ignore bool) {
+	c.removeEmpty = ignore
 }
 
 func (c *client) SnapRadius(radius int) error {
@@ -224,6 +233,13 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 		opt(cfg)
 	}
 
+	// Remove empty points, if requested.
+	originalLength := len(points)
+	var deflatedIndices []int
+	if c.removeEmpty {
+		points, deflatedIndices = deflateZeroes(points)
+	}
+
 	// Creates paths with sources to make requests "by row".
 	requests, err := c.tableRequests(cfg, points)
 	if err != nil {
@@ -297,6 +313,12 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 
 	// Stitch responses together.
 	routeResp := mergeRequests(responses)
+
+	// Reinflate the response matrix to the original size, if necessary.
+	if c.removeEmpty {
+		routeResp.Distances = inflateZeroes(routeResp.Distances, deflatedIndices, originalLength)
+		routeResp.Durations = inflateZeroes(routeResp.Durations, deflatedIndices, originalLength)
+	}
 
 	return routeResp.Distances, routeResp.Durations, nil
 }
@@ -668,4 +690,37 @@ func mergeRequests(responses []tableResponse) tableResponse {
 	}
 
 	return merged
+}
+
+// deflateZeroes returns a new slice of points without points that are missing
+// or [0,0]. It also returns a slice of indices that can be used to inflate the
+// matrix. The indices are the indices of the points in the original slice.
+func deflateZeroes(points []route.Point) (deflated []route.Point, indices []int) {
+	deflated = make([]route.Point, 0, len(points))
+	indices = make([]int, 0, len(points))
+	for i, point := range points {
+		if len(point) == 0 || (point[0] == 0 && point[1] == 0) {
+			continue
+		}
+		deflated = append(deflated, point)
+		indices = append(indices, i)
+	}
+	return deflated, indices
+}
+
+// inflateZeroes returns a new matrix with inflated to original size. The
+// indices are the indices of the points in the deflated matrix in the original
+// matrix (i.e. the indices returned by deflateZeroes). The length is the length
+// of the original matrix.
+func inflateZeroes(matrix [][]float64, indices []int, length int) [][]float64 {
+	inflated := make([][]float64, length)
+	for i := 0; i < length; i++ {
+		inflated[i] = make([]float64, length)
+	}
+	for i, oi := range indices {
+		for j, oj := range indices {
+			inflated[oi][oj] = matrix[i][j]
+		}
+	}
+	return inflated
 }
