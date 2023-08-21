@@ -25,9 +25,10 @@ type Run struct {
 
 // Result is the structure of the result section of the statistics.
 type Result struct {
-	Duration *float64 `json:"duration,omitempty"`
-	Value    *Float64 `json:"value,omitempty"`
-	Custom   any      `json:"custom,omitempty"`
+	Duration   *float64 `json:"duration,omitempty"`
+	Iterations *int     `json:"iterations,omitempty"`
+	Value      *Float64 `json:"value,omitempty"`
+	Custom     any      `json:"custom,omitempty"`
 }
 
 // SeriesData is the structure of the series section of the statistics.
