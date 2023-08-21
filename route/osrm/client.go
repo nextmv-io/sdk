@@ -72,7 +72,7 @@ func NewClient(host string, opts ...ClientOption) Client {
 	c := &client{
 		host:         host,
 		httpClient:   http.DefaultClient,
-		snapRadius:   1000,
+		snapRadius:   0,
 		maxTableSize: 100,
 		scaleFactor:  1.0,
 	}
