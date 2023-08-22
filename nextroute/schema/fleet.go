@@ -2,6 +2,7 @@
 package schema
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -126,6 +127,31 @@ type Limits struct {
 // maintained. It will be deleted soon. Please use [solve.Options] instead.
 type CloudDuration struct {
 	time.Duration
+}
+
+// UnmarshalJSON is a function to unmarshal a CloudDuration.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+func (d *CloudDuration) UnmarshalJSON(b []byte) (err error) {
+	// Handle duration given as a string (use time.ParseDuration)
+	if b[0] == '"' {
+		sd := string(b[1 : len(b)-1])
+		d.Duration, err = time.ParseDuration(sd)
+		return
+	}
+
+	// If duration is given as a number, fall back to duration default (nanoseconds)
+	var id int64
+	id, err = json.Number(string(b)).Int64()
+	d.Duration = time.Duration(id)
+	return
+}
+
+// MarshalJSON is a function to marshal a CloudDuration.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+func (d CloudDuration) MarshalJSON() (b []byte, err error) {
+	return []byte(fmt.Sprintf(`"%s"`, d.String())), nil
 }
 
 // ToNextRoute converters a legacy cloud fleet input into nextroute input format.
