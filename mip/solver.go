@@ -98,6 +98,17 @@ type SolverParameter int
 // SolverProvider identifier for a back-end solver.
 type SolverProvider string
 
+const (
+	// Highs is the [HiGHS] open-source solver.
+	//
+	// [HiGHS]: https://highs.dev
+	Highs SolverProvider = "highs"
+	// Xpress is the [FICO Xpress] commercial solver.
+	//
+	// [FICO Xpress]: https://www.fico.com/en/products/fico-xpress-optimization
+	Xpress SolverProvider = "xpress"
+)
+
 // GetSolverParameter interface to retrieve a solver parameter.
 type GetSolverParameter interface {
 	SolverParameter() SolverParameter

@@ -108,8 +108,9 @@ func solver(_ context.Context, input input, options options) (schema.Output, err
 		}
 	}
 
-	// We create a solver using the 'highs' provider.
-	solver, err := mip.NewSolver("highs", m)
+	// Create a solver using a provider. Please see the documentation on
+	// [mip.SolverProvider] for more information on the available providers.
+	solver, err := mip.NewSolver(mip.Highs, m)
 	if err != nil {
 		return schema.Output{}, err
 	}
