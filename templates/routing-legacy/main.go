@@ -42,7 +42,7 @@ func solver(
 	}
 
 	solveOptions := options.Solve
-	if input.Options != nil || input.Options.Solver != nil &&
+	if input.Options != nil && input.Options.Solver != nil &&
 		input.Options.Solver.Limits != nil {
 		duration, err := time.ParseDuration(input.Options.Solver.Limits.Duration)
 		if err != nil {
