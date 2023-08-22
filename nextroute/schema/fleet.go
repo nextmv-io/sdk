@@ -228,6 +228,18 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 	}
 
 	// Create stops with legacy backlog feature.
+	stops := createStops(fleetInput, backlogStops)
+
+	// Put new input format together and return it.
+	input.StopGroups = &fleetInput.StopGroups
+	input.DurationGroups = &fleetInput.DurationGroups
+	input.Vehicles = vehicles
+	input.Stops = stops
+
+	return input, nil
+}
+
+func createStops(fleetInput FleetInput, backlogStops map[string]struct{}) []Stop {
 	stops := make([]Stop, len(fleetInput.Stops))
 	for i, s := range fleetInput.Stops {
 		compats := make([]string, 0)
@@ -256,15 +268,19 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 			CustomData:              nil,
 		}
 		if s.HardWindow != nil {
-			stops[i].StartTimeWindow = *s.HardWindow
+			timeWindow := *s.HardWindow
+			for i := range timeWindow {
+				timeWindow[i] = roundToMinute(timeWindow[i])
+			}
+			stops[i].StartTimeWindow = timeWindow
 		}
 	}
+	return stops
+}
 
-	// Put new input format together and return it.
-	input.StopGroups = &fleetInput.StopGroups
-	input.DurationGroups = &fleetInput.DurationGroups
-	input.Vehicles = vehicles
-	input.Stops = stops
-
-	return input, nil
+func roundToMinute(t time.Time) time.Time {
+	if t.Minute() > 29 {
+		return time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute()+1, 0, 0, t.Location())
+	}
+	return time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), 0, 0, t.Location())
 }
