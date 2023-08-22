@@ -105,6 +105,16 @@ type FleetStop struct {
 // maintained. It will be deleted soon. Please use [solve.Options] instead.
 type Options struct {
 	Solver *SolverOptions `json:"solver,omitempty"`
+	Runner *RunnerOptions `json:"runner,omitempty"`
+}
+
+// RunnerOptions represent the solver runtime duration in legacy fleet.
+// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
+// maintained. It will be deleted soon. Please use [solve.Options] instead.
+type RunnerOptions struct {
+	Output struct {
+		Solutions string `json:"solutions,omitempty"`
+	} `json:"output,omitempty"`
 }
 
 // SolverOptions represent the solver runtime duration in legacy fleet.
