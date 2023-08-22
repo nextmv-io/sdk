@@ -4,19 +4,19 @@ package main
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/nextmv-io/sdk/nextroute"
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
 	runSchema "github.com/nextmv-io/sdk/run/schema"
-	"github.com/nextmv-io/sdk/run/validate"
 )
 
 func main() {
 	runner := run.CLI(solver,
 		run.InputValidate[run.CLIRunnerConfig, schema.FleetInput, options, runSchema.Output](
-			validate.JSON[schema.FleetInput](nil),
+			nil,
 		),
 	)
 	err := runner.Run(context.Background())
@@ -41,6 +41,17 @@ func solver(
 		panic(err)
 	}
 
+	solveOptions := options.Solve
+	if input.Options != nil || input.Options.Solver != nil &&
+		input.Options.Solver.Limits != nil {
+		duration, err := time.ParseDuration(input.Options.Solver.Limits.Duration)
+		if err != nil {
+			return runSchema.Output{}, err
+		}
+
+		solveOptions.Duration = duration
+	}
+
 	model, err := factory.NewModel(nextrouteInput, options.Model)
 	if err != nil {
 		return runSchema.Output{}, err
@@ -51,7 +62,7 @@ func solver(
 		return runSchema.Output{}, err
 	}
 
-	solutions, err := solver.Solve(ctx, options.Solve)
+	solutions, err := solver.Solve(ctx, solveOptions)
 	if err != nil {
 		return runSchema.Output{}, err
 	}
