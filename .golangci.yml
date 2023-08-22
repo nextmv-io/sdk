@@ -98,6 +98,8 @@ linters:
     # different from depguard where there are different block types for example
     # version constraints and module recommendations.
     - gomodguard
+    # gosec offers another set of security checks in addition to govet
+    - gosec
     # Linter for Go source code that specializes in simplifying a code.
     - gosimple
     # Vet examines Go source code and reports suspicious constructs, such as
@@ -208,6 +210,16 @@ issues:
     - path: alns/solver\.go
       linters:
         - nestif
+
+    # Using math/rand is fine here
+    - path: nextroute/common/alias_test\.go
+      linters:
+        - gosec
+      text: G404
+    - path: route/osrm/matrix_test\.go
+      linters:
+        - gosec
+      text: G404
 
     # Please note that other Go modules have issues that are ignored but are
     # not listed here. The reason is that linting must be done standing on the
