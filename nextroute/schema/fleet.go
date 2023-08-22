@@ -62,7 +62,7 @@ type FleetStopDefaults struct {
 
 // FleetVehicle holds the fleet input vehicle data.
 // DEPRECATION NOTICE: this part of the API is deprecated and is no longer
-// maintained. It will be deleted soon. Please use [Vehilce] instead.
+// maintained. It will be deleted soon. Please use [Vehicle] instead.
 type FleetVehicle struct {
 	ID                      string     `json:"id,omitempty"`
 	Start                   *Location  `json:"start,omitempty"`
@@ -138,7 +138,6 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 	// Use default values and add special handling for CompatibilityAttributes
 	// and HardWindows.
 	if fleetInput.Defaults != nil && fleetInput.Defaults.Stops != nil {
-		input.Defaults = &Defaults{}
 		input.Defaults.Stops = &StopDefaults{
 			UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
 			Quantity:                fleetInput.Defaults.Stops.Quantity,

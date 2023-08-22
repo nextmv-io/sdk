@@ -10,10 +10,15 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
 	runSchema "github.com/nextmv-io/sdk/run/schema"
+	"github.com/nextmv-io/sdk/run/validate"
 )
 
 func main() {
-	runner := run.CLI(solver)
+	runner := run.CLI(solver,
+		run.InputValidate[run.CLIRunnerConfig, schema.FleetInput, options, runSchema.Output](
+			validate.JSON[schema.FleetInput](nil),
+		),
+	)
 	err := runner.Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
@@ -36,12 +41,6 @@ func solver(
 		panic(err)
 	}
 
-	opt := options.Solve
-	if input.Options != nil || input.Options.Solver != nil &&
-		input.Options.Solver.Limits != nil && input.Options.Solver.Limits.Duration != nil {
-		opt.Duration = input.Options.Solver.Limits.Duration.Duration
-	}
-
 	model, err := factory.NewModel(nextrouteInput, options.Model)
 	if err != nil {
 		return runSchema.Output{}, err
@@ -52,7 +51,7 @@ func solver(
 		return runSchema.Output{}, err
 	}
 
-	solutions, err := solver.Solve(ctx, opt)
+	solutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
 		return runSchema.Output{}, err
 	}
