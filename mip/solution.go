@@ -31,6 +31,8 @@ type Solution interface {
 	// ObjectiveValue return the value of the objective, the value should only
 	// be used if HasValues returns true. Returns 0.0 if HasValues is false.
 	ObjectiveValue() float64
+	// Provider of the solver that produced the invoking solution.
+	Provider() SolverProvider
 	// RunTime returns the duration it took for the Solver.Solve to return
 	// this solution
 	RunTime() time.Duration
