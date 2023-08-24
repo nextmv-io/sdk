@@ -3,6 +3,7 @@ package schema
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 )
 
@@ -85,12 +86,14 @@ type FleetVehicle struct {
 // DEPRECATION NOTICE: this part of the API is deprecated and is no longer
 // maintained. It will be deleted soon. Please use [Stop] instead.
 type FleetStop struct {
-	ID                      string       `json:"id,omitempty"`
-	Position                Location     `json:"position,omitempty"`
-	UnassignedPenalty       *int         `json:"unassigned_penalty,omitempty"`
-	Quantity                any          `json:"quantity,omitempty"`
-	Precedes                any          `json:"precedes,omitempty"`
-	Succeeds                any          `json:"succeeds,omitempty"`
+	ID                      string   `json:"id,omitempty"`
+	Position                Location `json:"position,omitempty"`
+	UnassignedPenalty       *int     `json:"unassigned_penalty,omitempty"`
+	Quantity                any      `json:"quantity,omitempty"`
+	Precedes                any      `json:"precedes,omitempty"`
+	precedes                []string
+	Succeeds                any `json:"succeeds,omitempty"`
+	succeeds                []string
 	HardWindow              *[]time.Time `json:"hard_window,omitempty"`
 	MaxWait                 *int         `json:"max_wait,omitempty"`
 	StopDuration            *int         `json:"stop_duration,omitempty"`
@@ -105,16 +108,6 @@ type FleetStop struct {
 // maintained. It will be deleted soon. Please use [solve.Options] instead.
 type Options struct {
 	Solver *SolverOptions `json:"solver,omitempty"`
-	Runner *RunnerOptions `json:"runner,omitempty"`
-}
-
-// RunnerOptions represent the solver runtime duration in legacy fleet.
-// DEPRECATION NOTICE: this part of the API is deprecated and is no longer
-// maintained. It will be deleted soon. Please use [solve.Options] instead.
-type RunnerOptions struct {
-	Output struct {
-		Solutions string `json:"solutions,omitempty"`
-	} `json:"output,omitempty"`
 }
 
 // SolverOptions represent the solver runtime duration in legacy fleet.
@@ -187,6 +180,12 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 			append(fleetInput.Vehicles[i].CompatibilityAttributes, vehicleCompats...)
 	}
 
+	// Get stopMap and update precedes/succeeds any fields.
+	stopMap, err := fleetInput.stopMapUpdate()
+	if err != nil {
+		return input, err
+	}
+
 	// Create vehicles with special logic for backlog legacy needs.
 	backlogStops := make(map[string]struct{})
 	vehicles := make([]Vehicle, len(fleetInput.Vehicles))
@@ -199,13 +198,27 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 				newAttributes = append(newAttributes, fmt.Sprintf("%s_%s", ca, b))
 			}
 		}
-		newBacklog := make([]InitialStop, len(v.Backlog))
+		newBacklog := make([]InitialStop, 0)
 		falseBool := false
-		for i, b := range v.Backlog {
+		for _, b := range v.Backlog {
 			backlogStops[b] = struct{}{}
-			newBacklog[i] = InitialStop{
+			newBacklog = append(newBacklog, InitialStop{
 				Fixed: &falseBool,
 				ID:    b,
+			})
+			backlogStop := stopMap[b]
+			for _, p := range backlogStop.precedes {
+				newBacklog = append(newBacklog, InitialStop{
+					Fixed: &falseBool,
+					ID:    p,
+				})
+			}
+
+			for _, s := range backlogStop.succeeds {
+				newBacklog = append(newBacklog, InitialStop{
+					Fixed: &falseBool,
+					ID:    s,
+				})
 			}
 		}
 		vehicles[i] = Vehicle{
@@ -247,6 +260,55 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 	input.Stops = stops
 
 	return input, nil
+}
+
+func (fleetInput *FleetInput) stopMapUpdate() (map[string]FleetStop, error) {
+	stopMap := make(map[string]FleetStop)
+	for idx, stop := range fleetInput.Stops {
+		if stop.Precedes == nil { //nolint:gocritic
+			fleetInput.Stops[idx].precedes = []string{}
+		} else if reflect.ValueOf(stop.Precedes).Kind() == reflect.Slice {
+			slice := stop.Precedes.([]any)
+			precedes := make([]string, len(slice))
+			for i, p := range slice {
+				val, ok := p.(string)
+				if !ok {
+					return nil, fmt.Errorf("could not parse Precedes field for stop %s", stop.ID)
+				}
+				precedes[i] = val
+			}
+			fleetInput.Stops[idx].precedes = precedes
+		} else {
+			precedes, ok := stop.Precedes.(string)
+			if !ok {
+				return nil, fmt.Errorf("could not parse Precedes field for stop %s", stop.ID)
+			}
+			fleetInput.Stops[idx].precedes = []string{precedes}
+		}
+
+		if stop.Succeeds == nil { //nolint:gocritic
+			fleetInput.Stops[idx].succeeds = []string{}
+		} else if reflect.ValueOf(stop.Succeeds).Kind() == reflect.Slice {
+			slice := stop.Succeeds.([]any)
+			succeeds := make([]string, len(slice))
+			for i, p := range slice {
+				val, ok := p.(string)
+				if !ok {
+					return nil, fmt.Errorf("could not parse Succeeds field for stop %s", stop.ID)
+				}
+				succeeds[i] = val
+			}
+			fleetInput.Stops[idx].succeeds = succeeds
+		} else {
+			succeeds, ok := stop.Succeeds.(string)
+			if !ok {
+				return nil, fmt.Errorf("could not parse Succeeds field for stop %s", stop.ID)
+			}
+			fleetInput.Stops[idx].succeeds = []string{succeeds}
+		}
+		stopMap[stop.ID] = fleetInput.Stops[idx]
+	}
+	return stopMap, nil
 }
 
 func createStops(fleetInput FleetInput, backlogStops map[string]struct{}) []Stop {
