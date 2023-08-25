@@ -112,7 +112,7 @@ type ModelConstraint interface {
 	// It should be a pure function, i.e. not change any state of the
 	// constraint. The stopPositionsHint can be used to speed up the estimation
 	// of the constraint violation.
-	EstimateIsViolated(Move, Solution) (isViolated bool, stopPositionsHint StopPositionsHint)
+	EstimateIsViolated(SolutionMoveStops, Solution) (isViolated bool, stopPositionsHint StopPositionsHint)
 }
 
 // ModelConstraints is a slice of ModelConstraint.

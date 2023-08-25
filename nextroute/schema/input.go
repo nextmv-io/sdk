@@ -75,6 +75,7 @@ type Vehicle struct {
 	MaxWait                 *int           `json:"max_wait,omitempty"`
 	ActivationPenalty       *int           `json:"activation_penalty,omitempty"`
 	StartLocation           *Location      `json:"start_location,omitempty"`
+	AlternateStops          *[]string      `json:"alternate_stops,omitempty"`
 	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
 	ID                      string         `json:"id,omitempty"`
 }
