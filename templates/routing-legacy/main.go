@@ -42,7 +42,7 @@ func solver(
 ) (FleetOutput, error) {
 	nextrouteInput, err := input.ToNextRoute()
 	if err != nil {
-		panic(err)
+		return FleetOutput{}, err
 	}
 
 	if input.Options != nil && input.Options.Solver != nil &&
