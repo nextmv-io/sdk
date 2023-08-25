@@ -254,8 +254,12 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 	stops := createStops(fleetInput, backlogStops)
 
 	// Put new input format together and return it.
-	input.StopGroups = &fleetInput.StopGroups
-	input.DurationGroups = &fleetInput.DurationGroups
+	if fleetInput.StopGroups != nil {
+		input.StopGroups = &fleetInput.StopGroups
+	}
+	if fleetInput.DurationGroups != nil {
+		input.DurationGroups = &fleetInput.DurationGroups
+	}
 	input.Vehicles = vehicles
 	input.Stops = stops
 
