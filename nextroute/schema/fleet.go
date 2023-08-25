@@ -71,7 +71,7 @@ type FleetVehicle struct {
 	End                     *Location `json:"end,omitempty"`
 	Speed                   *float64  `json:"speed,omitempty"`
 	Capacity                any       `json:"capacity,omitempty"`
-	capacity                map[string]int
+	capacity                map[string]any
 	ShiftStart              *time.Time `json:"shift_start,omitempty"`
 	ShiftEnd                *time.Time `json:"shift_end,omitempty"`
 	CompatibilityAttributes []string   `json:"compatibility_attributes,omitempty"`
@@ -92,7 +92,7 @@ type FleetStop struct {
 	Position                Location `json:"position,omitempty"`
 	UnassignedPenalty       *int     `json:"unassigned_penalty,omitempty"`
 	Quantity                any      `json:"quantity,omitempty"`
-	quantity                map[string]int
+	quantity                map[string]any
 	Precedes                any `json:"precedes,omitempty"`
 	precedes                []string
 	Succeeds                any `json:"succeeds,omitempty"`
@@ -180,7 +180,7 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 		newBacklog := make([]InitialStop, 0)
 		falseBool := false
 		isInBacklog := make(map[string]struct{})
-		startLevel := make(map[string]int)
+		startLevel := make(map[string]any)
 		for _, b := range v.Backlog {
 			backlogStops[b] = struct{}{}
 			backlogStop := stopMap[b]
@@ -218,7 +218,16 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 		for _, b := range newBacklog {
 			backlogStop := stopMap[b.ID]
 			for k, q := range backlogStop.quantity {
-				startLevel[k] += q
+				level, ok := convertToInt(q)
+				if !ok {
+					return input, fmt.Errorf("could not convert quantity for stop %s to int", backlogStop.ID)
+				}
+				currentLevel, ok := convertToInt(startLevel[k])
+				if !ok {
+					return input, fmt.Errorf("could not convert quantity for stop %s to int", backlogStop.ID)
+				}
+				currentLevel += level
+				startLevel[k] = currentLevel
 			}
 		}
 		vehicles[i] = Vehicle{
@@ -358,12 +367,12 @@ func (fleetInput *FleetInput) stopMapUpdate() (map[string]FleetStop, error) {
 		// Handle multi capacity fields
 		if reflect.ValueOf(stop.Quantity).Kind() == reflect.Map {
 			// We detected a map and need to handle it
-			quantities, ok := stop.Quantity.(map[string]interface{})
+			quantities, ok := stop.Quantity.(map[string]any)
 			if !ok {
 				return nil, fmt.Errorf("could not parse Quanitity field for stop %s", stop.ID)
 			}
 			// Init map
-			fleetInput.Stops[idx].quantity = map[string]int{}
+			fleetInput.Stops[idx].quantity = make(map[string]any)
 			// Set all values
 			for kind, quant := range quantities {
 				rounded, ok := convertToInt(quant)
@@ -378,7 +387,7 @@ func (fleetInput *FleetInput) stopMapUpdate() (map[string]FleetStop, error) {
 			if !ok {
 				return nil, fmt.Errorf("could not parse Quanitity field for stop %s", stop.ID)
 			}
-			fleetInput.Stops[idx].quantity = map[string]int{
+			fleetInput.Stops[idx].quantity = map[string]any{
 				dynamicDefaultKey: quantity,
 			}
 		}
@@ -396,12 +405,12 @@ func (fleetInput *FleetInput) stopMapUpdate() (map[string]FleetStop, error) {
 
 func handleCapacity(vehicle FleetVehicle) (FleetVehicle, error) {
 	if reflect.ValueOf(vehicle.Capacity).Kind() == reflect.Map {
-		capacities, ok := vehicle.Capacity.(map[string]interface{})
+		capacities, ok := vehicle.Capacity.(map[string]any)
 		if !ok {
 			return vehicle, fmt.Errorf("could not parse Capacity field for vehicle %s", vehicle.ID)
 		}
 
-		vehicle.capacity = map[string]int{}
+		vehicle.capacity = make(map[string]any)
 
 		for kind, cap := range capacities {
 			rounded, ok := convertToInt(cap)
@@ -415,7 +424,7 @@ func handleCapacity(vehicle FleetVehicle) (FleetVehicle, error) {
 		if !ok {
 			return vehicle, fmt.Errorf("could not parse Capacity field for vehicle %s", vehicle.ID)
 		}
-		vehicle.capacity = map[string]int{
+		vehicle.capacity = map[string]any{
 			dynamicDefaultKey: capacity,
 		}
 	}
