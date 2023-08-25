@@ -56,13 +56,12 @@ func solver(
 		}
 	}
 
-	distanceExpression := makeDistanceExpression(input)
-
 	model, err := factory.NewModel(nextrouteInput, options.Model)
 	if err != nil {
 		return FleetOutput{}, err
 	}
 
+	distanceExpression := makeDistanceExpression(input)
 	for _, v := range model.VehicleTypes() {
 		v.SetData(distanceData{
 			distance: distanceExpression,
