@@ -132,25 +132,7 @@ const dynamicDefaultKey = "default"
 
 // ToNextRoute converters a legacy cloud fleet input into nextroute input format.
 func (fleetInput FleetInput) ToNextRoute() (Input, error) {
-	input := Input{
-		//Defaults: &Defaults{},
-	}
-	// stopCompats := make([]string, 0)
-	// vehicleCompats := make([]string, 0)
-	// // Use default values and add special handling for CompatibilityAttributes
-	// // and HardWindows.
-	// input, stopCompats = stopDefaults(fleetInput, input, stopCompats)
-
-	// // Use default values. nil values are not compatible between fleet and
-	// // nextroute.
-	// input, vehicleCompats = vehicleDefaults(fleetInput, vehicleCompats, input)
-
-	// Handle special case of compatibility attributes, to use them to make
-	// legacy backlogs more or less work like in legacy fleet.
-	// for i := range fleetInput.Vehicles {
-	// 	fleetInput.Vehicles[i].CompatibilityAttributes =
-	// 		append(fleetInput.Vehicles[i].CompatibilityAttributes, vehicleCompats...)
-	// }
+	input := Input{}
 
 	fleetInput.applyStopDefaults()
 	fleetInput.applyVehicleDefaults()
@@ -222,6 +204,9 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 				if !ok {
 					return input, fmt.Errorf("could not convert quantity for stop %s to int", backlogStop.ID)
 				}
+				if _, ok := startLevel[k]; !ok {
+					startLevel[k] = 0
+				}
 				currentLevel, ok := convertToInt(startLevel[k])
 				if !ok {
 					return input, fmt.Errorf("could not convert quantity for stop %s to int", backlogStop.ID)
@@ -253,12 +238,6 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 		}
 	}
 
-	// for i, s := range fleetInput.Stops {
-	// 	if _, ok := backlogStops[s.ID]; !ok && s.CompatibilityAttributes == nil {
-	// 		fleetInput.Stops[i].CompatibilityAttributes = &stopCompats
-	// 	}
-	// }
-
 	// Create stops with legacy backlog feature.
 	stops := createStops(fleetInput, backlogStops)
 
@@ -274,50 +253,6 @@ func (fleetInput FleetInput) ToNextRoute() (Input, error) {
 
 	return input, nil
 }
-
-// func stopDefaults(fleetInput FleetInput, input Input, stopCompats []string) (Input, []string) {
-// 	if fleetInput.Defaults != nil && fleetInput.Defaults.Stops != nil {
-// 		input.Defaults.Stops = &StopDefaults{
-// 			UnplannedPenalty:        fleetInput.Defaults.Stops.UnassignedPenalty,
-// 			Quantity:                fleetInput.Defaults.Stops.Quantity,
-// 			MaxWait:                 fleetInput.Defaults.Stops.MaxWait,
-// 			Duration:                fleetInput.Defaults.Stops.StopDuration,
-// 			TargetArrivalTime:       fleetInput.Defaults.Stops.TargetTime,
-// 			EarlyArrivalTimePenalty: fleetInput.Defaults.Stops.EarlinessPenalty,
-// 			LateArrivalTimePenalty:  fleetInput.Defaults.Stops.LatenessPenalty,
-// 		}
-// 		if fleetInput.Defaults.Stops.CompatibilityAttributes != nil {
-// 			stopCompats = *fleetInput.Defaults.Stops.CompatibilityAttributes
-// 		}
-// 		if fleetInput.Defaults.Stops.HardWindow != nil {
-// 			input.Defaults.Stops.StartTimeWindow = *fleetInput.Defaults.Stops.HardWindow
-// 		}
-// 	}
-// 	return input, stopCompats
-// }
-
-// func vehicleDefaults(fleetInput FleetInput, vehicleCompats []string, input Input) (Input, []string) {
-// 	if fleetInput.Defaults != nil && fleetInput.Defaults.Vehicles != nil {
-// 		vehicleCompats = fleetInput.Defaults.Vehicles.CompatibilityAttributes
-// 		input.Defaults.Vehicles = &VehicleDefaults{
-// 			Capacity:          fleetInput.Defaults.Vehicles.Capacity,
-// 			StartLocation:     fleetInput.Defaults.Vehicles.Start,
-// 			EndLocation:       fleetInput.Defaults.Vehicles.End,
-// 			Speed:             fleetInput.Defaults.Vehicles.Speed,
-// 			StartTime:         fleetInput.Defaults.Vehicles.ShiftStart,
-// 			EndTime:           fleetInput.Defaults.Vehicles.ShiftEnd,
-// 			MaxStops:          fleetInput.Defaults.Vehicles.MaxStops,
-// 			MaxDistance:       fleetInput.Defaults.Vehicles.MaxDistance,
-// 			MaxDuration:       fleetInput.Defaults.Vehicles.MaxDuration,
-// 			StartLevel:        nil,
-// 			MinStops:          nil,
-// 			MinStopsPenalty:   nil,
-// 			MaxWait:           nil,
-// 			ActivationPenalty: nil,
-// 		}
-// 	}
-// 	return input, vehicleCompats
-// }
 
 func (fleetInput *FleetInput) stopMapUpdate() (map[string]FleetStop, error) {
 	stopMap := make(map[string]FleetStop)
