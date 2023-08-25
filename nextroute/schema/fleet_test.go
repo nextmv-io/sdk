@@ -158,37 +158,6 @@ const fleetInputData = `{
   }`
 
 const nextrouteInputWant = `{
-  "defaults": {
-    "vehicles": {
-      "capacity": 10,
-      "start_location": {
-        "lon": -96.659222,
-        "lat": 33.122746
-      },
-      "end_location": {
-        "lon": -96.659222,
-        "lat": 33.122746
-      },
-      "speed": 20,
-      "start_time": "2021-10-17T09:00:00-06:00",
-      "end_time": "2021-10-17T11:00:00-06:00",
-      "max_stops": 15,
-      "max_distance": 100000,
-      "max_duration": 50000
-    },
-    "stops": {
-      "unplanned_penalty": 200000,
-      "quantity": -5,
-      "start_time_window": [
-        "2021-10-17T09:00:00-06:00",
-        "2021-10-17T10:00:00-06:00"
-      ],
-      "max_wait": 300,
-      "duration": 120,
-      "early_arrival_time_penalty": 2,
-      "late_arrival_time_penalty": 5
-    }
-  },
   "stop_groups": [
     [
       "order-24-pickup-1",
@@ -206,7 +175,12 @@ const nextrouteInputWant = `{
   ],
   "vehicles": [
     {
-      "capacity": 105,
+      "capacity": {
+        "default": 105
+      },
+      "start_level": {
+        "default": 0
+      },
       "compatibility_attributes": [
         "vehicle-1",
         "vehicle-1_order-24-pickup-1",
@@ -214,10 +188,13 @@ const nextrouteInputWant = `{
       ],
       "max_distance": 200000,
       "stop_duration_multiplier": 1,
+      "start_time": "2021-10-17T09:00:00-06:00",
+      "end_time": "2021-10-17T11:00:00-06:00",
       "end_location": {
         "lon": -96.659222,
         "lat": 33.122746
       },
+      "max_stops": 15,
       "speed": 14,
       "max_duration": 55000,
       "activation_penalty": 2,
@@ -238,9 +215,27 @@ const nextrouteInputWant = `{
       "id": "vehicle-1"
     },
     {
-      "capacity": 95,
+      "capacity": {
+        "default": 95
+      },
+      "start_level": {},
       "compatibility_attributes": [],
+      "max_distance": 100000,
+      "stop_duration_multiplier": 1,
+      "start_time": "2021-10-17T09:00:00-06:00",
+      "end_time": "2021-10-17T11:00:00-06:00",
+      "end_location": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
+      "max_stops": 15,
+      "speed": 20,
+      "max_duration": 50000,
       "activation_penalty": 0,
+      "start_location": {
+        "lon": -96.659222,
+        "lat": 33.122746
+      },
       "initial_stops": [],
       "id": "vehicle-2"
     }
@@ -248,11 +243,18 @@ const nextrouteInputWant = `{
   "stops": [
     {
       "precedes": "order-1-dropoff",
-      "quantity": -27,
+      "quantity": {
+        "default": -27
+      },
+      "duration": 120,
+      "max_wait": 300,
       "start_time_window": [
         "2021-10-17T10:00:00-06:00",
         "2021-10-17T11:00:00-06:00"
       ],
+      "unplanned_penalty": 200000,
+      "early_arrival_time_penalty": 2,
+      "late_arrival_time_penalty": 5,
       "compatibility_attributes": [
         "vehicle-1"
       ],
@@ -263,11 +265,18 @@ const nextrouteInputWant = `{
       }
     },
     {
-      "quantity": 27,
+      "quantity": {
+        "default": 27
+      },
+      "duration": 120,
+      "max_wait": 300,
       "start_time_window": [
         "2021-10-17T09:00:00-06:00",
         "2021-10-17T10:00:00-06:00"
       ],
+      "unplanned_penalty": 200000,
+      "early_arrival_time_penalty": 2,
+      "late_arrival_time_penalty": 5,
       "compatibility_attributes": [
         "A"
       ],
@@ -280,7 +289,18 @@ const nextrouteInputWant = `{
     },
     {
       "precedes": "order-24-dropoff",
-      "quantity": -9,
+      "quantity": {
+        "default": -9
+      },
+      "duration": 120,
+      "max_wait": 300,
+      "start_time_window": [
+        "2021-10-17T09:00:00-06:00",
+        "2021-10-17T10:00:00-06:00"
+      ],
+      "unplanned_penalty": 200000,
+      "early_arrival_time_penalty": 2,
+      "late_arrival_time_penalty": 5,
       "compatibility_attributes": [
         "vehicle-1_order-24-pickup-1"
       ],
@@ -291,12 +311,21 @@ const nextrouteInputWant = `{
       }
     },
     {
-      "quantity": 9,
+      "quantity": {
+        "default": 9
+      },
+      "duration": 120,
+      "max_wait": 300,
       "start_time_window": [
         "2021-10-17T09:31:00-06:00",
         "2021-10-17T12:00:00-06:00"
       ],
-      "compatibility_attributes": [],
+      "unplanned_penalty": 200000,
+      "early_arrival_time_penalty": 2,
+      "late_arrival_time_penalty": 5,
+      "compatibility_attributes": [
+        "A_order-24-dropoff"
+      ],
       "target_arrival_time": "2021-10-17T10:55:00-06:00",
       "id": "order-24-dropoff",
       "location": {
