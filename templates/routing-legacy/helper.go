@@ -98,3 +98,16 @@ func haversinePolyline(p []measure.Point) (string, []string) {
 	routePolyline := string(polyline.EncodeCoords(allCoords))
 	return routePolyline, legs
 }
+
+// mapWithError maps a slice of type T to a slice of type R using the function f.
+func mapWithError[T any, R any](v []T, f func(T) (R, error)) ([]R, error) {
+	r := make([]R, len(v))
+	for idx, x := range v {
+		o, err := f(x)
+		if err != nil {
+			return r, err
+		}
+		r[idx] = o
+	}
+	return r, nil
+}

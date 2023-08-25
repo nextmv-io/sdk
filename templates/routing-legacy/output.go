@@ -1,14 +1,20 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"math"
 	"time"
 
+	"github.com/nextmv-io/sdk"
+	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute"
 	"github.com/nextmv-io/sdk/nextroute/common"
 	"github.com/nextmv-io/sdk/nextroute/schema"
+	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/run/statistics"
 )
 
 // FleetOutput is the root output structure.
@@ -94,10 +100,78 @@ type FleetOutputStop struct {
 	Polyline         string     `json:"polyline,omitempty"`
 }
 
+func format(
+	ctx context.Context,
+	duration time.Duration,
+	progressioner alns.Progressioner,
+	toSolutionOutputFn func(nextroute.Solution) (any, error),
+	solutions ...nextroute.Solution,
+) (FleetOutput, error) {
+	mappedSolutions, err := mapWithError(solutions, toSolutionOutputFn)
+	if err != nil {
+		return FleetOutput{}, err
+	}
+
+	output := FleetOutput{
+		Solutions: mappedSolutions,
+		Options: schema.Options{
+			Solver: &schema.SolverOptions{
+				Limits: &schema.Limits{
+					Duration: duration.String(),
+				},
+			},
+		},
+		Hop: struct {
+			Version string "json:\"version\""
+		}{
+			Version: sdk.VERSION,
+		},
+	}
+
+	startTime := time.Time{}
+	if start, ok := ctx.Value(run.Start).(time.Time); ok {
+		startTime = start
+	}
+
+	progressionValues := progressioner.Progression()
+
+	if len(progressionValues) == 0 {
+		return output, errors.New("no solution values or elapsed time values found")
+	}
+
+	seriesData := common.Map(
+		progressionValues,
+		func(progressionEntry alns.ProgressionEntry) statistics.DataPoint {
+			return statistics.DataPoint{
+				X: statistics.Float64(progressionEntry.ElapsedSeconds),
+				Y: statistics.Float64(progressionEntry.Value),
+			}
+		},
+	)
+
+	if len(output.Solutions) == 1 {
+		seriesData = seriesData[len(seriesData)-1:]
+	}
+
+	if len(output.Solutions) != len(seriesData) {
+		return output, errors.New("more or less solution values than solutions found")
+	}
+	for idx, data := range seriesData {
+		if _, ok := output.Solutions[idx].(FleetState); ok {
+			output.Statistics.Time.Start = startTime
+			output.Statistics.Value = int(data.Y)
+			output.Statistics.Time.ElapsedSeconds = float64(data.X)
+			output.Statistics.Time.Elapsed = time.Duration(data.X * statistics.Float64(time.Second)).String()
+		}
+	}
+
+	return output, nil
+}
+
 // ToFleetSolutionOutput is a transformation function to create a legacy fleet
 // output format.
 func ToFleetSolutionOutput(solution nextroute.Solution) (any, error) {
-	fleetOutputVehicles, err := MapWithError(solution.Vehicles(), toFleetVehicleOutput)
+	fleetOutputVehicles, err := mapWithError(solution.Vehicles(), toFleetVehicleOutput)
 	if err != nil {
 		return FleetState{}, err
 	}

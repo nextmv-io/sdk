@@ -3,20 +3,14 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
+	"fmt"
 	"log"
-	"os"
 	"time"
 
-	"github.com/nextmv-io/sdk"
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/nextroute"
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
-	"github.com/nextmv-io/sdk/run/statistics"
 )
 
 func main() {
@@ -46,9 +40,6 @@ func solver(
 	if err != nil {
 		panic(err)
 	}
-
-	b, err := json.Marshal(nextrouteInput)
-	os.WriteFile("test.json", b, 0644)
 
 	if input.Options != nil && input.Options.Solver != nil &&
 		input.Options.Solver.Limits != nil {
@@ -84,103 +75,21 @@ func solver(
 	}
 
 	runSolutions := run.Last
-	if runSolutions == run.Last {
-		last := solutions.Last()
-		output, err := format(ctx, options.Solve.Duration, solver, ToFleetSolutionOutput, last)
-		if err != nil {
-			return output, err
-		}
-		return output, nil
-	}
-
 	solutionArray := make([]nextroute.Solution, 0)
-	for s := range solutions {
-		solutionArray = append(solutionArray, s)
+	switch runSolutions {
+	case run.Last:
+		solutionArray = append(solutionArray, solutions.Last())
+	case run.All:
+		for s := range solutions {
+			solutionArray = append(solutionArray, s)
+		}
+	default:
+		return FleetOutput{},
+			fmt.Errorf("%s is an invalid value for parameter runner.output.solutions. it must be 'all' or 'last'", runSolutions)
 	}
 	output, err := format(ctx, options.Solve.Duration, solver, ToFleetSolutionOutput, solutionArray...)
 	if err != nil {
 		return output, err
 	}
 	return output, nil
-}
-
-func format(
-	ctx context.Context,
-	duration time.Duration,
-	progressioner alns.Progressioner,
-	toSolutionOutputFn func(nextroute.Solution) (any, error),
-	solutions ...nextroute.Solution,
-) (FleetOutput, error) {
-	mappedSolutions, err := MapWithError(solutions, toSolutionOutputFn)
-	if err != nil {
-		return FleetOutput{}, err
-	}
-
-	output := FleetOutput{
-		Solutions: mappedSolutions,
-		Options: schema.Options{
-			Solver: &schema.SolverOptions{
-				Limits: &schema.Limits{
-					Duration: duration.String(),
-				},
-			},
-		},
-		Hop: struct {
-			Version string "json:\"version\""
-		}{
-			Version: sdk.VERSION,
-		},
-	}
-
-	startTime := time.Time{}
-	if start, ok := ctx.Value(run.Start).(time.Time); ok {
-		startTime = start
-	}
-
-	progressionValues := progressioner.Progression()
-
-	if len(progressionValues) == 0 {
-		return output, errors.New("no solution values or elapsed time values found")
-	}
-
-	seriesData := common.Map(
-		progressionValues,
-		func(progressionEntry alns.ProgressionEntry) statistics.DataPoint {
-			return statistics.DataPoint{
-				X: statistics.Float64(progressionEntry.ElapsedSeconds),
-				Y: statistics.Float64(progressionEntry.Value),
-			}
-		},
-	)
-
-	if len(output.Solutions) == 1 {
-		seriesData = seriesData[len(seriesData)-1:]
-	}
-
-	if len(output.Solutions) != len(seriesData) {
-		return output, errors.New("more or less solution values than solutions found")
-	}
-	for idx, data := range seriesData {
-		if _, ok := output.Solutions[idx].(FleetState); ok {
-			output.Statistics.Time.Start = startTime
-			output.Statistics.Value = int(data.Y)
-			output.Statistics.Time.ElapsedSeconds = float64(data.X)
-			output.Statistics.Time.Elapsed = time.Duration(data.X * statistics.Float64(time.Second)).String()
-		}
-	}
-
-	return output, nil
-}
-
-// MapWithError maps a slice of type T to a slice of type R using the function f.
-func MapWithError[T any, R any](v []T, f func(T) (R, error)) ([]R, error) {
-	r := make([]R, len(v))
-	for idx, x := range v {
-		o, err := f(x)
-		if err != nil {
-			return r, err
-		}
-		r[idx] = o
-	}
-	return r, nil
 }
