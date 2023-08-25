@@ -106,12 +106,15 @@ func ToFleetSolutionOutput(solution nextroute.Solution) (any, error) {
 		Unassigned: common.MapSlice(
 			solution.UnPlannedPlanUnits().SolutionPlanUnits(),
 			func(solutionPlanUnit nextroute.SolutionPlanUnit) []FleetOutputStop {
-				return common.Map(
-					solutionPlanUnit.SolutionStops(),
-					func(solutionStop nextroute.SolutionStop) FleetOutputStop {
-						return toFleetStopOutput(solutionStop.ModelStop())
-					},
-				)
+				if solutionPlanStopsUnit, ok := solutionPlanUnit.(nextroute.SolutionPlanStopsUnit); ok {
+					return common.Map(
+						solutionPlanStopsUnit.SolutionStops(),
+						func(solutionStop nextroute.SolutionStop) FleetOutputStop {
+							return toFleetStopOutput(solutionStop.ModelStop())
+						},
+					)
+				}
+				return []FleetOutputStop{}
 			},
 		),
 		Vehicles: fleetOutputVehicles,

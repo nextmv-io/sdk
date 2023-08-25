@@ -3,8 +3,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log"
+	"os"
 	"time"
 
 	"github.com/nextmv-io/sdk"
@@ -44,6 +46,9 @@ func solver(
 	if err != nil {
 		panic(err)
 	}
+
+	b, err := json.Marshal(nextrouteInput)
+	os.WriteFile("test.json", b, 0644)
 
 	if input.Options != nil && input.Options.Solver != nil &&
 		input.Options.Solver.Limits != nil {
