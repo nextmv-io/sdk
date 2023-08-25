@@ -85,8 +85,9 @@ type SolutionStop interface {
 	// unplanned, the objective value has no semantic meaning.
 	ObjectiveData(objective ModelObjective) any
 
-	// PlanUnit returns the [SolutionPlanUnit] that the stop is associated with.
-	PlanUnit() SolutionPlanUnit
+	// PlanStopsUnit returns the [SolutionPlanStopsUnit] that the stop is
+	// associated with.
+	PlanStopsUnit() SolutionPlanStopsUnit
 	// Previous returns the previous stop the vehicle visited before the stop.
 	// If the stop is the first stop of a vehicle, the solution stop itself is
 	// returned. If the stop is unplanned, the previous stop has no semantic

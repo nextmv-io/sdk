@@ -23,6 +23,12 @@ type DirectedAcyclicGraph interface {
 	// Arcs returns all [Arcs] in the graph.
 	Arcs() Arcs
 
+	// IndependentDirectedAcyclicGraphs returns all the independent
+	// [DirectedAcyclicGraph]s in the graph. An independent
+	// [DirectedAcyclicGraph] is a [DirectedAcyclicGraph] that does not share
+	// any [ModelStop]s with any other [DirectedAcyclicGraph]s.
+	IndependentDirectedAcyclicGraphs() ([]DirectedAcyclicGraph, error)
+
 	// IsAllowed returns true if the sequence of stops is allowed by the DAG,
 	// otherwise returns false.
 	IsAllowed(stops ModelStops) (bool, error)
