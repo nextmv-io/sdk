@@ -3,8 +3,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log"
+	"os"
 	"time"
 
 	"github.com/nextmv-io/sdk"
@@ -42,8 +44,11 @@ func solver(
 ) (FleetOutput, error) {
 	nextrouteInput, err := input.ToNextRoute()
 	if err != nil {
-		return FleetOutput{}, err
+		panic(err)
 	}
+
+	b, err := json.Marshal(nextrouteInput)
+	os.WriteFile("test.json", b, 0644)
 
 	if input.Options != nil && input.Options.Solver != nil &&
 		input.Options.Solver.Limits != nil {
@@ -73,19 +78,13 @@ func solver(
 		return FleetOutput{}, err
 	}
 
-	solutionsCount := "last"
-	runSolutions, err := run.ParseSolutions(solutionsCount)
-	if err != nil {
-		return FleetOutput{}, err
-	}
-
 	solutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
 		return FleetOutput{}, err
 	}
 
-	// Last solution == 1, all solutions == 0
-	if runSolutions == 1 {
+	runSolutions := run.Last
+	if runSolutions == run.Last {
 		last := solutions.Last()
 		output, err := format(ctx, options.Solve.Duration, solver, ToFleetSolutionOutput, last)
 		if err != nil {
