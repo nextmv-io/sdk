@@ -105,8 +105,15 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel                 func() (Model, error)
-	newModelSanityCheck      func(Model) ModelSanityCheck
+	newModel            func() (Model, error)
+	newModelSanityCheck func(Model) ModelSanityCheck
+	sanityCheckReport   func(
+		context.Context,
+		Model,
+		time.Duration,
+		SanityCheckDepth,
+	) (schema.Output, error)
+
 	newModelExpressionIndex  func() int
 	newSolutionStopGenerator func(
 		SolutionMoveStops,

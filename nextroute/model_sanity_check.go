@@ -1,10 +1,20 @@
 package nextroute
 
 import (
+	"context"
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/run/schema"
 )
+
+// SanityCheckOptions are the options for the sanity check.
+type SanityCheckOptions struct {
+	Enable bool `json:"enable" usage:"enable the sanity check" default:"false"`
+	// Duration is the maximum duration allowed for the sanity check to run.
+	Duration time.Duration `json:"duration" usage:"maximum duration of the sanity check" default:"30s"`
+	Depth    int           `json:"level" usage:"depth of the sanity check, deeper is more checking, current available depths are 0 and 2" default:"0"`
+}
 
 // SanityCheckDepth is the depth of the sanity check.
 type SanityCheckDepth int
@@ -160,4 +170,14 @@ type SanityCheckData struct {
 func NewModelSanityCheck(model Model) ModelSanityCheck {
 	connect.Connect(con, &newModelSanityCheck)
 	return newModelSanityCheck(model)
+}
+
+// SanityCheckReport is the sanity check of a model.
+func SanityCheckReport(
+	ctx context.Context,
+	model Model,
+	duration time.Duration,
+	sanityCheckDepth SanityCheckDepth) (schema.Output, error) {
+	connect.Connect(con, &sanityCheckReport)
+	return sanityCheckReport(ctx, model, duration, sanityCheckDepth)
 }
