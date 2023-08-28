@@ -147,6 +147,10 @@ var (
 	// shift-scheduling template.
 	//go:embed shift-scheduling/main.go
 	ShiftSchedulingMain string
+	// ShiftSchedulingSchema is the schema.go file in the
+	// shift-scheduling template.
+	//go:embed shift-scheduling/schema.go
+	ShiftSchedulingSchema string
 	// ShiftSchedulingInput is the input.json file in the
 	// shift-scheduling template.
 	//go:embed shift-scheduling/input.json
