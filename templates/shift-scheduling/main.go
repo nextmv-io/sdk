@@ -1,3 +1,4 @@
+// package main holds the implementation of the shift scheduling template.
 package main
 
 import (
@@ -16,8 +17,12 @@ import (
 )
 
 func main() {
-	GenerateInput()
-	err := run.CLI(solver).Run(context.Background())
+	runner := run.CLI(solver,
+		run.InputValidate[run.CLIRunnerConfig, Input, Options, schema.Output](
+			nil,
+		),
+	)
+	err := runner.Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
