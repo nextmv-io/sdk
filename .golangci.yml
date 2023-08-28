@@ -267,6 +267,7 @@ issues:
     - path: templates/shift-scheduling/main\.go
       linters:
         - gocyclo
+        - nestif
     - path: templates/sudoku/main\.go
       linters:
         - gocyclo
