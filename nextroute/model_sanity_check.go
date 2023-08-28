@@ -13,7 +13,7 @@ type SanityCheckOptions struct {
 	Enable bool `json:"enable" usage:"enable the sanity check" default:"false"`
 	// Duration is the maximum duration allowed for the sanity check to run.
 	Duration time.Duration `json:"duration" usage:"maximum duration of the sanity check" default:"30s"`
-	Depth    int           `json:"level" usage:"depth of the sanity check, deeper is more checking, current available depths are 0 and 2" default:"0"`
+	Depth    int           `json:"depth" usage:"depth of the sanity check, deeper is more checking, current available depths are 0 and 2" default:"0"`
 }
 
 // SanityCheckDepth is the depth of the sanity check.

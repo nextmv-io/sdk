@@ -178,6 +178,10 @@ issues:
     - path: nextroute/solver_parallel\.go
       linters:
         - lll
+    # Deactivate line length in model_sanity_check.go because of go tags
+    - path: nextroute/model_sanity_check\.go
+      linters:
+        - lll
     # Deactivate lll in schema due to go tags.
     - path: nextroute/schema
       linters:
