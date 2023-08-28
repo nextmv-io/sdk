@@ -10,16 +10,19 @@ import (
 	"time"
 )
 
+// Output holds the output data of the solution.
 type Output struct {
 	Status         string             `json:"status"`
 	AssignedShifts []OutputAssignment `json:"assigned_shifts"`
 	Value          float64            `json:"value"`
 }
 
+// CustomResultStatistics add custom stats.
 type CustomResultStatistics struct {
 	NumberOfWorkers int `json:"number_of_workers"`
 }
 
+// Options holds custom configuration data.
 type Options struct {
 	OverSupplyPenalty  float64       `json:"over_supply_penalty" default:"1000" usage:"penalty for over-supplying a demand"`
 	UnderSupplyPenalty float64       `json:"under_supply_penalty" default:"500" usage:"penalty for over-supplying a demand"`
@@ -30,37 +33,43 @@ type Options struct {
 	HoursBetweenShifts time.Duration `json:"hours_between_shifts" default:"8h" usage:"minimum number of hours between shifts"`
 }
 
-// create an input struct definition that can read input.json
+// Input represents a struct definition that can read input.json.
 type Input struct {
 	Workers         []Worker         `json:"workers"`
 	RequiredWorkers []RequiredWorker `json:"required_workers"`
 }
 
+// Worker holds worker specific data.
 type Worker struct {
 	Availability []Availability `json:"availability"`
 	ID           int            `json:"id"`
 }
 
+// Availability holds available times for a worker.
 type Availability struct {
 	Start CustomTime `json:"start"`
 	End   CustomTime `json:"end"`
 }
 
+// RequiredWorker holds data about times and number of required workers per time window.
 type RequiredWorker struct {
-	Id    int        `json:"id,omitempty"`
-	Start CustomTime `json:"start"`
-	End   CustomTime `json:"end"`
-	Count int        `json:"count"`
+	RequiredWorkerID int        `json:"required_worker_id,omitempty"`
+	Start            CustomTime `json:"start"`
+	End              CustomTime `json:"end"`
+	Count            int        `json:"count"`
 }
 
+// ID returned the RequiredWorker ID.
 func (r RequiredWorker) ID() string {
-	return strconv.Itoa(int(r.Id))
+	return strconv.Itoa(r.RequiredWorkerID)
 }
 
+// CustomTime represents a time.Time.
 type CustomTime struct {
 	time.Time
 }
 
+// UnmarshalJSON unmarshals a CustomTime.
 func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
 	date, err := time.Parse(`"2006-01-02 15:04:05"`, string(b))
 	if err != nil {
@@ -70,25 +79,29 @@ func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
 	return
 }
 
+// MarshalJSON marshals a CustomTime.
 func (t *CustomTime) MarshalJSON() ([]byte, error) {
 	return []byte(t.Format(`"2006-01-02 15:04:05"`)), nil
 }
 
+// OutputAssignment holds an assignment for a driver.
 type OutputAssignment struct {
 	Start    time.Time `json:"start"`
 	End      time.Time `json:"end"`
-	DriverID int       `json:"worker_id"`
+	WorkerID int       `json:"worker_id"`
 }
 
+// Assignment represents a shift assignment.
 type Assignment struct {
 	DemandsCovered []RequiredWorker `json:"demands_covered"`
 	Start          time.Time        `json:"start"`
 	End            time.Time        `json:"end"`
 	Worker         Worker           `json:"worker"`
 	Duration       time.Duration    `json:"duration"`
-	Id             int              `json:"id"`
+	AssignmentID   int              `json:"assignment_id"`
 }
 
+// DurationApart calculates the time to assignments are apart from each other.
 func (a Assignment) DurationApart(other Assignment) time.Duration {
 	if a.Start.After(other.End) {
 		return a.Start.Sub(other.End)
@@ -99,16 +112,16 @@ func (a Assignment) DurationApart(other Assignment) time.Duration {
 	return 0
 }
 
+// ID returns the assignment id.
 func (a Assignment) ID() string {
-	return strconv.Itoa(a.Id)
+	return strconv.Itoa(a.AssignmentID)
 }
 
+// GenerateInput generates valid input files.
 func GenerateInput() {
 	// Generate input file
 	random := rand.New(rand.NewSource(0))
-
 	for fileCount := 0; fileCount < 5; fileCount++ {
-
 		input := Input{}
 
 		// create RequiredDrivers for one week

@@ -27,7 +27,6 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 	// We solve a shift coverage problem using Mixed Integer Programming.
 	// We solve this by generating all possible shifts
 	// and then selecting a subset of these
-
 	potentialAssignments := []Assignment{}
 	potentialAssignmentsPerDriver := map[int][]Assignment{}
 	for _, driver := range input.Workers {
@@ -46,11 +45,11 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 						break
 					}
 					assignment := Assignment{
-						Id:       len(potentialAssignments),
-						Start:    start,
-						End:      end,
-						Worker:   driver,
-						Duration: duration,
+						AssignmentID: len(potentialAssignments),
+						Start:        start,
+						End:          end,
+						Worker:       driver,
+						Duration:     duration,
 					}
 					potentialAssignmentsPerDriver[driver.ID] = append(potentialAssignmentsPerDriver[driver.ID], assignment)
 					potentialAssignments = append(potentialAssignments, assignment)
@@ -61,18 +60,18 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 
 	// initialize demand ids
 	for i, demand := range input.RequiredWorkers {
-		demand.Id = i
+		demand.RequiredWorkerID = i
 		input.RequiredWorkers[i] = demand
 	}
 
 	demandCovering := map[int][]Assignment{}
 	for _, demand := range input.RequiredWorkers {
-		demandCovering[demand.Id] = []Assignment{}
+		demandCovering[demand.RequiredWorkerID] = []Assignment{}
 		for i, potentialAssignment := range potentialAssignments {
 			if (potentialAssignment.Start.Before(demand.Start.Time) || potentialAssignment.Start.Equal(demand.Start.Time)) &&
 				(potentialAssignment.End.After(demand.End.Time) || potentialAssignment.End.Equal(demand.End.Time)) {
-				potentialAssignments[i].DemandsCovered = append(potentialAssignment.DemandsCovered, demand)
-				demandCovering[demand.Id] = append(demandCovering[demand.Id], potentialAssignment)
+				potentialAssignments[i].DemandsCovered = append(potentialAssignments[i].DemandsCovered, demand)
+				demandCovering[demand.RequiredWorkerID] = append(demandCovering[demand.RequiredWorkerID], potentialAssignment)
 			}
 		}
 	}
@@ -96,7 +95,7 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 		}, input.RequiredWorkers)
 
 	for _, demand := range input.RequiredWorkers {
-		demandCover := demandCovering[demand.Id]
+		demandCover := demandCovering[demand.RequiredWorkerID]
 		// We need to cover all demands
 		coverConstraint := m.NewConstraint(mip.Equal, float64(demand.Count))
 		coverConstraint.NewTerm(1.0, underSupplySlack.Get(demand))
@@ -218,7 +217,7 @@ func format(
 				nextShiftSolution.AssignedShifts = append(nextShiftSolution.AssignedShifts, OutputAssignment{
 					Start:    assignment.Start,
 					End:      assignment.End,
-					DriverID: assignment.Worker.ID,
+					WorkerID: assignment.Worker.ID,
 				})
 				if _, ok := usedWorkers[assignment.Worker.ID]; !ok {
 					usedWorkers[assignment.Worker.ID] = struct{}{}
