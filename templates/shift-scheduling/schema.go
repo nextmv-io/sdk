@@ -1,11 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"math/rand"
-	"os"
 	"strconv"
 	"time"
 )
@@ -115,75 +110,4 @@ func (a Assignment) DurationApart(other Assignment) time.Duration {
 // ID returns the assignment id.
 func (a Assignment) ID() string {
 	return strconv.Itoa(a.AssignmentID)
-}
-
-// GenerateInput generates valid input files.
-func GenerateInput() {
-	// Generate input file
-	random := rand.New(rand.NewSource(0))
-	for fileCount := 0; fileCount < 5; fileCount++ {
-		input := Input{}
-
-		// create RequiredDrivers for one week
-		// each RequiredDriver entry will cover 30 minutes
-		// the timeframe for which entries are generated starts a week ago and ends
-		// today
-		start := time.Now().Add(-7 * 24 * time.Hour).Round(time.Minute * 30)
-		end := time.Now().Round(time.Minute * 30)
-
-		for start.Before(end) {
-			input.RequiredWorkers = append(input.RequiredWorkers, RequiredWorker{
-				Start: CustomTime{start},
-				End:   CustomTime{start.Add(30 * time.Minute)},
-				Count: random.Intn(20),
-			})
-			start = start.Add(30 * time.Minute)
-		}
-
-		// create Drivers
-		// each driver has a unique id and a random performance rating between 1 and
-		// 5
-		// each driver has a random number of availabilities. This number of
-		// availabilities varies between 1 and 10
-		// each availability is between 1 and 12 hours long
-		// each availability starts between 1 and 8 days ago
-		for i := 0; i < 100; i++ {
-			availabilityCount := random.Intn(10) + 1
-			availabilities := []Availability{}
-			for j := 0; j < availabilityCount; j++ {
-				availability := Availability{
-					Start: CustomTime{time.Now().Add(-time.Duration(random.Intn(8*24)) * time.Hour).Round(time.Minute * 30)},
-				}
-				availability.End = CustomTime{
-					availability.Start.Add(time.Duration(random.Intn(12)) * time.Hour).Round(time.Minute * 30),
-				}
-				availabilities = append(availabilities, availability)
-			}
-
-			// order availabilities by start time
-			for j := 0; j < len(availabilities); j++ {
-				for k := j + 1; k < len(availabilities); k++ {
-					if availabilities[j].Start.After(availabilities[k].Start.Time) {
-						availabilities[j], availabilities[k] = availabilities[k], availabilities[j]
-					}
-				}
-			}
-
-			input.Workers = append(input.Workers, Worker{
-				Availability: availabilities,
-				ID:           i,
-			})
-		}
-
-		// write input to json file
-		filename := fmt.Sprintf("input_%d.json", fileCount)
-		f, err := os.Create(filename)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = json.NewEncoder(f).Encode(input)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
 }
