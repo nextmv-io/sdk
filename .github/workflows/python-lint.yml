@@ -12,18 +12,16 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: lint with flake8
-        uses: py-actions/flake8@v2
-        with:
-          args: --max-line-length=120
-          flake8-version: "6.0.0"
-          path: "."
-
       - name: lint with black
         uses: psf/black@stable
         with:
           options: "-l 120 --check --verbose --diff"
           src: .
           version: "23.7.0"
-      
 
+      - name: lint with flake8
+        uses: py-actions/flake8@v2
+        with:
+          args: --max-line-length=120
+          flake8-version: "6.0.0"
+          path: "."
