@@ -209,6 +209,10 @@ issues:
     - path: alns/solver\.go
       linters:
         - nestif
+    # Cloud code for compatibility
+    - path: nextroute/schema/fleet_defaults\.go
+      linters:
+        - gocyclo
 
     # Using math/rand is fine here
     - path: nextroute/common/alias_test\.go

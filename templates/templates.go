@@ -21,6 +21,13 @@ var (
 	// RoutingLegacyMain is the main.go file in the routing-legacy template.
 	//go:embed routing-legacy/main.go
 	RoutingLegacyMain string
+	// RoutingLegacyHelper is file with helper functions in the routing-legacy
+	// template.
+	//go:embed routing-legacy/helper.go
+	RoutingLegacyHelper string
+	// RoutingLegacyOutput is the output.go file in the routing-legacy template.
+	//go:embed routing-legacy/output.go
+	RoutingLegacyOutput string
 	// RoutingLegacyInput is the input.json file in the routing-legacy template.
 	//go:embed routing-legacy/input.json
 	RoutingLegacyInput string
