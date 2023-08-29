@@ -11,6 +11,13 @@ holds firstly a set of workers with an `id` and availability times. Secondly, it
 contains a set of `required workers`, each describing a time window and the
 number of workers that are required to work during this time.
 
+You should be able to run the following command. It assumes that you gave your
+app the app-id `shift-scheduling`:
+
+```bash
+nextmv app run -a "shift-scheduling" --options max_hours_per_day="9h"
+```
+
 ## Next steps
 
 * For more information about our platform, please visit: <https://docs.nextmv.io>.
