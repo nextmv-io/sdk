@@ -1,27 +1,17 @@
-# Nextshift
+# Nextmv shift scheduling template
 
-## Usage
+`shift-scheduling` is a MIP-based shift-scheduling model. This template will get
+you up to speed deploying your own solution.
 
-Run app remotely with latest pushed binary using the REST API endpoint (the
-instance=devint query parameter tells the service to run the latest dev binary
-pushed to the app).
+The most important files created are `main.go` and `input.json`.
 
-```bash
-MY_API_KEY=<your api key>
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $MY_API_KEY" \
-  -d "{\"input\": $(cat input.json)}" \
-  "https://api.cloud.nextmv.io/v1/applications/nextshift/runs?instance_id=devint"
-```
+`main.go` implements shift-scheduling model to be solved. `input.json` is a
+sample input file that follows the input definition in `main.go`. The input
+holds firstly a set of workers with an `id` and availability times. Secondly, it
+contains a set of `required workers`, each describing a time window and the
+number of workers that are required to work during this time.
 
-Retrieve results of remote REST API run
+## Next steps
 
-```bash
-MY_API_KEY=<your api key>
-RUN_ID=<the run ID returned by posting the run to the API>
-curl -X GET \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $MY_API_KEY" \
-  "https://api.cloud.nextmv.io/v1/applications/nextshift/runs/$RUN_ID"
-```
+* For more information about our platform, please visit: <https://docs.nextmv.io>.
+* Need more assistance? Send us an [email](mailto:support@nextmv.io)!
