@@ -9,15 +9,12 @@ The most important files created are `main.go` and `input.json`.
 configured. `input.json` is a sample input file that follows the input
 definition in `main.go`.
 
-Before you start customizing run the command below to see if everything works as
-expected:
+You should be able to run the following command. It assumes that you gave your
+app the app-id `shift-scheduling`:
 
 ```bash
-nextmv sdk run . -- -runner.input.path input.json\
-  -runner.output.path output.json -solve.duration 10s
+nextmv app run -a "shift-scheduling" --options max_hours_per_day="9h"
 ```
-
-A file `output.json` should have been created with a VRP solution.
 
 ## Next steps
 
