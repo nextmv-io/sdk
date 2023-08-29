@@ -23,7 +23,9 @@ def solve(input_data: Dict[str, Any]) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
+    
     provider = "SCIP"
+    
     solver = pywraplp.Solver.CreateSolver(provider)
 
     # Initializes the linear sums.

@@ -24,4 +24,5 @@ jobs:
         with:
           args: --max-line-length=120
           flake8-version: "6.0.0"
+          path: "."
 
