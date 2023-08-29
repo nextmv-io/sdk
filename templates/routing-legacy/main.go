@@ -38,7 +38,7 @@ func solver(
 ) (FleetOutput, error) {
 	nextrouteInput, err := input.ToNextRoute()
 	if err != nil {
-		panic(err)
+		return FleetOutput{}, err
 	}
 
 	if input.Options != nil && input.Options.Solver != nil &&
@@ -57,7 +57,7 @@ func solver(
 		return FleetOutput{}, err
 	}
 
-	distanceExpression := makeDistanceExpression(input)
+	distanceExpression := newDistanceExpression(input)
 	for _, v := range model.VehicleTypes() {
 		v.SetData(distanceData{
 			distance: distanceExpression,

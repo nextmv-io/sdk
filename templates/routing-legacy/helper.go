@@ -9,7 +9,7 @@ import (
 	"github.com/twpayne/go-polyline"
 )
 
-func makeDistanceExpression(input schema.FleetInput) nextroute.DistanceExpression {
+func newDistanceExpression(input schema.FleetInput) nextroute.DistanceExpression {
 	points := make([]measure.Point, len(input.Stops)+2*len(input.Vehicles))
 	for i, s := range input.Stops {
 		points[i] = measure.Point{
@@ -36,7 +36,7 @@ func makeDistanceExpression(input schema.FleetInput) nextroute.DistanceExpressio
 	m := measure.HaversineByPoint()
 	mIndexed := measure.Indexed(m, points)
 
-	distanceMatrix := makeFloatMatrix(mIndexed, len(points))
+	distanceMatrix := newFloatMatrix(mIndexed, len(points))
 	distanceExpression := distanceExpression(&distanceMatrix)
 	return distanceExpression
 }
@@ -58,9 +58,9 @@ type distanceData struct {
 	distance nextroute.DistanceExpression
 }
 
-// makeFloatMatrix is a helper function that takes a route.ByIndex and returns a
+// newFloatMatrix is a helper function that takes a route.ByIndex and returns a
 // [][]float64.
-func makeFloatMatrix(matrix route.ByIndex, length int) [][]float64 {
+func newFloatMatrix(matrix route.ByIndex, length int) [][]float64 {
 	out := make([][]float64, length)
 	for i := 0; i < length; i++ {
 		out[i] = make([]float64, length)
