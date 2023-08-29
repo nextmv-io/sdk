@@ -24,6 +24,15 @@ type Solution[T any] interface {
 // Solutions is a channel of solutions.
 type Solutions[T any] <-chan T
 
+// All returns all solutions in the channel.
+func (solutions Solutions[T]) All() []T {
+	solutionArray := make([]T, 0)
+	for s := range solutions {
+		solutionArray = append(solutionArray, s)
+	}
+	return solutionArray
+}
+
 // Last returns the last solution in the channel.
 func (solutions Solutions[T]) Last() T {
 	var solution T
