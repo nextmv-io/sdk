@@ -26,6 +26,7 @@ type Options struct {
 	MinHoursPerShift   time.Duration `json:"min_hours_per_shift" default:"2h" usage:"minimum number of hours per shift"`
 	MaxHoursPerShift   time.Duration `json:"max_hours_per_shift" default:"8h" usage:"maximum number of hours per shift"`
 	HoursBetweenShifts time.Duration `json:"hours_between_shifts" default:"8h" usage:"minimum number of hours between shifts"`
+	SolverDuration     time.Duration `json:"solver_duration" default:"4m" usage:"maximum runtime for the solver"`
 }
 
 // Input represents a struct definition that can read input.json.

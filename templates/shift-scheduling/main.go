@@ -162,7 +162,7 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 	if err != nil {
 		return schema.Output{}, err
 	}
-	err = options.SetMaximumDuration(time.Duration(4) * time.Minute)
+	err = options.SetMaximumDuration(opts.SolverDuration)
 	if err != nil {
 		return schema.Output{}, err
 	}
