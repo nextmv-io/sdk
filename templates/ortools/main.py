@@ -53,7 +53,7 @@ def solve(input_data: Dict[str, Any]) -> Dict[str, Any]:
     # Determines which items were chosen.
     chosen_items = []
     for item in items:
-        if item["variable"].solution_value() == 1.0:
+        if item["variable"].solution_value() > 0.9:
             chosen_items.append(item["item"])
 
     # Creates the statistics.

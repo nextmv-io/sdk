@@ -1,7 +1,7 @@
 # Nextmv OR-Tools Python template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
-using the open-source open source software suite [OR-Tools][or-tools].
+using the open source software suite [OR-Tools][or-tools].
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this

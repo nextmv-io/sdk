@@ -13,7 +13,7 @@ jobs:
           python-version: "3.11"
 
       - name: lint with black
-        uses: psf/black@stable
+        uses: psf/black@s23.7.0
         with:
           options: "-l 120 --check --verbose --diff"
           src: .
