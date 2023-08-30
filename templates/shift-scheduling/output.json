@@ -1,0 +1,35 @@
+{
+    "version": { "sdk": "v0.28.0" },
+    "solutions": [
+      {
+        "status": "optimal",
+        "assigned_shifts": [
+          {
+            "start": "2023-06-20T14:00:00Z",
+            "end": "2023-06-20T17:30:00Z",
+            "worker_id": 0
+          },
+          {
+            "start": "2023-06-20T17:30:00Z",
+            "end": "2023-06-20T19:30:00Z",
+            "worker_id": 0
+          },
+          {
+            "start": "2023-06-20T09:00:00Z",
+            "end": "2023-06-20T17:00:00Z",
+            "worker_id": 3
+          }
+        ],
+        "value": 34000
+      }
+    ],
+    "statistics": {
+      "schema": "v1",
+      "run": { "duration": 0.351703042 },
+      "result": {
+        "duration": 0.351703042,
+        "value": 34000,
+        "custom": { "number_of_workers": 2 }
+      }
+    }
+  }
