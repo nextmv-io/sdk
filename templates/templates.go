@@ -335,6 +335,9 @@ var (
 	//go:embed unique-matrix-measure/README.md
 	UniqueMatrixReadme string
 
+	// OrtoolsManifest is the app manifest file in the ortools template.
+	//go:embed ortools/app.yaml
+	OrtoolsManifest string
 	// OrtoolsMain is the main.py file in the ortools template.
 	//go:embed ortools/main.py
 	OrtoolsMain string
