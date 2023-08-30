@@ -345,6 +345,6 @@ var (
 	//go:embed ortools/README.md
 	OrtoolsReadme string
 	// OrtoolsRequirements is the requirements.txt file in the ortools template.
-	// go:embed ortools/requirements.txt
+	//go:embed ortools/requirements.txt
 	OrtoolsRequirements string
 )
