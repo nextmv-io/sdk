@@ -77,7 +77,7 @@ func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
 
 // MarshalJSON marshals a CustomTime.
 func (t *CustomTime) MarshalJSON() ([]byte, error) {
-	return []byte(t.Format(`"2006-01-02 15:04:05"`)), nil
+	return []byte(t.Format(time.RFC3339)), nil
 }
 
 // OutputAssignment holds an assignment for a driver.
@@ -98,7 +98,7 @@ type Assignment struct {
 }
 
 // DurationApart calculates the time to assignments are apart from each other.
-func (a Assignment) DurationApart(other Assignment) time.Duration {
+func (a *Assignment) DurationApart(other Assignment) time.Duration {
 	if a.Start.After(other.End) {
 		return a.Start.Sub(other.End)
 	}
