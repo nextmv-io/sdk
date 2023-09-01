@@ -67,7 +67,7 @@ type CustomTime struct {
 
 // UnmarshalJSON unmarshals a CustomTime.
 func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
-	date, err := time.Parse(`"2006-01-02 15:04:05"`, string(b))
+	date, err := time.Parse(time.RFC3339, string(b))
 	if err != nil {
 		return err
 	}
