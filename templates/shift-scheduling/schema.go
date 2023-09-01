@@ -80,7 +80,7 @@ func (t *customTime) MarshalJSON() ([]byte, error) {
 	return []byte(t.Format(time.RFC3339)), nil
 }
 
-// outputAssignment holds an assignment for a driver.
+// outputAssignment holds an assignment for a worker.
 type outputAssignment struct {
 	Start    time.Time `json:"start"`
 	End      time.Time `json:"end"`
