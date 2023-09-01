@@ -17,7 +17,7 @@ const gap = 0.999
 
 func main() {
 	runner := run.CLI(solver,
-		run.InputValidate[run.CLIRunnerConfig, Input, Options, schema.Output](
+		run.InputValidate[run.CLIRunnerConfig, input, options, schema.Output](
 			nil,
 		),
 	)
@@ -27,7 +27,7 @@ func main() {
 	}
 }
 
-func solver(_ context.Context, input Input, opts Options) (out schema.Output, retErr error) {
+func solver(_ context.Context, input input, opts options) (out schema.Output, retErr error) {
 	// We solve a shift coverage problem using Mixed Integer Programming.
 	// We solve this by generating all possible shifts
 	// and then selecting a subset of these
@@ -56,27 +56,26 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 
 	// Format the solution into the desired output format and add custom
 	// statistics.
-	output := mip.Format(options, format(input, solution, x, potentialAssignments), solution)
+	output := mip.Format(options, format(solution, x, potentialAssignments), solution)
 	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
 
 	return output, nil
 }
 
 func format(
-	_ Input,
 	solverSolution mip.Solution,
-	x model.MultiMap[mip.Bool, Assignment],
-	assignments []Assignment,
-) Output {
+	x model.MultiMap[mip.Bool, assignment],
+	assignments []assignment,
+) output {
 	if !solverSolution.IsOptimal() && !solverSolution.IsSubOptimal() {
-		return Output{}
+		return output{}
 	}
-	nextShiftSolution := Output{}
+	nextShiftSolution := output{}
 	usedWorkers := make(map[int]struct{})
 
 	for _, assignment := range assignments {
 		if solverSolution.Value(x.Get(assignment)) >= 0.9 {
-			nextShiftSolution.AssignedShifts = append(nextShiftSolution.AssignedShifts, OutputAssignment{
+			nextShiftSolution.AssignedShifts = append(nextShiftSolution.AssignedShifts, outputAssignment{
 				Start:    assignment.Start,
 				End:      assignment.End,
 				WorkerID: assignment.Worker.ID,
@@ -91,27 +90,27 @@ func format(
 }
 
 func newMIPModel(
-	input Input,
-	potentialAssignments []Assignment,
-	potentialAssignmentsPerWorker map[int][]*Assignment,
-	demandCovering map[int][]Assignment,
-	opts Options,
-) (mip.Model, model.MultiMap[mip.Bool, Assignment]) {
+	input input,
+	potentialAssignments []assignment,
+	potentialAssignmentsPerWorker map[int][]*assignment,
+	demandCovering map[int][]assignment,
+	opts options,
+) (mip.Model, model.MultiMap[mip.Bool, assignment]) {
 	m := mip.NewModel()
 	m.Objective().SetMinimize()
 
 	x := model.NewMultiMap(
-		func(...Assignment) mip.Bool {
+		func(...assignment) mip.Bool {
 			return m.NewBool()
 		}, potentialAssignments)
 
 	underSupplySlack := model.NewMultiMap(
-		func(demand ...RequiredWorker) mip.Float {
+		func(demand ...requiredWorker) mip.Float {
 			return m.NewFloat(0, float64(demand[0].Count))
 		}, input.RequiredWorkers)
 
 	overSupplySlack := model.NewMultiMap(
-		func(demand ...RequiredWorker) mip.Float {
+		func(demand ...requiredWorker) mip.Float {
 			return m.NewFloat(0, math.MaxFloat64)
 		}, input.RequiredWorkers)
 
@@ -169,11 +168,11 @@ func newMIPModel(
 	return m, x
 }
 
-func potentialAssignments(input Input, opts Options) ([]Assignment, map[int][]*Assignment) {
-	potentialAssignments := make([]Assignment, 0)
-	potentialAssignmentsPerWorker := map[int][]*Assignment{}
+func potentialAssignments(input input, opts options) ([]assignment, map[int][]*assignment) {
+	potentialAssignments := make([]assignment, 0)
+	potentialAssignmentsPerWorker := map[int][]*assignment{}
 	for _, worker := range input.Workers {
-		potentialAssignmentsPerWorker[worker.ID] = make([]*Assignment, 0)
+		potentialAssignmentsPerWorker[worker.ID] = make([]*assignment, 0)
 		for _, availability := range worker.Availability {
 			for start := availability.Start.Time; start.Before(availability.End.Time); start = start.Add(30 * time.Minute) {
 				for end := availability.End.Time; start.Before(end); end = end.Add(-30 * time.Minute) {
@@ -187,7 +186,7 @@ func potentialAssignments(input Input, opts Options) ([]Assignment, map[int][]*A
 					if duration < opts.MinHoursPerShift {
 						break
 					}
-					assignment := Assignment{
+					assignment := assignment{
 						AssignmentID: len(potentialAssignments),
 						Start:        start,
 						End:          end,
@@ -203,16 +202,16 @@ func potentialAssignments(input Input, opts Options) ([]Assignment, map[int][]*A
 	return potentialAssignments, potentialAssignmentsPerWorker
 }
 
-func demands(input Input, potentialAssignments []Assignment) map[int][]Assignment {
+func demands(input input, potentialAssignments []assignment) map[int][]assignment {
 	// initialize demand ids
 	for i, demand := range input.RequiredWorkers {
 		demand.RequiredWorkerID = i
 		input.RequiredWorkers[i] = demand
 	}
 
-	demandCovering := map[int][]Assignment{}
+	demandCovering := map[int][]assignment{}
 	for _, demand := range input.RequiredWorkers {
-		demandCovering[demand.RequiredWorkerID] = []Assignment{}
+		demandCovering[demand.RequiredWorkerID] = []assignment{}
 		for i, potentialAssignment := range potentialAssignments {
 			if (potentialAssignment.Start.Before(demand.Start.Time) || potentialAssignment.Start.Equal(demand.Start.Time)) &&
 				(potentialAssignment.End.After(demand.End.Time) || potentialAssignment.End.Equal(demand.End.Time)) {

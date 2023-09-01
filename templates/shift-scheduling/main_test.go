@@ -13,7 +13,7 @@ import (
 
 func TestTemplate(t *testing.T) {
 	// Read the input from the file.
-	input := Input{}
+	input := input{}
 	b, err := os.ReadFile("input.json")
 	if err != nil {
 		t.Fatal(err)
@@ -23,7 +23,7 @@ func TestTemplate(t *testing.T) {
 	}
 
 	// Declare the output.
-	options := Options{}
+	options := options{}
 	options.Limits.Duration = 5 * time.Second
 	output, err := solver(context.Background(), input, options)
 	if err != nil {

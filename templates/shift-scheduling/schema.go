@@ -7,18 +7,18 @@ import (
 	"github.com/nextmv-io/sdk/mip"
 )
 
-// Output holds the output data of the solution.
-type Output struct {
-	AssignedShifts []OutputAssignment `json:"assigned_shifts"`
+// output holds the output data of the solution.
+type output struct {
+	AssignedShifts []outputAssignment `json:"assigned_shifts"`
 }
 
-// CustomResultStatistics add custom stats.
-type CustomResultStatistics struct {
+// customResultStatistics add custom stats.
+type customResultStatistics struct {
 	NumberOfWorkers int `json:"number_of_workers"`
 }
 
-// Options holds custom configuration data.
-type Options struct {
+// options holds custom configuration data.
+type options struct {
 	OverSupplyPenalty  float64       `json:"over_supply_penalty" default:"1000" usage:"penalty for over-supplying a demand"`
 	UnderSupplyPenalty float64       `json:"under_supply_penalty" default:"500" usage:"penalty for over-supplying a demand"`
 	MaxHoursPerDay     time.Duration `json:"max_hours_per_day" default:"10h" usage:"maximum number of hours per day"`
@@ -29,44 +29,44 @@ type Options struct {
 	Limits             mip.Limits    `json:"limits,omitempty"`
 }
 
-// Input represents a struct definition that can read input.json.
-type Input struct {
-	Workers         []Worker         `json:"workers"`
-	RequiredWorkers []RequiredWorker `json:"required_workers"`
+// input represents a struct definition that can read input.json.
+type input struct {
+	Workers         []worker         `json:"workers"`
+	RequiredWorkers []requiredWorker `json:"required_workers"`
 }
 
-// Worker holds worker specific data.
-type Worker struct {
-	Availability []Availability `json:"availability"`
+// worker holds worker specific data.
+type worker struct {
+	Availability []availability `json:"availability"`
 	ID           int            `json:"id"`
 }
 
-// Availability holds available times for a worker.
-type Availability struct {
-	Start CustomTime `json:"start"`
-	End   CustomTime `json:"end"`
+// availability holds available times for a worker.
+type availability struct {
+	Start customTime `json:"start"`
+	End   customTime `json:"end"`
 }
 
-// RequiredWorker holds data about times and number of required workers per time window.
-type RequiredWorker struct {
+// requiredWorker holds data about times and number of required workers per time window.
+type requiredWorker struct {
 	RequiredWorkerID int        `json:"required_worker_id,omitempty"`
-	Start            CustomTime `json:"start"`
-	End              CustomTime `json:"end"`
+	Start            customTime `json:"start"`
+	End              customTime `json:"end"`
 	Count            int        `json:"count"`
 }
 
 // ID returned the RequiredWorker ID.
-func (r RequiredWorker) ID() string {
+func (r requiredWorker) ID() string {
 	return strconv.Itoa(r.RequiredWorkerID)
 }
 
-// CustomTime represents a time.Time.
-type CustomTime struct {
+// customTime represents a time.Time.
+type customTime struct {
 	time.Time
 }
 
 // UnmarshalJSON unmarshals a CustomTime.
-func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
+func (t *customTime) UnmarshalJSON(b []byte) (err error) {
 	date, err := time.Parse(time.RFC3339, string(b))
 	if err != nil {
 		return err
@@ -76,29 +76,29 @@ func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
 }
 
 // MarshalJSON marshals a CustomTime.
-func (t *CustomTime) MarshalJSON() ([]byte, error) {
+func (t *customTime) MarshalJSON() ([]byte, error) {
 	return []byte(t.Format(time.RFC3339)), nil
 }
 
-// OutputAssignment holds an assignment for a driver.
-type OutputAssignment struct {
+// outputAssignment holds an assignment for a driver.
+type outputAssignment struct {
 	Start    time.Time `json:"start"`
 	End      time.Time `json:"end"`
 	WorkerID int       `json:"worker_id"`
 }
 
-// Assignment represents a shift assignment.
-type Assignment struct {
-	DemandsCovered []RequiredWorker `json:"demands_covered"`
+// assignment represents a shift assignment.
+type assignment struct {
+	DemandsCovered []requiredWorker `json:"demands_covered"`
 	Start          time.Time        `json:"start"`
 	End            time.Time        `json:"end"`
-	Worker         Worker           `json:"worker"`
+	Worker         worker           `json:"worker"`
 	Duration       time.Duration    `json:"duration"`
 	AssignmentID   int              `json:"assignment_id"`
 }
 
 // DurationApart calculates the time to assignments are apart from each other.
-func (a *Assignment) DurationApart(other Assignment) time.Duration {
+func (a *assignment) DurationApart(other assignment) time.Duration {
 	if a.Start.After(other.End) {
 		return a.Start.Sub(other.End)
 	}
@@ -109,6 +109,6 @@ func (a *Assignment) DurationApart(other Assignment) time.Duration {
 }
 
 // ID returns the assignment id.
-func (a Assignment) ID() string {
+func (a assignment) ID() string {
 	return strconv.Itoa(a.AssignmentID)
 }
