@@ -3,17 +3,14 @@ package main
 
 import (
 	"context"
-	"errors"
 	"log"
 	"math"
 	"time"
 
-	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/run/schema"
-	"github.com/nextmv-io/sdk/run/statistics"
 )
 
 const gap = 0.999
@@ -48,7 +45,7 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 	if err != nil {
 		return schema.Output{}, err
 	}
-	err = options.SetMaximumDuration(opts.SolverDuration)
+	err = options.SetMaximumDuration(opts.Limits.Duration)
 	if err != nil {
 		return schema.Output{}, err
 	}
@@ -57,80 +54,40 @@ func solver(_ context.Context, input Input, opts Options) (out schema.Output, re
 		return schema.Output{}, err
 	}
 
-	output, err := format(solution, input, x, potentialAssignments)
-	if err != nil {
-		return schema.Output{}, err
-	}
+	// Format the solution into the desired output format and add custom
+	// statistics.
+	output := mip.Format(options, format(input, solution, x, potentialAssignments), solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
 
 	return output, nil
 }
 
 func format(
-	solution mip.Solution,
 	_ Input,
+	solverSolution mip.Solution,
 	x model.MultiMap[mip.Bool, Assignment],
 	assignments []Assignment,
-) (output schema.Output, err error) {
-	o := schema.Output{}
-
-	o.Version = schema.Version{
-		Sdk: sdk.VERSION,
+) Output {
+	if !solverSolution.IsOptimal() && !solverSolution.IsSubOptimal() {
+		return Output{}
 	}
-
-	stats := statistics.NewStatistics()
-
-	result := statistics.Result{}
-
-	run := statistics.Run{}
-
-	t := solution.RunTime().Seconds()
-	run.Duration = &t
-	result.Duration = &t
-
 	nextShiftSolution := Output{}
+	usedWorkers := make(map[int]struct{})
 
-	nextShiftSolution.Status = "infeasible"
-
-	if solution != nil && solution.HasValues() {
-		nextShiftSolution.Status = "suboptimal"
-		if solution.IsOptimal() {
-			nextShiftSolution.Status = "optimal"
-		}
-
-		nextShiftSolution.Value = solution.ObjectiveValue()
-		val := statistics.Float64(solution.ObjectiveValue())
-		result.Value = &val
-
-		usedWorkers := make(map[int]struct{})
-
-		for _, assignment := range assignments {
-			if solution.Value(x.Get(assignment)) >= 0.9 {
-				nextShiftSolution.AssignedShifts = append(nextShiftSolution.AssignedShifts, OutputAssignment{
-					Start:    assignment.Start,
-					End:      assignment.End,
-					WorkerID: assignment.Worker.ID,
-				})
-				if _, ok := usedWorkers[assignment.Worker.ID]; !ok {
-					usedWorkers[assignment.Worker.ID] = struct{}{}
-				}
+	for _, assignment := range assignments {
+		if solverSolution.Value(x.Get(assignment)) >= 0.9 {
+			nextShiftSolution.AssignedShifts = append(nextShiftSolution.AssignedShifts, OutputAssignment{
+				Start:    assignment.Start,
+				End:      assignment.End,
+				WorkerID: assignment.Worker.ID,
+			})
+			if _, ok := usedWorkers[assignment.Worker.ID]; !ok {
+				usedWorkers[assignment.Worker.ID] = struct{}{}
 			}
 		}
-
-		o.Solutions = append(o.Solutions, nextShiftSolution)
-		customResultStatistics := CustomResultStatistics{
-			NumberOfWorkers: len(usedWorkers),
-		}
-
-		result.Custom = customResultStatistics
-
-		stats.Result = &result
-		stats.Run = &run
-		o.Statistics = stats
-	} else {
-		retErr := errors.New("no solution found")
-		return schema.Output{}, retErr
 	}
-	return o, nil
+
+	return nextShiftSolution
 }
 
 func newMIPModel(
