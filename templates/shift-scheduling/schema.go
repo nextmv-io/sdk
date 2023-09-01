@@ -12,11 +12,6 @@ type output struct {
 	AssignedShifts []outputAssignment `json:"assigned_shifts"`
 }
 
-// customResultStatistics add custom stats.
-type customResultStatistics struct {
-	NumberOfWorkers int `json:"number_of_workers"`
-}
-
 // options holds custom configuration data.
 type options struct {
 	OverSupplyPenalty  float64       `json:"over_supply_penalty" default:"1000" usage:"penalty for over-supplying a demand"`
