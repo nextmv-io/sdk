@@ -225,7 +225,8 @@ func SanityCheckReport(
 	ctx context.Context,
 	model Model,
 	duration time.Duration,
-	sanityCheckDepth SanityCheckDepth) (schema.Output, error) {
+	sanityCheckDepth SanityCheckDepth,
+) (schema.Output, error) {
 	connect.Connect(con, &sanityCheckReport)
 	return sanityCheckReport(ctx, model, duration, sanityCheckDepth)
 }
