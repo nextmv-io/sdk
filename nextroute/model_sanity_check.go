@@ -103,6 +103,14 @@ type SanityCheckPlanUnits struct {
 	// one move has been found but the move can not be planned. This should not
 	// happen if all the constraints are implemented correct.
 	PlanUnitsMoveFoundFailed int `json:"plan_units_move_found_failed"`
+	// PlanUnitsMoveFoundTooExpensive is the number of plan units for which at
+	// least one move has been found but the move is too expensive. This can
+	// happen when the move unplanned penalty is too low compared to the cost
+	// of other objectives.
+	PlanUnitsMoveTooExpensive int `json:"plan_units_move_too_expensive"`
+	// PlanUnitsMoveFoundExecutable is the number of plan units for which at
+	// least one move has been found and the move is executable.
+	PlanUnitsMoveExecutable int `json:"plan_units_move_executable"`
 	// SanityCheckPlanUnits is the sanity check of the plan units.
 	SanityCheckPlanUnits []*SanityCheckPlanUnit `json:"sanity_check_plan_units"`
 }
@@ -125,9 +133,12 @@ type SanityCheckPlanUnit struct {
 	MoveFoundObjectives *SanityCheckObjective `json:"move_found_objective,omitempty"`
 	// MoveFoundFailed is true if the plan unit best move failed to execute.
 	MoveFoundFailed bool `json:"move_found_failed"`
-	// NoMoveFound is true if no move is found for the plan unit. A plan unit
-	// has no move found if the plan unit is over-constrained.
-	NoMoveFound bool `json:"no_move_found"`
+	// MoveFoundExecutable is true if the plan unit best move is executable.
+	MoveFoundExecutable bool `json:"move_found_executable"`
+	// MoveFound is true if a move is found for the plan unit. A plan unit
+	// has no move found if the plan unit is over-constrained or the move found
+	// is too expensive.
+	MoveFound bool `json:"move_found"`
 	// Evaluated is true if the plan unit is evaluated. If the sanity check
 	// timed out the plan unit might not be evaluated due to time limit.
 	Evaluated bool `json:"evaluated"`
