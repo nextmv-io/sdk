@@ -6,7 +6,9 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 
+	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run/schema"
 )
 
@@ -21,8 +23,17 @@ func TestTemplate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Declare the output.
-	options := options{}
+	// Set default options.
+	options := options{
+		OverSupplyPenalty:  1000,
+		UnderSupplyPenalty: 500,
+		MaxHoursPerDay:     10 * time.Hour,
+		MaxHoursPerWeek:    40 * time.Hour,
+		MinHoursPerShift:   2 * time.Hour,
+		MaxHoursPerShift:   8 * time.Hour,
+		HoursBetweenShifts: 8 * time.Hour,
+		Limits:             mip.Limits{Duration: 4 * time.Minute},
+	}
 	output, err := solver(context.Background(), input, options)
 	if err != nil {
 		t.Fatal(err)
