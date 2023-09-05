@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -10,12 +11,11 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
-	runSchema "github.com/nextmv-io/sdk/run/schema"
 )
 
 func main() {
 	runner := run.CLI(solver,
-		run.InputValidate[run.CLIRunnerConfig, schema.FleetInput, options, runSchema.Output](
+		run.InputValidate[run.CLIRunnerConfig, schema.FleetInput, options, FleetOutput](
 			nil,
 		),
 	)
@@ -36,26 +36,33 @@ func solver(
 	ctx context.Context,
 	input schema.FleetInput,
 	options options,
-) (runSchema.Output, error) {
+) (FleetOutput, error) {
 	nextrouteInput, err := input.ToNextRoute()
 	if err != nil {
-		panic(err)
+		return FleetOutput{}, err
 	}
 
-	solveOptions := options.Solve
 	if input.Options != nil && input.Options.Solver != nil &&
 		input.Options.Solver.Limits != nil {
-		duration, err := time.ParseDuration(input.Options.Solver.Limits.Duration)
-		if err != nil {
-			return runSchema.Output{}, err
+		if input.Options.Solver.Limits.Duration != "" {
+			duration, err := time.ParseDuration(input.Options.Solver.Limits.Duration)
+			if err != nil {
+				return FleetOutput{}, err
+			}
+			options.Solve.Duration = duration
 		}
-
-		solveOptions.Duration = duration
 	}
 
 	model, err := factory.NewModel(nextrouteInput, options.Model)
 	if err != nil {
-		return runSchema.Output{}, err
+		return FleetOutput{}, err
+	}
+
+	distanceExpression := newDistanceExpression(input)
+	for _, v := range model.VehicleTypes() {
+		v.SetData(distanceData{
+			distance: distanceExpression,
+		})
 	}
 
 	if options.SanityCheck.Enable {
@@ -69,17 +76,30 @@ func solver(
 
 	solver, err := nextroute.NewParallelSolver(model)
 	if err != nil {
-		return runSchema.Output{}, err
+		return FleetOutput{}, err
 	}
 
-	solutions, err := solver.Solve(ctx, solveOptions)
+	solutions, err := solver.Solve(ctx, options.Solve)
 	if err != nil {
-		return runSchema.Output{}, err
+		return FleetOutput{}, err
 	}
-	last := solutions.Last()
 
-	output := factory.Format(ctx, options, solver, last)
-	output.Statistics.Result.Custom = factory.DefaultCustomResultStatistics(last)
-
+	runSolutions := run.Last
+	solutionArray := make([]nextroute.Solution, 0)
+	switch runSolutions {
+	case run.Last:
+		solutionArray = append(solutionArray, solutions.Last())
+	case run.All:
+		for s := range solutions {
+			solutionArray = append(solutionArray, s)
+		}
+	default:
+		return FleetOutput{},
+			fmt.Errorf("%s is an invalid value for parameter runner.output.solutions. it must be 'all' or 'last'", runSolutions)
+	}
+	output, err := format(ctx, options.Solve.Duration, solver, ToFleetSolutionOutput, solutionArray...)
+	if err != nil {
+		return output, err
+	}
 	return output, nil
 }
