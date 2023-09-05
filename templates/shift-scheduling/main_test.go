@@ -6,7 +6,6 @@ import (
 	"os"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/nextmv-io/sdk/run/schema"
 )
@@ -24,7 +23,6 @@ func TestTemplate(t *testing.T) {
 
 	// Declare the output.
 	options := options{}
-	options.Limits.Duration = 5 * time.Second
 	output, err := solver(context.Background(), input, options)
 	if err != nil {
 		t.Fatal(err)
