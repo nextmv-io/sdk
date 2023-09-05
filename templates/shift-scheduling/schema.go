@@ -62,17 +62,16 @@ type customTime struct {
 
 // UnmarshalJSON unmarshals a CustomTime.
 func (t *customTime) UnmarshalJSON(b []byte) (err error) {
-	date, err := time.Parse(time.RFC3339, string(b))
+	err = t.Time.UnmarshalJSON(b)
 	if err != nil {
 		return err
 	}
-	t.Time = date
-	return
+	return nil
 }
 
 // MarshalJSON marshals a CustomTime.
 func (t *customTime) MarshalJSON() ([]byte, error) {
-	return []byte(t.Format(time.RFC3339)), nil
+	return t.Time.MarshalJSON()
 }
 
 // outputAssignment holds an assignment for a worker.
