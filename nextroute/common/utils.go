@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"math/rand"
 	"sync"
 	"time"
@@ -194,6 +195,21 @@ func WithinTolerance(a, b, tolerance float64) bool {
 		return d < tolerance
 	}
 	return (d / math.Abs(b)) < tolerance
+}
+
+// Truncate truncates a float64 to the given unit.
+func Truncate(f float64, unit float64) float64 {
+	bf := big.NewFloat(0).SetPrec(1000).SetFloat64(f)
+	bu := big.NewFloat(0).SetPrec(1000).SetFloat64(unit)
+
+	bf.Quo(bf, bu)
+
+	i := big.NewInt(0)
+	bf.Int(i)
+	bf.SetInt(i)
+
+	f, _ = bf.Mul(bf, bu).Float64()
+	return f
 }
 
 // DurationValue returns the value of a duration in the given time unit.

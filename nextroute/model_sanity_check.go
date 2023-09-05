@@ -90,14 +90,19 @@ type SanityCheckPlanUnits struct {
 	// vehicle.
 	ExecuteMoveDuration SanityCheckData `json:"execute_move_duration"`
 	// MovesFailed is the number of moves that failed. A move can fail if the
-	// estimate of a constraint is wrong.
+	// estimate of a constraint is wrong. This should not happen if all the
+	// constraints are implemented correct.This is different from
+	// PlanUnitsMoveFoundFailed, this counts each vehicle for which a move
+	// failed. PlanUnitsMoveFoundFailed counts the plan units for
+	// which at least one move failed.
 	MovesFailed int `json:"moves_failed"`
 	// PlanUnitsNoMoveFound is the number of plan units that have no move found.
 	// These moves can not be planned ever, they are over-constrained.
 	PlanUnitsNoMoveFound int `json:"plan_units_no_move_found"`
-	// PlanUnitsUnPlannable is the number of plan units for which moves have
-	// been found but the move can not be planned. This should not happen.
-	PlanUnitsUnPlannable int `json:"plan_units_un_plannable"`
+	// PlanUnitsMoveFoundFailed is the number of plan units for which at least
+	// one move has been found but the move can not be planned. This should not
+	// happen if all the constraints are implemented correct.
+	PlanUnitsMoveFoundFailed int `json:"plan_units_move_found_failed"`
 	// SanityCheckPlanUnits is the sanity check of the plan units.
 	SanityCheckPlanUnits []*SanityCheckPlanUnit `json:"sanity_check_plan_units"`
 }
@@ -109,14 +114,46 @@ type SanityCheckPlanUnit struct {
 	Stops []string `json:"stops"`
 	// VehiclesHaveMoves is the number of vehicles that have moves for the plan
 	// unit. Only calculated if the depth is medium.
-	VehiclesHaveMoves int `json:"vehicles_have_moves,omitempty"`
-	// UnPlannable is true if the plan unit is un-plannable. A plan unit is
-	// un-plannable if a move is found but the Move.Execute does not result in a
-	// success.
-	UnPlannable bool `json:"un_plannable"`
+	VehiclesHaveMoves int `json:"vehicles_have_moves"`
+	// MoveFoundTooExpensive is true if the plan unit best move is too
+	// expensive. A move is too expensive if the move can be executed but the
+	// delta value of the objective is too high, larger than zero.
+	MoveFoundTooExpensive bool `json:"move_found_too_expensive"`
+	// MoveFoundObjectives is the sanity check of the objectives of the plan
+	// unit best move. Only calculated if MoveFoundTooExpensive is true and
+	// reports the objectives of the plan unit on the cheapest vehicles.
+	MoveFoundObjectives *SanityCheckObjective `json:"move_found_objective,omitempty"`
+	// MoveFoundFailed is true if the plan unit best move failed to execute.
+	MoveFoundFailed bool `json:"move_found_failed"`
 	// NoMoveFound is true if no move is found for the plan unit. A plan unit
 	// has no move found if the plan unit is over-constrained.
 	NoMoveFound bool `json:"no_move_found"`
+	// Evaluated is true if the plan unit is evaluated. If the sanity check
+	// timed out the plan unit might not be evaluated due to time limit.
+	Evaluated bool `json:"evaluated"`
+}
+
+// SanityCheckObjectiveTerm is the sanity check of the individual terms of
+// the objective.
+type SanityCheckObjectiveTerm struct {
+	// Name is the name of the objective term.
+	Name string `json:"objective"`
+	// Factor is the factor of the objective term.
+	Factor float64 `json:"term"`
+	// Base is the base value of the objective term.
+	Base float64 `json:"base"`
+	// Value is the value of the objective term which is the Factor times Base.
+	Value float64 `json:"value"`
+}
+
+// SanityCheckObjective is the sanity check of the objective.
+type SanityCheckObjective struct {
+	// Vehicle is the ID of the vehicle for which it reports the objective.
+	Vehicle string `json:"vehicle"`
+	// Value is the value of the objective.
+	Value float64 `json:"value"`
+	// Terms is the sanity check of the individual terms of the objective.
+	Terms []SanityCheckObjectiveTerm
 }
 
 // SanityCheckVehicles is the sanity check of the vehicles.
@@ -133,7 +170,7 @@ type SanityCheckVehicle struct {
 	ID string `json:"id"`
 	// PlanUnitsHaveMoves is the number of plan units that have moves for the
 	// vehicle. Only calculated if the depth is medium.
-	PlanUnitsHaveMoves int `json:"plan_units_have_moves,omitempty"`
+	PlanUnitsHaveMoves int `json:"plan_units_have_moves"`
 }
 
 // SanityCheckData is the data of a sanity check property.
