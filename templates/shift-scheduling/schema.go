@@ -9,7 +9,8 @@ import (
 
 // output holds the output data of the solution.
 type output struct {
-	AssignedShifts []outputAssignment `json:"assigned_shifts"`
+	AssignedShifts        []outputAssignment `json:"assigned_shifts"`
+	NumberAssignedWorkers int                `json:"number_assigned_workers"`
 }
 
 // options holds custom configuration data.

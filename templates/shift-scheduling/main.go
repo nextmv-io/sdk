@@ -85,6 +85,7 @@ func format(
 			}
 		}
 	}
+	nextShiftSolution.NumberAssignedWorkers = len(usedWorkers)
 
 	return nextShiftSolution
 }

@@ -1,5 +1,5 @@
 {
-  "version": { "sdk": "v0.28.0" },
+  "version": { "sdk": "v0.29.0-dev.0.0.20230905095116-2d7e41f77870" },
   "options": {},
   "solutions": [
     {
@@ -9,16 +9,22 @@
           "end": "2023-08-29T11:00:00+02:00",
           "worker_id": 3
         }
-      ]
+      ],
+      "number_assigned_workers": 1
     }
   ],
   "statistics": {
     "schema": "v1",
-    "run": { "duration": 0.094214708 },
+    "run": { "duration": 0.09652325 },
     "result": {
-      "duration": 0.094214708,
+      "duration": 0.09652325,
       "value": 5500,
-      "custom": { "columns": 913, "rows": 2713, "status": "optimal" }
+      "custom": {
+        "constraints": 2713,
+        "provider": "highs",
+        "status": "optimal",
+        "variables": 913
+      }
     }
   }
 }
