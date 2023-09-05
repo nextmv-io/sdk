@@ -127,10 +127,10 @@ type SanityCheckPlanUnit struct {
 	// expensive. A move is too expensive if the move can be executed but the
 	// delta value of the objective is too high, larger than zero.
 	MoveFoundTooExpensive bool `json:"move_found_too_expensive"`
-	// MoveFoundObjectives is the sanity check of the objectives of the plan
+	// MoveFoundObjective is the sanity check of the objectives of the plan
 	// unit best move. Only calculated if MoveFoundTooExpensive is true and
 	// reports the objectives of the plan unit on the cheapest vehicles.
-	MoveFoundObjectives *SanityCheckObjective `json:"move_found_objective,omitempty"`
+	MoveFoundObjective *SanityCheckObjective `json:"move_found_objective,omitempty"`
 	// MoveFoundFailed is true if the plan unit best move failed to execute.
 	MoveFoundFailed bool `json:"move_found_failed"`
 	// MoveFoundExecutable is true if the plan unit best move is executable.
@@ -148,9 +148,9 @@ type SanityCheckPlanUnit struct {
 // the objective.
 type SanityCheckObjectiveTerm struct {
 	// Name is the name of the objective term.
-	Name string `json:"objective"`
+	Name string `json:"name"`
 	// Factor is the factor of the objective term.
-	Factor float64 `json:"term"`
+	Factor float64 `json:"factor"`
 	// Base is the base value of the objective term.
 	Base float64 `json:"base"`
 	// Value is the value of the objective term which is the Factor times Base.
