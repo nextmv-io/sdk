@@ -25,8 +25,8 @@ type options struct {
 }
 
 type penalty struct {
-	OverSupply  float64 `json:"over_supply_penalty" default:"1000" usage:"penalty for over-supplying a demand"`
-	UnderSupply float64 `json:"under_supply_penalty" default:"500" usage:"penalty for over-supplying a demand"`
+	OverSupply  float64 `json:"over_supply" default:"1000" usage:"penalty for over-supplying a demand"`
+	UnderSupply float64 `json:"under_supply" default:"500" usage:"penalty for over-supplying a demand"`
 }
 
 // input represents a struct definition that can read input.json.
