@@ -111,7 +111,7 @@ func (c *client) IgnoreEmpty(ignore bool) {
 	c.removeEmpty = ignore
 }
 
-// WithIgnoreEmpty configures if empty points should be ignored
+// WithIgnoreEmpty configures if empty points should be ignored.
 func WithIgnoreEmpty(ignore bool) ClientOption {
 	return func(c *client) {
 		c.removeEmpty = ignore
