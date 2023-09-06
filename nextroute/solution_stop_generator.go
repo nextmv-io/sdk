@@ -27,7 +27,7 @@ type SolutionStopGenerator interface {
 //			  // Do something with solutionStop
 //	   }
 func NewSolutionStopGenerator(
-	move Move,
+	move SolutionMoveStops,
 	startAtFirst bool,
 	endAtLast bool,
 ) SolutionStopGenerator {

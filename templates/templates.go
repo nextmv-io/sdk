@@ -18,6 +18,23 @@ var (
 	//go:embed routing/README.md
 	RoutingReadme string
 
+	// RoutingLegacyMain is the main.go file in the routing-legacy template.
+	//go:embed routing-legacy/main.go
+	RoutingLegacyMain string
+	// RoutingLegacyHelper is file with helper functions in the routing-legacy
+	// template.
+	//go:embed routing-legacy/helper.go
+	RoutingLegacyHelper string
+	// RoutingLegacyOutput is the output.go file in the routing-legacy template.
+	//go:embed routing-legacy/output.go
+	RoutingLegacyOutput string
+	// RoutingLegacyInput is the input.json file in the routing-legacy template.
+	//go:embed routing-legacy/input.json
+	RoutingLegacyInput string
+	// RoutingLegacyReadme is the README.md file in the routing-legacy template.
+	//go:embed routing-legacy/README.md
+	RoutingLegacyReadme string
+
 	// NextrouteMain is the main.go file in the nextroute template.
 	//go:embed nextroute/main.go
 	NextrouteMain string
@@ -317,4 +334,20 @@ var (
 	// UniqueMatrixReadme is the README.md file in the routing unique-matrix template.
 	//go:embed unique-matrix-measure/README.md
 	UniqueMatrixReadme string
+
+	// OrtoolsManifest is the app manifest file in the ortools template.
+	//go:embed ortools/app.yaml
+	OrtoolsManifest string
+	// OrtoolsMain is the main.py file in the ortools template.
+	//go:embed ortools/main.py
+	OrtoolsMain string
+	// OrtoolsInput is the input.json file in the ortools template.
+	//go:embed ortools/input.json
+	OrtoolsInput string
+	// OrtoolsReadme is the README.md file in the ortools template.
+	//go:embed ortools/README.md
+	OrtoolsReadme string
+	// OrtoolsRequirements is the requirements.txt file in the ortools template.
+	//go:embed ortools/requirements.txt
+	OrtoolsRequirements string
 )

@@ -1,9 +1,7 @@
 # Nextmv MIP incentive allocation template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
-using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS). To run
-this beta template, please contact support@nextmv.io for access to the Nextmv
-HiGHS interface.
+using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS).
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
@@ -38,6 +36,6 @@ solution.
 * API documentation and examples can be found in the [package
   documentation](https://pkg.go.dev/github.com/nextmv-io/sdk/mip).
 * Further documentation, guides, and API references about custom modelling and
-deployment can also be found on our [blog](https://www.nextmv.io/blog) and on
-our [documentation site](https://docs.nextmv.io).
+  deployment can also be found on our [blog](https://www.nextmv.io/blog) and on
+  our [documentation site](https://docs.nextmv.io).
 * Need more assistance? Send us an [email](mailto:support@nextmv.io)!

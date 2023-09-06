@@ -170,7 +170,6 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
-
     # Deactivate line length in solver.go because of go tags
     - path: nextroute/solver\.go
       linters:
@@ -210,12 +209,19 @@ issues:
     - path: alns/solver\.go
       linters:
         - nestif
+    # Cloud code for compatibility
+    - path: nextroute/schema/fleet_defaults\.go
+      linters:
+        - gocyclo
 
     # Using math/rand is fine here
     - path: nextroute/common/alias_test\.go
       linters:
         - gosec
       text: G404
+    - path: nextroute/common/utils\.go
+      linters:
+        - gomodguard
     - path: route/osrm/matrix_test\.go
       linters:
         - gosec
