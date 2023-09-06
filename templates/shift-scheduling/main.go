@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math"
 	"time"
@@ -67,7 +68,7 @@ func format(
 		return output{}
 	}
 	nextShiftSolution := output{}
-	usedWorkers := make(map[int]struct{})
+	usedWorkers := make(map[string]struct{})
 
 	for _, assignment := range assignments {
 		if solverSolution.Value(x.Get(assignment)) >= 0.9 {
@@ -89,8 +90,8 @@ func format(
 func newMIPModel(
 	input input,
 	potentialAssignments []assignment,
-	potentialAssignmentsPerWorker map[int][]assignment,
-	demandCovering map[int][]assignment,
+	potentialAssignmentsPerWorker map[string][]assignment,
+	demandCovering map[string][]assignment,
 	opts options,
 ) (mip.Model, model.MultiMap[mip.Bool, assignment]) {
 	m := mip.NewModel()
@@ -112,12 +113,12 @@ func newMIPModel(
 		}, input.RequiredWorkers)
 
 	for _, demand := range input.RequiredWorkers {
-		demandCover := demandCovering[demand.RequiredWorkerID]
+		demandCover := demandCovering[demand.requiredWorkerID]
 		// We need to cover all demands
 		coverConstraint := m.NewConstraint(mip.Equal, float64(demand.Count))
 		coverConstraint.NewTerm(1.0, underSupplySlack.Get(demand))
 		coverConstraint.NewTerm(-1.0, overSupplySlack.Get(demand))
-		coverPerWorker := map[int]mip.Constraint{}
+		coverPerWorker := map[string]mip.Constraint{}
 		for _, assignment := range demandCover {
 			constraint, ok := coverPerWorker[assignment.Worker.ID]
 			if !ok {
@@ -165,26 +166,26 @@ func newMIPModel(
 	return m, x
 }
 
-func potentialAssignments(input input, opts options) ([]assignment, map[int][]assignment) {
+func potentialAssignments(input input, opts options) ([]assignment, map[string][]assignment) {
 	potentialAssignments := make([]assignment, 0)
-	potentialAssignmentsPerWorker := map[int][]assignment{}
+	potentialAssignmentsPerWorker := map[string][]assignment{}
 	for _, worker := range input.Workers {
 		potentialAssignmentsPerWorker[worker.ID] = make([]assignment, 0)
 		for _, availability := range worker.Availability {
 			for start := availability.Start; start.Before(availability.End); start = start.Add(30 * time.Minute) {
 				for end := availability.End; start.Before(end); end = end.Add(-30 * time.Minute) {
-					// make sure that end-start is not more than 8h
+					// make sure that end-start is not more than x hours
 					duration := end.Sub(start)
 					if duration > opts.MaxHoursPerShift {
 						continue
 					}
-					// make sure that end-start is not less than 2h - we are
+					// make sure that end-start is not less than y hours - we are
 					// only shrinking the end time, so we can break here
 					if duration < opts.MinHoursPerShift {
 						break
 					}
 					assignment := assignment{
-						AssignmentID: len(potentialAssignments),
+						AssignmentID: fmt.Sprint(len(potentialAssignments)),
 						Start:        start,
 						End:          end,
 						Worker:       worker,
@@ -199,21 +200,21 @@ func potentialAssignments(input input, opts options) ([]assignment, map[int][]as
 	return potentialAssignments, potentialAssignmentsPerWorker
 }
 
-func demands(input input, potentialAssignments []assignment) map[int][]assignment {
+func demands(input input, potentialAssignments []assignment) map[string][]assignment {
 	// initialize demand ids
 	for i, demand := range input.RequiredWorkers {
-		demand.RequiredWorkerID = i
+		demand.requiredWorkerID = fmt.Sprint(i)
 		input.RequiredWorkers[i] = demand
 	}
 
-	demandCovering := map[int][]assignment{}
+	demandCovering := map[string][]assignment{}
 	for _, demand := range input.RequiredWorkers {
-		demandCovering[demand.RequiredWorkerID] = []assignment{}
+		demandCovering[demand.requiredWorkerID] = []assignment{}
 		for i, potentialAssignment := range potentialAssignments {
 			if (potentialAssignment.Start.Before(demand.Start) || potentialAssignment.Start.Equal(demand.Start)) &&
 				(potentialAssignment.End.After(demand.End) || potentialAssignment.End.Equal(demand.End)) {
 				potentialAssignments[i].DemandsCovered = append(potentialAssignments[i].DemandsCovered, demand)
-				demandCovering[demand.RequiredWorkerID] = append(demandCovering[demand.RequiredWorkerID], potentialAssignment)
+				demandCovering[demand.requiredWorkerID] = append(demandCovering[demand.requiredWorkerID], potentialAssignment)
 			}
 		}
 	}

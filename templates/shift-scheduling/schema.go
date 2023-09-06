@@ -1,7 +1,6 @@
 package main
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/nextmv-io/sdk/mip"
@@ -38,7 +37,7 @@ type input struct {
 // worker holds worker specific data.
 type worker struct {
 	Availability []availability `json:"availability"`
-	ID           int            `json:"id"`
+	ID           string         `json:"id"`
 }
 
 // availability holds available times for a worker.
@@ -49,7 +48,7 @@ type availability struct {
 
 // requiredWorker holds data about times and number of required workers per time window.
 type requiredWorker struct {
-	RequiredWorkerID int       `json:"required_worker_id,omitempty"`
+	requiredWorkerID string    `json:"-"`
 	Start            time.Time `json:"start"`
 	End              time.Time `json:"end"`
 	Count            int       `json:"count"`
@@ -57,14 +56,14 @@ type requiredWorker struct {
 
 // ID returned the RequiredWorker ID.
 func (r requiredWorker) ID() string {
-	return strconv.Itoa(r.RequiredWorkerID)
+	return r.requiredWorkerID
 }
 
 // outputAssignment holds an assignment for a worker.
 type outputAssignment struct {
 	Start    time.Time `json:"start"`
 	End      time.Time `json:"end"`
-	WorkerID int       `json:"worker_id"`
+	WorkerID string    `json:"worker_id"`
 }
 
 // assignment represents a shift assignment.
@@ -74,7 +73,7 @@ type assignment struct {
 	End            time.Time        `json:"end"`
 	Worker         worker           `json:"worker"`
 	Duration       time.Duration    `json:"duration"`
-	AssignmentID   int              `json:"assignment_id"`
+	AssignmentID   string           `json:"assignment_id"`
 }
 
 // DurationApart calculates the time to assignments are apart from each other.
@@ -90,5 +89,5 @@ func (a assignment) DurationApart(other assignment) time.Duration {
 
 // ID returns the assignment id.
 func (a assignment) ID() string {
-	return strconv.Itoa(a.AssignmentID)
+	return a.AssignmentID
 }
