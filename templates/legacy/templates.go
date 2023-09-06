@@ -1,4 +1,4 @@
-// Package legacy contains variables holding embded legacy template files.
+// Package legacy contains variables holding embedded legacy template files.
 package legacy
 
 import (

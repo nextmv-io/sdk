@@ -1,4 +1,4 @@
-// Package templates contains variables holding embded template files.
+// Package templates contains variables holding embedded template files.
 package templates
 
 import (

@@ -2,4 +2,4 @@
 type: sdk
 features:
   - sdk
-  - mip-highs # Replace with mip-xpress to use the mip.Xpress solver provider.
+  - mip-highs # Replace if using a different solver provider in your app.
