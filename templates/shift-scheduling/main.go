@@ -13,14 +13,10 @@ import (
 	"github.com/nextmv-io/sdk/run/schema"
 )
 
-const gap = 0.999
+const minGap = 0.999
 
 func main() {
-	runner := run.CLI(solver,
-		run.InputValidate[run.CLIRunnerConfig, input, options, schema.Output](
-			nil,
-		),
-	)
+	runner := run.CLI(solver)
 	err := runner.Run(context.Background())
 	if err != nil {
 		log.Fatal(err)
@@ -41,7 +37,7 @@ func solver(_ context.Context, input input, opts options) (out schema.Output, re
 	}
 	options := mip.NewSolveOptions()
 	options.SetVerbosity(mip.Off)
-	err = options.SetMIPGapRelative(gap)
+	err = options.SetMIPGapRelative(minGap)
 	if err != nil {
 		return schema.Output{}, err
 	}
@@ -93,7 +89,7 @@ func format(
 func newMIPModel(
 	input input,
 	potentialAssignments []assignment,
-	potentialAssignmentsPerWorker map[int][]*assignment,
+	potentialAssignmentsPerWorker map[int][]assignment,
 	demandCovering map[int][]assignment,
 	opts options,
 ) (mip.Model, model.MultiMap[mip.Bool, assignment]) {
@@ -131,8 +127,8 @@ func newMIPModel(
 			constraint.NewTerm(1.0, x.Get(assignment))
 			coverConstraint.NewTerm(1.0, x.Get(assignment))
 		}
-		m.Objective().NewTerm(opts.OverSupplyPenalty, overSupplySlack.Get(demand))
-		m.Objective().NewTerm(opts.UnderSupplyPenalty, underSupplySlack.Get(demand))
+		m.Objective().NewTerm(opts.Penalty.OverSupply, overSupplySlack.Get(demand))
+		m.Objective().NewTerm(opts.Penalty.UnderSupply, underSupplySlack.Get(demand))
 	}
 
 	// Two shift of a worker have to be at least x hours apart
@@ -140,26 +136,26 @@ func newMIPModel(
 		for i, a1 := range potentialAssignmentsPerWorker[worker.ID] {
 			// A worker can only work y hours per day
 			lessThanXhoursPerDay := m.NewConstraint(mip.LessThanOrEqual, opts.MaxHoursPerDay.Hours())
-			lessThanXhoursPerDay.NewTerm(a1.Duration.Hours(), x.Get(*a1))
+			lessThanXhoursPerDay.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			atLeastYhoursApart := m.NewConstraint(mip.LessThanOrEqual, 1.0)
-			atLeastYhoursApart.NewTerm(1.0, x.Get(*a1))
+			atLeastYhoursApart.NewTerm(1.0, x.Get(a1))
 			lessThanZhoursPerWeek := m.NewConstraint(mip.LessThanOrEqual, float64(opts.MaxHoursPerWeek))
-			lessThanZhoursPerWeek.NewTerm(a1.Duration.Hours(), x.Get(*a1))
+			lessThanZhoursPerWeek.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			for _, a2 := range potentialAssignmentsPerWorker[worker.ID][i+1:] {
-				durationApart := a1.DurationApart(*a2)
+				durationApart := a1.DurationApart(a2)
 				if durationApart > 0 {
 					// if a1 and a2 do not at least have x hours between them, we
 					// forbid them to be assigned at the same time
 					if durationApart < opts.HoursBetweenShifts {
-						atLeastYhoursApart.NewTerm(1.0, x.Get(*a2))
+						atLeastYhoursApart.NewTerm(1.0, x.Get(a2))
 					}
 
 					if durationApart < 24*time.Hour {
-						lessThanXhoursPerDay.NewTerm(a2.Duration.Hours(), x.Get(*a2))
+						lessThanXhoursPerDay.NewTerm(a2.Duration.Hours(), x.Get(a2))
 					}
 
 					if durationApart < 7*24*time.Hour {
-						lessThanZhoursPerWeek.NewTerm(a2.Duration.Hours(), x.Get(*a2))
+						lessThanZhoursPerWeek.NewTerm(a2.Duration.Hours(), x.Get(a2))
 					}
 				}
 			}
@@ -169,14 +165,14 @@ func newMIPModel(
 	return m, x
 }
 
-func potentialAssignments(input input, opts options) ([]assignment, map[int][]*assignment) {
+func potentialAssignments(input input, opts options) ([]assignment, map[int][]assignment) {
 	potentialAssignments := make([]assignment, 0)
-	potentialAssignmentsPerWorker := map[int][]*assignment{}
+	potentialAssignmentsPerWorker := map[int][]assignment{}
 	for _, worker := range input.Workers {
-		potentialAssignmentsPerWorker[worker.ID] = make([]*assignment, 0)
+		potentialAssignmentsPerWorker[worker.ID] = make([]assignment, 0)
 		for _, availability := range worker.Availability {
-			for start := availability.Start.Time; start.Before(availability.End.Time); start = start.Add(30 * time.Minute) {
-				for end := availability.End.Time; start.Before(end); end = end.Add(-30 * time.Minute) {
+			for start := availability.Start; start.Before(availability.End); start = start.Add(30 * time.Minute) {
+				for end := availability.End; start.Before(end); end = end.Add(-30 * time.Minute) {
 					// make sure that end-start is not more than 8h
 					duration := end.Sub(start)
 					if duration > opts.MaxHoursPerShift {
@@ -194,7 +190,7 @@ func potentialAssignments(input input, opts options) ([]assignment, map[int][]*a
 						Worker:       worker,
 						Duration:     duration,
 					}
-					potentialAssignmentsPerWorker[worker.ID] = append(potentialAssignmentsPerWorker[worker.ID], &assignment)
+					potentialAssignmentsPerWorker[worker.ID] = append(potentialAssignmentsPerWorker[worker.ID], assignment)
 					potentialAssignments = append(potentialAssignments, assignment)
 				}
 			}
@@ -214,8 +210,8 @@ func demands(input input, potentialAssignments []assignment) map[int][]assignmen
 	for _, demand := range input.RequiredWorkers {
 		demandCovering[demand.RequiredWorkerID] = []assignment{}
 		for i, potentialAssignment := range potentialAssignments {
-			if (potentialAssignment.Start.Before(demand.Start.Time) || potentialAssignment.Start.Equal(demand.Start.Time)) &&
-				(potentialAssignment.End.After(demand.End.Time) || potentialAssignment.End.Equal(demand.End.Time)) {
+			if (potentialAssignment.Start.Before(demand.Start) || potentialAssignment.Start.Equal(demand.Start)) &&
+				(potentialAssignment.End.After(demand.End) || potentialAssignment.End.Equal(demand.End)) {
 				potentialAssignments[i].DemandsCovered = append(potentialAssignments[i].DemandsCovered, demand)
 				demandCovering[demand.RequiredWorkerID] = append(demandCovering[demand.RequiredWorkerID], potentialAssignment)
 			}

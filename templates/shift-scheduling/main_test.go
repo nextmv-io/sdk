@@ -25,8 +25,10 @@ func TestTemplate(t *testing.T) {
 
 	// Set default options.
 	options := options{
-		OverSupplyPenalty:  1000,
-		UnderSupplyPenalty: 500,
+		Penalty: penalty{
+			OverSupply:  1000,
+			UnderSupply: 500,
+		},
 		MaxHoursPerDay:     10 * time.Hour,
 		MaxHoursPerWeek:    40 * time.Hour,
 		MinHoursPerShift:   2 * time.Hour,
