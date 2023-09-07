@@ -1,81 +1,30 @@
 {
-  "shifts": [
+  "version": { "sdk": "v0.29.0-dev.0.0.20230905095116-2d7e41f77870" },
+  "options": {},
+  "solutions": [
     {
-      "day": 1,
-      "worker": 2,
-      "type": "morning"
-    },
-    {
-      "day": 1,
-      "worker": 3,
-      "type": "day"
-    },
-    {
-      "day": 1,
-      "worker": 4,
-      "type": "night"
-    },
-    {
-      "day": 2,
-      "worker": 1,
-      "type": "morning"
-    },
-    {
-      "day": 2,
-      "worker": 2,
-      "type": "day"
-    },
-    {
-      "day": 2,
-      "worker": 3,
-      "type": "night"
-    },
-    {
-      "day": 3,
-      "worker": 1,
-      "type": "morning"
-    },
-    {
-      "day": 3,
-      "worker": 2,
-      "type": "day"
-    },
-    {
-      "day": 3,
-      "worker": 3,
-      "type": "night"
-    },
-    {
-      "day": 4,
-      "worker": 1,
-      "type": "morning"
-    },
-    {
-      "day": 4,
-      "worker": 2,
-      "type": "day"
-    },
-    {
-      "day": 4,
-      "worker": 3,
-      "type": "night"
-    },
-    {
-      "day": 5,
-      "worker": 1,
-      "type": "morning"
-    },
-    {
-      "day": 5,
-      "worker": 2,
-      "type": "day"
-    },
-    {
-      "day": 5,
-      "worker": 3,
-      "type": "night"
+      "assigned_shifts": [
+        {
+          "start": "2023-08-29T03:00:00+02:00",
+          "end": "2023-08-29T11:00:00+02:00",
+          "worker_id": 3
+        }
+      ],
+      "number_assigned_workers": 1
     }
   ],
-  "happiness": 6,
-  "workers": 4
+  "statistics": {
+    "schema": "v1",
+    "run": { "duration": 0.09652325 },
+    "result": {
+      "duration": 0.09652325,
+      "value": 5500,
+      "custom": {
+        "constraints": 2713,
+        "provider": "highs",
+        "status": "optimal",
+        "variables": 913
+      }
+    }
+  }
 }

@@ -271,6 +271,13 @@ issues:
     - path: templates/shift-scheduling/main\.go
       linters:
         - gocyclo
+        - nestif
+    # json tags are too long and unmarshal does not throw an error where one is
+    # needed for the signature of the function.
+    - path: templates/shift-scheduling/schema\.go
+      linters:
+        - lll
+        - unparam
     - path: templates/legacy/sudoku/main\.go
       linters:
         - gocyclo
