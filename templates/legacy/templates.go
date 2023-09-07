@@ -271,6 +271,9 @@ var (
 	// RoutingLegacyReadme is the README.md file in the routing-legacy template.
 	//go:embed routing-legacy/README.md
 	RoutingLegacyReadme string
+	// RoutingLegacyManifest is the app.yaml file in the routing-legacy template.
+	//go:embed routing-legacy/app.yaml
+	RoutingLegacyManifest string
 
 	// RoutingMatrixMain is the main.go file in the routing-matrix template.
 	//go:embed routing-matrix-input/main.go

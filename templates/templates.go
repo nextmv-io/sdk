@@ -17,6 +17,9 @@ var (
 	// MipReadme is the README.md file in the mip template.
 	//go:embed mip/README.md
 	MipReadme string
+	// MipManifest is the app.yaml file in the mip template.
+	//go:embed mip/app.yaml
+	MipManifest string
 
 	// NextrouteMain is the main.go file in the nextroute template.
 	//go:embed nextroute/main.go
@@ -59,4 +62,8 @@ var (
 	// shift-scheduling template.
 	//go:embed shift-scheduling/README.md
 	ShiftSchedulingReadme string
+	// ShiftSchedulingManifest is the app.yaml file in the
+	// shift-scheduling template.
+	//go:embed shift-scheduling/app.yaml
+	ShiftSchedulingManifest string
 )
