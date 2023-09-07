@@ -74,7 +74,7 @@ func solver(
 		return FleetOutput{}, err
 	}
 
-	runSolutions := run.All
+	runSolutions := run.Last
 	solutionArray := make([]nextroute.Solution, 0)
 	switch runSolutions {
 	case run.Last:
