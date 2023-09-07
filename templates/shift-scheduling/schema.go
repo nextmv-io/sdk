@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"github.com/nextmv-io/sdk/mip"
 )
 
 // output holds the output data of the solution.
@@ -14,13 +12,25 @@ type output struct {
 
 // options holds custom configuration data.
 type options struct {
-	Penalty            penalty       `json:"penalty" usage:"set penalties for over and under supply of workers"`
-	MaxHoursPerDay     time.Duration `json:"max_hours_per_day" default:"10h" usage:"maximum number of hours per day"`
-	MaxHoursPerWeek    time.Duration `json:"max_hours_per_week" default:"40h" usage:"maximum number of hours per week"`
-	MinHoursPerShift   time.Duration `json:"min_hours_per_shift" default:"2h" usage:"minimum number of hours per shift"`
-	MaxHoursPerShift   time.Duration `json:"max_hours_per_shift" default:"8h" usage:"maximum number of hours per shift"`
-	HoursBetweenShifts time.Duration `json:"hours_between_shifts" default:"8h" usage:"minimum number of hours between shifts"`
-	Limits             mip.Limits    `json:"limits" usage:"holds a field to set the maximum duration of the solver"`
+	Penalty penalty `json:"penalty" usage:"set penalties for over and under supply of workers"`
+	Limits  limits  `json:"limits" usage:"holds fields to configure the models limits"`
+	Solve   struct {
+		Duration time.Duration `json:"duration" usage:"maximum duration of the solver" default:"30s"`
+	} `json:"solve" usage:"holds a time duration field to set the maximum duration of the solver"`
+}
+
+type limits struct {
+	Shift struct {
+		MinDuration  time.Duration `json:"min_duration" default:"2h" usage:"minimum working time per shift"`
+		MaxDuration  time.Duration `json:"max_duration" default:"8h" usage:"maximum working time per shift"`
+		RecoveryTime time.Duration `json:"recovery_time" default:"8h" usage:"minimum time between shifts"`
+	}
+	Week struct {
+		MaxDuration time.Duration `json:"max_duration" default:"40h" usage:"maximum working time per week"`
+	}
+	Day struct {
+		MaxDuration time.Duration `json:"max_duration" default:"10h" usage:"maximum working time per day"`
+	}
 }
 
 type penalty struct {

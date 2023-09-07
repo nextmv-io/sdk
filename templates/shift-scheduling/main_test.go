@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run/schema"
 )
 
@@ -29,12 +28,32 @@ func TestTemplate(t *testing.T) {
 			OverSupply:  1000,
 			UnderSupply: 500,
 		},
-		MaxHoursPerDay:     10 * time.Hour,
-		MaxHoursPerWeek:    40 * time.Hour,
-		MinHoursPerShift:   2 * time.Hour,
-		MaxHoursPerShift:   8 * time.Hour,
-		HoursBetweenShifts: 8 * time.Hour,
-		Limits:             mip.Limits{Duration: 4 * time.Minute},
+		Solve: struct {
+			Duration time.Duration "json:\"duration\" usage:\"maximum duration of the solver\" default:\"30s\""
+		}{
+			Duration: 30 * time.Second,
+		},
+		Limits: limits{
+			Shift: struct {
+				MinDuration  time.Duration "json:\"min_duration\" default:\"2h\" usage:\"minimum working time per shift\""
+				MaxDuration  time.Duration "json:\"max_duration\" default:\"8h\" usage:\"maximum working time per shift\""
+				RecoveryTime time.Duration "json:\"recovery_time\" default:\"8h\" usage:\"minimum time between shifts\""
+			}{
+				MinDuration:  2 * time.Hour,
+				MaxDuration:  8 * time.Hour,
+				RecoveryTime: 8 * time.Hour,
+			},
+			Week: struct {
+				MaxDuration time.Duration "json:\"max_duration\" default:\"40h\" usage:\"maximum working time per week\""
+			}{
+				MaxDuration: 40 * time.Hour,
+			},
+			Day: struct {
+				MaxDuration time.Duration "json:\"max_duration\" default:\"10h\" usage:\"maximum working time per day\""
+			}{
+				MaxDuration: 10 * time.Hour,
+			},
+		},
 	}
 	output, err := solver(context.Background(), input, options)
 	if err != nil {

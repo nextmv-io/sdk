@@ -42,7 +42,7 @@ func solver(_ context.Context, input input, opts options) (out schema.Output, re
 	if err != nil {
 		return schema.Output{}, err
 	}
-	err = options.SetMaximumDuration(opts.Limits.Duration)
+	err = options.SetMaximumDuration(opts.Solve.Duration)
 	if err != nil {
 		return schema.Output{}, err
 	}
@@ -136,18 +136,18 @@ func newMIPModel(
 	for _, worker := range input.Workers {
 		for i, a1 := range potentialAssignmentsPerWorker[worker.ID] {
 			// A worker can only work y hours per day
-			lessThanXhoursPerDay := m.NewConstraint(mip.LessThanOrEqual, opts.MaxHoursPerDay.Hours())
+			lessThanXhoursPerDay := m.NewConstraint(mip.LessThanOrEqual, opts.Limits.Day.MaxDuration.Hours())
 			lessThanXhoursPerDay.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			atLeastYhoursApart := m.NewConstraint(mip.LessThanOrEqual, 1.0)
 			atLeastYhoursApart.NewTerm(1.0, x.Get(a1))
-			lessThanZhoursPerWeek := m.NewConstraint(mip.LessThanOrEqual, float64(opts.MaxHoursPerWeek))
+			lessThanZhoursPerWeek := m.NewConstraint(mip.LessThanOrEqual, opts.Limits.Week.MaxDuration.Hours())
 			lessThanZhoursPerWeek.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			for _, a2 := range potentialAssignmentsPerWorker[worker.ID][i+1:] {
 				durationApart := a1.DurationApart(a2)
 				if durationApart > 0 {
 					// if a1 and a2 do not at least have x hours between them, we
 					// forbid them to be assigned at the same time
-					if durationApart < opts.HoursBetweenShifts {
+					if durationApart < opts.Limits.Shift.RecoveryTime {
 						atLeastYhoursApart.NewTerm(1.0, x.Get(a2))
 					}
 
@@ -176,12 +176,12 @@ func potentialAssignments(input input, opts options) ([]assignment, map[string][
 				for end := availability.End; start.Before(end); end = end.Add(-30 * time.Minute) {
 					// make sure that end-start is not more than x hours
 					duration := end.Sub(start)
-					if duration > opts.MaxHoursPerShift {
+					if duration > opts.Limits.Shift.MaxDuration {
 						continue
 					}
 					// make sure that end-start is not less than y hours - we are
 					// only shrinking the end time, so we can break here
-					if duration < opts.MinHoursPerShift {
+					if duration < opts.Limits.Shift.MinDuration {
 						break
 					}
 					assignment := assignment{
