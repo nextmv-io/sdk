@@ -80,9 +80,7 @@ func solver(
 	case run.Last:
 		solutionArray = append(solutionArray, solutions.Last())
 	case run.All:
-		for s := range solutions {
-			solutionArray = append(solutionArray, s)
-		}
+		solutionArray = append(solutionArray, solutions.All()...)
 	default:
 		return FleetOutput{},
 			fmt.Errorf("%s is an invalid value for parameter runner.output.solutions. it must be 'all' or 'last'", runSolutions)
