@@ -14,8 +14,6 @@ import (
 	"github.com/nextmv-io/sdk/run/schema"
 )
 
-const minGap = 0.999
-
 func main() {
 	runner := run.CLI(solver)
 	err := runner.Run(context.Background())
@@ -24,29 +22,20 @@ func main() {
 	}
 }
 
-func solver(_ context.Context, input input, opts options) (out schema.Output, retErr error) {
+func solver(_ context.Context, input input, options options) (out schema.Output, retErr error) {
 	// We solve a shift coverage problem using Mixed Integer Programming.
 	// We solve this by generating all possible shifts
 	// and then selecting a subset of these
-	potentialAssignments, potentialAssignmentsPerWorker := potentialAssignments(input, opts)
+	potentialAssignments, potentialAssignmentsPerWorker := potentialAssignments(input, options)
 	demands := demands(input, potentialAssignments)
-	m, x := newMIPModel(input, potentialAssignments, potentialAssignmentsPerWorker, demands, opts)
+	m, x := newMIPModel(input, potentialAssignments, potentialAssignmentsPerWorker, demands, options)
 
-	solver, err := mip.NewSolver("highs", m)
+	solver, err := mip.NewSolver(mip.Highs, m)
 	if err != nil {
 		return schema.Output{}, err
 	}
-	options := mip.NewSolveOptions()
-	options.SetVerbosity(mip.Off)
-	err = options.SetMIPGapRelative(minGap)
-	if err != nil {
-		return schema.Output{}, err
-	}
-	err = options.SetMaximumDuration(opts.Solve.Duration)
-	if err != nil {
-		return schema.Output{}, err
-	}
-	solution, err := solver.Solve(options)
+
+	solution, err := solver.Solve(options.Solve)
 	if err != nil {
 		return schema.Output{}, err
 	}

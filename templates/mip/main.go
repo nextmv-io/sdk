@@ -23,7 +23,7 @@ func main() {
 
 // The options for the solver.
 type options struct {
-	Limits mip.Limits `json:"limits,omitempty"`
+	Solve mip.SolveOptions `json:"solve,omitempty"`
 }
 
 // Input of the problem.
@@ -49,23 +49,51 @@ type solution struct {
 	Items []item `json:"items,omitempty"`
 }
 
+// solver is the entrypoint of the program where a model is defined and solved.
 func solver(_ context.Context, input input, options options) (schema.Output, error) {
+	// Translate the input to a MIP model.
+	model, variables := model(input)
+
+	// Create a solver using a provider. Please see the documentation on
+	// [mip.SolverProvider] for more information on the available providers.
+	solver, err := mip.NewSolver(mip.Highs, model)
+	if err != nil {
+		return schema.Output{}, err
+	}
+
+	// Solve the model and get the solution.
+	solution, err := solver.Solve(options.Solve)
+	if err != nil {
+		return schema.Output{}, err
+	}
+
+	// Format the solution into the desired output format and add custom
+	// statistics.
+	output := mip.Format(options, format(input, solution, variables), solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(model, solution)
+
+	return output, nil
+}
+
+// model creates a MIP model from the input. It also returns the decision
+// variables.
+func model(input input) (mip.Model, map[string]mip.Bool) {
 	// We start by creating a MIP model.
-	m := mip.NewModel()
+	model := mip.NewModel()
 
 	// Create a map of ID to decision variables for each item in the knapsack.
 	itemVariables := make(map[string]mip.Bool, len(input.Items))
 	for _, item := range input.Items {
 		// Create a new binary decision variable for each item in the knapsack.
-		itemVariables[item.ItemID] = m.NewBool()
+		itemVariables[item.ItemID] = model.NewBool()
 	}
 
 	// We want to maximize the value of the knapsack.
-	m.Objective().SetMaximize()
+	model.Objective().SetMaximize()
 
 	// This constraint ensures the weight capacity of the knapsack will not be
 	// exceeded.
-	capacityConstraint := m.NewConstraint(
+	capacityConstraint := model.NewConstraint(
 		mip.LessThanOrEqual,
 		input.WeightCapacity,
 	)
@@ -74,47 +102,13 @@ func solver(_ context.Context, input input, options options) (schema.Output, err
 	// constraint.
 	for _, item := range input.Items {
 		// Sets the value of the item in the objective function.
-		m.Objective().NewTerm(item.Value, itemVariables[item.ItemID])
+		model.Objective().NewTerm(item.Value, itemVariables[item.ItemID])
 
 		// Sets the weight of the item in the constraint.
 		capacityConstraint.NewTerm(item.Weight, itemVariables[item.ItemID])
 	}
 
-	// Create a solver using a provider. Please see the documentation on
-	// [mip.SolverProvider] for more information on the available providers.
-	solver, err := mip.NewSolver(mip.Highs, m)
-	if err != nil {
-		return schema.Output{}, err
-	}
-
-	// We create the solve options we will use.
-	solveOptions := mip.NewSolveOptions()
-
-	// Limit the solve to a maximum duration.
-	if err = solveOptions.SetMaximumDuration(options.Limits.Duration); err != nil {
-		return schema.Output{}, err
-	}
-
-	// Set the relative gap to 0% (highs' default is 5%)
-	if err = solveOptions.SetMIPGapRelative(0); err != nil {
-		return schema.Output{}, err
-	}
-
-	// Set verbose level to see a more detailed output
-	solveOptions.SetVerbosity(mip.Off)
-
-	// Solve the model and get the solution.
-	solution, err := solver.Solve(solveOptions)
-	if err != nil {
-		return schema.Output{}, err
-	}
-
-	// Format the solution into the desired output format and add custom
-	// statistics.
-	output := mip.Format(options, format(input, solution, itemVariables), solution)
-	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
-
-	return output, nil
+	return model, itemVariables
 }
 
 // format the solution from the solver into the desired output format.

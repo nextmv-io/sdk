@@ -2,6 +2,8 @@ package main
 
 import (
 	"time"
+
+	"github.com/nextmv-io/sdk/mip"
 )
 
 // output holds the output data of the solution.
@@ -12,11 +14,9 @@ type output struct {
 
 // options holds custom configuration data.
 type options struct {
-	Penalty penalty `json:"penalty" usage:"set penalties for over and under supply of workers"`
-	Limits  limits  `json:"limits" usage:"holds fields to configure the models limits"`
-	Solve   struct {
-		Duration time.Duration `json:"duration" usage:"maximum duration of the solver" default:"30s"`
-	} `json:"solve" usage:"holds a time duration field to set the maximum duration of the solver"`
+	Penalty penalty          `json:"penalty" usage:"set penalties for over and under supply of workers"`
+	Limits  limits           `json:"limits" usage:"holds fields to configure the models limits"`
+	Solve   mip.SolveOptions `json:"solve" usage:"holds fields to configure the solver"`
 }
 
 type limits struct {
