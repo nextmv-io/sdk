@@ -28,6 +28,7 @@ type VehicleOutput struct {
 	RouteWaitingDuration int                 `json:"route_waiting_duration,omitempty"`
 	RouteDuration        int                 `json:"route_duration"`
 	CustomData           any                 `json:"custom_data,omitempty"`
+	AlternateStops       *[]string           `json:"alternate_stops,omitempty"`
 }
 
 // PlannedStopOutput adds information to the input stop.
