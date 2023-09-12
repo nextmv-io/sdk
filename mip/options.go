@@ -15,15 +15,15 @@ type SolveOptions struct {
 	Duration time.Duration `json:"duration" usage:"Maximum duration of the solver." default:"30s"`
 	// Verbosity of the solver in the console.
 	Verbosity Verbosity `json:"verbosity" usage:"{off, low, medium, high} Verbosity of the solver in the console." default:"off"`
-	// Mip-specific options.
-	Mip MipOptions `json:"mip" usage:"Options specific to MIP problems. Linear problems do not use these options."`
+	// MIP-specific options.
+	MIP MIPOptions `json:"mip" usage:"Options specific to MIP problems. Linear problems do not use these options."`
 	// Control options for the specific solver.
 	Control ControlOptions `json:"control" usage:"Options to control a specific solver, as defined by the provider."`
 }
 
-// MipOptions are options specific to MIP problems. LP problems do not use
+// MIPOptions are options specific to MIP problems. LP problems do not use
 // these options.
-type MipOptions struct {
+type MIPOptions struct {
 	// Gap stopping criteria.
 	Gap GapOptions `json:"gap" usage:"Gap stopping criteria."`
 }
