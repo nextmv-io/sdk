@@ -333,3 +333,10 @@ issues:
     - path: mip/options\.go
       linters:
         - lll
+    # Although the name stutters, we need to call it mip.MipOptions because the
+    # mip package can also handle linear programs, so potentially we may have
+    # mip.LpOptions.
+    - path: mip/options\.go
+      linters:
+        - revive
+      text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"

@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run/schema"
 )
 
@@ -28,9 +29,7 @@ func TestTemplate(t *testing.T) {
 			OverSupply:  1000,
 			UnderSupply: 500,
 		},
-		Solve: struct {
-			Duration time.Duration "json:\"duration\" usage:\"maximum duration of the solver\" default:\"30s\""
-		}{
+		Solve: mip.SolveOptions{
 			Duration: 30 * time.Second,
 		},
 		Limits: limits{
