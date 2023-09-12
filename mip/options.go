@@ -31,9 +31,9 @@ type MipOptions struct {
 // GapOptions specifies the gap stopping criteria.
 type GapOptions struct {
 	// Absolute gap.
-	Absolute float64 `json:"absolute" usage:"Absolute gap stopping value. If the problem is an integer problem the solver will stop if the gap between the relaxed problem and the best found integer problem is less than this value." default:"0.0"`
+	Absolute float64 `json:"absolute" usage:"Absolute gap stopping value. If the problem is an integer problem the solver will stop if the gap between the relaxed problem and the best found integer problem is less than this value." default:"0.000001"`
 	// Relative gap.
-	Relative float64 `json:"relative" usage:"Relative gap stopping value. If the problem is an integer problem the solver will stop if the relative gap between the relaxed problem and the best found integer problem is less than this value." default:"0.0"`
+	Relative float64 `json:"relative" usage:"Relative gap stopping value. If the problem is an integer problem the solver will stop if the relative gap between the relaxed problem and the best found integer problem is less than this value." default:"0.0001"`
 }
 
 // Verbosity specifies the level of verbosity of the back-end solver.
