@@ -20,10 +20,10 @@ The most important files created are `main.py` and `input.json`.
 * `main.py` implements a MIP knapsack solver.
 * `input.json` is a sample input file.
 
-Run the command below to see if everything works as expected:
+Run the command below to check that everything works as expected:
 
 ```bash
-python main.py input.json
+python3 main.py input.json
 ```
 
 The optimal knapsack solution should be printed to stdout.
