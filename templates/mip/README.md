@@ -20,7 +20,7 @@ The most important files created are `main.go` and `input.json`.
 * `input.json` is a sample input file that follows the input definition in
 `main.go`.
 
-Run the command below to see if everything works as expected:
+Run the command below to check that everything works as expected:
 
 ```bash
 nextmv sdk run . -- -runner.input.path input.json \
