@@ -15,7 +15,8 @@ You should be able to run the following command. It assumes that you gave your
 app the app-id `shift-scheduling`:
 
 ```bash
-nextmv app run -a "shift-scheduling" --options max_hours_per_day="9h"
+nextmv sdk run . -- -runner.input.path input.json \
+  -runner.output.path output.json -solve.duration 10s
 ```
 
 ## Next steps
