@@ -25,7 +25,7 @@ func main() {
 
 // The options for the solver.
 type options struct {
-	Limits mip.Limits `json:"limits,omitempty"`
+	Solve mip.SolveOptions `json:"solve,omitempty"`
 }
 
 // Input of the problem.
@@ -60,15 +60,43 @@ type solution struct {
 	Assignments []assignments `json:"assignments,omitempty"`
 }
 
+// solver is the entrypoint of the program where a model is defined and solved.
 func solver(_ context.Context, input input, options options) (schema.Output, error) {
+	// Translate the input to a MIP model.
+	model, variables := model(input)
+
+	// Create a solver using a provider. Please see the documentation on
+	// [mip.SolverProvider] for more information on the available providers.
+	solver, err := mip.NewSolver(mip.Highs, model)
+	if err != nil {
+		return schema.Output{}, err
+	}
+
+	// Solve the model and get the solution.
+	solution, err := solver.Solve(options.Solve)
+	if err != nil {
+		return schema.Output{}, err
+	}
+
+	// Format the solution into the desired output format and add custom
+	// statistics.
+	output := mip.Format(options, format(input, solution, variables), solution)
+	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(model, solution)
+
+	return output, nil
+}
+
+// model creates a MIP model from the input. It also returns the decision
+// variables.
+func model(input input) (mip.Model, map[string][]mip.Var) {
 	// We start by creating a MIP model.
-	m := mip.NewModel()
+	model := mip.NewModel()
 
 	// We want to maximize the value of the problem.
-	m.Objective().SetMaximize()
+	model.Objective().SetMaximize()
 
 	// This constraint ensures the budget of the will not be exceeded.
-	budgetConstraint := m.NewConstraint(
+	budgetConstraint := model.NewConstraint(
 		mip.LessThanOrEqual,
 		float64(input.Budget),
 	)
@@ -83,14 +111,14 @@ func solver(_ context.Context, input input, options options) (schema.Output, err
 
 		// This constraint ensures that each user is assigned at most one
 		// incentive.
-		oneIncentiveConstraint := m.NewConstraint(mip.LessThanOrEqual, 1.0)
+		oneIncentiveConstraint := model.NewConstraint(mip.LessThanOrEqual, 1.0)
 		for i, incentive := range user.Incentives {
 			// For each incentive, create a binary decision variable.
-			userIncentiveVariables[user.ID][i] = m.NewBool()
+			userIncentiveVariables[user.ID][i] = model.NewBool()
 
 			// Set the term of the variable on the objective, based on the
 			// effect the incentive has on the user.
-			m.Objective().NewTerm(
+			model.Objective().NewTerm(
 				incentive.Effect,
 				userIncentiveVariables[user.ID][i],
 			)
@@ -108,41 +136,7 @@ func solver(_ context.Context, input input, options options) (schema.Output, err
 		}
 	}
 
-	// Create a solver using a provider. Please see the documentation on
-	// [mip.SolverProvider] for more information on the available providers.
-	solver, err := mip.NewSolver(mip.Highs, m)
-	if err != nil {
-		return schema.Output{}, err
-	}
-
-	// We create the solve options we will use.
-	solveOptions := mip.NewSolveOptions()
-
-	// Limit the solve to a maximum duration.
-	if err = solveOptions.SetMaximumDuration(options.Limits.Duration); err != nil {
-		return schema.Output{}, err
-	}
-
-	// Set the relative gap to 0% (highs' default is 5%)
-	if err = solveOptions.SetMIPGapRelative(0); err != nil {
-		return schema.Output{}, err
-	}
-
-	// Set verbose level to see a more detailed output
-	solveOptions.SetVerbosity(mip.Off)
-
-	// Solve the model and get the solution.
-	solution, err := solver.Solve(solveOptions)
-	if err != nil {
-		return schema.Output{}, err
-	}
-
-	// Format the solution into the desired output format and add custom
-	// statistics.
-	output := mip.Format(options, format(input, solution, userIncentiveVariables), solution)
-	output.Statistics.Result.Custom = mip.DefaultCustomResultStatistics(m, solution)
-
-	return output, nil
+	return model, userIncentiveVariables
 }
 
 // format the solution from the solver into the desired output format.
