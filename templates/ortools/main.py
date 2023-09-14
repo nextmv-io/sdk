@@ -13,7 +13,7 @@ from ortools.linear_solver import pywraplp
 
 def main():
     """Entry point for the template."""
-    parser = argparse.ArgumentParser(description="Solve knapsack problems.")
+    parser = argparse.ArgumentParser(description="Solve knapsack problems with OR-Tools.")
     parser.add_argument(
         "-input",
         default="",
