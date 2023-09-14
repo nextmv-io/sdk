@@ -13,22 +13,19 @@ from ortools.linear_solver import pywraplp
 
 def main():
     """Entry point for the template."""
-    parser = argparse.ArgumentParser(description="Solve knapsack problems.")
+    parser = argparse.ArgumentParser(description="Solve problems with OR-Tools.")
     parser.add_argument(
-        "--input",
-        "-i",
+        "-input",
         default="",
         help="Path to input file. Default is stdin.",
     )
     parser.add_argument(
-        "--output",
-        "-o",
+        "-output",
         default="",
         help="Path to output file. Default is stdout.",
     )
     parser.add_argument(
-        "--duration",
-        "-d",
+        "-duration",
         default=30,
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
@@ -117,11 +114,12 @@ def read_input(input_path) -> Dict[str, Any]:
 
 def write_output(output_path, output) -> None:
     """Writes the output to stdout or a given output file."""
+    content = json.dumps(output, indent=2)
     if output_path:
         with open(output_path, "w") as file:
-            json.dump(output, file, indent=2)
+            file.write(content + "\n")
     else:
-        json.dump(output, sys.stdout, indent=2)
+        print(content)
 
 
 if __name__ == "__main__":
