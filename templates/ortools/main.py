@@ -41,12 +41,13 @@ def main():
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any]) -> Dict[str, Any]:
+def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
     provider = "SCIP"
     solver = pywraplp.Solver.CreateSolver(provider)
+    solver.parameters.max_time_in_seconds = duration
 
     # Initializes the linear sums.
     weights = 0.0
