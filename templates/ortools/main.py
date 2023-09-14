@@ -114,11 +114,12 @@ def read_input(input_path) -> Dict[str, Any]:
 
 def write_output(output_path, output) -> None:
     """Writes the output to stdout or a given output file."""
+    content = json.dumps(output, indent=2)
     if output_path:
         with open(output_path, "w") as file:
-            json.dump(output, file, indent=2)
+            file.write(content + "\n")
     else:
-        json.dump(output, sys.stdout, indent=2)
+        print(content)
 
 
 if __name__ == "__main__":
