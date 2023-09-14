@@ -47,7 +47,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the solver.
     provider = "SCIP"
     solver = pywraplp.Solver.CreateSolver(provider)
-    solver.parameters.max_time_in_seconds = duration
+    solver.SetTimeLimit(duration * 1000)
 
     # Initializes the linear sums.
     weights = 0.0
