@@ -1,34 +1,38 @@
-# Nextmv MIP incentive allocation template
+# Nextmv mip-meal-allocation template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
 using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS).
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
-by solving a incentive allocation problem.
+by solving a made up problem we named MIP meal allocation.
 
-Given a collection of incentives per user with a cost and effect, our
-objective is to maximize the total effect without exceeding a given budget.
+MIP meal allocation is a demo program in which we maximize the number of
+binkies our bunnies will execute by selecting their meal.
 
-The input defines a number of users which have an id to identify them, and a set
-of in incentives per user with a cost, an effect and a name. There is also an
-available budget.
+A binky is when a bunny jumps straight up and quickly twists its hind end,
+head, or both. A bunny may binky because it is feeling happy or safe in its
+environment.
+
+The input defines a number of meals we can use to maximize binkies. Each
+meal consists out of one or more items and in total we can only use the
+number of items we have in stock.
 
 The most important files created are `main.go` and `input.json`.
 
-* `main.go` implements a MIP incentive allocation solver.
+* `main.go` implements a binkies MIP solver.
 * `input.json` is a sample input file that follows the input definition in
 `main.go`.
 
-Run the command below to see if everything works as expected:
+Before you start customizing, run the command below to see if everything works
+as expected:
 
 ```bash
-nextmv sdk run main.go -- -runner.input.path input.json \
-  -runner.output.path output.json -limits.duration 10s
+nextmv sdk run . -- -runner.input.path input.json \
+  -runner.output.path output.json -solve.duration 10s
 ```
 
-A file `output.json` should have been created with the optimal knapsack
-solution.
+A file `output.json` should have been created with the optimal binkies solution
 
 ## Next steps
 

@@ -25,7 +25,7 @@ type ModelStop interface {
 	// ID returns the identifier of the stop.
 	ID() string
 
-	// Index returns the index of the stop.
+	// Index returns the unique index of the stop.
 	Index() int
 
 	// IsFirstOrLast returns true if the stop is the first or last stop of one
@@ -54,8 +54,23 @@ type ModelStop interface {
 	// is not part of a stops plan unit.
 	PlanStopsUnit() ModelPlanStopsUnit
 
+	// MeasureIndex returns the measure index of the invoking stop . This index
+	// is not necessarily unique.
+	// This index is used by the model expression constructed by the factory
+	// NewMeasureByIndexExpression to calculate the value of the measure
+	// expression. By default, the measure index is the same as the index of
+	// the stop.
+	MeasureIndex() int
+
 	// SetEarliestStart sets the earliest start time of the stop.
 	SetEarliestStart(t time.Time) error
+
+	// SetMeasureIndex sets the reference index of the stop, by default the
+	// measure index is the same as the index of the stop.
+	// This index is used by the model expression constructed by the factory
+	// NewMeasureByIndexExpression to calculate the value of the measure
+	// expression.
+	SetMeasureIndex(int)
 
 	// SetWindows sets the time windows of the stop.
 	SetWindows(windows [][2]time.Time) error

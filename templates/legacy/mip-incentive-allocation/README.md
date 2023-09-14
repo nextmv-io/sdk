@@ -1,30 +1,30 @@
-# Nextmv MIP knapsack template
+# Nextmv MIP incentive allocation template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
 using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS).
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
-by solving the knapsack problem.
+by solving a incentive allocation problem.
 
-Knapsack is a classic combinatorial optimization problem. Given a collection of
-items with a value and weight, our objective is to maximize the total value
-without exceeding the weight capacity of the knapsack.
+Given a collection of incentives per user with a cost and effect, our
+objective is to maximize the total effect without exceeding a given budget.
 
-The input defines a number of items which have an id to identify the item, a
-weight and a value. Additionally there is a weight capacity.
+The input defines a number of users which have an id to identify them, and a set
+of in incentives per user with a cost, an effect and a name. There is also an
+available budget.
 
 The most important files created are `main.go` and `input.json`.
 
-* `main.go` implements a MIP knapsack solver.
+* `main.go` implements a MIP incentive allocation solver.
 * `input.json` is a sample input file that follows the input definition in
 `main.go`.
 
 Run the command below to see if everything works as expected:
 
 ```bash
-nextmv sdk run . -- -runner.input.path input.json \
-  -runner.output.path output.json -limits.duration 10s
+nextmv sdk run main.go -- -runner.input.path input.json \
+  -runner.output.path output.json -solve.duration 10s
 ```
 
 A file `output.json` should have been created with the optimal knapsack

@@ -1,38 +1,34 @@
-# Nextmv mip-meal-allocation template
+# Nextmv MIP knapsack template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
 using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS).
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this
-by solving a made up problem we named MIP meal allocation.
+by solving the knapsack problem.
 
-MIP meal allocation is a demo program in which we maximize the number of
-binkies our bunnies will execute by selecting their meal.
+Knapsack is a classic combinatorial optimization problem. Given a collection of
+items with a value and weight, our objective is to maximize the total value
+without exceeding the weight capacity of the knapsack.
 
-A binky is when a bunny jumps straight up and quickly twists its hind end,
-head, or both. A bunny may binky because it is feeling happy or safe in its
-environment.
-
-The input defines a number of meals we can use to maximize binkies. Each
-meal consists out of one or more items and in total we can only use the
-number of items we have in stock.
+The input defines a number of items which have an id to identify the item, a
+weight and a value. Additionally there is a weight capacity.
 
 The most important files created are `main.go` and `input.json`.
 
-* `main.go` implements a binkies MIP solver.
+* `main.go` implements a MIP knapsack solver.
 * `input.json` is a sample input file that follows the input definition in
 `main.go`.
 
-Before you start customizing, run the command below to see if everything works
-as expected:
+Run the command below to see if everything works as expected:
 
 ```bash
 nextmv sdk run . -- -runner.input.path input.json \
-  -runner.output.path output.json -limits.duration 10s
+  -runner.output.path output.json -solve.duration 10s
 ```
 
-A file `output.json` should have been created with the optimal binkies solution
+A file `output.json` should have been created with the optimal knapsack
+solution.
 
 ## Next steps
 
