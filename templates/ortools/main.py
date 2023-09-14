@@ -2,6 +2,7 @@
 Template for working with Google OR-Tools.
 """
 
+import argparse
 import json
 import sys
 import time
@@ -12,11 +13,32 @@ from ortools.linear_solver import pywraplp
 
 def main():
     """Entry point for the template."""
-    input_data = read_input()
-    solution = solve(input_data)
+    parser = argparse.ArgumentParser(description="Solve knapsack problems.")
+    parser.add_argument(
+        "--input",
+        "-i",
+        default="",
+        help="Path to input file. Default is stdin.",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        default="",
+        help="Path to output file. Default is stdout.",
+    )
+    parser.add_argument(
+        "--duration",
+        "-d",
+        default=30,
+        help="Max runtime duration (in seconds). Default is 30.",
+        type=int,
+    )
+    args = parser.parse_args()
 
-    # Writes to stdout.
-    print(json.dumps(solution, indent=2))
+    # Read input data, solve the problem and write the solution.
+    input_data = read_input(args.input)
+    solution = solve(input_data, args.duration)
+    write_output(args.output, solution)
 
 
 def solve(input_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -80,21 +102,25 @@ def solve(input_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def read_input() -> Dict[str, Any]:
-    """Reads the input from stdin."""
+def read_input(input_path) -> Dict[str, Any]:
+    """Reads the input from stdin or a given input file."""
     input_file = {}
-    if len(sys.argv) == 2:
-        with open(sys.argv[1], "r", encoding="utf-8") as file:
+    if input_path:
+        with open(input_path) as file:
             input_file = json.load(file)
-
-    elif len(sys.argv) == 1:
+    else:
         input_file = json.load(sys.stdin)
 
-    else:
-        print("Usage: main.py filename")
-        sys.exit(0)
-
     return input_file
+
+
+def write_output(output_path, output) -> None:
+    """Writes the output to stdout or a given output file."""
+    if output_path:
+        with open(output_path, "w") as file:
+            json.dump(output, file, indent=2)
+    else:
+        json.dump(output, sys.stdout, indent=2)
 
 
 if __name__ == "__main__":
