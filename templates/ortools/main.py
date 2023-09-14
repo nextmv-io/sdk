@@ -13,22 +13,21 @@ from ortools.linear_solver import pywraplp
 
 def main():
     """Entry point for the template."""
-    parser = argparse.ArgumentParser(description="Solve knapsack problems.")
+    parser = argparse.ArgumentParser(
+        description="Solve knapsack problems with OR-Tools."
+    )
     parser.add_argument(
-        "--input",
-        "-i",
+        "-input",
         default="",
         help="Path to input file. Default is stdin.",
     )
     parser.add_argument(
-        "--output",
-        "-o",
+        "-output",
         default="",
         help="Path to output file. Default is stdout.",
     )
     parser.add_argument(
-        "--duration",
-        "-d",
+        "-duration",
         default=30,
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
