@@ -24,4 +24,12 @@ var (
 		alns.Progressioner,
 		...nextroute.Solution,
 	) runSchema.Output
+
+	formatExt func(
+		context.Context,
+		any,
+		nextroute.NextCheckOptions,
+		alns.Progressioner,
+		...nextroute.Solution,
+	) runSchema.Output
 )

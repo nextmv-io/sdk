@@ -21,10 +21,10 @@ func main() {
 }
 
 type options struct {
-	Model       factory.Options                `json:"model,omitempty"`
-	Solve       nextroute.ParallelSolveOptions `json:"solve,omitempty"`
-	Format      nextroute.FormatOptions        `json:"format,omitempty"`
-	SanityCheck nextroute.SanityCheckOptions   `json:"sanity_check,omitempty"`
+	Model     factory.Options                `json:"model,omitempty"`
+	Solve     nextroute.ParallelSolveOptions `json:"solve,omitempty"`
+	Format    nextroute.FormatOptions        `json:"format,omitempty"`
+	NextCheck nextroute.NextCheckOptions     `json:"next_check,omitempty"`
 }
 
 func solver(
@@ -35,15 +35,6 @@ func solver(
 	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
 		return runSchema.Output{}, err
-	}
-
-	if options.SanityCheck.Enable {
-		return nextroute.SanityCheckReport(
-			ctx,
-			model,
-			options.SanityCheck.Duration,
-			nextroute.SanityCheckDepth(options.SanityCheck.Depth),
-		)
 	}
 
 	solver, err := nextroute.NewParallelSolver(model)
@@ -57,7 +48,14 @@ func solver(
 	}
 	last := solutions.Last()
 
-	output := factory.Format(ctx, options, solver, last)
+	output := factory.FormatExt(
+		ctx,
+		options,
+		options.NextCheck,
+		solver,
+		solutions.Last(),
+	)
+
 	output.Statistics.Result.Custom = factory.DefaultCustomResultStatistics(last)
 
 	return output, nil
