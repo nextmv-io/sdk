@@ -85,7 +85,6 @@ func (fleetInput *FleetInput) applyVehicleDefaults() {
 // and stops not explicitly defined.
 func (fleetInput *FleetInput) applyStopDefaults() {
 	// Specify some defaults for missing values
-	unassignedPenalty := 0
 	quantity := 0
 	stopDuration := 0
 	stopCompatibilities := []string{}
@@ -98,8 +97,6 @@ func (fleetInput *FleetInput) applyStopDefaults() {
 		if fleetInput.Stops[s].UnassignedPenalty == nil {
 			if stopDefaults && fleetInput.Defaults.Stops.UnassignedPenalty != nil {
 				fleetInput.Stops[s].UnassignedPenalty = fleetInput.Defaults.Stops.UnassignedPenalty
-			} else {
-				fleetInput.Stops[s].UnassignedPenalty = &unassignedPenalty
 			}
 		}
 
