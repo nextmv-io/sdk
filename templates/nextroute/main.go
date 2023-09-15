@@ -54,7 +54,7 @@ func solver(
 		options,
 		options.Check,
 		solver,
-		solutions.Last(),
+		last,
 	)
 	if err != nil {
 		return runSchema.Output{}, err
