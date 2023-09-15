@@ -2,3 +2,4 @@
 type: sdk
 features:
   - sdk
+  - mip-highs
