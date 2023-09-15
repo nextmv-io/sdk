@@ -105,25 +105,7 @@ var (
 	newMeasureByPointExpression func(
 		measure.ByPoint,
 	) ModelExpression
-	newModel  func() (Model, error)
-	nextCheck func(
-		context.Context,
-		Model,
-		time.Duration,
-		NextCheckVerbosity,
-	) (schema.Output, error)
-	nextCheckModel func(
-		context.Context,
-		Model,
-		time.Duration,
-		NextCheckVerbosity,
-	) (NextCheckOutput, error)
-	nextCheckSolution func(
-		context.Context,
-		Solution,
-		time.Duration,
-		NextCheckVerbosity,
-	) (NextCheckOutput, error)
+	newModel                 func() (Model, error)
 	newModelExpressionIndex  func() int
 	newSolutionStopGenerator func(
 		SolutionMoveStops,

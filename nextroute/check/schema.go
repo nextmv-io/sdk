@@ -1,86 +1,93 @@
-package nextroute
+package check
 
-import (
-	"context"
-	"time"
+import "strings"
 
-	"github.com/nextmv-io/sdk/connect"
-)
-
-// NextCheckModel is the check of a model returning a [NextCheckOutput].
-func NextCheckModel(
-	ctx context.Context,
-	model Model,
-	duration time.Duration,
-	verbosity NextCheckVerbosity,
-) (NextCheckOutput, error) {
-	connect.Connect(con, &nextCheck)
-	return nextCheckModel(ctx, model, duration, verbosity)
-}
-
-// NextCheckSolution is the check of a solution returning a [NextCheckOutput].
-func NextCheckSolution(
-	ctx context.Context,
-	solution Solution,
-	duration time.Duration,
-	verbosity NextCheckVerbosity,
-) (NextCheckOutput, error) {
-	connect.Connect(con, &nextCheck)
-	return nextCheckSolution(ctx, solution, duration, verbosity)
-}
-
-// NextCheckOptions are the options for a check.
-type NextCheckOptions struct {
-	// Duration is the maximum duration allowed for the sanity check to run.
-	Duration  time.Duration `json:"duration" usage:"maximum duration of the sanity check" default:"30s"`
-	Verbosity int           `json:"verbosity" usage:"verbosity of the sanity check, current available options are 0 (off),1 (low), 2 (medium), 3 (high)" default:"0"`
-}
-
-// NextCheckVerbosity is the verbosity of the check.
-type NextCheckVerbosity int
+// Verbosity is the verbosity of the check.
+type Verbosity int
 
 const (
-	// NextCheckOff does not run the check.
-	NextCheckOff NextCheckVerbosity = iota
-	// NextCheckLow checks if there is at least one move per plan unit.
-	NextCheckLow
-	// NextCheckMedium checks the number of moves per plan unit and the
-	// number of vehicles that have moves.
-	NextCheckMedium
-	// NextCheckHigh count for each plan unit if it fits on a vehicle and
-	// therefor how many units fit on a vehicle and if a plan unit has no
-	// move what the constraints are that make the moves infeasible.
-	NextCheckHigh
-	// NextCheckVeryHigh checks the objective of the best move for each plan
-	// unit and vehicle.
-	NextCheckVeryHigh
+	// Off does not run the check.
+	Off Verbosity = iota
+	// Low checks if there is at least one move per plan unit.
+	Low
+	// Medium checks the number of moves per plan unit and the
+	// number of vehicles that have moves. It also reports the number of
+	// constraints that are violated for each plan unit if it does not fit
+	// on any vehicle.
+	Medium
+	// High is identical to medium.
+	High
+	// VeryHigh reports for each plan unit which vehicle have moves.
+	VeryHigh
 )
 
-// NextCheckOutput is the output of the  check.
-type NextCheckOutput struct {
+// ToVerbosity converts a string to a verbosity. The string can be
+// anything that starts with "o", "l", "m", "h" or "v" case-insensitive.
+// If the string does not start with one of these characters the
+// verbosity is off.
+func ToVerbosity(s string) Verbosity {
+	ls := strings.ToLower(s)
+	if strings.HasPrefix(ls, "o") {
+		return Off
+	}
+	if strings.HasPrefix(ls, "l") {
+		return Low
+	}
+	if strings.HasPrefix(ls, "m") {
+		return Medium
+	}
+	if strings.HasPrefix(ls, "h") {
+		return High
+	}
+	if strings.HasPrefix(ls, "v") {
+		return VeryHigh
+	}
+	return Off
+}
+
+// String returns the string representation of the verbosity.
+func (v Verbosity) String() string {
+	switch v {
+	case Off:
+		return "off"
+	case Low:
+		return "low"
+	case Medium:
+		return "medium"
+	case High:
+		return "high"
+	case VeryHigh:
+		return "very_high"
+	default:
+		return "unknown"
+	}
+}
+
+// Output is the output of the  check.
+type Output struct {
 	// Error is the error raised during the check.
 	Error *string `json:"error,omitempty"`
 	// Remark is the remark of the check. It can be "ok", "timeout" or
 	// anything else that should explain itself.
 	Remark string `json:"remark"`
 	// Verbosity is the verbosity of the check.
-	Verbosity int `json:"verbosity"`
+	Verbosity string `json:"verbosity"`
 	// Duration is the input maximum duration in seconds of the check.
 	DurationMaximum float64 `json:"duration_maximum"`
 	// DurationUsed is the duration in seconds used for the check.
 	DurationUsed float64 `json:"duration_used"`
 	// Solution is the start solution of the check.
-	Solution NextCheckStartSolution `json:"solution"`
+	Solution Solution `json:"solution"`
 	// Summary is the summary of the check.
-	Summary NextCheckSummary `json:"summary"`
+	Summary Summary `json:"summary"`
 	// PlanUnits is the check of the individual plan units.
-	PlanUnits []NextCheckPlanUnit `json:"plan_units"`
+	PlanUnits []PlanUnit `json:"plan_units"`
 	// Vehicles is the check of the vehicles.
-	Vehicles []NextCheckVehicle `json:"vehicles"`
+	Vehicles []Vehicle `json:"vehicles"`
 }
 
-// NextCheckStartSolution is the start solution of the check.
-type NextCheckStartSolution struct {
+// Solution is the solution the check has been executed on.
+type Solution struct {
 	// StopsPlanned is the number of stops planned in the start solution.
 	StopsPlanned int `json:"stops_planned"`
 	// PlanUnitsPlanned is the number of units planned in the start
@@ -95,11 +102,11 @@ type NextCheckStartSolution struct {
 	// the empty vehicles.
 	VehiclesNotUsed int `json:"vehicles_not_used"`
 	// Objective is the objective of the start solution.
-	Objective NextCheckObjective `json:"objective"`
+	Objective Objective `json:"objective"`
 }
 
-// NextCheckSummary is the summary of the check.
-type NextCheckSummary struct {
+// Summary is the summary of the check.
+type Summary struct {
 	// PlanUnitsToBeChecked is the number of plan units to be checked.
 	PlanUnitsToBeChecked int `json:"plan_units_to_be_checked"`
 	// PlanUnitsChecked is the number of plan units checked. If this is less
@@ -134,8 +141,8 @@ type NextCheckSummary struct {
 	MovesFailed int `json:"moves_failed"`
 }
 
-// NextCheckPlanUnit is the check of a plan unit.
-type NextCheckPlanUnit struct {
+// PlanUnit is the check of a plan unit.
+type PlanUnit struct {
 	// ID is the ID of the plan unit. The ID of the plan unit is the slice of
 	// ID's of the stops in the plan unit.
 	Stops []string `json:"stops"`
@@ -156,15 +163,15 @@ type NextCheckPlanUnit struct {
 	VehiclesWithMoves *[]string `json:"vehicles_with_moves,omitempty"`
 	// BestMoveObjective is the estimate of the objective of the best move if
 	// the plan unit has a best move.
-	BestMoveObjective *NextCheckObjective `json:"best_move_objective"`
+	BestMoveObjective *Objective `json:"best_move_objective"`
 
 	// Constraints is the constraints that are violated for the plan unit.
 	Constraints *map[string]int `json:"constraints,omitempty"`
 }
 
-// NextCheckObjectiveTerm is the check of the individual terms of
+// ObjectiveTerm is the check of the individual terms of
 // the objective for a move.
-type NextCheckObjectiveTerm struct {
+type ObjectiveTerm struct {
 	// Name is the name of the objective term.
 	Name string `json:"name"`
 	// Factor is the factor of the objective term.
@@ -175,18 +182,18 @@ type NextCheckObjectiveTerm struct {
 	Value float64 `json:"value"`
 }
 
-// NextCheckObjective is the estimate of an objective of a move.
-type NextCheckObjective struct {
+// Objective is the estimate of an objective of a move.
+type Objective struct {
 	// Vehicle is the ID of the vehicle for which it reports the objective.
 	Vehicle *string `json:"vehicle,omitempty"`
 	// Value is the value of the objective.
 	Value float64 `json:"value"`
 	// Terms is the check of the individual terms of the objective.
-	Terms []NextCheckObjectiveTerm `json:"terms"`
+	Terms []ObjectiveTerm `json:"terms"`
 }
 
-// NextCheckVehicle is the check of a vehicle.
-type NextCheckVehicle struct {
+// Vehicle is the check of a vehicle.
+type Vehicle struct {
 	// ID is the ID of the vehicle.
 	ID string `json:"id"`
 	// PlanUnitsHaveMoves is the number of plan units that have moves for the

@@ -23,19 +23,6 @@ func Format(
 	return format(ctx, options, progressioner, solutions...)
 }
 
-// FormatExt formats a solution in a basic format using the [schema.Output] to
-// format a solution.
-func FormatExt(
-	ctx context.Context,
-	options any,
-	checkOptions nextroute.NextCheckOptions,
-	progressioner alns.Progressioner,
-	solutions ...nextroute.Solution,
-) runSchema.Output {
-	connect.Connect(con, &format)
-	return formatExt(ctx, options, checkOptions, progressioner, solutions...)
-}
-
 // DefaultCustomResultStatistics creates default custom statistics for a given
 // solution.
 func DefaultCustomResultStatistics(solution nextroute.Solution) schema.CustomResultStatistics {
