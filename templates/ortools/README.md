@@ -23,7 +23,7 @@ The most important files created are `main.py` and `input.json`.
 Run the command below to check that everything works as expected:
 
 ```bash
-python3 main.py -input input.json -output output.json -duration 30
+python3 main.py -input input.json -duration 30
 ```
 
 The optimal knapsack solution should be printed to stdout.
@@ -31,7 +31,7 @@ The optimal knapsack solution should be printed to stdout.
 ## Next steps
 
 * Open `main.py` and read through the comments to understand the model.
-* Further documentation, guides, and API references about custom modelling and
+* Further documentation, guides, and API references about custom modeling and
   deployment can also be found on our [blog](https://www.nextmv.io/blog) and on
   our [documentation site](https://docs.nextmv.io).
 * Need more assistance? Send us an [email](mailto:support@nextmv.io)!

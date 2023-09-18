@@ -1,5 +1,5 @@
 """
-Template for working with Google OR-Tools.
+Template for working with FICO Xpress.
 """
 
 import argparse
@@ -7,13 +7,13 @@ import json
 import sys
 from typing import Any, Dict
 
-from ortools.linear_solver import pywraplp
+import xpress as xp
 
 
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve problems with OR-Tools.")
+    parser = argparse.ArgumentParser(description="Solve problems with Xpress.")
     parser.add_argument(
         "-input",
         default="",
@@ -41,10 +41,9 @@ def main() -> None:
 def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-    # Creates the solver.
-    provider = "SCIP"
-    solver = pywraplp.Solver.CreateSolver(provider)
-    solver.SetTimeLimit(duration * 1000)
+    # Creates the problem.
+    problem = xp.problem()
+    problem.setControl("timelimit", duration)
 
     # Initializes the linear sums.
     weights = 0.0
@@ -53,41 +52,42 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the decision variables and adds them to the linear sums.
     items = []
     for item in input_data["items"]:
-        item_variable = solver.IntVar(0, 1, item["item_id"])
+        item_variable = xp.var(vartype=xp.binary, name=item["item_id"])
+        problem.addVariable(item_variable)
         items.append({"item": item, "variable": item_variable})
         weights += item_variable * item["weight"]
         values += item_variable * item["value"]
 
     # This constraint ensures the weight capacity of the knapsack will not be
     # exceeded.
-    solver.Add(weights <= input_data["weight_capacity"])
+    problem.addConstraint(weights <= input_data["weight_capacity"])
 
     # Sets the objective function: maximize the value of the chosen items.
-    solver.Maximize(values)
+    problem.setObjective(values, sense=xp.maximize)
 
     # Solves the problem.
-    status = solver.Solve()
+    _, status = problem.optimize()
 
     # Determines which items were chosen.
     chosen_items = []
     for item in items:
-        if item["variable"].solution_value() > 0.9:
+        if problem.getSolution(item["variable"]) > 0.9:
             chosen_items.append(item["item"])
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": solver.NumConstraints(),
-                "provider": provider,
+                "constraints": problem.getAttrib("rows"),
+                "provider": "xpress",
                 "status": status,
-                "variables": solver.NumVariables(),
+                "variables": problem.getAttrib("cols"),
             },
-            "duration": solver.WallTime() / 1000,
-            "value": solver.Objective().Value(),
+            "duration": problem.getAttrib("time"),
+            "value": problem.getAttrib("objval"),
         },
         "run": {
-            "duration": solver.WallTime(),
+            "duration": problem.getAttrib("time"),
         },
         "schema": "v1",
     }
