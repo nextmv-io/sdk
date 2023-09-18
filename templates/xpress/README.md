@@ -22,10 +22,11 @@ The most important files created are `main.py` and `input.json`.
 Run the command below to check that everything works as expected:
 
 ```bash
-python3 main.py -input input.json -duration 30
+python3 main.py -input input.json -output output.json -duration 30
 ```
 
-The optimal knapsack solution should be printed to stdout.
+A file `output.json` should have been created with the optimal knapsack
+solution.
 
 ## Next steps
 
