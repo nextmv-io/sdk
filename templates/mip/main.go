@@ -34,14 +34,9 @@ type input struct {
 
 // An item has a Value and Weight. ItemID is used to identify the item.
 type item struct {
-	ItemID string  `json:"item_id,omitempty"`
+	ID     string  `json:"id,omitempty"`
 	Value  float64 `json:"value"`
 	Weight float64 `json:"weight"`
-}
-
-// ID is implemented to fulfill the model.Identifier interface.
-func (i item) ID() string {
-	return i.ItemID
 }
 
 // solution represents the decisions made by the solver.
@@ -85,7 +80,7 @@ func model(input input) (mip.Model, map[string]mip.Bool) {
 	itemVariables := make(map[string]mip.Bool, len(input.Items))
 	for _, item := range input.Items {
 		// Create a new binary decision variable for each item in the knapsack.
-		itemVariables[item.ItemID] = model.NewBool()
+		itemVariables[item.ID] = model.NewBool()
 	}
 
 	// We want to maximize the value of the knapsack.
@@ -102,10 +97,10 @@ func model(input input) (mip.Model, map[string]mip.Bool) {
 	// constraint.
 	for _, item := range input.Items {
 		// Sets the value of the item in the objective function.
-		model.Objective().NewTerm(item.Value, itemVariables[item.ItemID])
+		model.Objective().NewTerm(item.Value, itemVariables[item.ID])
 
 		// Sets the weight of the item in the constraint.
-		capacityConstraint.NewTerm(item.Weight, itemVariables[item.ItemID])
+		capacityConstraint.NewTerm(item.Weight, itemVariables[item.ID])
 	}
 
 	return model, itemVariables
@@ -119,10 +114,9 @@ func format(input input, solverSolution mip.Solution, itemVariables map[string]m
 
 	items := make([]item, 0)
 	for _, item := range input.Items {
-		if solverSolution.Value(itemVariables[item.ItemID]) < 1 {
-			continue
+		if solverSolution.Value(itemVariables[item.ID]) > 0.9 {
+			items = append(items, item)
 		}
-		items = append(items, item)
 	}
 
 	return solution{

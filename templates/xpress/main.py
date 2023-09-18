@@ -9,6 +9,14 @@ from typing import Any, Dict
 
 import xpress as xp
 
+# Status of the solver after optimizing.
+STATUS = {
+    xp.SolStatus.FEASIBLE: "suboptimal",
+    xp.SolStatus.INFEASIBLE: "infeasible",
+    xp.SolStatus.OPTIMAL: "optimal",
+    xp.SolStatus.UNBOUNDED: "unbounded",
+}
+
 
 def main() -> None:
     """Entry point for the template."""
@@ -52,7 +60,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the decision variables and adds them to the linear sums.
     items = []
     for item in input_data["items"]:
-        item_variable = xp.var(vartype=xp.binary, name=item["item_id"])
+        item_variable = xp.var(vartype=xp.binary, name=item["id"])
         problem.addVariable(item_variable)
         items.append({"item": item, "variable": item_variable})
         weights += item_variable * item["weight"]
@@ -80,7 +88,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
             "custom": {
                 "constraints": problem.getAttrib("rows"),
                 "provider": "xpress",
-                "status": status,
+                "status": STATUS.get(status, "unknown"),
                 "variables": problem.getAttrib("cols"),
             },
             "duration": problem.getAttrib("time"),

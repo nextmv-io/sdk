@@ -10,6 +10,15 @@ from typing import Any, Dict
 from ortools.linear_solver import pywraplp
 
 
+# Status of the solver after optimizing.
+STATUS = {
+    pywraplp.Solver.FEASIBLE: "suboptimal",
+    pywraplp.Solver.INFEASIBLE: "infeasible",
+    pywraplp.Solver.OPTIMAL: "optimal",
+    pywraplp.Solver.UNBOUNDED: "unbounded",
+}
+
+
 def main() -> None:
     """Entry point for the template."""
 
@@ -53,7 +62,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the decision variables and adds them to the linear sums.
     items = []
     for item in input_data["items"]:
-        item_variable = solver.IntVar(0, 1, item["item_id"])
+        item_variable = solver.IntVar(0, 1, item["id"])
         items.append({"item": item, "variable": item_variable})
         weights += item_variable * item["weight"]
         values += item_variable * item["value"]
@@ -80,7 +89,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
             "custom": {
                 "constraints": solver.NumConstraints(),
                 "provider": provider,
-                "status": status,
+                "status": STATUS.get(status, "unknown"),
                 "variables": solver.NumVariables(),
             },
             "duration": solver.WallTime() / 1000,
