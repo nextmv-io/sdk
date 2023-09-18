@@ -87,7 +87,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
             "value": solver.Objective().Value(),
         },
         "run": {
-            "duration": solver.WallTime(),
+            "duration": solver.WallTime() / 1000,
         },
         "schema": "v1",
     }
