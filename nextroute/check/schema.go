@@ -17,8 +17,6 @@ const (
 	Medium
 	// High is identical to medium.
 	High
-	// VeryHigh reports for each plan unit which vehicle have moves.
-	VeryHigh
 )
 
 // ToVerbosity converts a string to a verbosity. The string can be
@@ -39,9 +37,6 @@ func ToVerbosity(s string) Verbosity {
 	if strings.HasPrefix(ls, "h") {
 		return High
 	}
-	if strings.HasPrefix(ls, "v") {
-		return VeryHigh
-	}
 	return Off
 }
 
@@ -56,8 +51,6 @@ func (v Verbosity) String() string {
 		return "medium"
 	case High:
 		return "high"
-	case VeryHigh:
-		return "very_high"
 	default:
 		return "unknown"
 	}
