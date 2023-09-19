@@ -39,7 +39,7 @@ A file `output.json` should have been created with the optimal binkies solution
 * Open `main.go` and read through the comments to understand the model.
 * API documentation and examples can be found in the [package
   documentation](https://pkg.go.dev/github.com/nextmv-io/sdk/mip).
-* Further documentation, guides, and API references about custom modelling and
+* Further documentation, guides, and API references about custom modeling and
   deployment can also be found on our [blog](https://www.nextmv.io/blog) and on
   our [documentation site](https://docs.nextmv.io).
 * Need more assistance? Send us an [email](mailto:support@nextmv.io)!

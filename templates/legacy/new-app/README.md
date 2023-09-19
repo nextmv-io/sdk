@@ -1,6 +1,6 @@
 # Nextmv new-app template
 
-This template defines a skeleton to use our *custom modelling* framework `store`
+This template defines a skeleton to use our *custom modeling* framework `store`
 to model and solve your optimization problem.
 
 The most important files created are `main.go` and `input.json`.

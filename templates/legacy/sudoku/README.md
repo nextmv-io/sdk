@@ -4,7 +4,7 @@ The [Sudoku problem](https://en.wikipedia.org/wiki/Sudoku) asks to assign
 values to 81 cells so that each column, each row, and each of the nine 3 × 3
 sub-grids that compose the grid contain all of the digits from 1 to 9.
 
-This templates uses our *custom modelling* framework `store` to model and solve
+This templates uses our *custom modeling* framework `store` to model and solve
 such a Sudoku problem.
 
 The most important files created are `main.go` and `input.json`.
