@@ -70,4 +70,20 @@ var (
 	// shift-scheduling template.
 	//go:embed shift-scheduling/app.yaml
 	ShiftSchedulingManifest string
+
+	// XpressManifest is the app manifest file in the xpress template.
+	//go:embed xpress/app.yaml
+	XpressManifest string
+	// XpressMain is the main.py file in the xpress template.
+	//go:embed xpress/main.py
+	XpressMain string
+	// XpressInput is the input.json file in the xpress template.
+	//go:embed xpress/input.json
+	XpressInput string
+	// XpressReadme is the README.md file in the xpress template.
+	//go:embed xpress/README.md
+	XpressReadme string
+	// XpressRequirements is the requirements.txt file in the xpress template.
+	//go:embed xpress/requirements.txt
+	XpressRequirements string
 )

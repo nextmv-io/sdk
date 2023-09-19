@@ -4,7 +4,7 @@ Knapsack is a classic combinatorial optimization problem. Given a collection of
 items with a value and weight, our objective is to maximize the total value
 without exceeding the weight capacity of the knapsack.
 
-This template uses our *custom modelling* framework `store` to model and solve
+This template uses our *custom modeling* framework `store` to model and solve
 such a packing problem.
 
 The most important files created are `main.go` and `input.json`.
