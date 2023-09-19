@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/nextmv-io/sdk/nextroute"
+	"github.com/nextmv-io/sdk/nextroute/check"
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
@@ -24,6 +25,7 @@ type options struct {
 	Model  factory.Options                `json:"model,omitempty"`
 	Solve  nextroute.ParallelSolveOptions `json:"solve,omitempty"`
 	Format nextroute.FormatOptions        `json:"format,omitempty"`
+	Check  check.Options                  `json:"check,omitempty"`
 }
 
 func solver(
@@ -47,7 +49,16 @@ func solver(
 	}
 	last := solutions.Last()
 
-	output := factory.Format(ctx, options, solver, last)
+	output, err := check.Format(
+		ctx,
+		options,
+		options.Check,
+		solver,
+		last,
+	)
+	if err != nil {
+		return runSchema.Output{}, err
+	}
 	output.Statistics.Result.Custom = factory.DefaultCustomResultStatistics(last)
 
 	return output, nil
