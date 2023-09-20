@@ -340,3 +340,9 @@ issues:
       linters:
         - revive
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
+    # This tag is used by our validation engine and it is valid.
+    - path: nextroute/schema/input\.go
+      linters: 
+        - structtag
+      text: 'struct field tag `json:"lon" exclusiveMinimum:"-180" exclusiveMaximum:"180` not compatible with reflect.StructTag.Get: bad syntax for struct tag value'
+      
