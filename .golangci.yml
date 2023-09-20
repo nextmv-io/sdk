@@ -344,6 +344,4 @@ issues:
     - path: nextroute/schema/input\.go
       linters: 
         - structtag
-      text:
-        - govet
       
