@@ -123,8 +123,8 @@ type Stop struct {
 
 // Location represents a geographical location.
 type Location struct {
-	Lon float64 `json:"lon"`
-	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon" validate:"lt=180,gt=-180"`
+	Lat float64 `json:"lat" validate:"lt=90,gt=-90"`
 }
 
 // DurationGroup represents a group of stops that get additional duration
