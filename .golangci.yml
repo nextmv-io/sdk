@@ -344,5 +344,5 @@ issues:
     - path: nextroute/schema/input\.go
       linters: 
         - structtag
-      text: 'struct field tag `json:"lon" exclusiveMinimum:"-180" exclusiveMaximum:"180` not compatible with reflect.StructTag.Get: bad syntax for struct tag value'
+      text: govet
       
