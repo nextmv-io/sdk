@@ -25,11 +25,9 @@ type FleetOutput struct {
 	Hop struct {
 		Version string `json:"version"`
 	} `json:"hop"`
-	Options   schema.Options `json:"options"`
-	Solutions struct {
-		State []any `json:"state"`
-	} `json:"solutions"`
-	Statistics Statistics `json:"statistics"`
+	Options    schema.SolverOptions `json:"options"`
+	State      FleetState           `json:"state"`
+	Statistics Statistics           `json:"statistics"`
 }
 
 // FleetState is the solution output structure.
@@ -115,16 +113,10 @@ func format(
 	}
 
 	output := FleetOutput{
-		Solutions: struct {
-			State []any "json:\"state\""
-		}{
-			State: mappedSolutions,
-		},
-		Options: schema.Options{
-			Solver: &schema.SolverOptions{
-				Limits: &schema.Limits{
-					Duration: duration.String(),
-				},
+		State: mappedSolutions[0].(FleetState),
+		Options: schema.SolverOptions{
+			Limits: &schema.Limits{
+				Duration: duration.String(),
 			},
 		},
 		Hop: struct {
@@ -155,20 +147,12 @@ func format(
 		},
 	)
 
-	if len(output.Solutions.State) == 1 {
-		seriesData = seriesData[len(seriesData)-1:]
-	}
-
-	if len(output.Solutions.State) != len(seriesData) {
-		return output, errors.New("more or less solution values than solutions found")
-	}
-	for idx, data := range seriesData {
-		if _, ok := output.Solutions.State[idx].(FleetState); ok {
-			output.Statistics.Time.Start = startTime
-			output.Statistics.Value = int(data.Y)
-			output.Statistics.Time.ElapsedSeconds = float64(data.X)
-			output.Statistics.Time.Elapsed = time.Duration(data.X * statistics.Float64(time.Second)).String()
-		}
+	seriesData = seriesData[len(seriesData)-1:]
+	for _, data := range seriesData {
+		output.Statistics.Time.Start = startTime
+		output.Statistics.Value = int(data.Y)
+		output.Statistics.Time.ElapsedSeconds = float64(data.X)
+		output.Statistics.Time.Elapsed = time.Duration(data.X * statistics.Float64(time.Second)).String()
 	}
 
 	return output, nil

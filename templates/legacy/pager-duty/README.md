@@ -12,7 +12,7 @@ response on-call duty. In our example problem we have the following setting:
   users and maximizes happiness. Happiness is measured as the number of times
   the user had their preferred day assigned.
 
-This template uses our *custom modelling* framework to model and solve
+This template uses our *custom modeling* framework to model and solve
 such a scheduling problem.
 
 The most important files created are `main.go` and `input.json`.
