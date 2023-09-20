@@ -347,5 +347,6 @@ issues:
     # This tag is used by our validation engine and it is valid.
     - path: nextroute/schema/input\.go
       linters: 
-        - structtag
+        - govet
+      text: structtag
       
