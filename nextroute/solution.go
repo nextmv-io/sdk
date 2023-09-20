@@ -81,7 +81,7 @@ type Solution interface {
 	// model plan unit.
 	SolutionPlanStopsUnit(planUnit ModelPlanStopsUnit) SolutionPlanStopsUnit
 
-	// SolutionPlanUnit returns the [ModelPlanUnit] for the given
+	// SolutionPlanUnit returns the [SolutionPlanUnit] for the given
 	// model plan unit.
 	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
 
