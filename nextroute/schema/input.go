@@ -31,18 +31,18 @@ type VehicleDefaults struct {
 	StartLevel              any        `json:"start_level,omitempty"`
 	StartLocation           *Location  `json:"start_location,omitempty"`
 	EndLocation             *Location  `json:"end_location,omitempty"`
-	Speed                   *float64   `json:"speed,omitempty"`
+	Speed                   *float64   `json:"speed,omitempty" minimumExclusive:"0"`
 	StartTime               *time.Time `json:"start_time,omitempty"`
 	EndTime                 *time.Time `json:"end_time,omitempty"`
 	MinStops                *int       `json:"min_stops,omitempty" minimum:"0"`
 	MinStopsPenalty         *float64   `json:"min_stops_penalty,omitempty" minimum:"0"`
-	MaxStops                *int       `json:"max_stops,omitempty" minimum:"0"`
-	MaxDistance             *int       `json:"max_distance,omitempty" minimum:"0"`
-	MaxDuration             *int       `json:"max_duration,omitempty" minimum:"0"`
+	MaxStops                *int       `json:"max_stops,omitempty" minimumExclusive:"0"`
+	MaxDistance             *int       `json:"max_distance,omitempty" minimumExclusive:"0"`
+	MaxDuration             *int       `json:"max_duration,omitempty" minimumExclusive:"0"`
 	MaxWait                 *int       `json:"max_wait,omitempty" minimum:"0"`
-	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	ActivationPenalty       *int       `json:"activation_penalty,omitempty" minimum:"0"`
-	AlternateStops          *[]string  `json:"alternate_stops,omitempty"`
+	AlternateStops          *[]string  `json:"alternate_stops,omitempty" uniqueItems:"true"`
 }
 
 // StopDefaults contains default values for stops.
@@ -55,7 +55,7 @@ type StopDefaults struct {
 	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
 	EarlyArrivalTimePenalty *float64   `json:"early_arrival_time_penalty,omitempty" minimum:"0"`
 	LateArrivalTimePenalty  *float64   `json:"late_arrival_time_penalty,omitempty" minimum:"0"`
-	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 }
 
 // Vehicle represents a vehicle.
@@ -63,22 +63,22 @@ type Vehicle struct {
 	Capacity                any            `json:"capacity,omitempty"`
 	StartLevel              any            `json:"start_level,omitempty"`
 	CustomData              any            `json:"custom_data,omitempty"`
-	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty"`
-	MaxDistance             *int           `json:"max_distance,omitempty" minimum:"0"`
+	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
+	MaxDistance             *int           `json:"max_distance,omitempty" minimumExclusive:"0"`
 	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
 	StartTime               *time.Time     `json:"start_time,omitempty"`
 	EndTime                 *time.Time     `json:"end_time,omitempty"`
 	EndLocation             *Location      `json:"end_location,omitempty"`
 	MinStops                *int           `json:"min_stops,omitempty" minimum:"0"`
 	MinStopsPenalty         *float64       `json:"min_stops_penalty,omitempty" minimum:"0"`
-	MaxStops                *int           `json:"max_stops,omitempty" minimum:"0"`
-	Speed                   *float64       `json:"speed,omitempty"`
-	MaxDuration             *int           `json:"max_duration,omitempty" minimum:"0"`
+	MaxStops                *int           `json:"max_stops,omitempty" minimumExclusive:"0"`
+	Speed                   *float64       `json:"speed,omitempty" minimumExclusive:"0"`
+	MaxDuration             *int           `json:"max_duration,omitempty" minimumExclusive:"0"`
 	MaxWait                 *int           `json:"max_wait,omitempty" minimum:"0"`
 	ActivationPenalty       *int           `json:"activation_penalty,omitempty" minimum:"0"`
 	StartLocation           *Location      `json:"start_location,omitempty"`
-	AlternateStops          *[]string      `json:"alternate_stops,omitempty"`
-	InitialStops            *[]InitialStop `json:"initial_stops,omitempty"`
+	AlternateStops          *[]string      `json:"alternate_stops,omitempty" uniqueItems:"true"`
+	InitialStops            *[]InitialStop `json:"initial_stops,omitempty" uniqueItems:"true"`
 	ID                      string         `json:"id,omitempty"`
 }
 
@@ -115,7 +115,7 @@ type Stop struct {
 	UnplannedPenalty        *int       `json:"unplanned_penalty,omitempty" minimum:"0"`
 	EarlyArrivalTimePenalty *float64   `json:"early_arrival_time_penalty,omitempty" minimum:"0"`
 	LateArrivalTimePenalty  *float64   `json:"late_arrival_time_penalty,omitempty" minimum:"0"`
-	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	TargetArrivalTime       *time.Time `json:"target_arrival_time,omitempty"`
 	ID                      string     `json:"id,omitempty"`
 	Location                Location   `json:"location,omitempty"`
@@ -130,6 +130,6 @@ type Location struct {
 // DurationGroup represents a group of stops that get additional duration
 // whenever a stop of the group is approached for the first time.
 type DurationGroup struct {
-	Group    []string `json:"group,omitempty"`
+	Group    []string `json:"group,omitempty" uniqueItems:"true"`
 	Duration int      `json:"duration,omitempty" minimum:"0"`
 }
