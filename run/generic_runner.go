@@ -7,13 +7,18 @@ import (
 	"reflect"
 	"runtime"
 	"runtime/pprof"
+	"sync"
 	"time"
 )
 
 type start string
+type data string
 
 // Start is the key for the start time of the run.
 const Start start = "start"
+
+// Data is the key for additional data of the run.
+const Data data = "data"
 
 // GenericRunner creates a new runner from the given components.
 func GenericRunner[RunnerConfig, Input, Option, Solution any](
@@ -115,6 +120,7 @@ func (r *genericRunner[RunnerConfig, Input, Option, Solution]) Run(
 ) (retErr error) {
 	start := time.Now()
 	ctx = context.WithValue(ctx, Start, start)
+	ctx = context.WithValue(ctx, Data, &sync.Map{})
 	// handle CPU profile
 	deferFuncCPU, retErr := r.handleCPUProfile(r.runnerConfig)
 	if retErr != nil {

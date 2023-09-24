@@ -11,13 +11,13 @@ type SolutionVehicle interface {
 	// vehicle after the first solution stop of the vehicle. The move is
 	// first feasible move after the first solution stop based on the
 	// estimates of the constraint, this move is not necessarily executable.
-	FirstMove(SolutionPlanUnit) Move
+	FirstMove(SolutionPlanUnit) SolutionMove
 
 	// BestMove returns the best move for the given solution plan unit on
 	// the invoking vehicle. The best move is the move that has the lowest
 	// score. If there are no moves available for the given solution plan
-	// unit, a move is returned which is not executable, Move.IsExecutable.
-	BestMove(context.Context, SolutionPlanUnit) Move
+	// unit, a move is returned which is not executable, SolutionMoveStops.IsExecutable.
+	BestMove(context.Context, SolutionPlanUnit) SolutionMove
 
 	// Duration returns the duration of the vehicle. The duration is the
 	// time the vehicle is on the road. The duration is the time between

@@ -65,11 +65,11 @@ type Model interface {
 	// unplanned as a single unit. In this case they have to be planned as a
 	// sequence on the same vehicle in the order of the stops provided as an
 	// argument.
-	NewPlanSequence(stops ModelStops) (ModelPlanUnit, error)
+	NewPlanSequence(stops ModelStops) (ModelPlanStopsUnit, error)
 	// NewPlanSingleStop creates a new plan unit. A plan single stop
 	// is a plan unit of a single stop. A plan unit is a collection of
 	// stops which are always planned and unplanned as a single unit.
-	NewPlanSingleStop(stop ModelStop) (ModelPlanUnit, error)
+	NewPlanSingleStop(stop ModelStop) (ModelPlanStopsUnit, error)
 	// NewPlanMultipleStops creates a new plan of multiple [ModelStops]. A plan
 	// of multiple stops is a [ModelPlanUnit] of more than one stop. A plan
 	// unit is a collection of stops which are always planned and unplanned
@@ -85,7 +85,23 @@ type Model interface {
 	NewPlanMultipleStops(
 		stops ModelStops,
 		sequence DirectedAcyclicGraph,
-	) (ModelPlanUnit, error)
+	) (ModelPlanStopsUnit, error)
+
+	// NewPlanAllPlanUnits creates a new plan units unit. A plan all plan
+	// units unit is a collection of plan units which are always planned and
+	// unplanned as a single unit. The sameVehicle argument specifies if the
+	// plan units have to be planned on the same vehicle or not. If sameVehicle
+	// is true, the plan units have to be planned on the same vehicle.
+	// The plan units can only be part of one plan units unit.
+	NewPlanAllPlanUnits(
+		sameVehicle bool,
+		planUnits ...ModelPlanUnit,
+	) (ModelPlanUnitsUnit, error)
+
+	// NewPlanOneOfPlanUnits creates a new plan units unit. A plan one of plan
+	// units unit is a collection of plan units from which exactly one has to
+	// be planned.
+	NewPlanOneOfPlanUnits(planUnits ...ModelPlanUnit) (ModelPlanUnitsUnit, error)
 
 	// NewStop creates a new stop. The stop is used to create plan units or can
 	// be used to create a first or last stop of a vehicle.
@@ -120,6 +136,9 @@ type Model interface {
 	// is a collection of stops which are always planned and unplanned as a
 	// single unit.
 	PlanUnits() ModelPlanUnits
+
+	// PlanStopsUnits returns all plan units of the model that plan stops.
+	PlanStopsUnits() ModelPlanStopsUnits
 
 	// SequenceSampleSize returns the number of samples to take from all
 	// possible permutations of the stops in a PlanUnit.

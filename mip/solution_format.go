@@ -8,12 +8,14 @@ import (
 // CustomResultStatistics is an example of custom statistics that can be added
 // to the output and used in experiments.
 type CustomResultStatistics struct {
-	// Columns in the matrix, i.e. the number of variables.
-	Columns int `json:"columns,omitempty"`
-	// Rows in the matrix, i.e. the number of constraints.
-	Rows int `json:"rows,omitempty"`
+	// Constraints in the matrix, i.e. the number of constraints.
+	Constraints int `json:"constraints,omitempty"`
+	// Provider of the solution.
+	Provider SolverProvider `json:"provider,omitempty"`
 	// Status of the solution.
 	Status string `json:"status,omitempty"`
+	// Variables in the matrix, i.e. the number of variables.
+	Variables int `json:"variables,omitempty"`
 }
 
 // Format the MIP solution into the output format that the runner expects. The
@@ -60,8 +62,9 @@ func DefaultCustomResultStatistics(model Model, solution Solution) CustomResultS
 	}
 
 	return CustomResultStatistics{
-		Status:  status,
-		Columns: len(model.Vars()),
-		Rows:    len(model.Constraints()),
+		Status:      status,
+		Variables:   len(model.Vars()),
+		Constraints: len(model.Constraints()),
+		Provider:    solution.Provider(),
 	}
 }

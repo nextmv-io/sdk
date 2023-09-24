@@ -2,6 +2,8 @@ package schema
 
 import (
 	"time"
+
+	"github.com/nextmv-io/sdk/nextroute/check"
 )
 
 // SolutionOutput represents a solutions as JSON.
@@ -9,6 +11,7 @@ type SolutionOutput struct {
 	Unplanned []StopOutput    `json:"unplanned"`
 	Vehicles  []VehicleOutput `json:"vehicles"`
 	Objective ObjectiveOutput `json:"objective"`
+	Check     *check.Output   `json:"check,omitempty"`
 }
 
 // StopOutput is the basic struct for a stop.
@@ -28,6 +31,7 @@ type VehicleOutput struct {
 	RouteWaitingDuration int                 `json:"route_waiting_duration,omitempty"`
 	RouteDuration        int                 `json:"route_duration"`
 	CustomData           any                 `json:"custom_data,omitempty"`
+	AlternateStops       *[]string           `json:"alternate_stops,omitempty"`
 }
 
 // PlannedStopOutput adds information to the input stop.
@@ -63,26 +67,26 @@ type ObjectiveOutput struct {
 type CustomResultStatistics struct {
 	// ActivatedVehicles is the number of vehicles that were used in the
 	// solution.
-	ActivatedVehicles int `json:"activated_vehicles,omitempty"`
+	ActivatedVehicles int `json:"activated_vehicles"`
 	// UnplannedStops is the number of stops that were not planned in the
 	// solution.
-	UnplannedStops int `json:"unplanned_stops,omitempty"`
+	UnplannedStops int `json:"unplanned_stops"`
 	// MaxTravelDuration is the maximum travel duration of a vehicle in the
 	// solution.
-	MaxTravelDuration int `json:"max_travel_duration,omitempty"`
+	MaxTravelDuration int `json:"max_travel_duration"`
 	// MaxDuration is the maximum duration of a vehicle (including waiting
 	// times) in the solution.
-	MaxDuration int `json:"max_duration,omitempty"`
+	MaxDuration int `json:"max_duration"`
 	// MinTravelDuration is the minimum travel duration of a vehicle in the
 	// solution, excluding vehicles that were not used.
-	MinTravelDuration int `json:"min_travel_duration,omitempty"`
+	MinTravelDuration int `json:"min_travel_duration"`
 	// MinDuration is the minimum duration of a vehicle (including waiting
 	// times) in the solution, excluding vehicles that were not used.
-	MinDuration int `json:"min_duration,omitempty"`
+	MinDuration int `json:"min_duration"`
 	// MaxStopsInRoute is the maximum number of stops in a vehicle's route in
 	// the solution. The start and end stops of the vehicle are not considered.
-	MaxStopsInVehicle int `json:"max_stops_in_vehicle,omitempty"`
+	MaxStopsInVehicle int `json:"max_stops_in_vehicle"`
 	// MinStopsInRoute is the minimum number of stops in a vehicle's route in
 	// the solution. The start and end stops of the vehicle are not considered.
-	MinStopsInVehicle int `json:"min_stops_in_vehicle,omitempty"`
+	MinStopsInVehicle int `json:"min_stops_in_vehicle"`
 }

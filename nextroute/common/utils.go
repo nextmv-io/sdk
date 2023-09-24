@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"math/rand"
 	"sync"
 	"time"
@@ -50,15 +51,15 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	return result
 }
 
-// NotUnique returns the instances for which f returns identical values.
+// NotUnique returns the duplicate instances.
 func NotUnique[T comparable](s []T) []T {
 	inResult := make(map[T]bool)
 	var result []T
 	for _, str := range s {
-		if _, ok := inResult[str]; !ok {
-			inResult[str] = true
-		} else {
+		if _, ok := inResult[str]; ok {
 			result = append(result, str)
+		} else {
+			inResult[str] = true
 		}
 	}
 	return result
@@ -70,10 +71,10 @@ func NotUniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	inResult := make(map[I]bool)
 	var result []T
 	for _, item := range items {
-		if _, ok := inResult[f(item)]; !ok {
-			inResult[f(item)] = true
-		} else {
+		if _, ok := inResult[f(item)]; ok {
 			result = append(result, item)
+		} else {
+			inResult[f(item)] = true
 		}
 	}
 	return result
@@ -134,6 +135,9 @@ func AllFalse[E any](s []E, predicate func(E) bool) bool {
 // All returns true if all the given predicate evaluations evaluate to
 // condition.
 func All[E any](s []E, condition bool, predicate func(E) bool) bool {
+	if len(s) == 0 {
+		return false
+	}
 	for _, v := range s {
 		if predicate(v) != condition {
 			return false
@@ -193,6 +197,21 @@ func WithinTolerance(a, b, tolerance float64) bool {
 	return (d / math.Abs(b)) < tolerance
 }
 
+// Truncate truncates a float64 to the given unit.
+func Truncate(f float64, unit float64) float64 {
+	bf := big.NewFloat(0).SetPrec(1000).SetFloat64(f)
+	bu := big.NewFloat(0).SetPrec(1000).SetFloat64(unit)
+
+	bf.Quo(bf, bu)
+
+	i := big.NewInt(0)
+	bf.Int(i)
+	bf.SetInt(i)
+
+	f, _ = bf.Mul(bf, bu).Float64()
+	return f
+}
+
 // DurationValue returns the value of a duration in the given time unit.
 // Will panic if the time unit is zero.
 func DurationValue(
@@ -243,10 +262,6 @@ func RandomElements[T any](
 	n int,
 ) []T {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -281,10 +296,6 @@ func RandomElementIndices[T any](
 	n int,
 ) []int {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -318,10 +329,6 @@ func RandomElementIndices[T any](
 // is created using the current time.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	if source == nil {
-		// math/rand is about 50 to 100 times faster than crypto/rand.
-		// Also math/rand sequence is reproducible when given same seed. This is good for testing/debugging.
-		// The rand use case here has no security concern.
-		// G404 (CWE-338): Use of weak random number generator (math/rand instead of crypto/rand).
 		/* #nosec */
 		source = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
@@ -333,6 +340,21 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 			return index
 		}
 	}
+}
+
+// Shuffle returns a shuffled copy of the given slice. If source is nil, a new
+// source is created using the current time.
+func Shuffle[T any](source *rand.Rand, slice []T) []T {
+	s := DefensiveCopy(slice)
+	if source == nil {
+		/* #nosec */
+		source = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+	for i := range slice {
+		j := source.Intn(i + 1)
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
 }
 
 // Lazy is a function that returns a value of type T. The value is only
@@ -400,4 +422,13 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 			break
 		}
 	}
+}
+
+// Reverse reverses the given slice in place and returns it.
+func Reverse[T any](slice []T) []T {
+	n := len(slice)
+	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
+		slice[i], slice[j] = slice[j], slice[i]
+	}
+	return slice
 }
