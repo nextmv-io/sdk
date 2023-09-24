@@ -44,9 +44,6 @@ type ImmutableSolutionPlanUnitCollection interface {
 	RandomElement() SolutionPlanUnit
 	// Size return the number of solution plan units in the collection.
 	Size() int
-	// SolutionStops returns the solution stops of all the units in the
-	// collection.
-	SolutionStops() SolutionStops
 	// SolutionPlanUnit returns the solution plan units in the collection
 	// which correspond to the given model plan unit. If no such solution
 	// plan unit is found, nil is returned.

@@ -46,14 +46,14 @@ type SolutionObserver interface {
 	// OnBestMove is called when the solution is asked for it's best move.
 	OnBestMove(solution Solution)
 	// OnBestMoveFound is called when the solution has found it's best move.
-	OnBestMoveFound(move Move)
+	OnBestMoveFound(move SolutionMove)
 
 	// OnPlan is called when a move is going to be planned.
-	OnPlan(move Move)
+	OnPlan(move SolutionMove)
 	// OnPlanFailed is called when a move has failed to be planned.
-	OnPlanFailed(move Move)
+	OnPlanFailed(move SolutionMove)
 	// OnPlanSucceeded is called when a move has succeeded to be planned.
-	OnPlanSucceeded(move Move)
+	OnPlanSucceeded(move SolutionMove)
 }
 
 // SolutionObservers is a slice of SolutionObserver.

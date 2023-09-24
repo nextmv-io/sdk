@@ -98,6 +98,8 @@ linters:
     # different from depguard where there are different block types for example
     # version constraints and module recommendations.
     - gomodguard
+    # gosec offers another set of security checks in addition to govet
+    - gosec
     # Linter for Go source code that specializes in simplifying a code.
     - gosimple
     # Vet examines Go source code and reports suspicious constructs, such as
@@ -168,13 +170,16 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
-
     # Deactivate line length in solver.go because of go tags
     - path: nextroute/solver\.go
       linters:
         - lll
     # Deactivate line length in solver_parallel.go because of go tags
     - path: nextroute/solver_parallel\.go
+      linters:
+        - lll
+    # Deactivate line length because of go tags
+    - path: nextroute/check/options\.go
       linters:
         - lll
     # Deactivate lll in schema due to go tags.
@@ -208,6 +213,23 @@ issues:
     - path: alns/solver\.go
       linters:
         - nestif
+    # Cloud code for compatibility
+    - path: nextroute/schema/fleet_defaults\.go
+      linters:
+        - gocyclo
+
+    # Using math/rand is fine here
+    - path: nextroute/common/alias_test\.go
+      linters:
+        - gosec
+      text: G404
+    - path: nextroute/common/utils\.go
+      linters:
+        - gomodguard
+    - path: route/osrm/matrix_test\.go
+      linters:
+        - gosec
+      text: G404
 
     # Please note that other Go modules have issues that are ignored but are
     # not listed here. The reason is that linting must be done standing on the
@@ -218,77 +240,84 @@ issues:
     # you look for uses of //nolint you will find the other linting issues
     # being excluided.
 
-    # TODO: fix cyclomatic complexity issues on these templates. This linter is
+    # TODO: fix cyclomatic complexity issues on these templates/legacy. This linter is
     # ignored for expediency.
-    - path: templates/cloud-routing/helper\.go
+    - path: templates/legacy/cloud-routing/helper\.go
       linters:
         - gocyclo
-    - path: templates/cloud-routing/schema\.go
+    - path: templates/legacy/cloud-routing/schema\.go
       linters:
         - gocyclo
-    - path: templates/cloud-routing/solver\.go
+    - path: templates/legacy/cloud-routing/solver\.go
       linters:
         - gocyclo
-    - path: templates/routing-informs/helper\.go
+    - path: templates/legacy/routing-informs/helper\.go
       linters:
         - gocyclo
-    - path: templates/routing-informs/schema\.go
+    - path: templates/legacy/routing-informs/schema\.go
       linters:
         - gocyclo
-    - path: templates/routing-informs/main\.go
+    - path: templates/legacy/routing-informs/main\.go
       linters:
         - gocyclo
-    - path: templates/demo-routing/helper\.go
+    - path: templates/legacy/demo-routing/helper\.go
       linters:
         - gocyclo
-    - path: templates/demo-routing/schema\.go
+    - path: templates/legacy/demo-routing/schema\.go
       linters:
         - gocyclo
-    - path: templates/demo-routing/main\.go
+    - path: templates/legacy/demo-routing/main\.go
       linters:
         - gocyclo
-    - path: templates/pager-duty/main\.go
+    - path: templates/legacy/pager-duty/main\.go
       linters:
         - gocyclo
     - path: templates/shift-scheduling/main\.go
       linters:
         - gocyclo
-    - path: templates/sudoku/main\.go
+        - nestif
+    # json tags are too long and unmarshal does not throw an error where one is
+    # needed for the signature of the function.
+    - path: templates/shift-scheduling/schema\.go
+      linters:
+        - lll
+        - unparam
+    - path: templates/legacy/sudoku/main\.go
       linters:
         - gocyclo
-    - path: templates/unique-matrix-measure/main\.go
+    - path: templates/legacy/unique-matrix-measure/main\.go
       linters:
         - gocyclo
 
     # TODO: figure out a better way to Marshal to JSON with some sort of error
     # checking.
-    - path: templates/cloud-routing/schema\.go
+    - path: templates/legacy/cloud-routing/schema\.go
       linters:
         - unparam
       text: cloudDuration
 
     # The linter suggests switching an if-elseif-else statement to use switch.
     # This is not reasonable right now because the conditions are complex.
-    - path: templates/cloud-routing/helper\.go
+    - path: templates/legacy/cloud-routing/helper\.go
       linters:
         - gocritic
       text: ifElseChain
-    - path: templates/routing-informs/helper\.go
+    - path: templates/legacy/routing-informs/helper\.go
       linters:
         - gocritic
       text: ifElseChain
-    - path: templates/demo-routing/helper\.go
+    - path: templates/legacy/demo-routing/helper\.go
       linters:
         - gocritic
       text: ifElseChain
-    - path: templates/cluster-tsp/schema\.go
+    - path: templates/legacy/cluster-tsp/schema\.go
       linters:
         - unparam
       text: cloudDuration
 
     # The linter suggests switching an if-elseif-else statement to use switch.
     # This is not reasonable right now because the conditions are complex.
-    - path: templates/cluster-tsp/helper\.go
+    - path: templates/legacy/cluster-tsp/helper\.go
       linters:
         - gocritic
       text: ifElseChain
@@ -308,3 +337,10 @@ issues:
     - path: mip/options\.go
       linters:
         - lll
+    # Although the name stutters, we need to call it mip.MipOptions because the
+    # mip package can also handle linear programs, so potentially we may have
+    # mip.LpOptions.
+    - path: mip/options\.go
+      linters:
+        - revive
+      text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"

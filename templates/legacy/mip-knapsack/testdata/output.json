@@ -1,0 +1,26 @@
+{
+  "options": { "limits": { "duration": 5000000000 } },
+  "solutions": [
+    {
+      "items": [
+        { "item_id": "cat", "value": 100, "weight": 20 },
+        { "item_id": "water", "value": 40, "weight": 2 },
+        { "item_id": "phone", "value": 6, "weight": 1 },
+        { "item_id": "book", "value": 63, "weight": 10 },
+        { "item_id": "rx", "value": 81, "weight": 1 },
+        { "item_id": "coat", "value": 44, "weight": 9 },
+        { "item_id": "keys", "value": 92, "weight": 1 },
+        { "item_id": "nuts", "value": 18, "weight": 4 }
+      ]
+    }
+  ],
+  "statistics": {
+    "schema": "v1",
+    "run": { "duration": 0.000629417 },
+    "result": {
+      "duration": 0.000629417,
+      "value": 444,
+      "custom": { "columns": 11, "rows": 1, "status": "optimal" }
+    }
+  }
+}

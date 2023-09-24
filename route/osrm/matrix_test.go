@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/osrm"
 )
@@ -259,6 +260,44 @@ func TestSnappingFailed(t *testing.T) {
 	actualErrorMsg := err.Error()
 	if actualErrorMsg != expectedErrorMsg {
 		t.Errorf("want: %v; got: %v\n", expectedErrorMsg, actualErrorMsg)
+	}
+}
+
+func TestDeflate(t *testing.T) {
+	osrmHost := os.Getenv(hostEnv)
+	if osrmHost == "" {
+		t.Skip(hostEnvNotSetMsg)
+	}
+
+	// Extend base matrix to include a 0,0 point
+	points := make([]measure.Point, len(p)+1)
+	copy(points, p)
+	points[len(p)] = measure.Point{0, 0}
+	expDistances := make([][]float64, len(points))
+	for i := range expectedDistances {
+		expDistances[i] = make([]float64, len(points))
+		copy(expDistances[i], expectedDistances[i][:])
+	}
+	expDistances[len(points)-1] = make([]float64, len(points))
+	expDurations := make([][]float64, len(points))
+	for i := range expectedDurations {
+		expDurations[i] = make([]float64, len(points))
+		copy(expDurations[i], expectedDurations[i][:])
+	}
+	expDurations[len(points)-1] = make([]float64, len(points))
+
+	c := osrm.DefaultClient(osrmHost, true)
+	c.IgnoreEmpty(true)
+	distances, durations, err := c.Table(points, osrm.WithDistance(), osrm.WithDuration())
+	if err != nil {
+		t.Fatalf("error requesting matrices: %v", err)
+	}
+
+	if !reflect.DeepEqual(expDistances, distances) {
+		t.Errorf("want: %v; got: %v\n", expDistances, distances)
+	}
+	if !reflect.DeepEqual(expDurations, durations) {
+		t.Errorf("want: %v; got: %v\n", expDurations, durations)
 	}
 }
 

@@ -8,6 +8,7 @@ require (
 	github.com/danielgtaylor/huma v1.14.1
 	github.com/nextmv-io/sdk/route/osrm v0.21.1
 	github.com/xeipuuv/gojsonschema v1.2.0
+	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
 )
 
 require (

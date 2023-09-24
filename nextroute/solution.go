@@ -46,8 +46,8 @@ type Solution interface {
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan unit, a move is returned which
-	// is not executable, Move.IsExecutable.
-	BestMove(context.Context, SolutionPlanUnit) Move
+	// is not executable, SolutionMoveStops.IsExecutable.
+	BestMove(context.Context, SolutionPlanUnit) SolutionMove
 
 	// ConstraintData returns the data of the constraint for the solution. The
 	// constraint data of a solution is set by the
@@ -77,9 +77,14 @@ type Solution interface {
 	// a collection of solution plan units.
 	PlannedPlanUnits() ImmutableSolutionPlanUnitCollection
 
+	// SolutionPlanStopsUnit returns the [SolutionPlanStopsUnit] for the given
+	// model plan unit.
+	SolutionPlanStopsUnit(planUnit ModelPlanStopsUnit) SolutionPlanStopsUnit
+
 	// SolutionPlanUnit returns the [SolutionPlanUnit] for the given
 	// model plan unit.
 	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
+
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.
