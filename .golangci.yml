@@ -344,3 +344,8 @@ issues:
       linters:
         - revive
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
+    # We do not need to check for week random number generators in tests.
+    - path: _test\.go$
+      linters:
+        - gosec
+      text: G404
