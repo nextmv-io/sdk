@@ -40,9 +40,11 @@ func (l Locations) Unique() Locations {
 	for _, location := range l {
 		unique[location] = struct{}{}
 	}
-	result := make(Locations, 0, len(unique))
+	result := make(Locations, len(unique))
+	i := 0
 	for location := range unique {
-		result = append(result, location)
+		result[i] = location
+		i++
 	}
 	return result
 }
