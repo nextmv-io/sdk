@@ -42,6 +42,10 @@ def main() -> None:
 
     # Read input data, solve the problem and write the solution.
     input_data = read_input(args.input)
+    log("Solving knapsack problem:")
+    log(f"  - items: {len(input_data.get('items', []))}")
+    log(f"  - capacity: {input_data.get('weight_capacity', 0)}")
+    log(f"  - max duration: {args.duration} seconds")
     solution = solve(input_data, args.duration)
     write_output(args.output, solution)
 
@@ -104,6 +108,12 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
         "solutions": [{"items": chosen_items}],
         "statistics": statistics,
     }
+
+
+def log(message: str) -> None:
+    """Logs a message. We need to use stderr since stdout is used for the solution."""
+
+    print(message, file=sys.stderr)
 
 
 def read_input(input_path) -> Dict[str, Any]:
