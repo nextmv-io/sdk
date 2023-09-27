@@ -6,7 +6,7 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/check"
 )
 
-// SolutionOutput represents a solutions as JSON.
+// SolutionOutput represents a solution as JSON.
 type SolutionOutput struct {
 	// Unplanned is the list of stops that were not planned in the solution.
 	Unplanned []StopOutput `json:"unplanned"`
