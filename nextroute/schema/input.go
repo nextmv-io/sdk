@@ -36,9 +36,9 @@ type VehicleDefaults struct {
 	EndTime                 *time.Time `json:"end_time,omitempty"`
 	MinStops                *int       `json:"min_stops,omitempty" minimum:"0"`
 	MinStopsPenalty         *float64   `json:"min_stops_penalty,omitempty" minimum:"0"`
-	MaxStops                *int       `json:"max_stops,omitempty" minimumExclusive:"0"`
-	MaxDistance             *int       `json:"max_distance,omitempty" minimumExclusive:"0"`
-	MaxDuration             *int       `json:"max_duration,omitempty" minimumExclusive:"0"`
+	MaxStops                *int       `json:"max_stops,omitempty" minimum:"0"`
+	MaxDistance             *int       `json:"max_distance,omitempty" minimum:"0"`
+	MaxDuration             *int       `json:"max_duration,omitempty" minimum:"0"`
 	MaxWait                 *int       `json:"max_wait,omitempty" minimum:"0"`
 	CompatibilityAttributes *[]string  `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	ActivationPenalty       *int       `json:"activation_penalty,omitempty" minimum:"0"`
@@ -64,16 +64,16 @@ type Vehicle struct {
 	StartLevel              any            `json:"start_level,omitempty"`
 	CustomData              any            `json:"custom_data,omitempty"`
 	CompatibilityAttributes *[]string      `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
-	MaxDistance             *int           `json:"max_distance,omitempty" minimumExclusive:"0"`
+	MaxDistance             *int           `json:"max_distance,omitempty" minimum:"0"`
 	StopDurationMultiplier  *float64       `json:"stop_duration_multiplier,omitempty"`
 	StartTime               *time.Time     `json:"start_time,omitempty"`
 	EndTime                 *time.Time     `json:"end_time,omitempty"`
 	EndLocation             *Location      `json:"end_location,omitempty"`
 	MinStops                *int           `json:"min_stops,omitempty" minimum:"0"`
 	MinStopsPenalty         *float64       `json:"min_stops_penalty,omitempty" minimum:"0"`
-	MaxStops                *int           `json:"max_stops,omitempty" minimumExclusive:"0"`
+	MaxStops                *int           `json:"max_stops,omitempty" minimum:"0"`
 	Speed                   *float64       `json:"speed,omitempty" minimumExclusive:"0"`
-	MaxDuration             *int           `json:"max_duration,omitempty" minimumExclusive:"0"`
+	MaxDuration             *int           `json:"max_duration,omitempty" minimum:"0"`
 	MaxWait                 *int           `json:"max_wait,omitempty" minimum:"0"`
 	ActivationPenalty       *int           `json:"activation_penalty,omitempty" minimum:"0"`
 	StartLocation           *Location      `json:"start_location,omitempty"`
