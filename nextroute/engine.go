@@ -99,6 +99,11 @@ var (
 	newMaximumStopsConstraint func(
 		VehicleTypeExpression,
 	) (MaximumStopsConstraint, error)
+
+	newNoMixConstraint func(
+		map[ModelStop]MixIngredient,
+	) (NoMixConstraint, error)
+
 	newMeasureByIndexExpression func(
 		measure.ByIndex,
 	) ModelExpression
