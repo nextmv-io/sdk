@@ -48,51 +48,51 @@ type VehicleDefaults struct {
 	// EndLocation location where the vehicle ends..
 	EndLocation *Location `json:"end_location,omitempty"`
 	// Speed of the vehicle in meters per second.
-	Speed *float64 `json:"speed,omitempty"`
+	Speed *float64 `json:"speed,omitempty" minimumExclusive:"0"`
 	// StartTime time when the vehicle starts its route.
 	StartTime *time.Time `json:"start_time,omitempty"`
 	// EndTime latest time at which the vehicle ends its route.
 	EndTime *time.Time `json:"end_time,omitempty"`
 	// MinStops minimum stops that a vehicle should visit.
-	MinStops *int `json:"min_stops,omitempty"`
+	MinStops *int `json:"min_stops,omitempty" minimum:"0"`
 	// MinStopsPenalty penalty for not visiting the minimum number of stops.
-	MinStopsPenalty *float64 `json:"min_stops_penalty,omitempty"`
+	MinStopsPenalty *float64 `json:"min_stops_penalty,omitempty" minimum:"0"`
 	// MaxStops maximum number of stops that the vehicle can visit.
-	MaxStops *int `json:"max_stops,omitempty"`
+	MaxStops *int `json:"max_stops,omitempty" minimum:"0"`
 	// MaxDistance maximum distance in meters that the vehicle can travel.
-	MaxDistance *int `json:"max_distance,omitempty"`
+	MaxDistance *int `json:"max_distance,omitempty" minimum:"0"`
 	// MaxDuration maximum duration in seconds that the vehicle can travel.
-	MaxDuration *int `json:"max_duration,omitempty"`
+	MaxDuration *int `json:"max_duration,omitempty" minimum:"0"`
 	// MaxWait maximum aggregated waiting time that the vehicle can wait across route stops.
-	MaxWait *int `json:"max_wait,omitempty"`
+	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// CompatibilityAttributes attributes that the vehicle is compatible with.
-	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	// ActivationPenalty penalty of using the vehicle.
-	ActivationPenalty *int `json:"activation_penalty,omitempty"`
+	ActivationPenalty *int `json:"activation_penalty,omitempty" minimum:"0"`
 	// AlternateStops a set of alternate stops for which only one should be serviced.
-	AlternateStops *[]string `json:"alternate_stops,omitempty"`
+	AlternateStops *[]string `json:"alternate_stops,omitempty" uniqueItems:"true"`
 }
 
 // StopDefaults contains default values for stops.
 type StopDefaults struct {
 	// UnplannedPenalty penalty for not planning a stop.
-	UnplannedPenalty *int `json:"unplanned_penalty,omitempty"`
+	UnplannedPenalty *int `json:"unplanned_penalty,omitempty" minimum:"0"`
 	// Quantity of the stop.
 	Quantity any `json:"quantity,omitempty"`
 	// StartTimeWindow time window in which the stop can start service.
 	StartTimeWindow any `json:"start_time_window,omitempty"`
 	// MaxWait maximum waiting duration in seconds at the stop.
-	MaxWait *int `json:"max_wait,omitempty"`
+	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// Duration in seconds that the stop takes.
-	Duration *int `json:"duration,omitempty"`
+	Duration *int `json:"duration,omitempty" minimum:"0"`
 	// TargetArrivalTime at the stop.
 	TargetArrivalTime *time.Time `json:"target_arrival_time,omitempty"`
 	// EarlyArrivalTimePenalty penalty per second for arriving at the stop before the target arrival time.
-	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty"`
+	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty" minimum:"0"`
 	// LateArrivalTimePenalty penalty per second for arriving at the stop after the target arrival time.
-	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty"`
+	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty" minimum:"0"`
 	// CompatibilityAttributes attributes that the stop is compatible with.
-	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 }
 
 // Vehicle represents a vehicle.
@@ -104,9 +104,9 @@ type Vehicle struct {
 	// CustomData arbitrary custom data.
 	CustomData any `json:"custom_data,omitempty"`
 	// CompatibilityAttributes attributes that the vehicle is compatible with.
-	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	// MaxDistance maximum distance in meters that the vehicle can travel.
-	MaxDistance *int `json:"max_distance,omitempty"`
+	MaxDistance *int `json:"max_distance,omitempty" minimum:"0"`
 	// StopDurationMultiplier multiplier for the duration of stops.
 	StopDurationMultiplier *float64 `json:"stop_duration_multiplier,omitempty"`
 	// StartTime time when the vehicle starts its route.
@@ -116,25 +116,25 @@ type Vehicle struct {
 	// EndLocation location where the vehicle ends.
 	EndLocation *Location `json:"end_location,omitempty"`
 	// MinStops minimum stops that a vehicle should visit.
-	MinStops *int `json:"min_stops,omitempty"`
+	MinStops *int `json:"min_stops,omitempty" minimum:"0"`
 	// MinStopsPenalty penalty for not visiting the minimum number of stops.
-	MinStopsPenalty *float64 `json:"min_stops_penalty,omitempty"`
+	MinStopsPenalty *float64 `json:"min_stops_penalty,omitempty" minimum:"0"`
 	// MaxStops maximum number of stops that the vehicle can visit.
 	MaxStops *int `json:"max_stops,omitempty"`
 	// Speed of the vehicle in meters per second.
-	Speed *float64 `json:"speed,omitempty"`
+	Speed *float64 `json:"speed,omitempty" minimumExclusive:"0"`
 	// MaxDuration maximum duration in seconds that the vehicle can travel.
-	MaxDuration *int `json:"max_duration,omitempty"`
+	MaxDuration *int `json:"max_duration,omitempty" minimum:"0"`
 	// MaxWait maximum aggregated waiting time that the vehicle can wait across route stops.
-	MaxWait *int `json:"max_wait,omitempty"`
+	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// ActivationPenalty penalty of using the vehicle.
-	ActivationPenalty *int `json:"activation_penalty,omitempty"`
+	ActivationPenalty *int `json:"activation_penalty,omitempty" minimum:"0"`
 	// StartLocation location where the vehicle starts.
 	StartLocation *Location `json:"start_location,omitempty"`
 	// AlternateStops a set of alternate stops for which only one should be serviced.
-	AlternateStops *[]string `json:"alternate_stops,omitempty"`
+	AlternateStops *[]string `json:"alternate_stops,omitempty" uniqueItems:"true"`
 	// InitialStops initial stops planned on the vehicle.
-	InitialStops *[]InitialStop `json:"initial_stops,omitempty"`
+	InitialStops *[]InitialStop `json:"initial_stops,omitempty" uniqueItems:"true"`
 	// ID of the vehicle.
 	ID string `json:"id,omitempty"`
 }
@@ -152,19 +152,19 @@ type AlternateStop struct {
 	// Quantity of the stop.
 	Quantity any `json:"quantity,omitempty"`
 	// Duration in seconds that the stop takes.
-	Duration *int `json:"duration,omitempty"`
+	Duration *int `json:"duration,omitempty" minimum:"0"`
 	// CustomData arbitrary custom data.
 	CustomData any `json:"custom_data,omitempty"`
 	// MaxWait maximum waiting duration in seconds at the stop.
-	MaxWait *int `json:"max_wait,omitempty"`
+	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// StartTimeWindow time window in which the stop can start service.
 	StartTimeWindow any `json:"start_time_window,omitempty"`
 	// UnplannedPenalty penalty for not planning a stop.
-	UnplannedPenalty *int `json:"unplanned_penalty,omitempty"`
+	UnplannedPenalty *int `json:"unplanned_penalty,omitempty" minimum:"0"`
 	// EarlyArrivalTimePenalty penalty per second for arriving at the stop before the target arrival time.
-	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty"`
+	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty" minimum:"0"`
 	// LateArrivalTimePenalty penalty per second for arriving at the stop after the target arrival time.
-	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty"`
+	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty" minimum:"0"`
 	// TargetArrivalTime at the stop.
 	TargetArrivalTime *time.Time `json:"target_arrival_time,omitempty"`
 	// ID unique identifier for the stop.
@@ -184,19 +184,19 @@ type Stop struct {
 	// CustomData arbitrary custom data.
 	CustomData any `json:"custom_data,omitempty"`
 	// Duration in seconds that the stop takes.
-	Duration *int `json:"duration,omitempty"`
+	Duration *int `json:"duration,omitempty" minimum:"0"`
 	// MaxWait maximum waiting duration in seconds at the stop.
-	MaxWait *int `json:"max_wait,omitempty"`
+	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// StartTimeWindow time window in which the stop can start service.
 	StartTimeWindow any `json:"start_time_window,omitempty"`
 	// UnplannedPenalty penalty for not planning a stop.
-	UnplannedPenalty *int `json:"unplanned_penalty,omitempty"`
+	UnplannedPenalty *int `json:"unplanned_penalty,omitempty" minimum:"0"`
 	// EarlyArrivalTimePenalty penalty per second for arriving at the stop before the target arrival time.
-	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty"`
+	EarlyArrivalTimePenalty *float64 `json:"early_arrival_time_penalty,omitempty" minimum:"0"`
 	// LateArrivalTimePenalty penalty per second for arriving at the stop after the target arrival time.
-	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty"`
+	LateArrivalTimePenalty *float64 `json:"late_arrival_time_penalty,omitempty" minimum:"0"`
 	// CompatibilityAttributes attributes that the stop is compatible with.
-	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty"`
+	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	// TargetArrivalTime at the stop.
 	TargetArrivalTime *time.Time `json:"target_arrival_time,omitempty"`
 	// ID unique identifier for the stop.
@@ -208,16 +208,16 @@ type Stop struct {
 // Location represents a geographical location.
 type Location struct {
 	// Lon longitude of the location.
-	Lon float64 `json:"lon"`
+	Lon float64 `json:"lon" minimum:"-180" maximum:"180`
 	// Lat latitude of the location.
-	Lat float64 `json:"lat"`
+	Lat float64 `json:"lat" minimum:"-90" maximum:"90"`
 }
 
 // DurationGroup represents a group of stops that get additional duration
 // whenever a stop of the group is approached for the first time.
 type DurationGroup struct {
 	// Group stop IDs contained in the group.
-	Group []string `json:"group,omitempty"`
+	Group []string `json:"group,omitempty" uniqueItems:"true"`
 	// Duration to add when visiting the group.
-	Duration int `json:"duration,omitempty"`
+	Duration int `json:"duration,omitempty" minimum:"0"`
 }

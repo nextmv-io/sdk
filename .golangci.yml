@@ -344,3 +344,9 @@ issues:
       linters:
         - revive
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
+    # This tag is used by our validation engine and it is valid.
+    - path: nextroute/schema/input\.go
+      linters: 
+        - govet
+      text: structtag
+      
