@@ -101,7 +101,7 @@ var (
 	) (MaximumStopsConstraint, error)
 
 	newNoMixConstraint func(
-		map[ModelStop]MixIngredient,
+		map[ModelStop]MixItem,
 	) (NoMixConstraint, error)
 
 	newMeasureByIndexExpression func(
