@@ -4,21 +4,21 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// NoMixConstraint is a type of inter-tour stop constraint that prevents certain
-// stops from being visited on the same tour.
+// NoMixConstraint prevents the order in which stops are assigned to a vehicle
+// based upon the ingredients the stops insert or remove from a vehicle.
 type NoMixConstraint interface {
 	ModelConstraint
-	// Insert returns the mix types that are associated with a stop that is
-	// inserted into a tour.
+	// Insert returns the mix ingredients that are associated with a stop that
+	// inserts an ingredient into a vehicle.
 	Insert() map[ModelStop]MixIngredient
-	// Remove returns the mix types that are associated with a stop that
-	// is removed from a tour.
+	// Remove returns the mix ingredients that are associated with a stop that
+	// removes an ingredient from a vehicle.
 	Remove() map[ModelStop]MixIngredient
 }
 
 // MixIngredient is an ingredient that is used to specify the type of mix.
 // The name is the name of the mix ingredient. The count is the number units of
-// the mix ingredient are inserted or removed from a tour.
+// the mix ingredient are inserted or removed from a vehicle.
 type MixIngredient struct {
 	// Name is the name of the mix ingredient.
 	Name string
@@ -29,11 +29,12 @@ type MixIngredient struct {
 
 // NewNoMixConstraint creates a new no-mix constraint. The constraint
 // needs to be added to the model to be taken into account.
-// The insert map contains the mix ingredients that are associated with a stop
-// that is inserted into a tour. The remove map contains the ingredients that
-// are associated with a stop that is removed from a tour. A stop can only be in
-// insert or remove, not in both. The sum of the counts of the insert map must
-// be equal to the sum of the counts of the remove map for each plan unit.
+// The deltas map contains the information defining how much ingredient a stop
+// inserts to the mix on a vehicle. If the count is positive it adds to the mix,
+// if the count is negative it removes from the mix. A stop can only insert or
+// remove an ingredient from the mix. The constraint limits the number of
+// ingredients that can be on the vehicle to be at most one ingredient. The sum
+// of the counts of all the stops of each plan unit must be zero.
 func NewNoMixConstraint(
 	deltas map[ModelStop]MixIngredient,
 ) (NoMixConstraint, error) {
