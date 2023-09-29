@@ -208,7 +208,7 @@ type Stop struct {
 // Location represents a geographical location.
 type Location struct {
 	// Lon longitude of the location.
-	Lon float64 `json:"lon" minimum:"-180" maximum:"180`
+	Lon float64 `json:"lon" minimum:"-180" maximum:"180"`
 	// Lat latitude of the location.
 	Lat float64 `json:"lat" minimum:"-90" maximum:"90"`
 }
