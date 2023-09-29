@@ -203,6 +203,17 @@ type Stop struct {
 	ID string `json:"id,omitempty"`
 	// Location where the stop is.
 	Location Location `json:"location,omitempty"`
+	// MixingItems defines the items that are inserted or removed from the vehicle when visiting the stop.
+	MixingItems any `json:"mixing_items,omitempty"`
+}
+
+// MixItem is an item that is used to specify the type of mix.
+type MixItem struct {
+	// Name is the name of the mix item.
+	Name string `json:"name"`
+	// Quantity is the number units of the mix items are inserted or removed from a
+	// vehicle.
+	Quantity int `json:"quantity"`
 }
 
 // Location represents a geographical location.
