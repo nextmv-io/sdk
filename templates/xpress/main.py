@@ -7,7 +7,11 @@ import json
 import sys
 from typing import Any, Dict
 
-import xpress as xp
+try:
+    import xpress as xp
+except ImportError as exc:
+    raise ImportError("is xpress available for your OS and ARCH and installed?") from exc
+
 
 # Status of the solver after optimizing.
 STATUS = {
