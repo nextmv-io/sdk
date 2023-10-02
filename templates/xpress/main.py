@@ -60,6 +60,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the problem.
     problem = xp.problem()
     problem.setControl("timelimit", duration)
+    xp.controls.outputlog = 0  # Turns off verbosity.
 
     # Initializes the linear sums.
     weights = 0.0
