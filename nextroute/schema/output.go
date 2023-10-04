@@ -78,6 +78,8 @@ type PlannedStopOutput struct {
 	EarlyArrivalDuration int `json:"early_arrival_duration,omitempty"`
 	// LateArrivalDuration is the late arrival duration of the stop in seconds.
 	LateArrivalDuration int `json:"late_arrival_duration,omitempty"`
+	// MixItems is the mix items of the stop.
+	MixItems any `json:"mix_items,omitempty"`
 	// CustomData is the custom data of the stop.
 	CustomData any `json:"custom_data,omitempty"`
 }
