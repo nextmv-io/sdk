@@ -7,7 +7,11 @@ import json
 import sys
 from typing import Any, Dict
 
-import xpress as xp
+try:
+    import xpress as xp
+except ImportError as exc:
+    raise ImportError("is xpress available for your OS and ARCH and installed?") from exc
+
 
 # Status of the solver after optimizing.
 STATUS = {
@@ -54,6 +58,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the problem.
+    xp.controls.outputlog = 0  # Turns off verbosity.
     problem = xp.problem()
     problem.setControl("timelimit", duration)
 
