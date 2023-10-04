@@ -39,6 +39,9 @@ type SolutionMoveStops interface {
 	// Vehicle returns the vehicle, if known, that is affected by the move. If
 	// not known, nil is returned.
 	Vehicle() SolutionVehicle
+
+	// Solution returns the solution that is affected by the move.
+	Solution() Solution
 }
 
 // StopPosition is the definition of the change in the solution for a
