@@ -151,7 +151,13 @@ var (
 	newVehiclesObjective   func(
 		VehicleTypeExpression,
 	) VehiclesObjective
-	newVehiclesDurationObjective  func() VehiclesDurationObjective
+	newVehiclesDurationObjective func() VehiclesDurationObjective
+	newBalanceStopsObjective     func(
+		BalanceObjectiveMode,
+	) BalanceStopsPerVehicleObjective
+	newBalanceDurationObjective func(
+		BalanceObjectiveMode,
+	) BalanceDurationPerVehicleObjective
 	newVehicleTypeValueExpression func(
 		string,
 		float64,

@@ -52,6 +52,8 @@ type Options struct {
 		VehiclesDuration         float64 `json:"vehicles_duration" usage:"factor to weigh the vehicles duration objective" default:"1.0"`
 		UnplannedPenalty         float64 `json:"unplanned_penalty" usage:"factor to weigh the unplanned objective" default:"1.0"`
 		Cluster                  float64 `json:"cluster" usage:"factor to weigh the cluster objective" default:"0.0"`
+		BalanceStopsPenalty      float64 `json:"balance_stops_penalty" usage:"factor to weigh the stops balancing objective" default:"0.0"`
+		BalanceDurationPenalty   float64 `json:"balance_duration_penalty" usage:"factor to weigh the duration balancing objective" default:"0.0"`
 	} `json:"objectives"`
 	Properties struct {
 		Disable struct {
@@ -61,6 +63,14 @@ type Options struct {
 			InitialSolution         bool `json:"initial_solution" usage:"ignore the initial solution"`
 		} `json:"disable"`
 	} `json:"properties"`
+	Settings struct {
+		BalanceStops struct {
+			Mode string `json:"mode" usage:"mode to use for balancing stops (one of: max, maxmin)" default:"max"`
+		} `json:"balance_stops"`
+		BalanceDuration struct {
+			Mode string `json:"mode" usage:"mode to use for balancing duration (one of: max, maxmin)" default:"max"`
+		} `json:"balance_duration"`
+	} `json:"settings"`
 	Validate struct {
 		Disable struct {
 			StartTime bool `json:"start_time" usage:"disable the start time validation" default:"false"`
