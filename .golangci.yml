@@ -20,7 +20,7 @@ linters-settings:
         - github.com/nextmv-io/sdk/route/routingkit
         - googlemaps.github.io/maps
         - github.com/dgraph-io/ristretto
-        - github.com/golang/mock
+        - go.uber.org/mock
         - github.com/google/go-cmp
         - github.com/hashicorp/golang-lru
         - github.com/nextmv-io/go-routingkit
@@ -344,3 +344,9 @@ issues:
       linters:
         - revive
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
+    # This tag is used by our validation engine and it is valid.
+    - path: nextroute/schema/input\.go
+      linters: 
+        - govet
+      text: structtag
+      
