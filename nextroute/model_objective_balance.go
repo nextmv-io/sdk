@@ -10,16 +10,16 @@ const (
 type BalanceObjectiveMode int
 
 const (
-	balanceObjectiveModeMax BalanceObjectiveMode = iota
-	balanceObjectiveModeMinMax
+	BalanceObjectiveModeMaxValue BalanceObjectiveMode = iota
+	BalanceObjectiveModeMinMaxValue
 )
 
 func BalanceObjectiveModeFrom(mode string) (BalanceObjectiveMode, error) {
 	switch mode {
 	case BalanceObjectiveModeMax:
-		return balanceObjectiveModeMax, nil
+		return BalanceObjectiveModeMaxValue, nil
 	case BalanceObjectiveModeMinMax:
-		return balanceObjectiveModeMinMax, nil
+		return BalanceObjectiveModeMinMaxValue, nil
 	default:
 		return 0, fmt.Errorf("invalid balance objective mode: %s", mode)
 	}
