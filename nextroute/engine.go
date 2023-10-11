@@ -157,6 +157,7 @@ var (
 	) BalanceStopsPerVehicleObjective
 	newBalanceDurationObjective func(
 		BalanceObjectiveMode,
+		float64,
 	) BalanceDurationPerVehicleObjective
 	newVehicleTypeValueExpression func(
 		string,

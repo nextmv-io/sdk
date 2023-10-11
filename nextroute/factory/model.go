@@ -68,7 +68,8 @@ type Options struct {
 			Mode string `json:"mode" usage:"mode to use for balancing stops (one of: max, maxmin)" default:"max"`
 		} `json:"balance_stops"`
 		BalanceDuration struct {
-			Mode string `json:"mode" usage:"mode to use for balancing duration (one of: max, maxmin)" default:"max"`
+			Mode    string  `json:"mode" usage:"mode to use for balancing duration (one of: max, maxmin)" default:"max"`
+			RoundTo float64 `json:"round_to" usage:"rounds duration to nearest multiple to avoid nervosity" default:"1800.0"`
 		} `json:"balance_duration"`
 	} `json:"settings"`
 	Validate struct {
