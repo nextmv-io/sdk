@@ -35,9 +35,9 @@ type DirectedAcyclicGraph interface {
 
 	// ModelStops returns all [ModelStops] in the graph.
 	ModelStops() ModelStops
-	// NewArc creates a new [Arc] in the graph. The new [Arc] should not be
-	// repeated or cause a cycle.
-	NewArc(origin, destination ModelStop) (Arc, error)
+	// AddArc adds a new [Arc] in the graph if it was not already added. The new
+	// [Arc] should not cause a cycle.
+	AddArc(origin, destination ModelStop) error
 	// OutboundArcs returns all [Arcs] that have the given [ModelStop] as their
 	// origin.
 	OutboundArcs(stop ModelStop) Arcs

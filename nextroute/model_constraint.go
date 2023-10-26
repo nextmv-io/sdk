@@ -26,7 +26,7 @@ type Locker interface {
 // ConstraintStopDataUpdater is the interface than can be used by a constraint if
 // it wants to store data with each stop in a solution.
 type ConstraintStopDataUpdater interface {
-	// UpdateConstraintData is called when a stop is added to a solution.
+	// UpdateConstraintStopData is called when a stop is added to a solution.
 	// The solutionStop has all it's expression values set and this function
 	// can use them to update the constraint data for the stop. The data
 	// returned can be used by the estimate function and can be retrieved by the
@@ -112,7 +112,7 @@ type ModelConstraint interface {
 	// It should be a pure function, i.e. not change any state of the
 	// constraint. The stopPositionsHint can be used to speed up the estimation
 	// of the constraint violation.
-	EstimateIsViolated(SolutionMoveStops, Solution) (isViolated bool, stopPositionsHint StopPositionsHint)
+	EstimateIsViolated(SolutionMoveStops) (isViolated bool, stopPositionsHint StopPositionsHint)
 }
 
 // ModelConstraints is a slice of ModelConstraint.
