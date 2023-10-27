@@ -32,7 +32,7 @@ type input struct {
 	WeightCapacity float64 `json:"weight_capacity"`
 }
 
-// An item has a Value and Weight. ItemID is used to identify the item.
+// An item has a Value and Weight. ID is used to identify the item.
 type item struct {
 	ID     string  `json:"id,omitempty"`
 	Value  float64 `json:"value"`
