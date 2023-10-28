@@ -36,9 +36,20 @@ type SolutionMoveStops interface {
 	// how it will change the solution.
 	StopPositions() StopPositions
 
+	// StopPositionAt returns the stop position at the given index. The index
+	// is the index is based on the positions in the move. Get the length of
+	// the stop positions from [StopPositionsLength].
+	StopPositionAt(index int) StopPosition
+
+	// StopPositionsLength returns the length of the stop positions.
+	StopPositionsLength() int
+
 	// Vehicle returns the vehicle, if known, that is affected by the move. If
 	// not known, nil is returned.
 	Vehicle() SolutionVehicle
+
+	// Solution returns the solution that is affected by the move.
+	Solution() Solution
 }
 
 // StopPosition is the definition of the change in the solution for a

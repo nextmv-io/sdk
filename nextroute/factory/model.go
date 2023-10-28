@@ -33,6 +33,7 @@ type Options struct {
 			MaximumStops       bool `json:"maximum_stops" usage:"ignore the maximum stops constraint"`
 			MaximumWaitStop    bool `json:"maximum_wait_stop" usage:"ignore the maximum stop wait constraint"`
 			MaximumWaitVehicle bool `json:"maximum_wait_vehicle" usage:"ignore the maximum vehicle wait constraint"`
+			MixingItems        bool `json:"mixing_items" usage:"ignore the do not mix items constraint"`
 			Precedence         bool `json:"precedence" usage:"ignore the precedence (pickups & deliveries) constraint"`
 			VehicleStartTime   bool `json:"vehicle_start_time" usage:"ignore the vehicle start time constraint"`
 			VehicleEndTime     bool `json:"vehicle_end_time" usage:"ignore the vehicle end time constraint"`

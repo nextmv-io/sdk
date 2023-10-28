@@ -10,7 +10,7 @@ jobs:
       - name: set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.1
+          node-version: 18.8
 
       - name: install prettier
         run: npm install prettier@v2.7.1 --global
