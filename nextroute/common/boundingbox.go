@@ -1,6 +1,6 @@
 package common
 
-// BoundingBox contains information about a box
+// BoundingBox contains information about a box.
 type BoundingBox interface {
 	// Maximum returns the maximum location of the bounding box. The right
 	// lower corner of the bounding box.
@@ -70,6 +70,7 @@ func Union(a, b BoundingBox) BoundingBox {
 	}
 }
 
+// NewInvalidBoundingBox returns an invalid bounding box.
 func NewInvalidBoundingBox() BoundingBox {
 	return boundingBox{
 		maximum: NewInvalidLocation(),
@@ -77,6 +78,7 @@ func NewInvalidBoundingBox() BoundingBox {
 	}
 }
 
+// NewBoundingBox returns a bounding box for the given locations.
 func NewBoundingBox(locations Locations) BoundingBox {
 	if len(locations) == 0 || !locations[0].IsValid() {
 		return NewInvalidBoundingBox()

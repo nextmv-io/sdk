@@ -202,7 +202,10 @@ issues:
     - path: nextroute/factory/model\.go
       linters:
         - lll
-
+    # Deactivate line length in construction.go because of go tags
+    - path: nextroute/factory/construction\.go
+      linters:
+        - lll
     # Tag should be 'measure' in both cases ByPoint and ByIndex
     - path: route/load\.go
       linters:

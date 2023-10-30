@@ -2,11 +2,11 @@ package factory
 
 import (
 	"context"
-	"github.com/nextmv-io/sdk/nextroute/common"
 
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
+	"github.com/nextmv-io/sdk/nextroute/common"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	runSchema "github.com/nextmv-io/sdk/run/schema"
 )
@@ -43,8 +43,6 @@ var (
 	newSortStopClustersRandom func() StopClusterSorter
 
 	newSortStopClustersOnDistanceFromCentroid func() StopClusterSorter
-
-	newSortStopClustersOnRadar func() StopClusterSorter
 
 	newStopClusterFilterArea func(
 		common.Distance,

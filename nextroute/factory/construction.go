@@ -15,6 +15,8 @@ type ClusterSolutionOptions struct {
 	Speed float64 `json:"speed" usage:"speed of the vehicle in meters per second" default:"10" minimum:"0"`
 }
 
+// FilterAreaOptions configure how the [NewGreedySolution] function builds [sdkNextRoute.Solution]. It limits the area
+// one vehicle can cover during construction. This limit is only applied during the construction of the solution.
 type FilterAreaOptions struct {
 	MaximumWidth  float64 `json:"maximum_width" usage:"maximum width of the area in meters" default:"100000" minimum:"0"`
 	MaximumHeight float64 `json:"maximum_height" usage:"maximum height of the area in meters" default:"100000" minimum:"0"`
