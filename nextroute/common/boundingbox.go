@@ -17,59 +17,6 @@ type BoundingBox interface {
 	Height() Distance
 }
 
-// Intersection returns the intersection of the two bounding boxes.
-func Intersection(a, b BoundingBox) BoundingBox {
-	if !a.IsValid() || !b.IsValid() {
-		return NewInvalidBoundingBox()
-	}
-	maximum := a.Maximum()
-	minimum := a.Minimum()
-	if b.Maximum().Longitude() < maximum.Longitude() {
-		maximum = b.Maximum()
-	}
-	if b.Maximum().Latitude() < maximum.Latitude() {
-		maximum = b.Maximum()
-	}
-	if b.Minimum().Longitude() > minimum.Longitude() {
-		minimum = b.Minimum()
-	}
-	if b.Minimum().Latitude() > minimum.Latitude() {
-		minimum = b.Minimum()
-	}
-	return boundingBox{
-		maximum: maximum,
-		minimum: minimum,
-	}
-}
-
-// Union returns the union of the two bounding boxes.
-func Union(a, b BoundingBox) BoundingBox {
-	if !a.IsValid() {
-		return b
-	}
-	if !b.IsValid() {
-		return a
-	}
-	maximum := a.Maximum()
-	minimum := a.Minimum()
-	if b.Maximum().Longitude() > maximum.Longitude() {
-		maximum = b.Maximum()
-	}
-	if b.Maximum().Latitude() > maximum.Latitude() {
-		maximum = b.Maximum()
-	}
-	if b.Minimum().Longitude() < minimum.Longitude() {
-		minimum = b.Minimum()
-	}
-	if b.Minimum().Latitude() < minimum.Latitude() {
-		minimum = b.Minimum()
-	}
-	return boundingBox{
-		maximum: maximum,
-		minimum: minimum,
-	}
-}
-
 // NewInvalidBoundingBox returns an invalid bounding box.
 func NewInvalidBoundingBox() BoundingBox {
 	return boundingBox{
