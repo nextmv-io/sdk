@@ -1,8 +1,9 @@
 package common_test
 
 import (
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"testing"
+
+	"github.com/nextmv-io/sdk/nextroute/common"
 )
 
 func TestBoundingBox(t *testing.T) {
@@ -79,6 +80,7 @@ func TestBoundingBox(t *testing.T) {
 	if !common.WithinTolerance(box.Height().Value(common.Meters), 111194.92664455874, 0.000001) {
 		t.Errorf("Expected height 111194.92664455874, got %v", box.Height().Value(common.Meters))
 	}
+
 	location3, _ := common.NewLocation(-2, 2)
 	location4, _ := common.NewLocation(2, -2)
 
