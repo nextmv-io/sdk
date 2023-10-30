@@ -226,6 +226,10 @@ issues:
       linters:
         - gosec
       text: G404
+    # Complexity is fine here because of the nature of the code
+    - path: nextroute/common/boundingbox_test\.go
+      linters:
+        - gocyclo
     - path: nextroute/common/utils\.go
       linters:
         - gomodguard
