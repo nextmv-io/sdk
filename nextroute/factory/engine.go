@@ -2,6 +2,7 @@ package factory
 
 import (
 	"context"
+	"github.com/nextmv-io/sdk/nextroute/common"
 
 	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
@@ -24,4 +25,54 @@ var (
 		alns.Progressioner,
 		...nextroute.Solution,
 	) runSchema.Output
+
+	newGreedySolution func(
+		context.Context,
+		schema.Input,
+		Options,
+		GreedySolutionOptions,
+		ModelFactory,
+	) (nextroute.Solution, error)
+
+	newStopCluster func(
+		[]schema.Stop,
+	) StopCluster
+
+	newPlanUnitStopClusterGenerator func() StopClusterGenerator
+
+	newSortStopClustersRandom func() StopClusterSorter
+
+	newSortStopClustersOnDistanceFromCentroid func() StopClusterSorter
+
+	newSortStopClustersOnRadar func() StopClusterSorter
+
+	newStopClusterFilterArea func(
+		common.Distance,
+		common.Distance,
+		common.Distance,
+	) StopClusterFilter
+
+	newAndStopClusterFilter func(
+		StopClusterFilter,
+		...StopClusterFilter,
+	) StopClusterFilter
+
+	newOrStopClusterFilter func(
+		StopClusterFilter,
+		...StopClusterFilter,
+	) StopClusterFilter
+
+	newClusterSolution func(
+		context.Context,
+		schema.Input,
+		Options,
+		StopClusterGenerator,
+		StopClusterSorter,
+		StopClusterSorter,
+		StopClusterFilter,
+		ClusterSolutionOptions,
+		ModelFactory,
+	) (nextroute.Solution, error)
+
+	newDefaultModelFactory func() ModelFactory
 )
