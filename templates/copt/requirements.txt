@@ -1,0 +1,2 @@
+coptpy==7.0.2
+coptpy-stubs==1.1.5

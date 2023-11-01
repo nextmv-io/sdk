@@ -8,6 +8,22 @@ import (
 )
 
 var (
+	// CoptManifest is the app manifest file in the copt template.
+	//go:embed copt/app.yaml
+	CoptManifest string
+	// CoptMain is the main.py file in the copt template.
+	//go:embed copt/main.py
+	CoptMain string
+	// CoptInput is the input.json file in the copt template.
+	//go:embed copt/input.json
+	CoptInput string
+	// CoptReadme is the README.md file in the copt template.
+	//go:embed copt/README.md
+	CoptReadme string
+	// CoptRequirements is the requirements.txt file in the copt template.
+	//go:embed copt/requirements.txt
+	CoptRequirements string
+
 	// MipMain is the main.go file in the mip template.
 	//go:embed mip/main.go
 	MipMain string

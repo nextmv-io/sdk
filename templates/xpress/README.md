@@ -22,7 +22,7 @@ The most important files created are `main.py` and `input.json`.
 Run the command below to check that everything works as expected:
 
 ```bash
-python3 main.py -input input.json -output output.json -duration 30
+python3 main.py -input input.json -output output.json -duration 10
 ```
 
 A file `output.json` should have been created with the optimal knapsack
