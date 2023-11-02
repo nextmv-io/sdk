@@ -4,11 +4,26 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
+	"time"
 
-	"github.com/itzg/go-flagsfiller"
+	"github.com/nextmv-io/go-flagsfiller"
 	"github.com/nextmv-io/sdk"
+	"github.com/nextmv-io/sdk/types"
 )
+
+func init() {
+	flagsfiller.RegisterSimpleType[types.Duration](customDuration)
+}
+
+func customDuration(s string, _ reflect.StructTag) (types.Duration, error) {
+	d, err := time.ParseDuration(s)
+	if err != nil {
+		return types.Duration(d), err
+	}
+	return types.Duration(d), nil
+}
 
 // FlagParser parses flags and env vars and returns a runner config and options.
 func FlagParser[Option, RunnerCfg any]() (
@@ -24,6 +39,7 @@ func FlagParser[Option, RunnerCfg any]() (
 			},
 		),
 	)
+
 	err = filler.Fill(flag.CommandLine, &option)
 	if err != nil {
 		return runnerConfig, option, err
