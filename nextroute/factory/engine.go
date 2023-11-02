@@ -26,6 +26,15 @@ var (
 		...nextroute.Solution,
 	) runSchema.Output
 
+	newStartSolution func(
+		context.Context,
+		schema.Input,
+		Options,
+		ModelFactory,
+		nextroute.ParallelSolveOptions,
+		ClusterSolutionOptions,
+	) (nextroute.Solution, error)
+
 	newGreedySolution func(
 		context.Context,
 		schema.Input,

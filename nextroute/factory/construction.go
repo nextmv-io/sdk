@@ -18,15 +18,38 @@ type ClusterSolutionOptions struct {
 // FilterAreaOptions configure how the [NewGreedySolution] function builds [sdkNextRoute.Solution]. It limits the area
 // one vehicle can cover during construction. This limit is only applied during the construction of the solution.
 type FilterAreaOptions struct {
-	MaximumWidth  float64 `json:"maximum_width" usage:"maximum width of the area in meters" default:"100000" minimum:"0"`
-	MaximumHeight float64 `json:"maximum_height" usage:"maximum height of the area in meters" default:"100000" minimum:"0"`
-	MaximumRadius float64 `json:"maximum_radius" usage:"maximum radius of the area in meters" default:"100000" minimum:"0"`
+	MaximumSide float64 `json:"maximum_side" usage:"maximum side of the square area in meters" default:"100000" minimum:"0"`
 }
 
 // GreedySolutionOptions configure how the [NewGreedySolution] function builds [sdkNextRoute.Solution].
 type GreedySolutionOptions struct {
 	ClusterSolutionOptions ClusterSolutionOptions `json:"cluster_solution_options" usage:"options for the cluster solution"`
 	FilterAreaOptions      FilterAreaOptions      `json:"filter_area_options" usage:"options for the filter area"`
+}
+
+// NewStartSolution returns a start solution. It uses input, factoryOptions and
+// modelFactory to create a model to create a start solution. The start solution
+// is created using the given solveOptions and clusterSolutionOptions. The
+// solveOptions is used to limit the duration and the number of parallel runs at
+// the same time. The clusterSolutionOptions is used to create the clusters to
+// create the start solution, see [NewClusterSolution].
+func NewStartSolution(
+	ctx context.Context,
+	input schema.Input,
+	factoryOptions Options,
+	modelFactory ModelFactory,
+	solveOptions sdkNextRoute.ParallelSolveOptions,
+	clusterSolutionOptions ClusterSolutionOptions,
+) (sdkNextRoute.Solution, error) {
+	connect.Connect(con, &newStartSolution)
+	return newStartSolution(
+		ctx,
+		input,
+		factoryOptions,
+		modelFactory,
+		solveOptions,
+		clusterSolutionOptions,
+	)
 }
 
 // NewGreedySolution returns a greedy solution for the given input.
