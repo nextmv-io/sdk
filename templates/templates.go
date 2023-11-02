@@ -24,6 +24,22 @@ var (
 	//go:embed copt/requirements.txt
 	CoptRequirements string
 
+	// GamsManifest is the app manifest file in the gams template.
+	//go:embed gams/app.yaml
+	GamsManifest string
+	// GamsMain is the main.py file in the gams template.
+	//go:embed gams/main.py
+	GamsMain string
+	// GamsInput is the input.json file in the gams template.
+	//go:embed gams/input.json
+	GamsInput string
+	// GamsReadme is the README.md file in the gams template.
+	//go:embed gams/README.md
+	GamsReadme string
+	// GamsRequirements is the requirements.txt file in the gams template.
+	//go:embed gams/requirements.txt
+	GamsRequirements string
+
 	// MipMain is the main.go file in the mip template.
 	//go:embed mip/main.go
 	MipMain string
