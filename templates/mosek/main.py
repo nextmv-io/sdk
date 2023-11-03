@@ -1,5 +1,5 @@
 """
-Template for working with GAMS.
+Template for working with Mosek.
 """
 
 import argparse
@@ -7,22 +7,22 @@ import json
 import sys
 from typing import Any, Dict
 
-import gamspy as gp
+import mosek as mk
 
 
 # Status of the solver after optimizing.
 STATUS = {
-    gp.ModelStatus.Feasible: "suboptimal",
-    gp.ModelStatus.InfeasibleGlobal: "infeasible",
-    gp.ModelStatus.OptimalGlobal: "optimal",
-    gp.ModelStatus.Unbounded: "unbounded",
+    mk.solsta.prim_feas: "suboptimal",
+    mk.prosta.prim_infeas: "infeasible",
+    mk.solsta.integer_optimal: "optimal",
+    mk.prosta.prim_infeas_or_unbounded: "unbounded",
 }
 
 
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve problems with GAMS.")
+    parser = argparse.ArgumentParser(description="Solve problems with Mosek.")
     parser.add_argument(
         "-input",
         default="",
@@ -54,65 +54,59 @@ def main() -> None:
 def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-    # Creates the container.
-    container = gp.Container()
-    provider = "CPLEX"
-
-    # Initializes the linear sums.
-    weights = 0.0
-    values = 0.0
-
-    # Creates the decision variables and adds them to the linear sums.
-    items = []
-    for item in input_data["items"]:
-        item_variable = gp.Variable(container, name=item["id"], type="binary")
-        items.append({"item": item, "variable": item_variable})
-        weights += item_variable * item["weight"]
-        values += item_variable * item["value"]
+    # Creates the environment and task.
+    env = mk.Env()
+    num_vars = len(input_data["items"])
+    num_constraints = 1
+    task = env.Task(
+        numcon=num_constraints,
+        numvar=num_vars,
+    )
+    task.putdouparam(mk.dparam.optimizer_max_time, duration)
 
     # This constraint ensures the weight capacity of the knapsack will not be
     # exceeded.
-    gp.Equation(
-        container,
-        name="weight_capacity",
-        definition=weights <= input_data["weight_capacity"],
-    )
+    task.appendcons(num_constraints)
+    task.putconbound(0, mk.boundkey.up, 0.0, input_data["weight_capacity"])
 
-    # Creates the model and solves the problem.
-    model = gp.Model(
-        container,
-        name="knapsack",
-        equations=container.getEquations(),
-        problem="MIP",
-        # Sets the objective function: maximize the value of the chosen items.
-        sense=gp.Sense.MAX,
-        objective=values,
-    )
-    model.solve(
-        solver=provider,
-        solver_options={"timelimit": duration},
-    )
+    # Creates the decision variables and sets the coefficients on the objective
+    # function and the constraint matrix.
+    task.appendvars(num_vars)
+    for i, item in enumerate(input_data["items"]):
+        task.putvarbound(i, mk.boundkey.ra, 0.0, 1.0)
+        task.putvartype(i, mk.variabletype.type_int)
+        task.putcj(i, item["value"])
+        task.putaij(0, i, item["weight"])
+
+    # Sets the objective function: maximize the value of the chosen items.
+    task.putobjsense(mk.objsense.maximize)
+
+    # Solves the problem.
+    task.optimize()
 
     # Determines which items were chosen.
     chosen_items = []
-    for item in items:
-        if item["variable"].records.level[0] > 0.9:
-            chosen_items.append(item["item"])
+    for i, item in enumerate(input_data["items"]):
+        if task.getxx(mk.soltype.itg)[i] > 0.9:
+            chosen_items.append(item)
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": len(container.getEquations()),
-                "provider": provider,
-                "status": STATUS.get(model.status, "unknown"),
-                "variables": model.num_variables,
+                "constraints": num_constraints,
+                "provider": "mosek",
+                "status": STATUS.get(
+                    task.getsolsta(mk.soltype.itg),
+                    STATUS.get(task.getprosta(mk.soltype.itg), "unknown"),
+                ),
+                "variables": num_vars,
             },
-            "duration": model.total_solve_time,
-            "value": model.objective_value,
+            "duration": task.getdouinf(mk.dinfitem.optimizer_time),
+            "value": task.getprimalobj(mk.soltype.itg),
         },
         "run": {
-            "duration": model.total_solve_time,
+            "duration": task.getdouinf(mk.dinfitem.optimizer_time),
         },
         "schema": "v1",
     }

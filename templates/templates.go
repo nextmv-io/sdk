@@ -53,6 +53,22 @@ var (
 	//go:embed mip/app.yaml
 	MipManifest string
 
+	// MosekManifest is the app manifest file in the mosek template.
+	//go:embed mosek/app.yaml
+	MosekManifest string
+	// MosekMain is the main.py file in the mosek template.
+	//go:embed mosek/main.py
+	MosekMain string
+	// MosekInput is the input.json file in the mosek template.
+	//go:embed mosek/input.json
+	MosekInput string
+	// MosekReadme is the README.md file in the mosek template.
+	//go:embed mosek/README.md
+	MosekReadme string
+	// MosekRequirements is the requirements.txt file in the mosek template.
+	//go:embed mosek/requirements.txt
+	MosekRequirements string
+
 	// NextrouteMain is the main.go file in the nextroute template.
 	//go:embed nextroute/main.go
 	NextrouteMain string
