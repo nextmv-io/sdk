@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/mip"
+	"github.com/nextmv-io/sdk/types"
 )
 
 // output holds the output data of the solution.
@@ -21,15 +22,15 @@ type options struct {
 
 type limits struct {
 	Shift struct {
-		MinDuration  time.Duration `json:"min_duration" default:"2h" usage:"minimum working time per shift"`
-		MaxDuration  time.Duration `json:"max_duration" default:"8h" usage:"maximum working time per shift"`
-		RecoveryTime time.Duration `json:"recovery_time" default:"8h" usage:"minimum time between shifts"`
+		MinDuration  types.Duration `json:"min_duration" default:"2h" usage:"minimum working time per shift"`
+		MaxDuration  types.Duration `json:"max_duration" default:"8h" usage:"maximum working time per shift"`
+		RecoveryTime types.Duration `json:"recovery_time" default:"8h" usage:"minimum time between shifts"`
 	} `json:"shift"`
 	Week struct {
-		MaxDuration time.Duration `json:"max_duration" default:"40h" usage:"maximum working time per week"`
+		MaxDuration types.Duration `json:"max_duration" default:"40h" usage:"maximum working time per week"`
 	} `json:"week"`
 	Day struct {
-		MaxDuration time.Duration `json:"max_duration" default:"10h" usage:"maximum working time per day"`
+		MaxDuration types.Duration `json:"max_duration" default:"10h" usage:"maximum working time per day"`
 	} `json:"day"`
 }
 

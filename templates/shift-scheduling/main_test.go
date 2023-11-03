@@ -10,6 +10,7 @@ import (
 
 	"github.com/nextmv-io/sdk/mip"
 	"github.com/nextmv-io/sdk/run/schema"
+	"github.com/nextmv-io/sdk/types"
 )
 
 func TestTemplate(t *testing.T) {
@@ -34,23 +35,23 @@ func TestTemplate(t *testing.T) {
 		},
 		Limits: limits{
 			Shift: struct {
-				MinDuration  time.Duration "json:\"min_duration\" default:\"2h\" usage:\"minimum working time per shift\""
-				MaxDuration  time.Duration "json:\"max_duration\" default:\"8h\" usage:\"maximum working time per shift\""
-				RecoveryTime time.Duration "json:\"recovery_time\" default:\"8h\" usage:\"minimum time between shifts\""
+				MinDuration  types.Duration "json:\"min_duration\" default:\"2h\" usage:\"minimum working time per shift\""
+				MaxDuration  types.Duration "json:\"max_duration\" default:\"8h\" usage:\"maximum working time per shift\""
+				RecoveryTime types.Duration "json:\"recovery_time\" default:\"8h\" usage:\"minimum time between shifts\""
 			}{
-				MinDuration:  2 * time.Hour,
-				MaxDuration:  8 * time.Hour,
-				RecoveryTime: 8 * time.Hour,
+				MinDuration:  types.Duration(2 * time.Hour),
+				MaxDuration:  types.Duration(8 * time.Hour),
+				RecoveryTime: types.Duration(8 * time.Hour),
 			},
 			Week: struct {
-				MaxDuration time.Duration "json:\"max_duration\" default:\"40h\" usage:\"maximum working time per week\""
+				MaxDuration types.Duration "json:\"max_duration\" default:\"40h\" usage:\"maximum working time per week\""
 			}{
-				MaxDuration: 40 * time.Hour,
+				MaxDuration: types.Duration(40 * time.Hour),
 			},
 			Day: struct {
-				MaxDuration time.Duration "json:\"max_duration\" default:\"10h\" usage:\"maximum working time per day\""
+				MaxDuration types.Duration "json:\"max_duration\" default:\"10h\" usage:\"maximum working time per day\""
 			}{
-				MaxDuration: 10 * time.Hour,
+				MaxDuration: types.Duration(10 * time.Hour),
 			},
 		},
 	}

@@ -125,18 +125,18 @@ func newMIPModel(
 	for _, worker := range input.Workers {
 		for i, a1 := range potentialAssignmentsPerWorker[worker.ID] {
 			// A worker can only work y hours per day
-			lessThanXhoursPerDay := m.NewConstraint(mip.LessThanOrEqual, opts.Limits.Day.MaxDuration.Hours())
+			lessThanXhoursPerDay := m.NewConstraint(mip.LessThanOrEqual, time.Duration(opts.Limits.Day.MaxDuration).Hours())
 			lessThanXhoursPerDay.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			atLeastYhoursApart := m.NewConstraint(mip.LessThanOrEqual, 1.0)
 			atLeastYhoursApart.NewTerm(1.0, x.Get(a1))
-			lessThanZhoursPerWeek := m.NewConstraint(mip.LessThanOrEqual, opts.Limits.Week.MaxDuration.Hours())
+			lessThanZhoursPerWeek := m.NewConstraint(mip.LessThanOrEqual, time.Duration(opts.Limits.Week.MaxDuration).Hours())
 			lessThanZhoursPerWeek.NewTerm(a1.Duration.Hours(), x.Get(a1))
 			for _, a2 := range potentialAssignmentsPerWorker[worker.ID][i+1:] {
 				durationApart := a1.DurationApart(a2)
 				if durationApart > 0 {
 					// if a1 and a2 do not at least have x hours between them, we
 					// forbid them to be assigned at the same time
-					if durationApart < opts.Limits.Shift.RecoveryTime {
+					if durationApart < time.Duration(opts.Limits.Shift.RecoveryTime) {
 						atLeastYhoursApart.NewTerm(1.0, x.Get(a2))
 					}
 
@@ -165,12 +165,12 @@ func potentialAssignments(input input, opts options) ([]assignment, map[string][
 				for end := availability.End; start.Before(end); end = end.Add(-30 * time.Minute) {
 					// make sure that end-start is not more than x hours
 					duration := end.Sub(start)
-					if duration > opts.Limits.Shift.MaxDuration {
+					if duration > time.Duration(opts.Limits.Shift.MaxDuration) {
 						continue
 					}
 					// make sure that end-start is not less than y hours - we are
 					// only shrinking the end time, so we can break here
-					if duration < opts.Limits.Shift.MinDuration {
+					if duration < time.Duration(opts.Limits.Shift.MinDuration) {
 						break
 					}
 					assignment := assignment{
