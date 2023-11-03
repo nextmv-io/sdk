@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/run/schema"
+	"github.com/nextmv-io/sdk/types"
 )
 
 func TestTemplate(t *testing.T) {
@@ -24,7 +25,7 @@ func TestTemplate(t *testing.T) {
 
 	// Declare the output.
 	options := options{}
-	options.Solve.Duration = 5 * time.Second
+	options.Solve.Duration = types.Duration(5 * time.Second)
 	output, err := solver(context.Background(), input, options)
 	if err != nil {
 		t.Fatal(err)

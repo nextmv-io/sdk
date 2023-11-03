@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
+
+	"github.com/nextmv-io/sdk/types"
 )
 
 // SolveOptions are options that can be cionfigured for any solver.
 type SolveOptions struct {
 	// Duration is the maximum duration of the solver. A duration limit of 0 is
 	// treated as infinity.
-	Duration time.Duration `json:"duration" usage:"Maximum duration of the solver." default:"30s"`
+	Duration types.Duration `json:"duration" usage:"Maximum duration of the solver." default:"30s"`
 	// Verbosity of the solver in the console.
 	Verbosity Verbosity `json:"verbosity" usage:"{off, low, medium, high} Verbosity of the solver in the console." default:"off"`
 	// MIP-specific options.

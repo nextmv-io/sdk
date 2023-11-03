@@ -31,7 +31,7 @@ func TestTemplate(t *testing.T) {
 			UnderSupply: 500,
 		},
 		Solve: mip.SolveOptions{
-			Duration: 30 * time.Second,
+			Duration: types.Duration(30 * time.Second),
 		},
 		Limits: limits{
 			Shift: struct {

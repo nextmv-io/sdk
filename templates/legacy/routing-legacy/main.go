@@ -11,6 +11,7 @@ import (
 	"github.com/nextmv-io/sdk/nextroute/factory"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
+	"github.com/nextmv-io/sdk/types"
 )
 
 func main() {
@@ -48,7 +49,7 @@ func solver(
 			if err != nil {
 				return FleetOutput{}, err
 			}
-			options.Solve.Duration = duration
+			options.Solve.Duration = types.Duration(duration)
 		}
 	}
 
@@ -85,7 +86,7 @@ func solver(
 		return FleetOutput{},
 			fmt.Errorf("%s is an invalid value for parameter runner.output.solutions. it must be 'all' or 'last'", runSolutions)
 	}
-	output, err := format(ctx, options.Solve.Duration, solver, ToFleetSolutionOutput, solutionArray...)
+	output, err := format(ctx, time.Duration(options.Solve.Duration), solver, ToFleetSolutionOutput, solutionArray...)
 	if err != nil {
 		return output, err
 	}
