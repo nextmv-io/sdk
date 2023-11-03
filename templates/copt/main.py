@@ -56,7 +56,9 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the model.
-    env = cp.Envr()
+    envconfig = cp.EnvrConfig()
+    envconfig.set("nobanner", "1")  # Turns off banner.
+    env = cp.Envr(envconfig)
     model = env.createModel()
     model.setParam(COPT.Param.Logging, 0)  # Turns off verbosity.
     model.setParam(COPT.Param.TimeLimit, duration)
