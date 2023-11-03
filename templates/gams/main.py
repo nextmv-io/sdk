@@ -1,5 +1,5 @@
 """
-Template for working with COPT.
+Template for working with GAMS.
 """
 
 import argparse
@@ -7,16 +7,15 @@ import json
 import sys
 from typing import Any, Dict
 
-import coptpy as cp
-from coptpy import COPT
+import gamspy as gp
 
 
 # Status of the solver after optimizing.
 STATUS = {
-    COPT.UNFINISHED: "suboptimal",
-    COPT.INFEASIBLE: "infeasible",
-    COPT.OPTIMAL: "optimal",
-    COPT.UNBOUNDED: "unbounded",
+    gp.ModelStatus.Feasible: "suboptimal",
+    gp.ModelStatus.InfeasibleGlobal: "infeasible",
+    gp.ModelStatus.OptimalGlobal: "optimal",
+    gp.ModelStatus.Unbounded: "unbounded",
 }
 
 
@@ -55,13 +54,9 @@ def main() -> None:
 def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-    # Creates the model.
-    envconfig = cp.EnvrConfig()
-    envconfig.set("nobanner", "1")  # Turns off banner.
-    env = cp.Envr(envconfig)
-    model = env.createModel()
-    model.setParam(COPT.Param.Logging, 0)  # Turns off verbosity.
-    model.setParam(COPT.Param.TimeLimit, duration)
+    # Creates the container.
+    container = gp.Container()
+    provider = "CPLEX"
 
     # Initializes the linear sums.
     weights = 0.0
@@ -70,41 +65,54 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     # Creates the decision variables and adds them to the linear sums.
     items = []
     for item in input_data["items"]:
-        item_variable = model.addVar(lb=0, ub=1, vtype=COPT.BINARY, name=item["id"])
+        item_variable = gp.Variable(container, name=item["id"], type="binary")
         items.append({"item": item, "variable": item_variable})
         weights += item_variable * item["weight"]
         values += item_variable * item["value"]
 
     # This constraint ensures the weight capacity of the knapsack will not be
     # exceeded.
-    model.addConstr(weights <= input_data["weight_capacity"])
+    gp.Equation(
+        container,
+        name="weight_capacity",
+        definition=weights <= input_data["weight_capacity"],
+    )
 
-    # Sets the objective function: maximize the value of the chosen items.
-    model.setObjective(values, sense=COPT.MAXIMIZE)
-
-    # Solves the problem.
-    model.solve()
+    # Creates the model and solves the problem.
+    model = gp.Model(
+        container,
+        name="knapsack",
+        equations=container.getEquations(),
+        problem="MIP",
+        # Sets the objective function: maximize the value of the chosen items.
+        sense=gp.Sense.MAX,
+        objective=values,
+    )
+    model.solve(
+        solver=provider,
+        solver_options={"timelimit": duration},
+    )
 
     # Determines which items were chosen.
     chosen_items = []
     for item in items:
-        if model.getVarByName(item["item"]["id"]).x > 0.9:
+        if item["variable"].records.level[0] > 0.9:
             chosen_items.append(item["item"])
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": model.rows,
-                "provider": "COPT",
+                "constraints": len(container.getEquations()),
+                "provider": provider,
                 "status": STATUS.get(model.status, "unknown"),
-                "variables": model.cols,
+                "variables": model.num_variables,
             },
-            "duration": model.solvingtime,
-            "value": model.objval,
+            "duration": model.total_solve_time,
+            "value": model.objective_value,
         },
         "run": {
-            "duration": model.solvingtime,
+            "duration": model.total_solve_time,
         },
         "schema": "v1",
     }
