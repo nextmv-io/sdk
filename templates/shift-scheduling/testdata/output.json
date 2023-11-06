@@ -1,30 +1,68 @@
 {
-  "version": { "sdk": "v0.29.0-dev.0.0.20230905095116-2d7e41f77870" },
-  "options": {},
+  "options": {
+    "limits": {
+      "day": {
+        "max_duration": 36000000000000
+      },
+      "shift": {
+        "max_duration": 28800000000000,
+        "min_duration": 7200000000000,
+        "recovery_time": 28800000000000
+      },
+      "week": {
+        "max_duration": 144000000000000
+      }
+    },
+    "penalty": {
+      "over_supply": 1000,
+      "under_supply": 500
+    },
+    "solve": {
+      "control": {
+        "bool": [],
+        "float": [],
+        "int": [],
+        "string": []
+      },
+      "duration": 10000000000,
+      "mip": {
+        "gap": {
+          "absolute": 0.000001,
+          "relative": 0.0001
+        }
+      },
+      "verbosity": "off"
+    }
+  },
   "solutions": [
     {
       "assigned_shifts": [
         {
-          "start": "2023-08-29T03:00:00+02:00",
           "end": "2023-08-29T11:00:00+02:00",
-          "worker_id": 3
+          "start": "2023-08-29T03:00:00+02:00",
+          "worker_id": "3"
         }
       ],
       "number_assigned_workers": 1
     }
   ],
   "statistics": {
-    "schema": "v1",
-    "run": { "duration": 0.09652325 },
     "result": {
-      "duration": 0.09652325,
-      "value": 5500,
       "custom": {
         "constraints": 2713,
         "provider": "highs",
         "status": "optimal",
         "variables": 913
-      }
-    }
+      },
+      "duration": 0.123,
+      "value": 5500
+    },
+    "run": {
+      "duration": 0.123
+    },
+    "schema": "v1"
+  },
+  "version": {
+    "sdk": "VERSION"
   }
 }
