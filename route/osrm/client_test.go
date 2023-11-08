@@ -265,3 +265,20 @@ const tableResponseOK = `{
 		[245938.6, 0]
 	]
 }`
+
+func TestEmptyPoints(t *testing.T) {
+	ts := newTestServer(t, osrm.TableEndpoint)
+	defer ts.s.Close()
+
+	c := osrm.DefaultClient(ts.s.URL, true)
+
+	_, _, err := c.Table([]route.Point{})
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+
+	_, _, err = c.Polyline([]route.Point{})
+	if err == nil {
+		t.Errorf("expected error, got nil")
+	}
+}

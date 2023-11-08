@@ -233,6 +233,10 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 		opt(cfg)
 	}
 
+	if len(points) == 0 {
+		return nil, nil, fmt.Errorf("cannot request distances/durations for empty points")
+	}
+
 	// Remove empty points, if requested.
 	originalLength := len(points)
 	var deflatedIndices []int
@@ -551,6 +555,10 @@ type Step struct {
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
 func (c *client) Polyline(points []route.Point) (string, []string, error) {
+	if len(points) == 0 {
+		return "", []string{}, fmt.Errorf("cannot create polyline for empty points")
+	}
+
 	// Turn points slice into OSRM-friendly semicolon-delimited point pairs
 	// []{{1,2}, {3,4}} => "1,2;3,4"
 	pointsParameter := pointsParameter(points)
