@@ -12,7 +12,7 @@ import (
 type SolveOptions struct {
 	// Duration is the maximum duration of the solver. A duration limit of 0 is
 	// treated as infinity.
-	Duration time.Duration `json:"duration" usage:"Maximum duration of the solver." default:"30s"`
+	Duration time.Duration `json:"duration" usage:"Maximum duration of the solver." default:"5s"`
 	// Verbosity of the solver in the console.
 	Verbosity Verbosity `json:"verbosity" usage:"{off, low, medium, high} Verbosity of the solver in the console." default:"off"`
 	// MIP-specific options.
