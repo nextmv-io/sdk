@@ -14,7 +14,7 @@ type Cluster interface {
 	ModelConstraint
 	ModelObjective
 
-	// IncludeFirst returns whether the first of the vehicle is included in the
+	// IncludeFirst returns whether the first stop of the vehicle is included in the
 	// centroid calculation. The centroid is used to determine the distance
 	// between a new stop and the cluster.
 	IncludeFirst() bool
