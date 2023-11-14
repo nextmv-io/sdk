@@ -38,7 +38,7 @@ def main() -> None:
     )
     parser.add_argument(
         "-duration",
-        default=5,
+        default=30,
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
     )
