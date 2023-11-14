@@ -20,7 +20,7 @@ type Cluster interface {
 	IncludeFirst() bool
 	// IncludeLast returns whether the lst stop of the vehicle is included in
 	// the centroid calculation. The centroid is used to determine the distance
-	//between a new stop and the cluster.
+	// between a new stop and the cluster.
 	IncludeLast() bool
 
 	// SetIncludeFirst sets whether the first stop of the vehicle is included in
@@ -29,7 +29,7 @@ type Cluster interface {
 	SetIncludeFirst(includeFirst bool)
 	// SetIncludeLast sets whether the last stop of the vehicle is included in
 	// the centroid calculation. The centroid is used to determine the distance
-	//between a new stop and the cluster.
+	// between a new stop and the cluster.
 	SetIncludeLast(includeLast bool)
 }
 
