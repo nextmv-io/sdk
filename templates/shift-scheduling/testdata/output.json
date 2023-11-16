@@ -1,29 +1,306 @@
 {
-  "version": { "sdk": "v0.29.0-dev.0.0.20230905095116-2d7e41f77870" },
-  "options": {},
+  "version": { "sdk": "v0.32.4-0.20231102124050-0137235cc4f0" },
+  "options": {
+    "penalty": { "over_supply": 1000, "under_supply": 500 },
+    "limits": {
+      "shift": {
+        "min_duration": 7200000000000,
+        "max_duration": 28800000000000,
+        "recovery_time": 28800000000000
+      },
+      "week": { "max_duration": 144000000000000 },
+      "day": { "max_duration": 36000000000000 }
+    },
+    "solve": {
+      "duration": 30000000000,
+      "verbosity": "off",
+      "mip": { "gap": { "absolute": 0.000001, "relative": 0.0001 } },
+      "control": { "bool": [], "float": [], "int": [], "string": [] }
+    }
+  },
   "solutions": [
     {
       "assigned_shifts": [
         {
-          "start": "2023-08-29T03:00:00+02:00",
-          "end": "2023-08-29T11:00:00+02:00",
-          "worker_id": 3
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "delirious-capuchin-monkey"
+        },
+        {
+          "start": "2023-12-10T09:00:00-05:00",
+          "end": "2023-12-10T16:59:00-05:00",
+          "worker_id": "ebullient-porcupine"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "mellifluous-lemur"
+        },
+        {
+          "start": "2023-12-10T18:30:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "mellifluous-lemur"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "recalcitrant-ostrich"
+        },
+        {
+          "start": "2023-12-10T12:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "recalcitrant-ostrich"
+        },
+        {
+          "start": "2023-12-10T08:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "querulous-turtle"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "perspicacious-flying-squirrel"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "mellifluous-walrus"
+        },
+        {
+          "start": "2023-12-10T16:00:00-05:00",
+          "end": "2023-12-10T23:59:00-05:00",
+          "worker_id": "kaleidoscopic-meerkat"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "xenophilic-okapi"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T19:59:00-05:00",
+          "worker_id": "lachrymose-sugar-glider"
+        },
+        {
+          "start": "2023-12-10T18:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "whimsical-hippopotamus"
+        },
+        {
+          "start": "2023-12-10T10:00:00-05:00",
+          "end": "2023-12-10T16:59:00-05:00",
+          "worker_id": "rambunctious-narwhal"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "rambunctious-narwhal"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "aberrant-otter"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "supercilious-hedgehog"
+        },
+        {
+          "start": "2023-12-10T13:30:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "supercilious-hedgehog"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "sesquipedalian-giraffe"
+        },
+        {
+          "start": "2023-12-10T19:00:00-05:00",
+          "end": "2023-12-10T23:59:00-05:00",
+          "worker_id": "obstreperous-pangolin"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "ghastly-meerkat"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T13:59:00-05:00",
+          "worker_id": "cantankerous-jerboa"
+        },
+        {
+          "start": "2023-12-10T08:00:00-05:00",
+          "end": "2023-12-10T15:59:00-05:00",
+          "worker_id": "supercilious-tapir"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "lugubrious-otter"
+        },
+        {
+          "start": "2023-12-10T08:00:00-05:00",
+          "end": "2023-12-10T15:59:00-05:00",
+          "worker_id": "pernicious-wombat"
+        },
+        {
+          "start": "2023-12-10T10:30:00-05:00",
+          "end": "2023-12-10T15:29:00-05:00",
+          "worker_id": "wanderlust-narwhal"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "wanderlust-narwhal"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T12:29:00-05:00",
+          "worker_id": "enigmatic-quokka"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "enigmatic-quokka"
+        },
+        {
+          "start": "2023-12-10T10:00:00-05:00",
+          "end": "2023-12-10T16:59:00-05:00",
+          "worker_id": "lugubrious-toucan"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "ghastly-fennec-fox"
+        },
+        {
+          "start": "2023-12-10T13:00:00-05:00",
+          "end": "2023-12-10T20:59:00-05:00",
+          "worker_id": "perspicacious-aardvark"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "cantankerous-red-panda"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "cacophonous-alpaca"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "beneficent-flying-squirrel"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "cacophonous-kakapo"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T15:59:00-05:00",
+          "worker_id": "cryptic-turtle"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "farcical-proboscis-monkey"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "nebulous-hedgehog"
+        },
+        {
+          "start": "2023-12-10T17:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "farcical-flamingo"
+        },
+        {
+          "start": "2023-12-10T13:00:00-05:00",
+          "end": "2023-12-10T20:59:00-05:00",
+          "worker_id": "zealous-capuchin-monkey"
+        },
+        {
+          "start": "2023-12-10T10:00:00-05:00",
+          "end": "2023-12-10T17:59:00-05:00",
+          "worker_id": "aberrant-peacock"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "aberrant-peacock"
+        },
+        {
+          "start": "2023-12-10T19:00:00-05:00",
+          "end": "2023-12-10T23:59:00-05:00",
+          "worker_id": "dapper-alpaca"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T15:59:00-05:00",
+          "worker_id": "gibbous-binturong"
+        },
+        {
+          "start": "2023-12-10T14:00:00-05:00",
+          "end": "2023-12-10T19:59:00-05:00",
+          "worker_id": "delirious-aardvark"
+        },
+        {
+          "start": "2023-12-10T17:00:00-05:00",
+          "end": "2023-12-10T23:59:00-05:00",
+          "worker_id": "ubiquitous-sugar-glider"
+        },
+        {
+          "start": "2023-12-10T11:00:00-05:00",
+          "end": "2023-12-10T18:59:00-05:00",
+          "worker_id": "astonishing-flamingo"
+        },
+        {
+          "start": "2023-12-10T16:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "astonishing-flamingo"
+        },
+        {
+          "start": "2023-12-10T07:00:00-05:00",
+          "end": "2023-12-10T14:59:00-05:00",
+          "worker_id": "delirious-armadillo"
+        },
+        {
+          "start": "2023-12-10T18:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "aberrant-toucan"
+        },
+        {
+          "start": "2023-12-10T15:00:00-05:00",
+          "end": "2023-12-10T22:59:00-05:00",
+          "worker_id": "cantankerous-pangolin"
+        },
+        {
+          "start": "2023-12-10T19:00:00-05:00",
+          "end": "2023-12-10T23:59:00-05:00",
+          "worker_id": "supercilious-alpaca"
         }
       ],
-      "number_assigned_workers": 1
+      "number_assigned_workers": 45
     }
   ],
   "statistics": {
     "schema": "v1",
-    "run": { "duration": 0.09652325 },
+    "run": { "duration": 0.257828417 },
     "result": {
-      "duration": 0.09652325,
-      "value": 5500,
+      "duration": 0.257828417,
+      "value": 55500,
       "custom": {
-        "constraints": 2713,
+        "constraints": 16192,
         "provider": "highs",
         "status": "optimal",
-        "variables": 913
+        "variables": 5378
       }
     }
   }
