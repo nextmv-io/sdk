@@ -15,7 +15,10 @@ import (
 	"github.com/nextmv-io/sdk/route"
 )
 
-const apiKey string = "foo"
+const (
+	apiKey         string = "foo"
+	statusEndpoint string = "/status"
+)
 
 // This isn't the best test in the world because it relies on timing, so it
 // doesn't test that every individual cancellation point handles cancellations
@@ -1212,7 +1215,7 @@ func internalServerError() buildResponse {
 func statusRedirect(status responseStatus) buildResponse {
 	return func(url string) (int, any) {
 		resp := statusResponse{
-			StatusURL: url + "/status",
+			StatusURL: url + statusEndpoint,
 			Status:    status,
 		}
 		if status == responseStatusComplete {
@@ -1231,7 +1234,7 @@ func syncMatrixSuccess(resp matrixResponse) buildResponse {
 func asyncMatrixSuccess() buildResponse {
 	return func(url string) (int, any) {
 		return http.StatusAccepted, statusResponse{
-			StatusURL: url + "/status",
+			StatusURL: url + statusEndpoint,
 		}
 	}
 }
@@ -1239,7 +1242,7 @@ func asyncMatrixSuccess() buildResponse {
 func statusSuccess() buildResponse {
 	return func(url string) (int, any) {
 		resp := statusResponse{
-			StatusURL: url + "/status",
+			StatusURL: url + statusEndpoint,
 			Status:    responseStatusComplete,
 			ResultURL: url + "/result",
 		}

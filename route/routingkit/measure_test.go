@@ -12,6 +12,8 @@ import (
 	"github.com/twpayne/go-polyline"
 )
 
+const cacheSizeAndOsm string = `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",`
+
 type byPointConstantMeasure float64
 
 func (m byPointConstantMeasure) Cost(_ route.Point, _ route.Point) float64 {
@@ -159,7 +161,7 @@ func TestByPointMarshal(t *testing.T) {
 	if err != nil {
 		t.Errorf("got %+v; want nil", err)
 	}
-	w := `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
+	w := cacheSizeAndOsm +
 		`"profile":{"name":"pedestrian"},` +
 		`"radius":1000,"type":"routingkit"}`
 	if v := string(b); v != w {
@@ -176,7 +178,7 @@ func TestByPointLoader(t *testing.T) {
 		expected    int
 	}{
 		{
-			input: `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
+			input: cacheSizeAndOsm +
 				`"profile":{"name":"car"},"radius":1000,"type":"routingkit"}`,
 			expectedErr: false,
 			from:        route.Point{7.33665, 52.14502},
@@ -184,7 +186,7 @@ func TestByPointLoader(t *testing.T) {
 			expected:    722,
 		},
 		{
-			input: `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
+			input: cacheSizeAndOsm +
 				`"profile":{"name":"pedestrian"},"radius":1000,"type":"routingkit"}`,
 			expectedErr: false,
 			from:        route.Point{7.33665, 52.14502},
@@ -340,7 +342,7 @@ func TestDurationByPointMarshal(t *testing.T) {
 	if err != nil {
 		t.Errorf("got %+v; want nil", err)
 	}
-	w := `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
+	w := cacheSizeAndOsm +
 		`"profile":{"name":"car"},` +
 		`"radius":1000,"type":"routingkitDuration"}`
 	if v := string(b); v != w {
