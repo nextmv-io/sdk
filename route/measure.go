@@ -166,6 +166,14 @@ func Truncate(m ByIndex, lower, upper float64) ByIndex {
 	return measure.Truncate(m, lower, upper)
 }
 
+// Unique returns a ByIndex that uses a reference slice to map the indices of a
+// point to the index of the measure.
+// m represents a matrix of unique points.
+// references maps a stop (by index) to an index in m.
+func Unique(m ByIndex, references []int) ByIndex {
+	return measure.Unique(m, references)
+}
+
 // Location measure returns the sum of the cost computed by the passed in
 // measure and the specified cost of the 'to' location. This cost is read from
 // the passed in costs slice.

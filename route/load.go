@@ -77,17 +77,18 @@ type ByIndexLoader struct {
 // of onto a map[string]any for type safety and because this will allow
 // recursive measures to be automatically unmarshalled.
 type byIndexJSON struct {
-	ByIndex  *ByIndexLoader          `json:"measure"`
-	Arcs     map[int]map[int]float64 `json:"arcs"`
-	Type     string                  `json:"type"`
-	Measures []ByIndexLoader         `json:"measures"`
-	Costs    []float64               `json:"costs"`
-	Matrix   [][]float64             `json:"matrix"`
-	Constant float64                 `json:"constant"`
-	Scale    float64                 `json:"scale"`
-	Exponent float64                 `json:"exponent"`
-	Lower    float64                 `json:"lower"`
-	Upper    float64                 `json:"upper"`
+	ByIndex    *ByIndexLoader          `json:"measure"`
+	Arcs       map[int]map[int]float64 `json:"arcs"`
+	Type       string                  `json:"type"`
+	Measures   []ByIndexLoader         `json:"measures"`
+	Costs      []float64               `json:"costs"`
+	Matrix     [][]float64             `json:"matrix"`
+	Constant   float64                 `json:"constant"`
+	Scale      float64                 `json:"scale"`
+	Exponent   float64                 `json:"exponent"`
+	Lower      float64                 `json:"lower"`
+	Upper      float64                 `json:"upper"`
+	References []int                   `json:"references"`
 }
 
 // MarshalJSON returns the JSON representation for the underlying Byindex.
@@ -135,6 +136,8 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 		l.byIndex = Sparse(j.ByIndex.To(), j.Arcs)
 	case "truncate":
 		l.byIndex = Truncate(j.ByIndex.To(), j.Lower, j.Upper)
+	case "unique":
+		l.byIndex = Unique(j.ByIndex.To(), j.References)
 	default:
 		return fmt.Errorf(`invalid type "%s"`, j.Type)
 	}
