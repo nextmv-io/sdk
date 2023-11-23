@@ -1,6 +1,6 @@
 module github.com/nextmv-io/sdk
 
-go 1.20
+go 1.19
 
 replace github.com/nextmv-io/sdk/route/osrm => ./route/osrm
 
