@@ -1,6 +1,6 @@
 module github.com/nextmv-io/sdk/route/routingkit
 
-go 1.19
+go 1.20
 
 replace github.com/nextmv-io/sdk => ../../.
 
