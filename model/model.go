@@ -14,6 +14,9 @@ const (
 	MinInt = (1 << bits.UintSize) / -2
 )
 
+// Domain is deprecated.nextroute engine. It is used with the router engine and store
+// which are both deprecated.
+//
 // A Domain of integers.
 type Domain interface {
 	// Add values to a domain.
@@ -48,6 +51,9 @@ type Domain interface {
 	Value() (int, bool)
 }
 
+// Domains is deprecated.nextroute engine. It is used with the router engine and
+// store which are both deprecated.
+//
 // Domains of integers.
 type Domains interface {
 	// Add values to a domain by index.
@@ -95,12 +101,18 @@ type Domains interface {
 	Smallest() (int, bool)
 }
 
+// Range is deprecated.nextroute engine. It is used with the router engine and
+// store which are both deprecated.
+//
 // A Range of integers.
 type Range interface {
 	Min() int
 	Max() int
 }
 
+// Iterator is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // An Iterator allows one to iterate over a range or a domain.
 //
 //	it := model.Domain(model.Range(1, 10)).Iterator()
@@ -112,36 +124,54 @@ type Iterator interface {
 	Value() int
 }
 
+// NewDomain is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // NewDomain creates a domain of integers.
 func NewDomain(ranges ...Range) Domain {
 	connect.Connect(con, &newDomainFunc)
 	return newDomainFunc(ranges...)
 }
 
+// Singleton is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // Singleton creates a domain containing one integer value.
 func Singleton(value int) Domain {
 	connect.Connect(con, &singletonFunc)
 	return singletonFunc(value)
 }
 
+// Multiple is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // Multiple creates a domain containing multiple integer values.
 func Multiple(values ...int) Domain {
 	connect.Connect(con, &multipleFunc)
 	return multipleFunc(values...)
 }
 
+// NewDomains is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // NewDomains creates a sequence of domains.
 func NewDomains(domains ...Domain) Domains {
 	connect.Connect(con, &newDomainsFunc)
 	return newDomainsFunc(domains...)
 }
 
+// Repeat is deprecated.nextroute engine. It is used with the router engine and
+// store which are both deprecated.
+//
 // Repeat a domain n times.
 func Repeat(n int, d Domain) Domains {
 	connect.Connect(con, &repeatFunc)
 	return repeatFunc(n, d)
 }
 
+// NewRange is deprecated.nextroute engine. It is used with the router engine
+// and store which are both deprecated.
+//
 // NewRange create a new integer range.
 func NewRange(min, max int) Range {
 	connect.Connect(con, &newRangeFunc)

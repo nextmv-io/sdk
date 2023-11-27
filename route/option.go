@@ -4,12 +4,19 @@ import (
 	"math/rand"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 )
 
+// Option is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // An Option configures a Router.
 type Option func(Router) error
 
+// Starts is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Starts sets the starting locations indexed by vehicle. The length must match
 // the vehicles' length.
 func Starts(starts []Position) Option {
@@ -17,6 +24,9 @@ func Starts(starts []Position) Option {
 	return startsFunc(starts)
 }
 
+// Ends is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Ends sets the ending locations indexed by vehicle. The length must match the
 // vehicles' length.
 func Ends(ends []Position) Option {
@@ -24,6 +34,9 @@ func Ends(ends []Position) Option {
 	return endsFunc(ends)
 }
 
+// InitializationCosts is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // InitializationCosts set the vehicle initialization costs indexed by vehicle.
 // The length must match the vehicles' length.
 func InitializationCosts(initializationCosts []float64) Option {
@@ -31,6 +44,9 @@ func InitializationCosts(initializationCosts []float64) Option {
 	return initializationCostsFunc(initializationCosts)
 }
 
+// Capacity is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Capacity adds a capacity constraint to the list of constraints and takes two
 // arguments: quantities and capacities. Quantities represent the change in
 // vehicle capacity indexed by stop. Capacities represent the maximum capacity
@@ -43,6 +59,9 @@ func Capacity(quantities []int, capacities []int) Option {
 	return capacityFunc(quantities, capacities)
 }
 
+// Precedence is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Precedence adds a precedence constraint to the list of constraints. It takes
 // one argument as a slice of jobs. Each job defines a pick-up and drop-off by
 // ID. The pick-up must precede the drop-off in the route.
@@ -51,6 +70,9 @@ func Precedence(precedences []Job) Option {
 	return precedenceFunc(precedences)
 }
 
+// Services is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Services adds a service time to the given stops. For stops not in the slice,
 // a service time of zero seconds is applied.
 func Services(serviceTimes []Service) Option {
@@ -59,6 +81,9 @@ func Services(serviceTimes []Service) Option {
 }
 
 /*
+Shifts is deprecated. It is used with the router engine
+which was replaced by the nextroute engine.
+
 Shifts adds shifts to the vehicles. Shifts are indexed by vehicle and represent
 a time window on its shift's start and end time. When using the Windows option,
 using the Shifts option is required. Shifts are additionally used to:
@@ -75,6 +100,9 @@ func Shifts(shifts []TimeWindow) Option {
 	return shiftsFunc(shifts)
 }
 
+// Windows is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Windows adds a time window constraint to the list of constraints. The method
 // takes in windows, which are indexed by stop and represent a fixed timeframe
 // in which the stop must be served. Service times at the stops can be
@@ -86,6 +114,9 @@ func Windows(windows []Window) Option {
 	return windowsFunc(windows)
 }
 
+// MultiWindows is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // MultiWindows adds a time window constraint to the list of constraints. The
 // method takes in multiple windows per stop, which are indexed by stop and
 // represent several fixed time frames in which the stop must be served.
@@ -99,6 +130,9 @@ func MultiWindows(windows [][]TimeWindow, maxWaitTimes []int) Option {
 	return multiWindowsFunc(windows, maxWaitTimes)
 }
 
+// Unassigned is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Unassigned sets the unassigned penalties indexed by stop. The length must
 // match the stops' length.
 func Unassigned(penalties []int) Option {
@@ -106,6 +140,9 @@ func Unassigned(penalties []int) Option {
 	return unassignedFunc(penalties)
 }
 
+// Backlogs is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Backlogs sets the backlog for the specified vehicles. A backlog is an
 // unordered list of stops that a vehicle has to serve.
 func Backlogs(backlogs []Backlog) Option {
@@ -113,6 +150,9 @@ func Backlogs(backlogs []Backlog) Option {
 	return backlogsFunc(backlogs)
 }
 
+// Minimize is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Minimize sets the solver type of the router to minimize the value with a
 // hybrid solver that uses decision diagrams and ALNS. This is the default
 // solver that the router engine uses.
@@ -121,6 +161,9 @@ func Minimize() Option {
 	return minimizeFunc()
 }
 
+// Maximize is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Maximize sets the solver type of the router to maximize the value with a
 // hybrid solver that uses decision diagrams and ALNS.
 func Maximize() Option {
@@ -128,6 +171,9 @@ func Maximize() Option {
 	return maximizeFunc()
 }
 
+// Limits is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Limits adds a route limit constraint to the list of constraints. The limit
 // constraint can be used to limit the routes. The option takes two arguments:
 // Firstly, the routeLimits struct which is indexed by vehicle and has two
@@ -145,6 +191,9 @@ func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
 	return limitsFunc(routeLimits, ignoreTriangular)
 }
 
+// LimitDistances is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // LimitDistances limits the distances of the routes by the given values. The
 // values are indexed by vehicle and must be given in meters. To not limit a
 // route to any value, use model.MaxInt.
@@ -153,6 +202,9 @@ func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
 	return limitDistancesFunc(maxDistances, ignoreTriangular)
 }
 
+// LimitDurations is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // LimitDurations limits the the durations of the routes to the given values.
 // The values are indexed by vehicle and must be given in seconds. To not limit
 // a route to any value, use model.MaxInt.
@@ -161,6 +213,9 @@ func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
 	return limitDurationsFunc(maxDurations, ignoreTriangular)
 }
 
+// Grouper is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Grouper adds a custom location group to the list of location groups. When one
 // or more groups of locations are defined, the router engine will ensure that
 // all locations of a group will be assigned to the same route. If no groups are
@@ -171,6 +226,9 @@ func Grouper(groups [][]string) Option {
 	return grouperFunc(groups)
 }
 
+// ValueFunctionMeasures is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // ValueFunctionMeasures sets custom measures for every vehicle to calculate the
 // overall solution costs, and should be indexed as such. If no custom measures
 // are provided, a default haversine measure will be used to calculate costs
@@ -182,12 +240,15 @@ func Grouper(groups [][]string) Option {
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 func ValueFunctionMeasures(
-	valueFunctionMeasures []ByIndex,
+	valueFunctionMeasures []measure.ByIndex,
 ) Option {
 	connect.Connect(con, &valueFunctionMeasuresFunc)
 	return valueFunctionMeasuresFunc(valueFunctionMeasures)
 }
 
+// ValueFunctionDependentMeasures is deprecated. It is used with the router
+// engine which was replaced by the nextroute engine.
+//
 // ValueFunctionDependentMeasures sets custom dependent measures for every
 // vehicle to calculate the overall solution costs, and should be indexed as
 // such. If no custom measures are provided, a default haversine measure will be
@@ -199,13 +260,16 @@ func ValueFunctionMeasures(
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 func ValueFunctionDependentMeasures(
-	valueFunctionMeasures []DependentByIndex,
+	valueFunctionMeasures []measure.DependentByIndex,
 ) Option {
 	connect.Connect(con, &valueFunctionDependentMeasuresFunc)
 	return valueFunctionDependentMeasuresFunc(valueFunctionMeasures)
 }
 
 /*
+TravelTimeMeasures is deprecated. It is used with the router engine
+which was replaced by the nextroute engine.
+
 TravelTimeMeasures sets custom time measures for every vehicle, and should be
 indexed as such. If no custom time measures are provided, a default time measure
 will be used, based on haversine using a velocity of 10 m/s if no custom
@@ -219,12 +283,15 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 */
-func TravelTimeMeasures(timeMeasures []ByIndex) Option {
+func TravelTimeMeasures(timeMeasures []measure.ByIndex) Option {
 	connect.Connect(con, &travelTimeMeasuresFunc)
 	return travelTimeMeasuresFunc(timeMeasures)
 }
 
 /*
+TravelTimeDependentMeasures is deprecated. It is used with the router engine
+which was replaced by the nextroute engine.
+
 TravelTimeDependentMeasures sets custom dependent time measures for every
 vehicle, and should be indexed as such. If no custom time measures are provided,
 a default time measure will be used, based on haversine using a velocity of
@@ -239,22 +306,28 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 */
-func TravelTimeDependentMeasures(timeMeasures []DependentByIndex) Option {
+func TravelTimeDependentMeasures(timeMeasures []measure.DependentByIndex) Option {
 	connect.Connect(con, &travelTimeDependentMeasuresFunc)
 	return travelTimeDependentMeasuresFunc(timeMeasures)
 }
 
+// TravelDistanceMeasures is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // TravelDistanceMeasures sets custom distance measures for every vehicle to
 // calculate the travel distance, and should be indexed as such. If no
 // distance measures are provided, a default haversine measure will be used to
 // calculate distances between stops.
 func TravelDistanceMeasures(
-	travelDistanceMeasures []ByIndex,
+	travelDistanceMeasures []measure.ByIndex,
 ) Option {
 	connect.Connect(con, &travelDistanceMeasuresFunc)
 	return travelDistanceMeasuresFunc(travelDistanceMeasures)
 }
 
+// Attribute is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Attribute sets a compatibility filter for stops and vehicles. It takes two
 // arguments, vehicles and stops which define a slice of compatibility
 // attributes for stops and vehicles. Stops that are not provided are compatible
@@ -265,6 +338,9 @@ func Attribute(vehicles []Attributes, stops []Attributes) Option {
 	return attributeFunc(vehicles, stops)
 }
 
+// Threads is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Threads sets the number of threads that the internal solver uses. The router
 // engine's solver is a hybrid solver that uses a Decision Diagram (DD) solver
 // and various ALNS solvers with DD sub-solvers. If threads = 1, it means that
@@ -276,6 +352,9 @@ func Threads(threads int) Option {
 	return threadsFunc(threads)
 }
 
+// Alternates is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Alternates sets a slice of alternate stops per vehicle. The vehicle will be
 // assigned exactly one stop from the list of alternate stops, which are passed
 // into this option, and any other stops from the list of stops that solve the
@@ -285,6 +364,9 @@ func Alternates(alternates []Alternate) Option {
 	return alternatesFunc(alternates)
 }
 
+// Velocities is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Velocities sets the speed for all vehicles to define a corresponding
 // TravelTimeMeasure based on haversine distance and is indexed by vehicle. The
 // length must match the vehicles' length.
@@ -293,6 +375,9 @@ func Velocities(velocities []float64) Option {
 	return velocitiesFunc(velocities)
 }
 
+// ServiceGroups is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // ServiceGroups adds an additional service time for a group of stops.
 // Whenever a stop in the group is visited from another stop that is not part
 // of it, the specified duration is added.
@@ -301,6 +386,9 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 	return serviceGroupsFunc(serviceGroups)
 }
 
+// Selector is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Selector sets the given custom location selector. The location selector lets
 // you define a function which selects the locations that will be inserted next
 // into the solution. If no custom location selector is given, the location with
@@ -310,6 +398,9 @@ func Selector(selector func(PartialPlan) model.Domain) Option {
 	return selectorFunc(selector)
 }
 
+// VehicleUpdater is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // VehicleUpdater defines an interface that is used to override the vehicle's
 // default value function. The Update function takes a PartialVehicle as an
 // input and returns three values, a VehicleUpdater with potentially updated
@@ -320,6 +411,9 @@ type VehicleUpdater interface {
 	Update(PartialVehicle) (VehicleUpdater, int, bool)
 }
 
+// PlanUpdater is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // PlanUpdater defines an interface that is used to override the router's
 // default value function. The Update function takes a Plan and a slice of
 // PartialVehicles as an input and returns three values, a PlanUpdater with
@@ -334,6 +428,9 @@ type PlanUpdater interface {
 }
 
 /*
+Update is deprecated.nextroute engine. It is used with the router engine
+which was replaced by the nextroute engine.
+
 Update sets the collection of functions that are called when transitioning from
 one store to another in the router's Decision Diagram search for the best
 solution in the time alloted. Updating information is useful for two purposes:
@@ -362,6 +459,9 @@ func Update(v VehicleUpdater, f PlanUpdater) Option {
 	return updateFunc(v, f)
 }
 
+// FilterWithRoute is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // FilterWithRoute adds a new VehicleFilter. Compared to the Filter option, the
 // FilterWithRoute option is more flexible. It defines a function that takes an
 // IntDomain of candidate vehicles, an IntDomain of locations that will be
@@ -379,6 +479,9 @@ func FilterWithRoute(
 	return filterWithRouteFunc(filter)
 }
 
+// Sorter is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Sorter sets the given custom vehicle sorter. The vehicle sorter lets you
 // define a function which returns the vehicle indices in a specific order. The
 // underlying engine will try to assign the locations to each vehicle in that
@@ -395,6 +498,9 @@ func Sorter(
 	return sorterFunc(sorter)
 }
 
+// VehicleConstraint is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // VehicleConstraint defines an interface that needs to be implemented when
 // creating a custom vehicle constraint.
 type VehicleConstraint interface {
@@ -406,6 +512,9 @@ type VehicleConstraint interface {
 	Violated(PartialVehicle) (VehicleConstraint, bool)
 }
 
+// Constraint is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Constraint sets a custom constraint for specified vehicles. It takes two
 // arguments, the constraint to be applied and a list of vehicles, indexed by
 // ID, to which the constraint shall be applied.
@@ -414,6 +523,9 @@ func Constraint(constraint VehicleConstraint, ids []string) Option {
 	return constraintFunc(constraint, ids)
 }
 
+// Filter is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Filter adds a custom vehicle filter to the list of filters. A filter checks
 // which location is in general compatible with a vehicle. If no filter is given
 // all locations are compatible with all vehicles and, thus, any location can be
@@ -442,11 +554,11 @@ var (
 	limitDistancesFunc                 func([]float64, bool) Option
 	limitDurationsFunc                 func([]float64, bool) Option
 	grouperFunc                        func([][]string) Option
-	valueFunctionMeasuresFunc          func([]ByIndex) Option
-	valueFunctionDependentMeasuresFunc func([]DependentByIndex) Option
-	travelTimeMeasuresFunc             func([]ByIndex) Option
-	travelTimeDependentMeasuresFunc    func([]DependentByIndex) Option
-	travelDistanceMeasuresFunc         func([]ByIndex) Option
+	valueFunctionMeasuresFunc          func([]measure.ByIndex) Option
+	valueFunctionDependentMeasuresFunc func([]measure.DependentByIndex) Option
+	travelTimeMeasuresFunc             func([]measure.ByIndex) Option
+	travelTimeDependentMeasuresFunc    func([]measure.DependentByIndex) Option
+	travelDistanceMeasuresFunc         func([]measure.ByIndex) Option
 	attributeFunc                      func([]Attributes, []Attributes) Option
 	threadsFunc                        func(int) Option
 	alternatesFunc                     func([]Alternate) Option

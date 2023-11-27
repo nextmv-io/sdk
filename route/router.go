@@ -4,10 +4,13 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk/connect"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 	"github.com/nextmv-io/sdk/store"
 )
 
+// Router is a deprecated interface. It was replaced by the nextroute engine.
+//
 // A Router is an engine that solves Vehicle Routing Problems.
 type Router interface {
 	// Options configures the router with the given options. An error is
@@ -46,6 +49,9 @@ type Router interface {
 	Format(func(*Plan) any)
 }
 
+// PartialPlan is a deprecated interface. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // PartialPlan is an (incomplete) Plan that operates on the internal
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
@@ -62,6 +68,9 @@ type PartialPlan interface {
 	Vehicles() []PartialVehicle
 }
 
+// PartialVehicle is a deprecated interface. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // PartialVehicle represents a Vehicle that operates on the internal solver
 // data structures. Certain router options that customize solver internals have
 // to work with this data structure.
@@ -82,15 +91,21 @@ type PartialVehicle interface {
 	// stop in the route. Usually ETA is the same as ETS, unless there is a
 	// waiting time before a time window opens, which is when the service
 	// actually starts (ETS).
-	Times() Times
+	Times() measure.Times
 }
 
+// Plan is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Plan describes a solution to a Vehicle Routing Problem.
 type Plan struct {
 	Unassigned []Stop           `json:"unassigned"`
 	Vehicles   []PlannedVehicle `json:"vehicles"`
 }
 
+// PlannedVehicle is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // PlannedVehicle holds information about the vehicle in a solution to a Vehicle
 // Routing Problem.
 type PlannedVehicle struct {
@@ -100,6 +115,9 @@ type PlannedVehicle struct {
 	RouteDistance int           `json:"route_distance"`
 }
 
+// PlannedStop is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // PlannedStop describes a stop as part of a Vehicle's route of solution
 // to a Vehicle Routing Problem.
 type PlannedStop struct {
@@ -109,30 +127,45 @@ type PlannedStop struct {
 	EstimatedService   *time.Time `json:"estimated_service,omitempty"`
 }
 
+// Stop is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Stop to service in a Vehicle Routing Problem.
 type Stop struct {
 	ID       string   `json:"id"`
 	Position Position `json:"position"`
 }
 
+// TimeWindow is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // TimeWindow represents a time window for a shift of a vehicle or a stop.
 type TimeWindow struct {
 	Start time.Time `json:"start,omitempty"`
 	End   time.Time `json:"end,omitempty"`
 }
 
+// Backlog is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Backlog represents the backlog, a list of stops for a vehicle.
 type Backlog struct {
 	VehicleID string   `json:"vehicle_id"`
 	Stops     []string `json:"stops"`
 }
 
+// Alternate is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Alternate represents alternate stops, a list of stops for a vehicle.
 type Alternate struct {
 	VehicleID string   `json:"vehicle_id"`
 	Stops     []string `json:"stops"`
 }
 
+// Window is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Window represents a fixed timeframe in which the stop must be served. The
 // duration represents the time it takes to service the stop. The max wait
 // attribute defines what the allowed time is for vehicles arriving to stops
@@ -142,6 +175,9 @@ type Window struct {
 	MaxWait    int        `json:"max_wait,omitempty"`
 }
 
+// ServiceGroup is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // ServiceGroup holds a group of stops and the service time duration (in
 // seconds) to be added for every approach to one of the stops in the group.
 type ServiceGroup struct {
@@ -149,12 +185,18 @@ type ServiceGroup struct {
 	Duration int      `json:"duration,omitempty"`
 }
 
+// Position is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Position represents a geographical location.
 type Position struct {
 	Lon float64 `json:"lon,omitempty"`
 	Lat float64 `json:"lat,omitempty"`
 }
 
+// Job is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Job represents a combination of one pick-up and one drop-off that must be
 // served together with the pick-up preceding the drop-off.
 type Job struct {
@@ -162,6 +204,9 @@ type Job struct {
 	DropOff string `json:"drop_off,omitempty"`
 }
 
+// Attributes is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Attributes holds the ID of a vehicle or stop and corresponding compatibility
 // attributes for that vehicle/stop.
 type Attributes struct {
@@ -169,6 +214,9 @@ type Attributes struct {
 	Attributes []string `json:"attributes"`
 }
 
+// Service is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Service holds the ID of a stop and corresponding time to service the stop
 // in seconds.
 type Service struct {
@@ -176,12 +224,18 @@ type Service struct {
 	Duration int    `json:"duration"`
 }
 
+// Limit is a deprecated struct. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // Limit holds a measure which will be limited by the given value.
 type Limit struct {
-	Measure ByIndex
+	Measure measure.ByIndex
 	Value   float64
 }
 
+// NewRouter is deprecated. It is used with the router engine
+// which was replaced by the nextroute engine.
+//
 // NewRouter returns a router interface. It receives a set of stops that must be
 // serviced by a fleet of vehicles and a list of options. When an option is
 // applied, an error is returned if there are validation issues. The router is
