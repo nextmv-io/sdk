@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 from typing import Any
+import os
 
 import pyomo.environ as pyo
 
