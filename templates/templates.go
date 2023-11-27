@@ -50,6 +50,22 @@ var (
 	//go:embed ortools/requirements.txt
 	OrtoolsRequirements string
 
+	// PyomoManifest is the app manifest file in the pyomo template.
+	//go:embed pyomo/app.yaml
+	PyomoManifest string
+	// PyomoMain is the main.py file in the pyomo template.
+	//go:embed pyomo/main.py
+	PyomoMain string
+	// PyomoInput is the input.json file in the pyomo template.
+	//go:embed pyomo/input.json
+	PyomoInput string
+	// PyomoReadme is the README.md file in the pyomo template.
+	//go:embed pyomo/README.md
+	PyomoReadme string
+	// PyomoRequirements is the requirements.txt file in the pyomo template.
+	//go:embed pyomo/requirements.txt
+	PyomoRequirements string
+
 	// ShiftSchedulingMain is the main.go file in the
 	// shift-scheduling template.
 	//go:embed shift-scheduling/main.go
