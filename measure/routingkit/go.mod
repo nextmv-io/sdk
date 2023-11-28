@@ -8,7 +8,6 @@ require (
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/nextmv-io/go-routingkit v0.1.18
 	github.com/nextmv-io/sdk v1.0.2
-	github.com/nextmv-io/sdk/route/routingkit v1.0.2
 	github.com/twpayne/go-polyline v1.1.1
 )
 
