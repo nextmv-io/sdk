@@ -1,11 +1,6 @@
 package osrm
 
 import (
-
-	// Ignore the gosec issue, see comments in the usage of sha1 down below.
-	// G505 (CWE-327): Blocklisted import crypto/sha1: weak cryptographic primitive.
-	/* #nosec */
-
 	"net/http"
 
 	o "github.com/nextmv-io/sdk/measure/osrm"
