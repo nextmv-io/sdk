@@ -6,6 +6,32 @@ import (
 	"math/rand"
 )
 
+// Solver is the interface for the Adaptive Local Neighborhood Search algorithm.
+type Solver[T Solution[T], Options any] interface {
+	BaseSolver[T, Options]
+
+	// WorkSolution returns the current work solution.
+	WorkSolution() T
+
+	// BestSolution returns the best solution found so far.
+	BestSolution() T
+
+	// Random returns the random number generator used by the solver.
+	Random() *rand.Rand
+
+	// Reset will reset the solver to use solution as work solution.
+	Reset(solution Solution[T])
+
+	// SolveOperators returns the solve-operators used by the solver.
+	SolveOperators() SolveOperators[T]
+
+	// AddSolveOperators adds a number of solve-operators to the solver.
+	AddSolveOperators(...SolveOperator[T])
+
+	// SolveEvents returns the solve-events used by the solver.
+	SolveEvents() SolveEvents[T]
+}
+
 // Solution is a solution to a problem. It defines the minimum interface
 // that a solution must implement to be used in Adaptive Local Neighborhood
 // Search.
@@ -42,24 +68,10 @@ func (solutions Solutions[T]) Last() T {
 	return solution
 }
 
-// Solver is an interface that can be implemented by a struct to indicate that
+// BaseSolver is an interface that can be implemented by a struct to indicate that
 // it can solve a problem.
-type Solver[T Solution[T], Options any] interface {
+type BaseSolver[T Solution[T], Options any] interface {
 	// Solve starts the solving process using the given options. It returns the
 	// solutions as a channel.
 	Solve(context.Context, Options, ...T) (Solutions[T], error)
-}
-
-// Progressioner is an interface that can be implemented by a solver to indicate
-// that is can return the progression of the solver.
-type Progressioner interface {
-	// Progression returns the progression of the solver.
-	Progression() []ProgressionEntry
-}
-
-// ProgressionEntry is a single entry in the progression of the solver.
-type ProgressionEntry struct {
-	ElapsedSeconds float64 `json:"elapsed_seconds"`
-	Value          float64 `json:"value"`
-	Iterations     int     `json:"iterations"`
 }

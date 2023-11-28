@@ -21,7 +21,7 @@ type ParallelSolveOptions struct {
 // solver will stop when the maximum duration is reached.
 type ParallelSolver interface {
 	alns.Progressioner
-	alns.Solver[Solution, ParallelSolveOptions]
+	alns.BaseSolver[Solution, ParallelSolveOptions]
 }
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.
