@@ -34,6 +34,7 @@ func DefaultClient(host string, useCache bool) Client {
 	return o.DefaultClient(host, useCache)
 }
 
+// TableOptions is a function that configures a tableConfig.
 type TableOptions = o.TableOptions
 
 // WithDuration returns a TableOptions function for composing a tableConfig with

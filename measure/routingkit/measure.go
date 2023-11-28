@@ -8,7 +8,7 @@ import (
 
 	"github.com/dgraph-io/ristretto"
 	"github.com/nextmv-io/go-routingkit/routingkit"
-	"github.com/nextmv-io/sdk/route"
+	route "github.com/nextmv-io/sdk/measure"
 	"github.com/twpayne/go-polyline"
 )
 
