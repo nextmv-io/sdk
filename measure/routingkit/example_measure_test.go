@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	goroutingkit "github.com/nextmv-io/go-routingkit/routingkit"
-	"github.com/nextmv-io/sdk/route"
-	"github.com/nextmv-io/sdk/route/routingkit"
+	"github.com/nextmv-io/sdk/measure"
+	"github.com/nextmv-io/sdk/measure/routingkit"
 )
 
 func ExampleByPoint() {
 	carProfile := routingkit.Car()
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
+	fallbackMeasure := measure.ScaleByPoint(measure.HaversineByPoint(), 1.3)
 	byPointDistance, err := routingkit.ByPoint(
 		"testdata/rk_test.osm.pbf",
 		1000,
@@ -22,8 +22,8 @@ func ExampleByPoint() {
 		panic(err)
 	}
 	cost := byPointDistance.Cost(
-		route.Point{7.33745, 52.14758},
-		route.Point{7.34979, 52.15149},
+		measure.Point{7.33745, 52.14758},
+		measure.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
@@ -32,7 +32,7 @@ func ExampleByPoint() {
 
 func ExampleDurationByPoint() {
 	carProfile := routingkit.Car()
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.2)
+	fallbackMeasure := measure.ScaleByPoint(measure.HaversineByPoint(), 1.2)
 	byPointDuration, err := routingkit.DurationByPoint(
 		"testdata/rk_test.osm.pbf",
 		1000,
@@ -44,8 +44,8 @@ func ExampleDurationByPoint() {
 		panic(err)
 	}
 	cost := byPointDuration.Cost(
-		route.Point{7.33745, 52.14758},
-		route.Point{7.34979, 52.15149},
+		measure.Point{7.33745, 52.14758},
+		measure.Point{7.34979, 52.15149},
 	)
 	fmt.Println(int(cost))
 	// Output:
@@ -53,15 +53,15 @@ func ExampleDurationByPoint() {
 }
 
 func ExampleMatrix() {
-	srcs := []route.Point{
+	srcs := []measure.Point{
 		{7.33745, 52.14758},
 		{7.32486, 52.14280},
 	}
-	dests := []route.Point{
+	dests := []measure.Point{
 		{7.34979, 52.15149},
 		{7.33293, 52.13893},
 	}
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
+	fallbackMeasure := measure.ScaleByPoint(measure.HaversineByPoint(), 1.3)
 	byIndexDistance, err := routingkit.Matrix(
 		"testdata/rk_test.osm.pbf",
 		1000,
@@ -80,15 +80,15 @@ func ExampleMatrix() {
 }
 
 func ExampleDurationMatrix() {
-	srcs := []route.Point{
+	srcs := []measure.Point{
 		{7.33745, 52.14758},
 		{7.32486, 52.14280},
 	}
-	dests := []route.Point{
+	dests := []measure.Point{
 		{7.34979, 52.15149},
 		{7.33293, 52.13893},
 	}
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.2)
+	fallbackMeasure := measure.ScaleByPoint(measure.HaversineByPoint(), 1.2)
 	byIndexDistance, err := routingkit.DurationMatrix(
 		"testdata/rk_test.osm.pbf",
 		1000,
@@ -117,7 +117,7 @@ func ExampleDurationMatrix() {
 // [osm-docs]: https://wiki.openstreetmap.org/wiki/Way
 // [osm-ways]: https://wiki.openstreetmap.org/wiki/Key:highway
 func Example_customProfile() {
-	fallbackMeasure := route.ScaleByPoint(route.HaversineByPoint(), 1.3)
+	fallbackMeasure := measure.ScaleByPoint(measure.HaversineByPoint(), 1.3)
 
 	// Restricts ways to defined OSM way tags.
 	filter := func(id int, tags map[string]string) bool {
@@ -164,8 +164,8 @@ func Example_customProfile() {
 	}
 	cost := m.Cost(
 
-		route.Point{7.34375, 52.16391},
-		route.Point{7.32165, 52.15834},
+		measure.Point{7.34375, 52.16391},
+		measure.Point{7.32165, 52.15834},
 	)
 	fmt.Println(int(cost))
 	// Output:
