@@ -18,6 +18,10 @@ linters-settings:
         - github.com/nextmv-io/sdk/route/here
         - github.com/nextmv-io/sdk/route/google
         - github.com/nextmv-io/sdk/route/routingkit
+        - github.com/nextmv-io/sdk/measure/here
+        - github.com/nextmv-io/sdk/measure/osrm
+        - github.com/nextmv-io/sdk/measure/google
+        - github.com/nextmv-io/sdk/measure/routingkit
         - googlemaps.github.io/maps
         - github.com/dgraph-io/ristretto
         - go.uber.org/mock
