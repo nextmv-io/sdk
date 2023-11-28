@@ -68,7 +68,7 @@ type VehicleDefaults struct {
 	// CompatibilityAttributes attributes that the vehicle is compatible with.
 	CompatibilityAttributes *[]string `json:"compatibility_attributes,omitempty" uniqueItems:"true"`
 	// ActivationPenalty penalty of using the vehicle.
-	ActivationPenalty *int `json:"activation_penalty,omitempty" minimum:"0"`
+	ActivationPenalty *int `json:"activation_penalty,omitempty"`
 	// AlternateStops a set of alternate stops for which only one should be serviced.
 	AlternateStops *[]string `json:"alternate_stops,omitempty" uniqueItems:"true"`
 }
@@ -128,7 +128,7 @@ type Vehicle struct {
 	// MaxWait maximum aggregated waiting time that the vehicle can wait across route stops.
 	MaxWait *int `json:"max_wait,omitempty" minimum:"0"`
 	// ActivationPenalty penalty of using the vehicle.
-	ActivationPenalty *int `json:"activation_penalty,omitempty" minimum:"0"`
+	ActivationPenalty *int `json:"activation_penalty,omitempty"`
 	// StartLocation location where the vehicle starts.
 	StartLocation *Location `json:"start_location,omitempty"`
 	// AlternateStops a set of alternate stops for which only one should be serviced.
