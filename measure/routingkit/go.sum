@@ -37,6 +37,8 @@ github.com/nextmv-io/go-routingkit v0.1.18 h1:eu4ILukW56gMwH2N37bYdgtc9DsKtJOb65
 github.com/nextmv-io/go-routingkit v0.1.18/go.mod h1:Cx6fyvDxyvgfSRGB2WB1e0pCpOqnGPQu7wlKVYEM0+0=
 github.com/nextmv-io/osm v0.0.1 h1:BzAfiw3Pw1j7P8KWdEoWKiB9LJ386ljczuOPqGBCXNQ=
 github.com/nextmv-io/osm v0.0.1/go.mod h1:tByeexrCVHDMzMZ4C7SMQJGXRJb1qO3e/9OfjSFTg5c=
+github.com/nextmv-io/sdk/route/routingkit v1.0.2 h1:rILXtG77zBHOPZqm4HTIK2l28dTWg2JNE+YNqVsGSY4=
+github.com/nextmv-io/sdk/route/routingkit v1.0.2/go.mod h1:e35EqkT8OYNSwR5Oz53KPDF3sifRDuf27Jvh4KH74/w=
 github.com/paulmach/orb v0.1.3/go.mod h1:VFlX/8C+IQ1p6FTRRKzKoOPJnvEtA5G0Veuqwbu//Vk=
 github.com/paulmach/orb v0.9.0 h1:MwA1DqOKtvCgm7u9RZ/pnYejTeDJPnr0+0oFajBbJqk=
 github.com/paulmach/orb v0.9.0/go.mod h1:SudmOk85SXtmXAB3sLGyJ6tZy/8pdfrV0o6ef98Xc30=
