@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/nextmv-io/go-routingkit/routingkit"
-	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/measure"
 )
 
 // ByPointLoader can be embedded in schema structs and unmarshals a ByPoint JSON
 // object into the appropriate implementation, including a routingkit.ByPoint.
 type ByPointLoader struct {
-	byPoint route.ByPoint
+	byPoint measure.ByPoint
 }
 
 type byPointJSON struct {
@@ -62,7 +62,7 @@ func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
 		}
 		l.byPoint = byPoint
 	default:
-		var byPointLoader route.ByPointLoader
+		var byPointLoader measure.ByPointLoader
 		if err := byPointLoader.UnmarshalJSON(b); err != nil {
 			return err
 		}
@@ -72,7 +72,7 @@ func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
 }
 
 // To returns the underlying ByPoint.
-func (l *ByPointLoader) To() route.ByPoint {
+func (l *ByPointLoader) To() measure.ByPoint {
 	if l == nil {
 		return nil
 	}
@@ -82,17 +82,17 @@ func (l *ByPointLoader) To() route.ByPoint {
 // ByIndexLoader can be embedded in schema structs and unmarshals a ByIndex JSON
 // object into the appropriate implementation, including a routingkit.ByIndex.
 type ByIndexLoader struct {
-	byIndex route.ByIndex
+	byIndex measure.ByIndex
 }
 
 type byIndexJSON struct {
-	Measure       *ByPointLoader `json:"measure"`
-	OSMFile       string         `json:"osm"` //nolint:tagliatelle
-	Type          string         `json:"type"`
-	Sources       []route.Point  `json:"sources"`
-	Destinations  []route.Point  `json:"destinations"`
-	Radius        float64        `json:"radius"`
-	ProfileLoader *ProfileLoader `json:"profile,omitempty"` //nolint:tagliatelle
+	Measure       *ByPointLoader  `json:"measure"`
+	OSMFile       string          `json:"osm"` //nolint:tagliatelle
+	Type          string          `json:"type"`
+	Sources       []measure.Point `json:"sources"`
+	Destinations  []measure.Point `json:"destinations"`
+	Radius        float64         `json:"radius"`
+	ProfileLoader *ProfileLoader  `json:"profile,omitempty"` //nolint:tagliatelle
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByIndex.
@@ -108,7 +108,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	var m route.ByPoint
+	var m measure.ByPoint
 	if j.Measure != nil {
 		m = j.Measure.To()
 	}
@@ -141,7 +141,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 		}
 		l.byIndex = byIndex
 	default:
-		var byIndexLoader route.ByIndexLoader
+		var byIndexLoader measure.ByIndexLoader
 		if err := byIndexLoader.UnmarshalJSON(b); err != nil {
 			return err
 		}
@@ -151,7 +151,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 }
 
 // To returns the underlying ByIndex.
-func (l *ByIndexLoader) To() route.ByIndex {
+func (l *ByIndexLoader) To() measure.ByIndex {
 	return l.byIndex
 }
 

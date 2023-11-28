@@ -1,11 +1,11 @@
 package osrm
 
 import (
-	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/measure"
 )
 
-func overrideZeroes(m route.ByIndex, points []route.Point) route.ByIndex {
-	return route.Override(m, route.Constant(0.0), func(i, j int) bool {
+func overrideZeroes(m measure.ByIndex, points []measure.Point) measure.ByIndex {
+	return measure.Override(m, measure.Constant(0.0), func(i, j int) bool {
 		return len(points[i]) == 0 || len(points[j]) == 0
 	})
 }
@@ -15,16 +15,16 @@ func overrideZeroes(m route.ByIndex, points []route.Point) route.ByIndex {
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
 func DistanceMatrix(
-	c Client, points []route.Point,
+	c Client, points []measure.Point,
 	parallelQueries int,
-) (route.ByIndex, error) {
+) (measure.ByIndex, error) {
 	p1, _, err := c.Table(points, WithDistance(), ParallelRuns(parallelQueries))
 	if err != nil {
 		// preserve the error type for callers
 		return nil, err
 	}
 
-	return overrideZeroes(route.Matrix(p1), points), nil
+	return overrideZeroes(measure.Matrix(p1), points), nil
 }
 
 // DurationMatrix makes a request for a duration table from an OSRM server and
@@ -32,16 +32,16 @@ func DistanceMatrix(
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
 func DurationMatrix(
-	c Client, points []route.Point,
+	c Client, points []measure.Point,
 	parallelQueries int,
-) (route.ByIndex, error) {
+) (measure.ByIndex, error) {
 	_, p2, err := c.Table(points, WithDuration(), ParallelRuns(parallelQueries))
 	if err != nil {
 		// preserve the error type for callers
 		return nil, err
 	}
 
-	return overrideZeroes(route.Matrix(p2), points), nil
+	return overrideZeroes(measure.Matrix(p2), points), nil
 }
 
 // DistanceDurationMatrices fetches a distance and duration table from an OSRM
@@ -50,10 +50,10 @@ func DurationMatrix(
 // number of points given.
 func DistanceDurationMatrices(
 	c Client,
-	points []route.Point,
+	points []measure.Point,
 	parallelQueries int,
 ) (
-	distance, duration route.ByIndex,
+	distance, duration measure.ByIndex,
 	err error,
 ) {
 	p1, p2, err := c.Table(
@@ -68,9 +68,9 @@ func DistanceDurationMatrices(
 	}
 
 	return overrideZeroes(
-			route.Matrix(p1),
+			measure.Matrix(p1),
 			points),
-		overrideZeroes(route.Matrix(p2),
+		overrideZeroes(measure.Matrix(p2),
 			points,
 		), nil
 }

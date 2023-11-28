@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/measure"
 	"googlemaps.github.io/maps"
 )
 
@@ -41,7 +41,7 @@ type matrixResponse struct {
 }
 
 // DistanceDurationMatrices makes requests to the Google Distance Matrix API
-// and returns route.ByIndex types to estimate distances (in meters) and
+// and returns measure.ByIndex types to estimate distances (in meters) and
 // durations (in seconds). It receives a Google Maps Client and Request. The
 // coordinates passed to the request must be in the form latitude, longitude.
 // The resulting distance and duration matrices are saved in memory. To find
@@ -51,8 +51,8 @@ type matrixResponse struct {
 // them accordingly. You can find more about usage limits here in the official
 // google maps documentation for the distance matrix, usage and billing.
 func DistanceDurationMatrices(c *maps.Client, r *maps.DistanceMatrixRequest) (
-	route.ByIndex,
-	route.ByIndex,
+	measure.ByIndex,
+	measure.ByIndex,
 	error,
 ) {
 	// Split request into multiple ones respecting the maxAddresses and
@@ -95,7 +95,7 @@ func DistanceDurationMatrices(c *maps.Client, r *maps.DistanceMatrixRequest) (
 		}
 	}
 
-	return route.Matrix(distances), route.Matrix(durations), nil
+	return measure.Matrix(distances), measure.Matrix(durations), nil
 }
 
 /*

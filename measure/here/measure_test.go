@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/measure"
 )
 
 const apiKey string = "foo"
@@ -63,7 +63,7 @@ func TestCancellation(t *testing.T) {
 	cli.(*client).schemeHost = s.URL
 	cli.(*client).maxSyncPoints = 1
 
-	points := []route.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
+	points := []measure.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
 	_, err := cli.DistanceMatrix(ctx, points)
 	if err == nil {
 		t.Errorf("expected context cancellation error: %v", err)
@@ -193,7 +193,7 @@ func TestClientRedirect(t *testing.T) {
 		cli.(*client).schemeHost = s.URL
 		cli.(*client).maxSyncPoints = 1
 
-		points := []route.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
+		points := []measure.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
 		_, err := cli.DistanceMatrix(context.Background(), points)
 		if err != nil {
 			t.Errorf(
@@ -208,47 +208,47 @@ func TestClientRedirect(t *testing.T) {
 func TestHereMeasures(t *testing.T) {
 	distances := func(
 		cli Client,
-		ps []route.Point,
+		ps []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		return cli.DistanceMatrix(context.Background(), ps, opts...)
 	}
 	durations := func(
 		cli Client,
-		ps []route.Point,
+		ps []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		return cli.DurationMatrix(context.Background(), ps, opts...)
 	}
 	selectDistances := func(
 		cli Client,
-		ps []route.Point,
+		ps []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		distances, _, err := cli.DistanceDurationMatrices(
 			context.Background(), ps, opts...)
 		return distances, err
 	}
 	selectDurations := func(
 		cli Client,
-		ps []route.Point,
+		ps []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		_, durations, err := cli.DistanceDurationMatrices(
 			context.Background(), ps, opts...)
 		return durations, err
 	}
 	type test struct {
 		description   string
-		points        []route.Point
+		points        []measure.Point
 		maxSyncPoints int
 		retries       int
 		expectErr     bool
 		getMatrix     func(
 			Client,
-			[]route.Point,
+			[]measure.Point,
 			...MatrixOption,
-		) (route.ByIndex, error)
+		) (measure.ByIndex, error)
 		expectedMatrix [][]float64
 		requests       []requestSpec
 		opts           []MatrixOption
@@ -260,8 +260,8 @@ func TestHereMeasures(t *testing.T) {
 		3, 0, 4,
 		5, 6, 0,
 	}
-	points := []route.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
-	pointsWithEmptyVals := []route.Point{
+	points := []measure.Point{{1.0, 0.1}, {2.0, 0.2}, {3.0, 0.3}}
+	pointsWithEmptyVals := []measure.Point{
 		{1.0, 0.1}, {2.0, 0.2}, {}, {3.0, 0.3}, {},
 	}
 	inPoints := []point{
@@ -1141,7 +1141,7 @@ func TestHereMeasures(t *testing.T) {
 	}
 }
 
-func unpackMatrix(m route.ByIndex, width int) [][]float64 {
+func unpackMatrix(m measure.ByIndex, width int) [][]float64 {
 	matrix := make([][]float64, width)
 	for i := 0; i < width; i++ {
 		matrix[i] = make([]float64, width)
