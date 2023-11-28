@@ -64,7 +64,7 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     model = pyo.ConcreteModel()
 
     # Define the solver provider. Make sure it is installed.
-    provider = "123"
+    provider = "cbc"
     if provider not in SUPPORTED_PROVIDER_DURATIONS:
         raise ValueError(
             f"Unsupported provider: {provider}. The supported providers are: "
