@@ -62,9 +62,14 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
 
     # Creates the model.
     model = pyo.ConcreteModel()
-    provider = "glpk"
+
+    # Define the solver provider. Make sure it is installed.
+    provider = "123"
     if provider not in SUPPORTED_PROVIDER_DURATIONS:
-        raise ValueError(f"Unsupported provider: {provider}")
+        raise ValueError(
+            f"Unsupported provider: {provider}. The supported providers are: "
+            f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
+        )
 
     # Creates the solver.
     solver = pyo.SolverFactory(provider)

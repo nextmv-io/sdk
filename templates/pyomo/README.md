@@ -27,9 +27,11 @@ Follow these steps to run locally.
     pip3 install -r requirements.txt
     ```
 
-1. Pyomo [does not include any solvers][pyomo-solvers]. Make sure that you have
-   installed a solver such as [GLPK][glpk] or [COIN-OR CBC][cbc] before running
-   locally.
+1. Pyomo [does not include any solvers][pyomo-solvers]. This template assumes
+   that supported providers are [`glpk`][glpk] and [`cbc`][cbc]. Make sure you
+   have installed them locally, as they are already installed on the image when
+   running remotely. Please [contact support][support] if you need a different
+   solver.
 
 1. Run the command below to check that everything works as expected:
 
@@ -53,3 +55,4 @@ Follow these steps to run locally.
 [pyomo-solvers]: http://www.pyomo.org/installation
 [glpk]: https://www.gnu.org/software/glpk/
 [cbc]: https://projects.coin-or.org/Cbc
+[support]: https://www.nextmv.io/contact
