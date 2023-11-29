@@ -5,12 +5,11 @@ import (
 	"github.com/nextmv-io/sdk/connect"
 )
 
-// NewSolver creates a new solver. The solver can be used to solve a solution.
-// The solution passed to the solver is the starting point of the solver. The
-// solver will try to improve the solution.
-func NewSolveOperatorUnplan(
+// NewSolveOperatorUnPlan creates a new solve operator for nextroute that
+// unplans units.
+func NewSolveOperatorUnPlan(
 	numberOfUnits alns.SolveParameter[Solution],
 ) (alns.SolveOperator[Solution], error) {
-	connect.Connect(con, &newSolveOperatorUnplan)
-	return newSolveOperatorUnplan(numberOfUnits)
+	connect.Connect(con, &newSolveOperatorUnPlan)
+	return newSolveOperatorUnPlan(numberOfUnits)
 }

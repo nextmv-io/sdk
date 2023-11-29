@@ -210,7 +210,7 @@ var (
 		DurationExpression,
 	) TimeDependentDurationExpression
 
-	newSolveOperatorUnplan func(
+	newSolveOperatorUnPlan func(
 		numberOfUnits alns.SolveParameter[Solution],
 	) (alns.SolveOperator[Solution], error)
 
