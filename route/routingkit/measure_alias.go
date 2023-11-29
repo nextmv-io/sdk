@@ -1,7 +1,7 @@
 package routingkit
 
 import (
-	"github.com/nextmv-io/go-routingkit/routingkit"
+	rk "github.com/nextmv-io/go-routingkit/routingkit"
 	r "github.com/nextmv-io/sdk/measure/routingkit"
 	"github.com/nextmv-io/sdk/route"
 )
@@ -14,7 +14,7 @@ type DistanceClient = r.DistanceClient
 // NewDistanceClient returns a new RoutingKit client.
 func NewDistanceClient(
 	mapFile string,
-	profile routingkit.Profile,
+	profile rk.Profile,
 ) (DistanceClient, error) {
 	return r.NewDistanceClient(mapFile, profile)
 }
@@ -27,7 +27,7 @@ type DurationClient = r.DurationClient
 // NewDurationClient returns a new RoutingKit client.
 func NewDurationClient(
 	mapFile string,
-	profile routingkit.Profile,
+	profile rk.Profile,
 ) (DurationClient, error) {
 	return r.NewDurationClient(mapFile, profile)
 }
@@ -56,7 +56,7 @@ func DurationByPoint(
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
+	profile rk.Profile,
 	m route.ByPoint,
 ) (route.ByPoint, error) {
 	return r.DurationByPoint(mapFile, radius, cacheSize, profile, m)
@@ -71,7 +71,7 @@ func ByPoint(
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
+	profile rk.Profile,
 	m route.ByPoint,
 ) (route.ByPoint, error) {
 	return r.ByPoint(mapFile, radius, cacheSize, profile, m)
@@ -87,7 +87,7 @@ func Matrix(
 	radius float64,
 	srcs []route.Point,
 	dests []route.Point,
-	profile routingkit.Profile,
+	profile rk.Profile,
 	m route.ByPoint,
 ) (route.ByIndex, error) {
 	return r.Matrix(mapFile, radius, srcs, dests, profile, m)
@@ -104,7 +104,7 @@ func DurationMatrix(
 	radius float64,
 	srcs []route.Point,
 	dests []route.Point,
-	profile routingkit.Profile,
+	profile rk.Profile,
 	m route.ByPoint,
 ) (route.ByIndex, error) {
 	return r.DurationMatrix(mapFile, radius, srcs, dests, profile, m)

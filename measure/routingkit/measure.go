@@ -7,8 +7,8 @@ import (
 	"math"
 
 	"github.com/dgraph-io/ristretto"
-	"github.com/nextmv-io/go-routingkit/routingkit"
-	route "github.com/nextmv-io/sdk/measure"
+	rk "github.com/nextmv-io/go-routingkit/routingkit"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/twpayne/go-polyline"
 )
 
@@ -16,24 +16,24 @@ import (
 
 // DistanceClient represents a RoutingKit distance client.
 type DistanceClient interface {
-	// Measure returns a route.ByPoint that can calculate the road network
+	// Measure returns a measure.ByPoint that can calculate the road network
 	// distance between any two points found within the provided mapFile.
-	Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error)
-	// Matrix returns a route.ByIndex that represents the road network distance
+	Measure(radius float64, cacheSize int64, fallback measure.ByPoint) (measure.ByPoint, error)
+	// Matrix returns a measure.ByIndex that represents the road network distance
 	// matrix as a measure.
-	Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error)
+	Matrix(srcs []measure.Point, dests []measure.Point) (measure.ByIndex, error)
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
-	Polyline(points []route.Point) (string, []string, error)
+	Polyline(points []measure.Point) (string, []string, error)
 }
 
 // NewDistanceClient returns a new RoutingKit client.
 func NewDistanceClient(
 	mapFile string,
-	profile routingkit.Profile,
+	profile rk.Profile,
 ) (DistanceClient, error) {
-	client, err := routingkit.NewDistanceClient(mapFile, profile)
+	client, err := rk.NewDistanceClient(mapFile, profile)
 	if err != nil {
 		return nil, err
 	}
@@ -46,26 +46,26 @@ func NewDistanceClient(
 
 type distanceClient struct {
 	mapFile string
-	profile routingkit.Profile
-	client  routingkit.DistanceClient
+	profile rk.Profile
+	client  rk.DistanceClient
 }
 
-// Measure returns a route.ByPoint that can calculate the road network distance
+// Measure returns a measure.ByPoint that can calculate the road network distance
 // between any two points found within the provided mapFile.
-func (c distanceClient) Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error) {
+func (c distanceClient) Measure(radius float64, cacheSize int64, fallback measure.ByPoint) (measure.ByPoint, error) {
 	return newByPoint(c.client, c.mapFile, radius, cacheSize, c.profile, fallback)
 }
 
-// Matrix returns a route.ByIndex that represents the road network distance
+// Matrix returns a measure.ByIndex that represents the road network distance
 // matrix as a measure.
-func (c distanceClient) Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error) {
+func (c distanceClient) Matrix(srcs []measure.Point, dests []measure.Point) (measure.ByIndex, error) {
 	return newMatrix(c.client, c.mapFile, 0, srcs, dests, c.profile, nil)
 }
 
 // Polyline requests polylines for the given points. The first parameter
 // returns a polyline from start to end and the second parameter returns a list
 // of polylines, one per leg.
-func (c distanceClient) Polyline(points []route.Point) (string, []string, error) {
+func (c distanceClient) Polyline(points []measure.Point) (string, []string, error) {
 	return getPolyLine(points, c.client.Route)
 }
 
@@ -73,24 +73,24 @@ func (c distanceClient) Polyline(points []route.Point) (string, []string, error)
 
 // DurationClient represents a RoutingKit duration client.
 type DurationClient interface {
-	// Measure returns a route.ByPoint that can calculate the road network
+	// Measure returns a measure.ByPoint that can calculate the road network
 	// travel time between any two points found within the provided mapFile.
-	Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error)
-	// Matrix returns a route.ByIndex that represents the road network travel
+	Measure(radius float64, cacheSize int64, fallback measure.ByPoint) (measure.ByPoint, error)
+	// Matrix returns a measure.ByIndex that represents the road network travel
 	// time matrix as a measure.
-	Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error)
+	Matrix(srcs []measure.Point, dests []measure.Point) (measure.ByIndex, error)
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
-	Polyline(points []route.Point) (string, []string, error)
+	Polyline(points []measure.Point) (string, []string, error)
 }
 
 // NewDurationClient returns a new RoutingKit client.
 func NewDurationClient(
 	mapFile string,
-	profile routingkit.Profile,
+	profile rk.Profile,
 ) (DurationClient, error) {
-	client, err := routingkit.NewTravelTimeClient(mapFile, profile)
+	client, err := rk.NewTravelTimeClient(mapFile, profile)
 	if err != nil {
 		return nil, err
 	}
@@ -103,26 +103,26 @@ func NewDurationClient(
 
 type durationClient struct {
 	mapFile string
-	profile routingkit.Profile
-	client  routingkit.TravelTimeClient
+	profile rk.Profile
+	client  rk.TravelTimeClient
 }
 
-// Measure returns a route.ByPoint that can calculate the road network travel
+// Measure returns a measure.ByPoint that can calculate the road network travel
 // time between any two points found within the provided mapFile.
-func (c durationClient) Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error) {
+func (c durationClient) Measure(radius float64, cacheSize int64, fallback measure.ByPoint) (measure.ByPoint, error) {
 	return newDurationByPoint(c.client, c.mapFile, radius, cacheSize, c.profile, fallback)
 }
 
-// Matrix returns a route.ByIndex that represents the road network travel time
+// Matrix returns a measure.ByIndex that represents the road network travel time
 // matrix as a measure.
-func (c durationClient) Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error) {
+func (c durationClient) Matrix(srcs []measure.Point, dests []measure.Point) (measure.ByIndex, error) {
 	return newDurationMatrix(c.client, c.mapFile, 0, srcs, dests, c.profile, nil)
 }
 
 // Polyline requests polylines for the given points. The first parameter
 // returns a polyline from start to end and the second parameter returns a list
 // of polylines, one per leg.
-func (c durationClient) Polyline(points []route.Point) (string, []string, error) {
+func (c durationClient) Polyline(points []measure.Point) (string, []string, error) {
 	return getPolyLine(points, c.client.Route)
 }
 
@@ -132,16 +132,16 @@ const cacheItemCost int64 = 80
 // to avoid having to import two packages both called routingkit
 
 // Car constructs a car routingkit profile.
-var Car = routingkit.Car
+var Car = rk.Car
 
 // Bike constructs a bike routingkit profile.
-var Bike = routingkit.Bike
+var Bike = rk.Bike
 
 // Truck constructs a truck routingkit profile.
-var Truck = routingkit.Truck
+var Truck = rk.Truck
 
 // Pedestrian constructs a pedestrian routingkit profile.
-var Pedestrian = routingkit.Pedestrian
+var Pedestrian = rk.Pedestrian
 
 // DurationByPoint is a measure that uses routingkit to calculate car travel
 // times between given points. It needs a .osm.pbf map file, a radius in which
@@ -152,10 +152,10 @@ func DurationByPoint(
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByPoint, error) {
-	client, err := routingkit.NewTravelTimeClient(mapFile, profile)
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByPoint, error) {
+	client, err := rk.NewTravelTimeClient(mapFile, profile)
 	if err != nil {
 		return nil, err
 	}
@@ -163,13 +163,13 @@ func DurationByPoint(
 }
 
 func newDurationByPoint(
-	client routingkit.TravelTimeClient,
+	client rk.TravelTimeClient,
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByPoint, error) {
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByPoint, error) {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		// NumCounters should be 10 times the max number of cached items. Since
 		// the cost of each item is cacheItemCost , 10 * cacheSize /
@@ -193,17 +193,17 @@ func newDurationByPoint(
 }
 
 type durationByPoint struct {
-	client    routingkit.TravelTimeClient
-	m         route.ByPoint
+	client    rk.TravelTimeClient
+	m         measure.ByPoint
 	cache     *ristretto.Cache
 	mapFile   string
 	radius    float64
 	cacheSize int64
-	profile   routingkit.Profile
+	profile   rk.Profile
 }
 
 // Cost calculates the road network travel time between the points.
-func (b durationByPoint) Cost(p1, p2 route.Point) float64 {
+func (b durationByPoint) Cost(p1, p2 measure.Point) float64 {
 	key := make([]byte, 32)
 	binary.LittleEndian.PutUint64(key[0:], math.Float64bits(p1[0]))
 	binary.LittleEndian.PutUint64(key[8:], math.Float64bits(p1[1]))
@@ -215,7 +215,7 @@ func (b durationByPoint) Cost(p1, p2 route.Point) float64 {
 	}
 
 	d := b.client.TravelTime(coords(p1), coords(p2))
-	if b.m != nil && d == routingkit.MaxDistance {
+	if b.m != nil && d == rk.MaxDistance {
 		c := b.m.Cost(p1, p2)
 		b.cache.Set(key, c, cacheItemCost)
 		return c
@@ -231,7 +231,7 @@ func (b durationByPoint) Triangular() bool {
 	return true
 }
 
-// MarshalJSON serializes the route.
+// MarshalJSON serializes the measure.
 func (b durationByPoint) MarshalJSON() ([]byte, error) {
 	m := make(map[string]any)
 	m["type"] = "routingkitDuration"
@@ -245,7 +245,7 @@ func (b durationByPoint) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-// ByPoint constructs a route.ByPoint that computes the road network distance
+// ByPoint constructs a measure.ByPoint that computes the road network distance
 // connecting any two points found within the provided mapFile. It needs a
 // radius in which points can be snapped to the road network, a cache size in
 // bytes (1 << 30 = 1 GB), a profile and a measure that is used in case no
@@ -254,10 +254,10 @@ func ByPoint(
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByPoint, error) {
-	client, err := routingkit.NewDistanceClient(mapFile, profile)
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByPoint, error) {
+	client, err := rk.NewDistanceClient(mapFile, profile)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
@@ -265,13 +265,13 @@ func ByPoint(
 }
 
 func newByPoint(
-	client routingkit.DistanceClient,
+	client rk.DistanceClient,
 	mapFile string,
 	radius float64,
 	cacheSize int64,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByPoint, error) {
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByPoint, error) {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		// NumCounters should be 10 times the max number of cached items. Since
 		// the cost of each item is cacheItemCost , 10 * cacheSize /
@@ -295,17 +295,17 @@ func newByPoint(
 }
 
 type byPoint struct {
-	client    routingkit.DistanceClient
-	m         route.ByPoint
+	client    rk.DistanceClient
+	m         measure.ByPoint
 	cache     *ristretto.Cache
 	mapFile   string
 	radius    float64
 	cacheSize int64
-	profile   routingkit.Profile
+	profile   rk.Profile
 }
 
 // Cost calculates the road network distance between the points.
-func (b byPoint) Cost(p1, p2 route.Point) float64 {
+func (b byPoint) Cost(p1, p2 measure.Point) float64 {
 	key := make([]byte, 32)
 	binary.LittleEndian.PutUint64(key[0:], math.Float64bits(p1[0]))
 	binary.LittleEndian.PutUint64(key[8:], math.Float64bits(p1[1]))
@@ -317,7 +317,7 @@ func (b byPoint) Cost(p1, p2 route.Point) float64 {
 	}
 
 	d := b.client.Distance(coords(p1), coords(p2))
-	if b.m != nil && d == routingkit.MaxDistance {
+	if b.m != nil && d == rk.MaxDistance {
 		c := b.m.Cost(p1, p2)
 		b.cache.Set(key, c, cacheItemCost)
 		return c
@@ -330,7 +330,7 @@ func (b byPoint) Cost(p1, p2 route.Point) float64 {
 // Creates polylines for the given points. First return parameter is a polyline
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
-func (b byPoint) Polyline(points []route.Point) (string, []string, error) {
+func (b byPoint) Polyline(points []measure.Point) (string, []string, error) {
 	return getPolyLine(points, b.client.Route)
 }
 
@@ -339,7 +339,7 @@ func (b byPoint) Triangular() bool {
 	return true
 }
 
-// MarshalJSON serializes the route.
+// MarshalJSON serializes the measure.
 func (b byPoint) MarshalJSON() ([]byte, error) {
 	m := make(map[string]any)
 	m["type"] = "routingkit"
@@ -353,7 +353,7 @@ func (b byPoint) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-// Matrix uses the provided mapFile to construct a route.ByIndex that can find
+// Matrix uses the provided mapFile to construct a measure.ByIndex that can find
 // the road network distance between any point in srcs and any point in dests.
 // In addition to the mapFile, srcs and dests it needs a radius in which points
 // can be snapped to the road network, a profile and a measure that is used in
@@ -361,12 +361,12 @@ func (b byPoint) MarshalJSON() ([]byte, error) {
 func Matrix(
 	mapFile string,
 	radius float64,
-	srcs []route.Point,
-	dests []route.Point,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByIndex, error) {
-	client, err := routingkit.NewDistanceClient(mapFile, profile)
+	srcs []measure.Point,
+	dests []measure.Point,
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByIndex, error) {
+	client, err := rk.NewDistanceClient(mapFile, profile)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
@@ -374,17 +374,17 @@ func Matrix(
 }
 
 func newMatrix(
-	client routingkit.DistanceClient,
+	client rk.DistanceClient,
 	mapFile string,
 	radius float64,
-	srcs []route.Point,
-	dests []route.Point,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByIndex, error) {
+	srcs []measure.Point,
+	dests []measure.Point,
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByIndex, error) {
 	mx := client.Matrix(coordsSlice(srcs), coordsSlice(dests))
 	return matrix{
-		ByIndex:    route.Matrix(float64Matrix(mx, srcs, dests, m, false)),
+		ByIndex:    measure.Matrix(float64Matrix(mx, srcs, dests, m, false)),
 		mapFile:    mapFile,
 		radius:     radius,
 		srcs:       srcs,
@@ -396,12 +396,12 @@ func newMatrix(
 }
 
 type matrix struct {
-	route.ByPoint
-	route.ByIndex
+	measure.ByPoint
+	measure.ByIndex
 	mapFile    string
 	clientType string
-	srcs       []route.Point
-	dests      []route.Point
+	srcs       []measure.Point
+	dests      []measure.Point
 	radius     float64
 	profile    *ProfileLoader
 }
@@ -411,7 +411,7 @@ func (m matrix) Cost(i, j int) float64 {
 	return m.ByIndex.Cost(i, j)
 }
 
-// MarshalJSON serializes the route.
+// MarshalJSON serializes the measure.
 func (m matrix) MarshalJSON() ([]byte, error) {
 	data := map[string]any{
 		"type":         m.clientType,
@@ -428,7 +428,7 @@ func (m matrix) MarshalJSON() ([]byte, error) {
 	return json.Marshal(data)
 }
 
-// DurationMatrix uses the provided mapFile to construct a route.ByIndex that
+// DurationMatrix uses the provided mapFile to construct a measure.ByIndex that
 // can find the road network durations between any point in srcs and any point
 // in dests.
 // In addition to the mapFile, srcs and dests it needs a radius in which points
@@ -437,12 +437,12 @@ func (m matrix) MarshalJSON() ([]byte, error) {
 func DurationMatrix(
 	mapFile string,
 	radius float64,
-	srcs []route.Point,
-	dests []route.Point,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByIndex, error) {
-	client, err := routingkit.NewTravelTimeClient(mapFile, profile)
+	srcs []measure.Point,
+	dests []measure.Point,
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByIndex, error) {
+	client, err := rk.NewTravelTimeClient(mapFile, profile)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
@@ -450,17 +450,17 @@ func DurationMatrix(
 }
 
 func newDurationMatrix(
-	client routingkit.TravelTimeClient,
+	client rk.TravelTimeClient,
 	mapFile string,
 	radius float64,
-	srcs []route.Point,
-	dests []route.Point,
-	profile routingkit.Profile,
-	m route.ByPoint,
-) (route.ByIndex, error) {
+	srcs []measure.Point,
+	dests []measure.Point,
+	profile rk.Profile,
+	m measure.ByPoint,
+) (measure.ByIndex, error) {
 	mx := client.Matrix(coordsSlice(srcs), coordsSlice(dests))
 	return matrix{
-		ByIndex:    route.Matrix(float64Matrix(mx, srcs, dests, m, true)),
+		ByIndex:    measure.Matrix(float64Matrix(mx, srcs, dests, m, true)),
 		mapFile:    mapFile,
 		radius:     radius,
 		srcs:       srcs,
@@ -471,11 +471,11 @@ func newDurationMatrix(
 	}, nil
 }
 
-func coords(p route.Point) []float32 {
+func coords(p measure.Point) []float32 {
 	return []float32{float32(p[0]), float32(p[1])}
 }
 
-func coordsSlice(ps []route.Point) [][]float32 {
+func coordsSlice(ps []measure.Point) [][]float32 {
 	cs := make([][]float32, len(ps))
 	for i, p := range ps {
 		cs[i] = coords(p)
@@ -484,16 +484,16 @@ func coordsSlice(ps []route.Point) [][]float32 {
 }
 
 func float64Matrix(m [][]uint32,
-	srcs []route.Point,
-	dests []route.Point,
-	fallback route.ByPoint,
+	srcs []measure.Point,
+	dests []measure.Point,
+	fallback measure.ByPoint,
 	duration bool,
 ) [][]float64 {
 	fM := make([][]float64, len(m))
 	for i, r := range m {
 		fM[i] = make([]float64, len(r))
 		for j, c := range r {
-			if fallback != nil && c == routingkit.MaxDistance {
+			if fallback != nil && c == rk.MaxDistance {
 				fM[i][j] = fallback.Cost(srcs[i], dests[j])
 			} else {
 				if duration {
@@ -510,7 +510,7 @@ func float64Matrix(m [][]uint32,
 // getPolyLine requests the polylines for the given route from the routingkit
 // client. It returns the complete polyline and a list of polylines per leg.
 func getPolyLine(
-	points []route.Point,
+	points []measure.Point,
 	router func(from []float32, to []float32) (uint32, [][]float32),
 ) (string, []string, error) {
 	encodedPolylines := make([]string, len(points)-1)
@@ -524,7 +524,7 @@ func getPolyLine(
 			poly64[i] = []float64{float64(p[0]), float64(p[1])}
 		}
 		encodedPolylines[i] = string(polyline.EncodeCoords(poly64))
-		if dist == routingkit.MaxDistance {
+		if dist == rk.MaxDistance {
 			return "", []string{}, fmt.Errorf("no route found between %v and %v", p1, p2)
 		}
 		completePolyline = append(completePolyline, poly64...)
