@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/nextmv-io/sdk/measure/osrm"
 	"github.com/nextmv-io/sdk/route"
-	"github.com/nextmv-io/sdk/route/osrm"
 )
 
 type input struct {
