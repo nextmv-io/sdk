@@ -211,7 +211,7 @@ issues:
       linters:
         - lll
     # Tag should be 'measure' in both cases ByPoint and ByIndex
-    - path: route/load\.go
+    - path: measure/load\.go
       linters:
         - tagliatelle
       text: measure
@@ -226,18 +226,18 @@ issues:
         - gocyclo
 
     # Using math/rand is fine here
-    - path: nextroute/common/alias_test\.go
+    - path: common/alias_test\.go
       linters:
         - gosec
       text: G404
     # Complexity is fine here because of the nature of the code
-    - path: nextroute/common/boundingbox_test\.go
+    - path: common/boundingbox_test\.go
       linters:
         - gocyclo
-    - path: nextroute/common/utils\.go
+    - path: common/utils\.go
       linters:
         - gomodguard
-    - path: route/osrm/matrix_test\.go
+    - path: measure/osrm/matrix_test\.go
       linters:
         - gosec
       text: G404
@@ -357,7 +357,6 @@ issues:
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
     # This tag is used by our validation engine and it is valid.
     - path: nextroute/schema/input\.go
-      linters: 
+      linters:
         - govet
       text: structtag
-      

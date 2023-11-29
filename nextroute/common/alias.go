@@ -1,3 +1,4 @@
+// Package common contains common types and functions used by the nextroute.
 package common
 
 import (
