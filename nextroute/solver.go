@@ -14,6 +14,15 @@ func NewSolverFactory() SolverFactory {
 	return newSolverFactory()
 }
 
+// NewEmptySolver creates a new empty solver. In order to make the solver
+// functional operators need to be added to the solver.
+func NewEmptySolver(
+	model Model,
+) (Solver, error) {
+	connect.Connect(con, &newEmptySolver)
+	return newEmptySolver(model)
+}
+
 // NewSolver creates a new solver. The solver can be used to solve a solution.
 // The solution passed to the solver is the starting point of the solver. The
 // solver will try to improve the solution.
@@ -35,11 +44,6 @@ type SolveOptions struct {
 type Solver interface {
 	alns.Progressioner
 	alns.Solver[Solution, SolveOptions]
-	// SolverOptions returns the solver-options used to create the solver. The
-	// returned options are a copy of the options used to create the solver.
-	// They can be used to create a new solver and changes will have no effect
-	// on this invoked solver.
-	SolverOptions() SolverOptions
 }
 
 // IntParameterOptions are the options for an integer parameter.

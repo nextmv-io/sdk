@@ -170,6 +170,10 @@ var (
 		SolverOptions,
 	) (Solver, error)
 
+	newEmptySolver func(
+		Model,
+	) (Solver, error)
+
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
