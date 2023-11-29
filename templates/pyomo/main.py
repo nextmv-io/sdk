@@ -1,5 +1,5 @@
 """
-Template for working with FICO Xpress.
+Template for working with Pyomo.
 """
 
 import argparse
@@ -7,25 +7,28 @@ import json
 import sys
 from typing import Any
 
-try:
-    import xpress as xp
-except ImportError as exc:
-    raise ImportError("is xpress available for your OS and ARCH and installed?") from exc
+import pyomo.environ as pyo
+
+# Duration parameter for the solver.
+SUPPORTED_PROVIDER_DURATIONS = {
+    "cbc": "sec",
+    "glpk": "tmlim",
+}
 
 
 # Status of the solver after optimizing.
 STATUS = {
-    xp.SolStatus.FEASIBLE: "suboptimal",
-    xp.SolStatus.INFEASIBLE: "infeasible",
-    xp.SolStatus.OPTIMAL: "optimal",
-    xp.SolStatus.UNBOUNDED: "unbounded",
+    pyo.TerminationCondition.feasible: "suboptimal",
+    pyo.TerminationCondition.infeasible: "infeasible",
+    pyo.TerminationCondition.optimal: "optimal",
+    pyo.TerminationCondition.unbounded: "unbounded",
 }
 
 
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve problems with Xpress.")
+    parser = argparse.ArgumentParser(description="Solve problems with Pyomo.")
     parser.add_argument(
         "-input",
         default="",
@@ -57,51 +60,64 @@ def main() -> None:
 def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-    # Creates the problem.
-    xp.controls.outputlog = 0  # Turns off verbosity.
-    problem = xp.problem()
-    problem.setControl("timelimit", duration)
+    # Creates the model.
+    model = pyo.ConcreteModel()
+
+    # Define the solver provider. Make sure it is installed.
+    provider = "cbc"
+    if provider not in SUPPORTED_PROVIDER_DURATIONS:
+        raise ValueError(
+            f"Unsupported provider: {provider}. The supported providers are: "
+            f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
+        )
+
+    # Creates the solver.
+    solver = pyo.SolverFactory(provider)
+    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration
 
     # Initializes the linear sums.
     weights = 0.0
     values = 0.0
 
-    # Creates the decision variables and adds them to the linear sums.
+    # Creates the decision variables.
+    item_ids = [item["id"] for item in input_data["items"]]
+    model.item_variable = pyo.Var(item_ids, domain=pyo.Boolean)
+
+    # Use the decision variables for the linear sums
     items = []
     for item in input_data["items"]:
-        item_variable = xp.var(vartype=xp.binary, name=item["id"])
-        problem.addVariable(item_variable)
-        items.append({"item": item, "variable": item_variable})
-        weights += item_variable * item["weight"]
-        values += item_variable * item["value"]
+        item_id = item["id"]
+        items.append({"item": item, "variable": model.item_variable[item_id]})
+        weights += model.item_variable[item_id] * item["weight"]
+        values += model.item_variable[item_id] * item["value"]
 
     # This constraint ensures the weight capacity of the knapsack will not be
     # exceeded.
-    problem.addConstraint(weights <= input_data["weight_capacity"])
+    model.constraint = pyo.Constraint(expr=weights <= input_data["weight_capacity"])
 
     # Sets the objective function: maximize the value of the chosen items.
-    problem.setObjective(values, sense=xp.maximize)
+    model.objective = pyo.Objective(expr=values, sense=pyo.maximize)
 
     # Solves the problem.
-    _, status = problem.optimize()
+    results = solver.solve(model)
 
     # Determines which items were chosen.
-    chosen_items = [item["item"] for item in items if problem.getSolution(item["variable"]) > 0.9]
+    chosen_items = [item["item"] for item in items if item["variable"]() > 0.9]
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": problem.getAttrib("rows"),
-                "provider": "xpress",
-                "status": STATUS.get(status, "unknown"),
-                "variables": problem.getAttrib("cols"),
+                "constraints": model.nconstraints(),
+                "provider": provider,
+                "status": STATUS.get(results.solver.termination_condition, "unknown"),
+                "variables": model.nvariables(),
             },
-            "duration": problem.getAttrib("time"),
-            "value": problem.getAttrib("objval"),
+            "duration": results.solver.time,
+            "value": pyo.value(model.objective),
         },
         "run": {
-            "duration": problem.getAttrib("time"),
+            "duration": results.solver.time,
         },
         "schema": "v1",
     }
