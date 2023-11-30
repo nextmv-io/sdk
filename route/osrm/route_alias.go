@@ -10,7 +10,7 @@ import (
 // polylines, one per leg.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/osrm] instead.s
+// Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func Polyline(
 	c Client, points []route.Point,
 ) (string, []string, error) {

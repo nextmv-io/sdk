@@ -325,6 +325,22 @@ issues:
       linters:
         - unparam
       text: cloudDuration
+    # Uses now deprecated functions.
+    - path: templates/legacy/cluster-tsp/main\.go
+      linters:
+        - staticcheck
+    - path: templates/route/osrm/matrix_alias\.go
+      linters:
+        - staticcheck
+    - path: templates/route/osrm/route_alias\.go
+      linters:
+        - staticcheck
+    - path: templates/route/routingkit/measure_alias\.go
+      linters:
+        - staticcheck
+    - path: templates/route/google/client_alias\.go
+      linters:
+        - staticcheck
 
     # The linter suggests switching an if-elseif-else statement to use switch.
     # This is not reasonable right now because the conditions are complex.
