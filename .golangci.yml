@@ -325,22 +325,33 @@ issues:
       linters:
         - unparam
       text: cloudDuration
-    # Uses now deprecated functions.
-    - path: templates/legacy/cluster-tsp/main\.go
+
+    # Now that route, store and dataframes are deprecated
+    # we get staticcheck errors.
+    - path: templates/legacy
       linters:
         - staticcheck
-    - path: templates/route/osrm/matrix_alias\.go
+      text: "SA1019:"
+    - path: route
       linters:
         - staticcheck
-    - path: templates/route/osrm/route_alias\.go
+      text: "SA1019:"
+    - path: run/legacy_runner\.go
       linters:
         - staticcheck
-    - path: templates/route/routingkit/measure_alias\.go
+      text: "SA1019:"
+    - path: run/simple_runner\.go
       linters:
         - staticcheck
-    - path: templates/route/google/client_alias\.go
+      text: "SA1019:"
+    - path: run/runner_option_legacy\.go
       linters:
         - staticcheck
+      text: "SA1019:"
+    - path: nextroute/schema/router\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
 
     # The linter suggests switching an if-elseif-else statement to use switch.
     # This is not reasonable right now because the conditions are complex.
