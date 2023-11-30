@@ -214,6 +214,14 @@ var (
 		numberOfUnits alns.SolveParameter[Solution],
 	) (alns.SolveOperator[Solution], error)
 
+	newSolveOperatorPlan func(
+		groupSize alns.SolveParameter[Solution],
+	) (alns.SolveOperator[Solution], error)
+
+	newSolveOperatorRestart func(
+		maximumIterations alns.SolveParameter[Solution],
+	) (alns.SolveOperator[Solution], error)
+
 	format func(
 		context.Context,
 		any,
