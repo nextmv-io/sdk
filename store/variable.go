@@ -8,6 +8,8 @@ import (
 )
 
 // Var is a variable stored in a Store.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
 type Var[T any] interface {
 	/*
 		Get the current value of the variable in the Store.
@@ -18,6 +20,7 @@ type Var[T any] interface {
 				return map[string]int{"x": x.Get(s)}
 			})
 
+		Deprecated: This package is deprecated and will be removed in a future.
 	*/
 	Get(Store) T
 
@@ -27,6 +30,8 @@ type Var[T any] interface {
 			s := store.New()
 			x := store.NewVar(s, 10)
 			s = s.Apply(x.Set(15))
+
+		Deprecated: This package is deprecated and will be removed in a future.
 	*/
 	Set(T) Change
 }
@@ -36,6 +41,8 @@ NewVar stores a new variable in a Store.
 
 	s := store.New()
 	x := store.NewVar(s, 10) // x is stored in s.
+
+Deprecated: This package is deprecated and will be removed in a future.
 */
 func NewVar[T any](s Store, data T) Var[T] {
 	connect.Connect(con, &newVarFunc)
@@ -47,6 +54,8 @@ type variable[T any] struct {
 }
 
 // Implements Var.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
 
 func (v variable[T]) Get(s Store) T {
 	if value := v.variable.Get(s); value != nil {
@@ -63,6 +72,8 @@ func (v variable[T]) Set(data T) Change {
 }
 
 // Implements fmt.Stringer.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
 
 func (v variable[T]) String() string {
 	var x T
@@ -70,6 +81,8 @@ func (v variable[T]) String() string {
 }
 
 // Implements json.Marshaler.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
 
 func (v variable[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.String())

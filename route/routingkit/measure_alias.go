@@ -9,9 +9,15 @@ import (
 // >>> DistanceClient implementation
 
 // DistanceClient represents a RoutingKit distance client.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 type DistanceClient = r.DistanceClient
 
 // NewDistanceClient returns a new RoutingKit client.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func NewDistanceClient(
 	mapFile string,
 	profile rk.Profile,
@@ -22,9 +28,15 @@ func NewDistanceClient(
 // >>> DurationClient implementation
 
 // DurationClient represents a RoutingKit duration client.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 type DurationClient = r.DurationClient
 
 // NewDurationClient returns a new RoutingKit client.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func NewDurationClient(
 	mapFile string,
 	profile rk.Profile,
@@ -36,15 +48,27 @@ func NewDurationClient(
 // to avoid having to import two packages both called routingkit
 
 // Car constructs a car routingkit profile.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 var Car = r.Car
 
 // Bike constructs a bike routingkit profile.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 var Bike = r.Bike
 
 // Truck constructs a truck routingkit profile.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 var Truck = r.Truck
 
 // Pedestrian constructs a pedestrian routingkit profile.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 var Pedestrian = r.Pedestrian
 
 // DurationByPoint is a measure that uses routingkit to calculate car travel
@@ -52,6 +76,9 @@ var Pedestrian = r.Pedestrian
 // points can be snapped to the road network, a cache size in bytes (1 << 30 = 1
 // GB), a profile and a measure that is used in case no travel time can be
 // computed.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func DurationByPoint(
 	mapFile string,
 	radius float64,
@@ -67,6 +94,9 @@ func DurationByPoint(
 // radius in which points can be snapped to the road network, a cache size in
 // bytes (1 << 30 = 1 GB), a profile and a measure that is used in case no
 // travel time can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func ByPoint(
 	mapFile string,
 	radius float64,
@@ -82,6 +112,9 @@ func ByPoint(
 // In addition to the mapFile, srcs and dests it needs a radius in which points
 // can be snapped to the road network, a profile and a measure that is used in
 // case no distances can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func Matrix(
 	mapFile string,
 	radius float64,
@@ -99,6 +132,9 @@ func Matrix(
 // In addition to the mapFile, srcs and dests it needs a radius in which points
 // can be snapped to the road network, a profile and a measure that is used in
 // case no travel durations can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 func DurationMatrix(
 	mapFile string,
 	radius float64,

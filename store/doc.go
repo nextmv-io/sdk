@@ -179,5 +179,7 @@ Writes this output to stdout:
 	    "value": 10
 	  }
 	}
+
+Deprecated: This package is deprecated and will be removed in a future.
 */
 package store

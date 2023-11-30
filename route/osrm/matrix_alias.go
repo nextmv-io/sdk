@@ -9,6 +9,9 @@ import (
 // returns a Matrix. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DistanceMatrix(
 	c Client, points []route.Point,
 	parallelQueries int,
@@ -20,6 +23,9 @@ func DistanceMatrix(
 // returns a Matrix. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DurationMatrix(
 	c Client, points []route.Point,
 	parallelQueries int,
@@ -31,6 +37,9 @@ func DurationMatrix(
 // server and returns a Matrix of each. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DistanceDurationMatrices(
 	c Client,
 	points []route.Point,

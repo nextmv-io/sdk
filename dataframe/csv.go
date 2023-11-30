@@ -7,6 +7,8 @@ import (
 
 // FromCSV returns a decoder to decode comma separated values (CSV) files and
 // turn it into a DataFrame.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
 func FromCSV() decode.Decoder {
 	connect.Connect(con, &fromCSV)
 	return fromCSV()

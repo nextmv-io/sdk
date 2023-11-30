@@ -8,12 +8,13 @@ import (
 	"github.com/nextmv-io/sdk/model"
 )
 
-// ByIndexAndTime is deprecated. It is used with the router
-// engine which was replaced by the nextroute engine.
-//
 // ByIndexAndTime holds a Measure and an EndTime (exclusive) up until this
 // measure is to be used as a Unix timestamp. ByIndexAndTime is to be used with
 // NewTimeDependentMeasure which a slice of ByIndexAndTime.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/nextroute].
 type ByIndexAndTime struct {
 	Measure measure.ByIndex
 	EndTime int
@@ -25,14 +26,15 @@ type client struct {
 	cache           map[int]ByIndexAndTime
 }
 
-// NewTimeDependentMeasure is deprecated. It is used with the router
-// engine which was replaced by the nextroute engine.
-//
 // NewTimeDependentMeasure returns a new NewTimeDependentMeasure
 // which implements a cost function.
 // It takes a startTime (e.g. vehicle start) byIndexAndTime measures, where each
 // measure is given with an endTime (exclusive) up until the measure will be
 // used and a fallback measure.
+//
+// Deprecated: This package is deprecated and will be removed in a future.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/nextroute].
 func NewTimeDependentMeasure(
 	startTime int,
 	measures []ByIndexAndTime,

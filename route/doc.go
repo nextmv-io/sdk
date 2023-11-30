@@ -226,5 +226,8 @@ In addition, the package provides Indexed, which adapts any ByPoint into a
 ByIndex. In addition to the ByPoint to be converted, Indexed accepts a fixed
 slice of points that it will use to look up the positions of indices passed
 to Cost.
+
+Deprecated: This package is deprecated and will be removed in a future.
+Use [github.com/nextmv-io/sdk/nextroute] instead.
 */
 package route
