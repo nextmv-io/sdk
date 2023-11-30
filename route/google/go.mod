@@ -7,8 +7,8 @@ replace github.com/nextmv-io/sdk => ../../.
 replace github.com/nextmv-io/sdk/measure/google => ../../measure/google
 
 require (
-	github.com/nextmv-io/sdk v1.0.2
-	github.com/nextmv-io/sdk/measure/google v1.0.2
+	github.com/nextmv-io/sdk v1.0.3
+	github.com/nextmv-io/sdk/measure/google v1.0.3
 	googlemaps.github.io/maps v1.4.0
 )
 
