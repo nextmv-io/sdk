@@ -15,6 +15,9 @@ STATUS = {
     pywraplp.Solver.INFEASIBLE: "infeasible",
     pywraplp.Solver.OPTIMAL: "optimal",
     pywraplp.Solver.UNBOUNDED: "unbounded",
+    pywraplp.Solver.ABNORMAL: "abnormal",
+    pywraplp.Solver.NOT_SOLVED: "not_solved",
+    pywraplp.Solver.MODEL_INVALID: "model_invalid",
 }
 
 
