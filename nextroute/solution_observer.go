@@ -59,18 +59,45 @@ type SolutionObserver interface {
 // SolutionObservers is a slice of SolutionObserver.
 type SolutionObservers []SolutionObserver
 
+// SolutionUnPlanObserver is an interface that can be implemented to observe the
+// plan units un-planning process.
+type SolutionUnPlanObserver interface {
+	// OnUnPlan is called when a planUnit is going to be un-planned.
+	OnUnPlan(planUnit SolutionPlanStopsUnit)
+	// OnUnPlanFailed is called when a planUnit has failed to be un-planned.
+	OnUnPlanFailed(planUnit SolutionPlanStopsUnit)
+	// OnUnPlanSucceeded is called when a planUnit has succeeded to be un-planned.
+	OnUnPlanSucceeded(planUnit SolutionPlanStopsUnit)
+}
+
+// SolutionUnPlanObservers is a slice of SolutionUnPlanObserver.
+type SolutionUnPlanObservers []SolutionUnPlanObserver
+
 // SolutionObserved is an interface that can be implemented to observe the
 // solution manipulation process.
 type SolutionObserved interface {
 	SolutionObserver
+	SolutionUnPlanObserver
+
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
 	AddSolutionObserver(observer SolutionObserver)
+
+	// AddSolutionUnPlanObserver adds the given solution un-plan observer to the
+	// solution observed.
+	AddSolutionUnPlanObserver(observer SolutionUnPlanObserver)
 
 	// RemoveSolutionObserver remove the given solution observer from the
 	// solution observed.
 	RemoveSolutionObserver(observer SolutionObserver)
 
+	// RemoveSolutionUnPlanObserver remove the given solution un-plan observer
+	// from the solution observed.
+	RemoveSolutionUnPlanObserver(observer SolutionUnPlanObserver)
+
 	// SolutionObservers returns the solution observers.
 	SolutionObservers() SolutionObservers
+
+	// SolutionUnPlanObservers returns the solution un-plan observers.
+	SolutionUnPlanObservers() SolutionUnPlanObservers
 }
