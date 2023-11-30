@@ -1,5 +1,5 @@
 """
-Template for working with Google OR-Tools.
+Template for working with Pyomo.
 """
 
 import argparse
@@ -7,24 +7,28 @@ import json
 import sys
 from typing import Any
 
-from ortools.linear_solver import pywraplp
+import pyomo.environ as pyo
+
+# Duration parameter for the solver.
+SUPPORTED_PROVIDER_DURATIONS = {
+    "cbc": "sec",
+    "glpk": "tmlim",
+}
+
 
 # Status of the solver after optimizing.
 STATUS = {
-    pywraplp.Solver.FEASIBLE: "suboptimal",
-    pywraplp.Solver.INFEASIBLE: "infeasible",
-    pywraplp.Solver.OPTIMAL: "optimal",
-    pywraplp.Solver.UNBOUNDED: "unbounded",
-    pywraplp.Solver.ABNORMAL: "abnormal",
-    pywraplp.Solver.NOT_SOLVED: "not_solved",
-    pywraplp.Solver.MODEL_INVALID: "model_invalid",
+    pyo.TerminationCondition.feasible: "suboptimal",
+    pyo.TerminationCondition.infeasible: "infeasible",
+    pyo.TerminationCondition.optimal: "optimal",
+    pyo.TerminationCondition.unbounded: "unbounded",
 }
 
 
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve problems with OR-Tools.")
+    parser = argparse.ArgumentParser(description="Solve problems with Pyomo.")
     parser.add_argument(
         "-input",
         default="",
@@ -56,50 +60,64 @@ def main() -> None:
 def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
+    # Creates the model.
+    model = pyo.ConcreteModel()
+
+    # Define the solver provider. Make sure it is installed.
+    provider = "cbc"
+    if provider not in SUPPORTED_PROVIDER_DURATIONS:
+        raise ValueError(
+            f"Unsupported provider: {provider}. The supported providers are: "
+            f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
+        )
+
     # Creates the solver.
-    provider = "SCIP"
-    solver = pywraplp.Solver.CreateSolver(provider)
-    solver.SetTimeLimit(duration * 1000)
+    solver = pyo.SolverFactory(provider)
+    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration
 
     # Initializes the linear sums.
     weights = 0.0
     values = 0.0
 
-    # Creates the decision variables and adds them to the linear sums.
+    # Creates the decision variables.
+    item_ids = [item["id"] for item in input_data["items"]]
+    model.item_variable = pyo.Var(item_ids, domain=pyo.Boolean)
+
+    # Use the decision variables for the linear sums
     items = []
     for item in input_data["items"]:
-        item_variable = solver.IntVar(0, 1, item["id"])
-        items.append({"item": item, "variable": item_variable})
-        weights += item_variable * item["weight"]
-        values += item_variable * item["value"]
+        item_id = item["id"]
+        items.append({"item": item, "variable": model.item_variable[item_id]})
+        weights += model.item_variable[item_id] * item["weight"]
+        values += model.item_variable[item_id] * item["value"]
 
     # This constraint ensures the weight capacity of the knapsack will not be
     # exceeded.
-    solver.Add(weights <= input_data["weight_capacity"])
+    model.constraint = pyo.Constraint(expr=weights <= input_data["weight_capacity"])
 
     # Sets the objective function: maximize the value of the chosen items.
-    solver.Maximize(values)
+    model.objective = pyo.Objective(expr=values, sense=pyo.maximize)
 
     # Solves the problem.
-    status = solver.Solve()
+    results = solver.solve(model)
 
     # Determines which items were chosen.
-    chosen_items = [item["item"] for item in items if item["variable"].solution_value() > 0.9]
+    chosen_items = [item["item"] for item in items if item["variable"]() > 0.9]
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": solver.NumConstraints(),
+                "constraints": model.nconstraints(),
                 "provider": provider,
-                "status": STATUS.get(status, "unknown"),
-                "variables": solver.NumVariables(),
+                "status": STATUS.get(results.solver.termination_condition, "unknown"),
+                "variables": model.nvariables(),
             },
-            "duration": solver.WallTime() / 1000,
-            "value": solver.Objective().Value(),
+            "duration": results.solver.time,
+            "value": pyo.value(model.objective),
         },
         "run": {
-            "duration": solver.WallTime() / 1000,
+            "duration": results.solver.time,
         },
         "schema": "v1",
     }

@@ -8,8 +8,9 @@ replace github.com/nextmv-io/sdk/measure/routingkit => ../../measure/routingkit
 
 require (
 	github.com/nextmv-io/go-routingkit v0.1.18
-	github.com/nextmv-io/sdk v1.0.2
 	github.com/nextmv-io/sdk/measure/routingkit v1.0.2
+	github.com/nextmv-io/sdk v1.0.3
+	github.com/twpayne/go-polyline v1.1.1
 )
 
 require (
