@@ -40,5 +40,7 @@ input path flag:
 	nextmv run local . -- \
 		-runner.input.path ./data.csv.gz \
 		-runner.output.path output.json
+
+Deprecated: This package is deprecated and will be removed in a future.
 */
 package dataframe
