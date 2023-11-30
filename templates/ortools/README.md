@@ -20,14 +20,22 @@ The most important files created are `main.py` and `input.json`.
 * `main.py` implements a MIP knapsack solver.
 * `input.json` is a sample input file.
 
-Run the command below to check that everything works as expected:
+Follow these steps to run locally.
 
-```bash
-python3 main.py -input input.json -output output.json -duration 30
-```
+1. Make sure that all the required packages are installed:
 
-A file `output.json` should have been created with the optimal knapsack
-solution.
+    ```bash
+    pip3 install -r requirements.txt
+    ```
+
+1. Run the command below to check that everything works as expected:
+
+    ```bash
+    python3 main.py -input input.json -output output.json -duration 30
+    ```
+
+1. A file `output.json` should have been created with the optimal knapsack
+   solution.
 
 ## Next steps
 
