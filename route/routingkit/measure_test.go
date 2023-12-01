@@ -6,22 +6,22 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/measure/routingkit"
+	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/route/routingkit"
 	"github.com/twpayne/go-polyline"
 )
 
 type byPointConstantMeasure float64
 
-func (m byPointConstantMeasure) Cost(_ measure.Point, _ measure.Point) float64 {
+func (m byPointConstantMeasure) Cost(_ route.Point, _ route.Point) float64 {
 	return float64(m)
 }
 
 func TestFallback(t *testing.T) {
-	sources := []measure.Point{
+	sources := []route.Point{
 		{7.336650, 52.145020},
 	}
-	dests := []measure.Point{
+	dests := []route.Point{
 		{1.32486, 52.14280},
 		{7.31893, 52.15924},
 	}
@@ -51,13 +51,13 @@ func TestFallback(t *testing.T) {
 }
 
 func TestMatrix(t *testing.T) {
-	sources := []measure.Point{
+	sources := []route.Point{
 		{7.336650, 52.145020},
 		{7.33293, 52.13893},
 		{7.33745, 52.14758},
 		{7.34979, 52.15149},
 	}
-	dests := []measure.Point{
+	dests := []route.Point{
 		{7.31893, 52.15924},
 		{7.35630, 52.14031},
 	}
@@ -93,8 +93,8 @@ func TestMatrixMarshal(t *testing.T) {
 	m, err := routingkit.Matrix(
 		"testdata/rk_test.osm.pbf",
 		1000,
-		[]measure.Point{{1.0, 2.0}},
-		[]measure.Point{{3.0, 4.0}},
+		[]route.Point{{1.0, 2.0}},
+		[]route.Point{{3.0, 4.0}},
 		routingkit.Car(),
 		nil,
 	)
@@ -114,8 +114,8 @@ func TestMatrixMarshal(t *testing.T) {
 }
 
 func TestByPoint(t *testing.T) {
-	p1 := measure.Point{7.33665, 52.14502}
-	p2 := measure.Point{7.33021, 52.14789}
+	p1 := route.Point{7.33665, 52.14502}
+	p2 := route.Point{7.33021, 52.14789}
 
 	m, err := routingkit.ByPoint(
 		"testdata/rk_test.osm.pbf",
@@ -169,8 +169,8 @@ func TestByPointMarshal(t *testing.T) {
 func TestByPointLoader(t *testing.T) {
 	tests := []struct {
 		input       string
-		from        measure.Point
-		to          measure.Point
+		from        route.Point
+		to          route.Point
 		expectedErr bool
 		expected    int
 	}{
@@ -178,16 +178,16 @@ func TestByPointLoader(t *testing.T) {
 			input: `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
 				`"profile":{"name":"car"},"radius":1000,"type":"routingkit"}`,
 			expectedErr: false,
-			from:        measure.Point{7.33665, 52.14502},
-			to:          measure.Point{7.33021, 52.14789},
+			from:        route.Point{7.33665, 52.14502},
+			to:          route.Point{7.33021, 52.14789},
 			expected:    722,
 		},
 		{
 			input: `{"cache_size":1073741824,"osm":"testdata/rk_test.osm.pbf",` +
 				`"profile":{"name":"pedestrian"},"radius":1000,"type":"routingkit"}`,
 			expectedErr: false,
-			from:        measure.Point{7.33665, 52.14502},
-			to:          measure.Point{7.33021, 52.14789},
+			from:        route.Point{7.33665, 52.14502},
+			to:          route.Point{7.33021, 52.14789},
 			expected:    690,
 		},
 	}
@@ -304,8 +304,8 @@ func TestByIndexLoader(t *testing.T) {
 }
 
 func TestDurationByPoint(t *testing.T) {
-	p1 := measure.Point{7.33665, 52.14502}
-	p2 := measure.Point{7.33021, 52.14789}
+	p1 := route.Point{7.33665, 52.14502}
+	p2 := route.Point{7.33021, 52.14789}
 
 	m, err := routingkit.DurationByPoint(
 		"testdata/rk_test.osm.pbf", 1000, 1<<30, routingkit.Car(), nil)
@@ -348,7 +348,7 @@ func TestDurationByPointMarshal(t *testing.T) {
 }
 
 func TestDistanceClient(t *testing.T) {
-	testRoute := []measure.Point{
+	testRoute := []route.Point{
 		{7.336189, 52.146548},
 		{7.335031, 52.146057},
 		{7.335073697312962, 52.145657185840214},
@@ -397,7 +397,7 @@ func TestDistanceClient(t *testing.T) {
 		t,
 		m,
 		mat,
-		func(points []measure.Point) (string, []string, error) {
+		func(points []route.Point) (string, []string, error) {
 			return c.Polyline(points)
 		},
 		testRoute,
@@ -408,7 +408,7 @@ func TestDistanceClient(t *testing.T) {
 }
 
 func TestDurationClient(t *testing.T) {
-	testRoute := []measure.Point{
+	testRoute := []route.Point{
 		{7.336189, 52.146548},
 		{7.335031, 52.146057},
 		{7.335073697312962, 52.145657185840214},
@@ -457,7 +457,7 @@ func TestDurationClient(t *testing.T) {
 		t,
 		m,
 		mat,
-		func(points []measure.Point) (string, []string, error) {
+		func(points []route.Point) (string, []string, error) {
 			return c.Polyline(points)
 		},
 		testRoute,
@@ -474,10 +474,10 @@ func TestDurationClient(t *testing.T) {
 // of points in the route).
 func checkClient(
 	t *testing.T,
-	m measure.ByPoint,
-	mat measure.ByIndex,
-	polyliner func(points []measure.Point) (string, []string, error),
-	testRoute []measure.Point,
+	m route.ByPoint,
+	mat route.ByIndex,
+	polyliner func(points []route.Point) (string, []string, error),
+	testRoute []route.Point,
 	expectedCosts [][]float64,
 	expectedWholePoly [][]float64,
 	expectedLegPolys [][][]float64,

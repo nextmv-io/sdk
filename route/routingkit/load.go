@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/nextmv-io/go-routingkit/routingkit"
-	"github.com/nextmv-io/sdk/measure"
+	"github.com/nextmv-io/sdk/route"
 )
 
 // ByPointLoader can be embedded in schema structs and unmarshals a ByPoint JSON
@@ -14,7 +14,7 @@ import (
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 type ByPointLoader struct {
-	byPoint measure.ByPoint
+	byPoint route.ByPoint
 }
 
 type byPointJSON struct {
@@ -65,7 +65,7 @@ func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
 		}
 		l.byPoint = byPoint
 	default:
-		var byPointLoader measure.ByPointLoader
+		var byPointLoader ByPointLoader
 		if err := byPointLoader.UnmarshalJSON(b); err != nil {
 			return err
 		}
@@ -75,7 +75,7 @@ func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
 }
 
 // To returns the underlying ByPoint.
-func (l *ByPointLoader) To() measure.ByPoint {
+func (l *ByPointLoader) To() route.ByPoint {
 	if l == nil {
 		return nil
 	}
@@ -88,17 +88,17 @@ func (l *ByPointLoader) To() measure.ByPoint {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/routingkit] instead.
 type ByIndexLoader struct {
-	byIndex measure.ByIndex
+	byIndex route.ByIndex
 }
 
 type byIndexJSON struct {
-	Measure       *ByPointLoader  `json:"measure"`
-	OSMFile       string          `json:"osm"` //nolint:tagliatelle
-	Type          string          `json:"type"`
-	Sources       []measure.Point `json:"sources"`
-	Destinations  []measure.Point `json:"destinations"`
-	Radius        float64         `json:"radius"`
-	ProfileLoader *ProfileLoader  `json:"profile,omitempty"` //nolint:tagliatelle
+	Measure       *ByPointLoader `json:"measure"`
+	OSMFile       string         `json:"osm"` //nolint:tagliatelle
+	Type          string         `json:"type"`
+	Sources       []route.Point  `json:"sources"`
+	Destinations  []route.Point  `json:"destinations"`
+	Radius        float64        `json:"radius"`
+	ProfileLoader *ProfileLoader `json:"profile,omitempty"` //nolint:tagliatelle
 }
 
 // MarshalJSON returns the JSON representation for the underlying ByIndex.
@@ -114,7 +114,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	var m measure.ByPoint
+	var m route.ByPoint
 	if j.Measure != nil {
 		m = j.Measure.To()
 	}
@@ -147,7 +147,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 		}
 		l.byIndex = byIndex
 	default:
-		var byIndexLoader measure.ByIndexLoader
+		var byIndexLoader ByIndexLoader
 		if err := byIndexLoader.UnmarshalJSON(b); err != nil {
 			return err
 		}
@@ -157,7 +157,7 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 }
 
 // To returns the underlying ByIndex.
-func (l *ByIndexLoader) To() measure.ByIndex {
+func (l *ByIndexLoader) To() route.ByIndex {
 	return l.byIndex
 }
 

@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 	"github.com/nextmv-io/sdk/route/osrm"
 )
@@ -270,9 +269,9 @@ func TestDeflate(t *testing.T) {
 	}
 
 	// Extend base matrix to include a 0,0 point
-	points := make([]measure.Point, len(p)+1)
+	points := make([]route.Point, len(p)+1)
 	copy(points, p)
-	points[len(p)] = measure.Point{0, 0}
+	points[len(p)] = route.Point{0, 0}
 	expDistances := make([][]float64, len(points))
 	for i := range expectedDistances {
 		expDistances[i] = make([]float64, len(points))

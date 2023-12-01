@@ -3,7 +3,7 @@ package google_test
 import (
 	"fmt"
 
-	"github.com/nextmv-io/sdk/measure/google"
+	"github.com/nextmv-io/sdk/route/google"
 	"googlemaps.github.io/maps"
 )
 

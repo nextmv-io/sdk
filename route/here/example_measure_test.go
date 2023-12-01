@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/measure/here"
+	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/route/here"
 )
 
 // How to create a `Client`, assuming the points are in the form `{longitude,
@@ -14,7 +14,7 @@ import (
 // Please note that this example does not define an output as it requires API
 // authentication and is here for illustrative purposes only.
 func Example() {
-	points := []measure.Point{
+	points := []route.Point{
 		{-74.028297, 4.875835},
 		{-74.046965, 4.872842},
 		{-74.041763, 4.885648},
