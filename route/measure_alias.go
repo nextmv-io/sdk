@@ -349,19 +349,3 @@ func OverrideZeroPoints(
 ) ByIndex {
 	return measure.OverrideZeroPoints(points, m)
 }
-
-// ByPointLoader can be embedded in schema structs and unmarshals a ByPoint JSON
-// object into the appropriate implementation.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/measure].
-type ByPointLoader measure.ByPointLoader
-
-// ByIndexLoader can be embedded in schema structs and unmarshals a ByIndex JSON
-// object into the appropriate implementation.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/measure].
-type ByIndexLoader measure.ByIndexLoader
