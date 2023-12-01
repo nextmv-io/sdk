@@ -3,20 +3,22 @@ package here
 import (
 	"net/http"
 	"time"
+
+	h "github.com/nextmv-io/sdk/measure/here"
 )
 
 // ClientOption can pass options to be used with a HERE client.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type ClientOption func(*client)
+type ClientOption = h.ClientOption
 
 // MatrixOption is passed to functions on the Client that create matrices,
 // configuring the HERE request the client will make.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type MatrixOption func(req *matrixRequest)
+type MatrixOption = h.MatrixOption
 
 // WithDepartureTime sets departure time to be used in the request. This will
 // take traffic data into account for the given time. If no departure time is
@@ -26,13 +28,7 @@ type MatrixOption func(req *matrixRequest)
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithDepartureTime(t time.Time) MatrixOption {
-	return func(req *matrixRequest) {
-		depTime := "any"
-		if !t.IsZero() {
-			depTime = t.Format(time.RFC3339)
-		}
-		req.DepartureTime = depTime
-	}
+	return h.WithDepartureTime(t)
 }
 
 // WithTransportMode sets the transport mode for the request.
@@ -40,9 +36,7 @@ func WithDepartureTime(t time.Time) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithTransportMode(mode TransportMode) MatrixOption {
-	return func(req *matrixRequest) {
-		req.TransportMode = mode
-	}
+	return h.WithTransportMode(mode)
 }
 
 // WithAvoidFeatures sets features that will be avoided in the calculated
@@ -51,20 +45,7 @@ func WithTransportMode(mode TransportMode) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithAvoidFeatures(features []Feature) MatrixOption {
-	return func(req *matrixRequest) {
-		featureStrs := make([]string, len(features))
-		for i, f := range features {
-			featureStrs[i] = string(f)
-		}
-
-		if req.Avoid == nil {
-			req.Avoid = &avoid{
-				Features: features,
-			}
-		} else {
-			req.Avoid.Features = features
-		}
-	}
+	return h.WithAvoidFeatures(features)
 }
 
 // WithAvoidAreas sets bounding boxes that will be avoided in the calculated
@@ -73,25 +54,7 @@ func WithAvoidFeatures(features []Feature) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithAvoidAreas(areas []BoundingBox) MatrixOption {
-	return func(req *matrixRequest) {
-		as := make([]area, len(areas))
-		for i, a := range areas {
-			as[i] = area{
-				Type:  "boundingBox",
-				West:  a.West,
-				South: a.South,
-				East:  a.East,
-				North: a.North,
-			}
-		}
-		if req.Avoid == nil {
-			req.Avoid = &avoid{
-				Areas: as,
-			}
-		} else {
-			req.Avoid.Areas = append(req.Avoid.Areas, as...)
-		}
-	}
+	return h.WithAvoidAreas(areas)
 }
 
 // WithTruckProfile sets a Truck profile on the matrix request. The following
@@ -104,12 +67,7 @@ func WithAvoidAreas(areas []BoundingBox) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithTruckProfile(t Truck) MatrixOption {
-	return func(req *matrixRequest) {
-		if t.TunnelCategory == "" {
-			t.TunnelCategory = TunnelCategoryNone
-		}
-		req.Truck = &t
-	}
+	return h.WithTruckProfile(t)
 }
 
 // WithScooterProfile sets a Scooter profile on the request.
@@ -117,9 +75,7 @@ func WithTruckProfile(t Truck) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithScooterProfile(scooter Scooter) MatrixOption {
-	return func(req *matrixRequest) {
-		req.Scooter = &scooter
-	}
+	return h.WithScooterProfile(scooter)
 }
 
 // WithTaxiProfile sets a Taxi profile on the request.
@@ -127,9 +83,7 @@ func WithScooterProfile(scooter Scooter) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithTaxiProfile(taxi Taxi) MatrixOption {
-	return func(req *matrixRequest) {
-		req.Taxi = &taxi
-	}
+	return h.WithTaxiProfile(taxi)
 }
 
 // WithClientTransport overwrites the RoundTripper used by the internal
@@ -138,13 +92,7 @@ func WithTaxiProfile(taxi Taxi) MatrixOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithClientTransport(rt http.RoundTripper) ClientOption {
-	if rt == nil {
-		rt = http.DefaultTransport
-	}
-
-	return func(c *client) {
-		c.httpClient.Transport = rt
-	}
+	return h.WithClientTransport(rt)
 }
 
 // WithDenyRedirectPolicy block redirected requests to specified hostnames.
@@ -154,7 +102,5 @@ func WithClientTransport(rt http.RoundTripper) ClientOption {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
 func WithDenyRedirectPolicy(hostnames ...string) ClientOption {
-	return func(c *client) {
-		c.denyRedirectedRequests = hostnames
-	}
+	return h.WithDenyRedirectPolicy(hostnames...)
 }

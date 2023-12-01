@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/measure/osrm"
+	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/route/osrm"
 )
 
 type testServer struct {
@@ -136,7 +136,7 @@ func TestMatrixCall(t *testing.T) {
 	defer ts.s.Close()
 
 	c := osrm.DefaultClient(ts.s.URL, true)
-	m, err := osrm.DurationMatrix(c, []measure.Point{{0, 0}, {1, 1}}, 0)
+	m, err := osrm.DurationMatrix(c, []route.Point{{0, 0}, {1, 1}}, 0)
 	if err != nil {
 		t.Fatalf("request error: %v", err)
 	}
@@ -146,10 +146,10 @@ func TestMatrixCall(t *testing.T) {
 }
 
 func TestTableErrorHandling(t *testing.T) {
-	smallTable := []measure.Point{{0, 0}, {1, 1}}
-	largeTable := make([]measure.Point, 101)
+	smallTable := []route.Point{{0, 0}, {1, 1}}
+	largeTable := make([]route.Point, 101)
 	for i := range largeTable {
-		largeTable[i] = measure.Point{float64(i), float64(i)}
+		largeTable[i] = route.Point{float64(i), float64(i)}
 	}
 
 	tests := map[string]struct {
@@ -157,7 +157,7 @@ func TestTableErrorHandling(t *testing.T) {
 		statusMsg  string
 		causeErr   bool
 		isUserErr  bool
-		table      []measure.Point
+		table      []route.Point
 	}{
 		"bad request": {
 			statusCode: http.StatusBadRequest,
@@ -220,7 +220,7 @@ func TestPolylineCall(t *testing.T) {
 
 	polyline, polyLegs, err := osrm.Polyline(
 		c,
-		[]measure.Point{
+		[]route.Point{
 			{13.388860, 52.517037},
 			{13.397634, 52.529407},
 		},
@@ -272,12 +272,12 @@ func TestEmptyPoints(t *testing.T) {
 
 	c := osrm.DefaultClient(ts.s.URL, true)
 
-	_, _, err := c.Table([]measure.Point{})
+	_, _, err := c.Table([]route.Point{})
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}
 
-	_, _, err = c.Polyline([]measure.Point{})
+	_, _, err = c.Polyline([]route.Point{})
 	if err == nil {
 		t.Errorf("expected error, got nil")
 	}

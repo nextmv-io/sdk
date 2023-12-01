@@ -1,374 +1,66 @@
 package here
 
-import (
-	"encoding/json"
-)
-
-type validationError struct {
-	message string
-}
-
-func (e validationError) Error() string {
-	return e.message
-}
-
-type responseStatus string
-
-const (
-	responseStatusComplete   responseStatus = "completed"
-	responseStatusAccepted   responseStatus = "accepted"
-	responseStatusInProgress responseStatus = "inProgress"
-)
-
-func isKnownStatusResponse(status responseStatus) bool {
-	return status == responseStatusComplete ||
-		status == responseStatusAccepted ||
-		status == responseStatusInProgress
-}
-
-type statusResponse struct {
-	MatrixID  string          `json:"matrixId"` //nolint:tagliatelle
-	Status    responseStatus  `json:"status"`
-	StatusURL string          `json:"statusUrl"` //nolint:tagliatelle
-	ResultURL string          `json:"resultUrl"` //nolint:tagliatelle
-	Error     json.RawMessage `json:"error"`
-}
-
-type matrixResponse struct {
-	Matrix           matrix           `json:"matrix"`
-	RegionDefinition regionDefinition `json:"regionDefinition"` //nolint:tagliatelle,lll
-}
-
-type matrix struct {
-	NumOrigins      int   `json:"numOrigins"`      //nolint:tagliatelle
-	NumDestinations int   `json:"numDestinations"` //nolint:tagliatelle
-	TravelTimes     []int `json:"travelTimes"`     //nolint:tagliatelle
-	Distances       []int `json:"distances"`
-}
-
-type regionDefinition struct {
-	Type string `json:"type"`
-}
-
-type point struct {
-	Lat float64 `json:"lat"`
-	Lon float64 `json:"lng"` //nolint:tagliatelle
-}
-
-type matrixRequest struct {
-	Origins          []point          `json:"origins"`
-	RegionDefinition regionDefinition `json:"regionDefinition,omitempty"` //nolint:tagliatelle,lll
-	// This is either an RFC 3339 timestamp or the string "any"
-	DepartureTime    string        `json:"departureTime,omitempty"` //nolint:tagliatelle,lll
-	MatrixAttributes []string      `json:"matrixAttributes"`        //nolint:tagliatelle,lll
-	TransportMode    TransportMode `json:"transportMode,omitempty"` //nolint:tagliatelle,lll
-	Avoid            *avoid        `json:"avoid,omitempty"`
-	Truck            *Truck        `json:"truck,omitempty"`
-	Scooter          *Scooter      `json:"scooter,omitempty"`
-	Taxi             *Taxi         `json:"taxi,omitempty"`
-}
-
-type avoid struct {
-	// Features string `json:"features,omitempty"`
-	Features []Feature `json:"features,omitempty"`
-	Areas    []area    `json:"areas,omitempty"`
-}
-
-type area struct {
-	Type  string  `json:"type"`
-	North float64 `json:"north"`
-	South float64 `json:"south"`
-	East  float64 `json:"east"`
-	West  float64 `json:"west"`
-}
+import h "github.com/nextmv-io/sdk/measure/here"
 
 // BoundingBox represents a region using four cooordinates corresponding
 // to the furthest points in each of the cardinal directions within that region.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type BoundingBox struct {
-	North float64
-	South float64
-	East  float64
-	West  float64
-}
+type BoundingBox = h.BoundingBox
 
 // TransportMode represents the type of vehicle that will be used for
 // the calculated routes.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type TransportMode string
-
-// TransportModeCar causes routes to be calculated for car travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModeCar TransportMode = "car"
-
-// TransportModeTruck causes routes to be calculated for truck travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModeTruck TransportMode = "truck"
-
-// TransportModePedestrian causes routes to be calculated for pedestrian travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModePedestrian TransportMode = "pedestrian"
-
-// TransportModeBicycle causes routes to be calculated for bicycle travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModeBicycle TransportMode = "bicycle"
-
-// TransportModeTaxi causes routes to be calculated for taxi travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModeTaxi TransportMode = "taxi"
-
-// TransportModeScooter causes routes to be calculated for scooter travel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TransportModeScooter TransportMode = "scooter"
+type TransportMode = h.TransportMode
 
 // Feature represents a geographical feature.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type Feature string
-
-// TollRoad designates a toll road feature.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TollRoad Feature = "tollRoad"
-
-// ControlledAccessHighway designates a controlled access highway.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const ControlledAccessHighway Feature = "controlledAccessHighway"
-
-// Ferry designates a ferry route.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Ferry Feature = "ferry"
-
-// Tunnel designates a tunnel.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Tunnel Feature = "tunnel"
-
-// DirtRoad designates a dirt road.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const DirtRoad Feature = "dirtRoad"
-
-// SeasonalClosure designates a route that is closed for the season.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const SeasonalClosure Feature = "seasonalClosure"
-
-// CarShuttleTrain designates a train that can transport cars.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const CarShuttleTrain Feature = "carShuttleTrain"
-
-// DifficultTurns represents u-turns, difficult turns, and sharp turns.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const DifficultTurns Feature = "difficultTurns"
-
-// UTurns designates u-turns.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const UTurns Feature = "uTurns"
+type Feature = h.Feature
 
 // Truck captures truck-specific routing parameters.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type Truck struct {
-	ShippedHazardousGoods []HazardousGood `json:"shippedHazardousGoods,omitempty"` //nolint:tagliatelle,lll
-	// in kilograms
-	GrossWeight int32 `json:"grossWeight,omitempty"` //nolint:tagliatelle
-	// in kilograms
-	WeightPerAxle int32 `json:"weightPerAxle,omitempty"` //nolint:tagliatelle
-	// in centimeters
-	Height int32 `json:"height,omitempty"`
-	// in centimeters
-	Width int32 `json:"width,omitempty"`
-	// in centimeters
-	Length             int32               `json:"length,omitempty"`
-	TunnelCategory     TunnelCategory      `json:"tunnelCategory,omitempty"` //nolint:tagliatelle,lll
-	AxleCount          int32               `json:"axleCount,omitempty"`      //nolint:tagliatelle,lll
-	Type               TruckType           `json:"type,omitempty"`
-	TrailerCount       int32               `json:"trailerCount,omitempty"`       //nolint:tagliatelle,lll
-	WeightPerAxleGroup *WeightPerAxleGroup `json:"weightPerAxleGroup,omitempty"` //nolint:tagliatelle,lll
-}
+type Truck = h.Truck
 
 // WeightPerAxleGroup captures the weights of different axle groups.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type WeightPerAxleGroup struct {
-	Single int32 `json:"single"`
-	Tandem int32 `json:"tandem"`
-	Triple int32 `json:"triple"`
-}
+type WeightPerAxleGroup = h.WeightPerAxleGroup
 
 // TunnelCategory is a tunnel category used to restrict the transport of
 // certain goods.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type TunnelCategory string
-
-// TunnelCategoryB represents tunnels with B category restrictions.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TunnelCategoryB TunnelCategory = "B"
-
-// TunnelCategoryC represents tunnels with C category restrictions.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TunnelCategoryC TunnelCategory = "C"
-
-// TunnelCategoryD represents a tunnel with D category restrictions.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TunnelCategoryD TunnelCategory = "D"
-
-// TunnelCategoryE represents a tunnel with E category restrictions.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TunnelCategoryE TunnelCategory = "E"
-
-// TunnelCategoryNone represents a tunnel with no category restrictions.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TunnelCategoryNone TunnelCategory = "None"
+type TunnelCategory = h.TunnelCategory
 
 // TruckType specifies the type of truck.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type TruckType string
-
-// TruckTypeStraight refers to trucks with a permanently attached cargo area.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TruckTypeStraight TruckType = "straight"
-
-// TruckTypeTractor refers to vehicles that can tow one or more semi-trailers.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const TruckTypeTractor TruckType = "tractor"
+type TruckType = h.TruckType
 
 // HazardousGood indicates a hazardous good that trucks can transport.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type HazardousGood string
-
-// Explosive represents explosive materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Explosive HazardousGood = "explosive"
-
-// Gas designates gas.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Gas HazardousGood = "gas"
-
-// Flammable designates flammable materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Flammable HazardousGood = "flammable"
-
-// Combustible designates combustible materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Combustible HazardousGood = "combustible"
-
-// Organic designates organical materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Organic HazardousGood = "organic"
-
-// Poison designates poison.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Poison HazardousGood = "poison"
-
-// Radioactive indicates radioactive materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Radioactive HazardousGood = "radioactive"
-
-// Corrosive indicates corrosive materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const Corrosive HazardousGood = "corrosive"
-
-// PoisonousInhalation refers to materials that are poisonous to inhale.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const PoisonousInhalation HazardousGood = "poisonousInhalation"
-
-// HarmfulToWater indicates materials that are harmful to water.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const HarmfulToWater HazardousGood = "harmfulToWater"
-
-// OtherHazardousGood refers to other types of hazardous materials.
-//
-// Deprecated: This package is deprecated and will be removed in a future.
-// Use [github.com/nextmv-io/sdk/measure/here] instead.
-const OtherHazardousGood HazardousGood = "other"
+type HazardousGood = h.HazardousGood
 
 // Scooter captures routing parameters that can be set on scooters.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type Scooter struct {
-	AllowHighway bool `json:"allowHighway"` //nolint:tagliatelle
-}
+type Scooter = h.Scooter
 
 // Taxi captures routing parameters that can be set on taxis.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/here] instead.
-type Taxi struct {
-	AllowDriveThroughTaxiRoads bool `json:"allowDriveThroughTaxiRoads"` //nolint:tagliatelle,lll
-}
+type Taxi = h.Taxi

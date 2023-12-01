@@ -1,14 +1,9 @@
 package osrm
 
 import (
-	"github.com/nextmv-io/sdk/measure"
+	o "github.com/nextmv-io/sdk/measure/osrm"
+	"github.com/nextmv-io/sdk/route"
 )
-
-func overrideZeroes(m measure.ByIndex, points []measure.Point) measure.ByIndex {
-	return measure.Override(m, measure.Constant(0.0), func(i, j int) bool {
-		return len(points[i]) == 0 || len(points[j]) == 0
-	})
-}
 
 // DistanceMatrix makes a request for a distance table from an OSRM server and
 // returns a Matrix. ParallelQueries specifies the number of
@@ -18,16 +13,10 @@ func overrideZeroes(m measure.ByIndex, points []measure.Point) measure.ByIndex {
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DistanceMatrix(
-	c Client, points []measure.Point,
+	c Client, points []route.Point,
 	parallelQueries int,
-) (measure.ByIndex, error) {
-	p1, _, err := c.Table(points, WithDistance(), ParallelRuns(parallelQueries))
-	if err != nil {
-		// preserve the error type for callers
-		return nil, err
-	}
-
-	return overrideZeroes(measure.Matrix(p1), points), nil
+) (route.ByIndex, error) {
+	return o.DistanceMatrix(c, points, parallelQueries)
 }
 
 // DurationMatrix makes a request for a duration table from an OSRM server and
@@ -38,16 +27,10 @@ func DistanceMatrix(
 // Deprecated: This package is deprecated and will be removed in a future.
 // Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DurationMatrix(
-	c Client, points []measure.Point,
+	c Client, points []route.Point,
 	parallelQueries int,
-) (measure.ByIndex, error) {
-	_, p2, err := c.Table(points, WithDuration(), ParallelRuns(parallelQueries))
-	if err != nil {
-		// preserve the error type for callers
-		return nil, err
-	}
-
-	return overrideZeroes(measure.Matrix(p2), points), nil
+) (route.ByIndex, error) {
+	return o.DurationMatrix(c, points, parallelQueries)
 }
 
 // DistanceDurationMatrices fetches a distance and duration table from an OSRM
@@ -59,27 +42,11 @@ func DurationMatrix(
 // Use [github.com/nextmv-io/sdk/measure/osrm] instead.
 func DistanceDurationMatrices(
 	c Client,
-	points []measure.Point,
+	points []route.Point,
 	parallelQueries int,
 ) (
-	distance, duration measure.ByIndex,
+	distance, duration route.ByIndex,
 	err error,
 ) {
-	p1, p2, err := c.Table(
-		points,
-		WithDistance(),
-		WithDuration(),
-		ParallelRuns(parallelQueries),
-	)
-	if err != nil {
-		// preserve the error type for callers
-		return nil, nil, err
-	}
-
-	return overrideZeroes(
-			measure.Matrix(p1),
-			points),
-		overrideZeroes(measure.Matrix(p2),
-			points,
-		), nil
+	return o.DistanceDurationMatrices(c, points, parallelQueries)
 }

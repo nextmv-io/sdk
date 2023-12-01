@@ -241,10 +241,6 @@ issues:
       linters:
         - gosec
       text: G404
-    - path: route/osrm/matrix_test\.go
-      linters:
-        - gosec
-      text: G404
 
     # Please note that other Go modules have issues that are ignored but are
     # not listed here. The reason is that linting must be done standing on the
