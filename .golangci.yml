@@ -215,6 +215,10 @@ issues:
       linters:
         - tagliatelle
       text: measure
+    - path: route/load\.go
+      linters:
+        - tagliatelle
+      text: measure
 
     # Complex nested block nesting is fine for now.
     - path: alns/solver\.go
@@ -238,6 +242,10 @@ issues:
       linters:
         - gomodguard
     - path: measure/osrm/matrix_test\.go
+      linters:
+        - gosec
+      text: G404
+    - path: route/osrm/matrix_test\.go
       linters:
         - gosec
       text: G404
