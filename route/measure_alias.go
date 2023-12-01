@@ -10,14 +10,14 @@ import (
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type Point = measure.Point
 
 // ByIndex estimates the cost of going from one index to another.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type ByIndex = measure.ByIndex
 
 // DependentByIndex is a measure uses a custom cost func to calculate parameter
@@ -25,14 +25,14 @@ type ByIndex = measure.ByIndex
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type DependentByIndex = measure.DependentByIndex
 
 // ByPoint estimates the cost of going from one point to another.
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type ByPoint = measure.ByPoint
 
 // Triangular indicates that the triangle inequality holds for every
@@ -40,7 +40,7 @@ type ByPoint = measure.ByPoint
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type Triangular = measure.Triangular
 
 // DurationGroups represents a slice of duration groups. Each duration group is
@@ -49,7 +49,7 @@ type Triangular = measure.Triangular
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type DurationGroups = measure.DurationGroups
 
 // DurationGroup groups stops by index which have additional service costs
@@ -57,7 +57,7 @@ type DurationGroups = measure.DurationGroups
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type DurationGroup = measure.DurationGroup
 
 // Times holds the estimated time of arrival (ETA), the estimated time of when
@@ -65,7 +65,7 @@ type DurationGroup = measure.DurationGroup
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type Times = measure.Times
 
 // VehicleData holds vehicle specific data, including times by index (ETA, ETD
@@ -74,7 +74,7 @@ type Times = measure.Times
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type VehicleData = measure.VehicleData
 
 // Bin is a measure that selects from a slice of indexed measures. Logic
@@ -83,7 +83,7 @@ type VehicleData = measure.VehicleData
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Bin(
 	measures []measure.ByIndex,
 	selector func(from, to int) int,
@@ -97,7 +97,7 @@ func Bin(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Override(
 	defaultByIndex ByIndex,
 	overrideByIndex ByIndex,
@@ -112,7 +112,7 @@ func Override(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func DebugOverride(
 	defaultByIndex ByIndex,
 	overrideByIndex ByIndex,
@@ -125,7 +125,7 @@ func DebugOverride(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Power(m ByIndex, exponent float64) ByIndex {
 	return measure.Power(m, exponent)
 }
@@ -135,7 +135,7 @@ func Power(m ByIndex, exponent float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func HaversineByPoint() ByPoint {
 	return measure.HaversineByPoint()
 }
@@ -144,7 +144,7 @@ func HaversineByPoint() ByPoint {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func ConstantByPoint(c float64) ByPoint {
 	return measure.ConstantByPoint(c)
 }
@@ -153,7 +153,7 @@ func ConstantByPoint(c float64) ByPoint {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Constant(c float64) ByIndex {
 	return measure.Constant(c)
 }
@@ -162,7 +162,7 @@ func Constant(c float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func EuclideanByPoint() ByPoint {
 	return measure.EuclideanByPoint()
 }
@@ -172,7 +172,7 @@ func EuclideanByPoint() ByPoint {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Indexed(m ByPoint, points []Point) ByIndex {
 	return measure.Indexed(m, points)
 }
@@ -185,7 +185,7 @@ func Indexed(m ByPoint, points []Point) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func DependentIndexed(
 	timeDependent bool,
 	cost func(
@@ -201,7 +201,7 @@ func DependentIndexed(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Scale(m ByIndex, constant float64) ByIndex {
 	return measure.Scale(m, constant)
 }
@@ -210,7 +210,7 @@ func Scale(m ByIndex, constant float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func ScaleByPoint(m ByPoint, constant float64) ByPoint {
 	return measure.ScaleByPoint(m, constant)
 }
@@ -220,7 +220,7 @@ func ScaleByPoint(m ByPoint, constant float64) ByPoint {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func ByClockwise(center Point, points []Point) sort.Interface {
 	return measure.ByClockwise(center, points)
 }
@@ -230,7 +230,7 @@ func ByClockwise(center Point, points []Point) sort.Interface {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func LessClockwise(center, a, b Point) bool {
 	return measure.LessClockwise(center, a, b)
 }
@@ -241,7 +241,7 @@ func LessClockwise(center, a, b Point) bool {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Sparse(m ByIndex, arcs map[int]map[int]float64) ByIndex {
 	return measure.Sparse(m, arcs)
 }
@@ -250,7 +250,7 @@ func Sparse(m ByIndex, arcs map[int]map[int]float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Sum(m ...measure.ByIndex) ByIndex {
 	return measure.Sum(m...)
 }
@@ -259,7 +259,7 @@ func Sum(m ...measure.ByIndex) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func TaxicabByPoint() ByPoint {
 	return measure.TaxicabByPoint()
 }
@@ -268,7 +268,7 @@ func TaxicabByPoint() ByPoint {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Truncate(m ByIndex, lower, upper float64) ByIndex {
 	return measure.Truncate(m, lower, upper)
 }
@@ -280,7 +280,7 @@ func Truncate(m ByIndex, lower, upper float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Unique(m ByIndex, references []int) ByIndex {
 	return measure.Unique(m, references)
 }
@@ -291,7 +291,7 @@ func Unique(m ByIndex, references []int) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Location(
 	m ByIndex,
 	costs []float64,
@@ -305,7 +305,7 @@ func Location(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func Matrix(arcs [][]float64) ByIndex {
 	return measure.Matrix(arcs)
 }
@@ -316,7 +316,7 @@ func Matrix(arcs [][]float64) ByIndex {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func IsTriangular(m any) bool {
 	return measure.IsTriangular(m)
 }
@@ -328,7 +328,7 @@ func IsTriangular(m any) bool {
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func BuildMatrixRequestPoints(
 	stops, starts,
 	ends []Point,
@@ -342,7 +342,7 @@ func BuildMatrixRequestPoints(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 func OverrideZeroPoints(
 	points []Point,
 	m ByIndex,
@@ -355,7 +355,7 @@ func OverrideZeroPoints(
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type ByPointLoader measure.ByPointLoader
 
 // ByIndexLoader can be embedded in schema structs and unmarshals a ByIndex JSON
@@ -363,5 +363,5 @@ type ByPointLoader measure.ByPointLoader
 //
 // Deprecated: This package is deprecated and will be removed in a future.
 // It is used with the router engine which was replaced by
-// [github.com/nextmv-io/sdk/nextroute].
+// [github.com/nextmv-io/sdk/measure].
 type ByIndexLoader measure.ByIndexLoader

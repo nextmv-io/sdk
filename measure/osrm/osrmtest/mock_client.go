@@ -11,8 +11,8 @@ package mock_osrm
 import (
         reflect "reflect"
 
-        route "github.com/nextmv-io/sdk/route"
-        osrm "github.com/nextmv-io/sdk/route/osrm"
+        measure "github.com/nextmv-io/sdk/measure"
+        osrm "github.com/nextmv-io/sdk/measure/osrm"
         gomock "go.uber.org/mock/gomock"
 )
 
@@ -81,7 +81,7 @@ func (mr *MockClientMockRecorder) MaxTableSize(size any) *gomock.Call {
 }
 
 // Polyline mocks base method.
-func (m *MockClient) Polyline(points []route.Point) (string, []string, error) {
+func (m *MockClient) Polyline(points []measure.Point) (string, []string, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Polyline", points)
         ret0, _ := ret[0].(string)
@@ -125,7 +125,7 @@ func (mr *MockClientMockRecorder) SnapRadius(radius any) *gomock.Call {
 }
 
 // Table mocks base method.
-func (m *MockClient) Table(points []route.Point, opts ...osrm.TableOptions) ([][]float64, [][]float64, error) {
+func (m *MockClient) Table(points []measure.Point, opts ...osrm.TableOptions) ([][]float64, [][]float64, error) {
         m.ctrl.T.Helper()
         varargs := []any{points}
         for _, a := range opts {

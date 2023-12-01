@@ -3,8 +3,8 @@ package osrm_test
 import (
 	"fmt"
 
-	"github.com/nextmv-io/sdk/route"
-	"github.com/nextmv-io/sdk/route/osrm"
+	"github.com/nextmv-io/sdk/measure"
+	"github.com/nextmv-io/sdk/measure/osrm"
 )
 
 // Please note that this example does not define an output as it requires a
@@ -24,7 +24,7 @@ func ExampleDistanceMatrix() {
 		"YOUR-OSRM-SERVER e.g.:http://localhost:5000",
 		true,
 	)
-	points := []route.Point{
+	points := []measure.Point{
 		{-123.1041788, 43.9965908},
 		{-123.1117056, 44.0568198},
 	}
@@ -43,7 +43,7 @@ func ExampleDurationMatrix() {
 		"YOUR-OSRM-SERVER e.g.:http://localhost:5000",
 		true,
 	)
-	points := []route.Point{
+	points := []measure.Point{
 		{-123.1041788, 43.9965908},
 		{-123.1117056, 44.0568198},
 	}
@@ -62,7 +62,7 @@ func ExampleDistanceDurationMatrices() {
 		"YOUR-OSRM-SERVER e.g.:http://localhost:5000",
 		true,
 	)
-	points := []route.Point{
+	points := []measure.Point{
 		{-123.1041788, 43.9965908},
 		{-123.1117056, 44.0568198},
 	}

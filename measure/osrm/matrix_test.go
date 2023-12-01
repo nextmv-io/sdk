@@ -10,8 +10,7 @@ import (
 	"testing"
 
 	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/route"
-	"github.com/nextmv-io/sdk/route/osrm"
+	"github.com/nextmv-io/sdk/measure/osrm"
 )
 
 var expectedDistances = [3][3]float64{
@@ -38,13 +37,13 @@ var expectedDurationsScaledBy2 = [3][3]float64{
 	{1587.0, 239, 0},
 }
 
-var p = []route.Point{
+var p = []measure.Point{
 	{-105.050583, 39.762631},
 	{-104.983978, 39.711413},
 	{-104.983978, 39.721413},
 }
 
-var oceanPoints = []route.Point{
+var oceanPoints = []measure.Point{
 	{-42.79808862899699, 28.670649170472345},
 	{-41.847832598419565, 17.13854940278748},
 }
@@ -74,21 +73,21 @@ func newMockOSRM(
 
 func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 	type matrixFunc func(c osrm.Client,
-		points []route.Point,
+		points []measure.Point,
 		parallelQueries int,
-	) (route.ByIndex, error)
+	) (measure.ByIndex, error)
 
 	selectDistance := func(c osrm.Client,
-		points []route.Point,
+		points []measure.Point,
 		parallelQueries int,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		distance, _, err := osrm.DistanceDurationMatrices(c, points, parallelQueries)
 		return distance, err
 	}
 	selectDuration := func(c osrm.Client,
-		points []route.Point,
+		points []measure.Point,
 		parallelQueries int,
-	) (route.ByIndex, error) {
+	) (measure.ByIndex, error) {
 		_, duration, err := osrm.DistanceDurationMatrices(c, points, parallelQueries)
 		return duration, err
 	}
@@ -96,7 +95,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 		matrixFunc        matrixFunc
 		distancesResponse [][]float64
 		durationsResponse [][]float64
-		points            []route.Point
+		points            []measure.Point
 		expected          [][]float64
 	}
 	matrixWithInfs := [][]float64{
@@ -119,7 +118,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 	}
 	cases := []testCase{
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{},
@@ -131,7 +130,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        osrm.DistanceMatrix,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{},
@@ -143,7 +142,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        osrm.DistanceMatrix,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{},
@@ -155,7 +154,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        osrm.DurationMatrix,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{},
@@ -167,7 +166,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        selectDistance,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{3.0, 3.0},
@@ -177,7 +176,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        osrm.DistanceMatrix,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{3.0, 3.0},
@@ -187,7 +186,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 			matrixFunc:        osrm.DurationMatrix,
 		},
 		{
-			points: []route.Point{
+			points: []measure.Point{
 				{1.0, 1.0},
 				{2.0, 2.0},
 				{3.0, 3.0},
@@ -212,7 +211,7 @@ func TestDistanceMatrixWithZeroPoints(t *testing.T) {
 	}
 }
 
-func unpackMeasure(m route.ByIndex, points []route.Point) [][]float64 {
+func unpackMeasure(m measure.ByIndex, points []measure.Point) [][]float64 {
 	matrix := make([][]float64, len(points))
 	for i := range matrix {
 		matrix[i] = make([]float64, len(points))
@@ -351,7 +350,7 @@ func TestDurationMatrixLarge(t *testing.T) {
 		t.Skip(hostEnvNotSetMsg)
 	}
 
-	testpoints := make([]route.Point, 1000)
+	testpoints := make([]measure.Point, 1000)
 	for i := 0; i < len(testpoints); i++ {
 		latMin := 24.17041401832874
 		latMax := 24.253760
@@ -360,7 +359,7 @@ func TestDurationMatrixLarge(t *testing.T) {
 		lonMin := 55.656787
 		lonMax := 55.81164689921658
 		lon := lonMin + rand.Float64()*(lonMax-lonMin)
-		testpoints[i] = route.Point{lon, lat}
+		testpoints[i] = measure.Point{lon, lat}
 	}
 
 	c := osrm.DefaultClient(osrmHost, true)
