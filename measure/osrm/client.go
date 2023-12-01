@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	lru "github.com/hashicorp/golang-lru"
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/route"
 	polyline "github.com/twpayne/go-polyline"
 )
@@ -35,7 +36,7 @@ const (
 type Client interface {
 	// Table requests a distance and/or duration table from an OSRM server.
 	Table(
-		points []route.Point,
+		points []measure.Point,
 		opts ...TableOptions,
 	) (
 		distance, duration [][]float64,
@@ -64,7 +65,7 @@ type Client interface {
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
-	Polyline(points []route.Point) (string, []string, error)
+	Polyline(points []measure.Point) (string, []string, error)
 }
 
 // NewClient returns a new OSRM Client.
@@ -221,7 +222,7 @@ func (c *client) Get(uri string) ([]byte, error) {
 	return c.get(uri)
 }
 
-func (c *client) Table(points []route.Point, opts ...TableOptions) (
+func (c *client) Table(points []measure.Point, opts ...TableOptions) (
 	distances, durations [][]float64,
 	err error,
 ) {
@@ -327,11 +328,11 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 	return routeResp.Distances, routeResp.Durations, nil
 }
 
-var unroutablePoint = route.Point{-143.292892, 37.683603}
+var unroutablePoint = measure.Point{-143.292892, 37.683603}
 
 func (c *client) tableRequests( //nolint:gocyclo
 	config *tableConfig,
-	points []route.Point,
+	points []measure.Point,
 ) ([]request, error) {
 	// Turn points slice into OSRM-friendly semicolon-delimited point pairs
 	// []{{1,2}, {3,4}} => "1,2;3,4"
@@ -499,7 +500,7 @@ func ParallelRuns(runs int) TableOptions {
 }
 
 // Creates the points parameters for an OSRM request.
-func pointsParameters(points []route.Point) []string {
+func pointsParameters(points []measure.Point) []string {
 	// Turn points slice into OSRM-friendly semicolon-delimited point pairs
 	// []{{1,2}, {3,4}} => "1,2;3,4"
 	pointStrings := []string{}
@@ -511,8 +512,8 @@ func pointsParameters(points []route.Point) []string {
 }
 
 // sets nil values to an unroutable point.
-func handleUnroutablePoints(in []route.Point) (out []route.Point) {
-	out = make([]route.Point, len(in))
+func handleUnroutablePoints(in []measure.Point) (out []measure.Point) {
+	out = make([]measure.Point, len(in))
 	for i, point := range in {
 		if len(point) == 2 {
 			out[i] = in[i]
@@ -524,7 +525,7 @@ func handleUnroutablePoints(in []route.Point) (out []route.Point) {
 }
 
 // Creates the points parameter for an OSRM request.
-func pointsParameter(points []route.Point) string {
+func pointsParameter(points []measure.Point) string {
 	return strings.Join(pointsParameters(points), ";")
 }
 
@@ -554,7 +555,7 @@ type Step struct {
 // Creates polylines for the given points. First return parameter is a polyline
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
-func (c *client) Polyline(points []route.Point) (string, []string, error) {
+func (c *client) Polyline(points []measure.Point) (string, []string, error) {
 	if len(points) == 0 {
 		return "", []string{}, fmt.Errorf("cannot create polyline for empty points")
 	}
