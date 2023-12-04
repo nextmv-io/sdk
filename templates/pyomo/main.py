@@ -45,6 +45,11 @@ def main() -> None:
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
     )
+    parser.add_argument(
+        "-provider",
+        default="cbc",
+        help="Solver provider. Default is cbc.",
+    )
     args = parser.parse_args()
 
     # Read input data, solve the problem and write the solution.
@@ -53,23 +58,22 @@ def main() -> None:
     log(f"  - items: {len(input_data.get('items', []))}")
     log(f"  - capacity: {input_data.get('weight_capacity', 0)}")
     log(f"  - max duration: {args.duration} seconds")
-    solution = solve(input_data, args.duration)
+    solution = solve(input_data, args.duration, args.provider)
     write_output(args.output, solution)
 
 
-def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-    # Creates the model.
-    model = pyo.ConcreteModel()
-
-    # Define the solver provider. Make sure it is installed.
-    provider = "cbc"
+    # Make sure the provider is supported.
     if provider not in SUPPORTED_PROVIDER_DURATIONS:
         raise ValueError(
             f"Unsupported provider: {provider}. The supported providers are: "
             f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
         )
+
+    # Creates the model.
+    model = pyo.ConcreteModel()
 
     # Creates the solver.
     solver = pyo.SolverFactory(provider)
