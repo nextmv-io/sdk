@@ -2,11 +2,11 @@ module github.com/nextmv-io/sdk
 
 go 1.19
 
-replace github.com/nextmv-io/sdk/measure/osrm => ./measure/osrm
+replace github.com/nextmv-io/sdk/route/osrm => ./route/osrm
 
 require (
 	github.com/danielgtaylor/huma v1.14.1
-	github.com/nextmv-io/sdk/measure/osrm v0.21.1
+	github.com/nextmv-io/sdk/route/osrm v1.0.3
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
 )
