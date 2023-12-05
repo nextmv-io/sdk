@@ -50,4 +50,6 @@ type ParallelSolveOptions[T Solution[T]] interface {
 type ParallelSolver[T Solution[T]] interface {
 	Progressioner
 	BaseSolver[T, ParallelSolveOptions[T]]
+	SetSolverFactory(NewSolverFactory[T])
+	SetSolveOptionsFactory(NewSolveOptionsFactory[T])
 }
