@@ -9,9 +9,14 @@ import (
 
 // NewSolverFactory creates a new SolverFactory. A SolverFactory can be used to
 // create a new solver.
-func NewSolverFactory() SolverFactory {
+func NewSolverFactory() alns.NewSolverFactory[Solution] {
 	connect.Connect(con, &newSolverFactory)
-	return newSolverFactory()
+	return newSolverFactory
+}
+
+func NewSolveOptionsFactory() alns.NewSolveOptionsFactory[Solution] {
+	connect.Connect(con, &newSolveOptionsFactory)
+	return newSolveOptionsFactory
 }
 
 // NewEmptySolver creates a new empty solver. In order to make the solver
@@ -62,10 +67,4 @@ type SolverOptions struct {
 	Unplan  IntParameterOptions `json:"unplan"  usage:"unplan parameter"`
 	Plan    IntParameterOptions `json:"plan"  usage:"plan parameter"`
 	Restart IntParameterOptions `json:"restart"  usage:"restart parameter"`
-}
-
-// SolverFactory is the interface for a solver-factory.
-type SolverFactory interface {
-	// NewSolver creates a new solver.
-	NewSolver(model Model) (Solver, error)
 }

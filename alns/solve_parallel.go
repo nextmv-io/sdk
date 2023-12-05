@@ -1,9 +1,6 @@
 package alns
 
-import (
-	"math/rand"
-	"time"
-)
+import "math/rand"
 
 // NewSolveOptionsFactory is a factory type for creating new solve options.
 // This factory is used by the parallel solver to create new solve options for
@@ -29,29 +26,22 @@ type ParallelSolveInformation interface {
 	// how often a new solver has been created and started with the best
 	// solution of the previous runs.
 	Cycle() int
+
+	// Random returns the random number generator from the solution.
+	Random() *rand.Rand
 }
 
-// ParallelSolverOptions holds the options for the parallel solver.
-type ParallelSolverOptions[T Solution[T]] interface {
+// ParallelSolveOptions holds the options for the parallel solver.
+type ParallelSolveOptions[T Solution[T]] interface {
 	// Iterations returns the maximum number of iterations of the parallel
 	// solver.
 	Iterations() int
-	// Duration returns the maximum duration of the parallel solver.
-	Duration() time.Duration
 	// ParallelRuns returns the maximum number of parallel runs.
 	ParallelRuns() int
-
 	// RunDeterministically returns true if the parallel solver should run
 	// deterministically. Deterministic mode will sacrifice performance for
 	// determinism.
 	RunDeterministically() bool
-
-	// NewSolveOptionsFactory returns the factory for creating a new solve
-	// options for each run.
-	NewSolveOptionsFactory(*rand.Rand) NewSolveOptionsFactory[T]
-	// NewSolverFactory returns the factory for creating a new solver for each
-	// run.
-	NewSolverFactory() NewSolverFactory[T]
 }
 
 // ParallelSolver is the interface for parallel solver. The parallel solver will
@@ -59,5 +49,5 @@ type ParallelSolverOptions[T Solution[T]] interface {
 // solver will stop when the maximum duration is reached.
 type ParallelSolver[T Solution[T]] interface {
 	Progressioner
-	BaseSolver[T, ParallelSolverOptions[T]]
+	BaseSolver[T, ParallelSolveOptions[T]]
 }

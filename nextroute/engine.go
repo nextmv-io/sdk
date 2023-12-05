@@ -147,8 +147,10 @@ var (
 		StopExpression,
 	) UnPlannedObjective
 	newExpressionObjective func(ModelExpression) ExpressionObjective
-	newSolverFactory       func() SolverFactory
-	newVehiclesObjective   func(
+	newSolverFactory       alns.NewSolverFactory[Solution]
+	newSolveOptionsFactory alns.NewSolveOptionsFactory[Solution]
+
+	newVehiclesObjective func(
 		VehicleTypeExpression,
 	) VehiclesObjective
 	newVehiclesDurationObjective  func() VehiclesDurationObjective
