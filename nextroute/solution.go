@@ -39,6 +39,16 @@ func NewSweepSolution(
 	return newSweepSolution(ctx, m)
 }
 
+// NewClusterSolution creates a new solution. The solution is created from the
+// given model using a cluster construction heuristic.
+func NewClusterSolution(
+	ctx context.Context,
+	m Model,
+) (Solution, error) {
+	connect.Connect(con, &newClusterSolution)
+	return newClusterSolution(ctx, m)
+}
+
 // Solution is a solution to a model.
 type Solution interface {
 	alns.Solution[Solution]
