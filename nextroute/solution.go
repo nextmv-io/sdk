@@ -44,9 +44,10 @@ func NewSweepSolution(
 func NewClusterSolution(
 	ctx context.Context,
 	m Model,
+	maximumClusters int,
 ) (Solution, error) {
 	connect.Connect(con, &newClusterSolution)
-	return newClusterSolution(ctx, m)
+	return newClusterSolution(ctx, m, maximumClusters)
 }
 
 // Solution is a solution to a model.

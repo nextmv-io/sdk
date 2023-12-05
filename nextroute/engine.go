@@ -16,10 +16,19 @@ import (
 var (
 	con = connect.NewConnector("sdk", "NextRoute")
 
-	newRandomSolution func(context.Context, Model) (Solution, error)
-	newSweepSolution  func(context.Context, Model) (Solution, error)
-
-	newClusterSolution            func(context.Context, Model) (Solution, error)
+	newRandomSolution func(
+		context.Context,
+		Model,
+	) (Solution, error)
+	newSweepSolution func(
+		context.Context,
+		Model,
+	) (Solution, error)
+	newClusterSolution func(
+		context.Context,
+		Model,
+		int,
+	) (Solution, error)
 	newConstantDurationExpression func(
 		string,
 		time.Duration,
