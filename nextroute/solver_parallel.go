@@ -22,6 +22,8 @@ type ParallelSolveOptions struct {
 type ParallelSolver interface {
 	alns.Progressioner
 	alns.BaseSolver[Solution, ParallelSolveOptions]
+	SetSolverFactory(alns.NewSolverFactory[Solution])
+	SetSolveOptionsFactory(alns.NewSolveOptionsFactory[Solution])
 }
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.
