@@ -14,6 +14,7 @@ func NewSolverFactory() alns.NewSolverFactory[Solution] {
 	return newSolverFactory
 }
 
+// NewSolveOptionsFactory creates a new SolveOptionsFactory.
 func NewSolveOptionsFactory() alns.NewSolveOptionsFactory[Solution] {
 	connect.Connect(con, &newSolveOptionsFactory)
 	return newSolveOptionsFactory
