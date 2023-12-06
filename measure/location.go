@@ -11,7 +11,7 @@ import (
 // measure and the specified cost of the 'to' location. This cost is read from
 // the passed in costs slice.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Location(
 	m ByIndex,
 	costs []float64,
@@ -62,7 +62,7 @@ func (l location) MarshalJSON() ([]byte, error) {
 // DurationGroup groups stops by index which have additional service costs
 // attached to them.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type DurationGroup struct {
 	Group    model.Domain
 	Duration int
@@ -72,13 +72,13 @@ type DurationGroup struct {
 // used to account for additional service costs whenever a stop of a group is
 // approached first.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type DurationGroups []DurationGroup
 
 // ToIndexGroup maps a location index to duration group to quickly access the
 // corresponding group of a given location.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func (dg DurationGroups) ToIndexGroup() (map[int]DurationGroup, error) {
 	indexToGroup := make(map[int]DurationGroup)
 	// Check if groups are overlapping

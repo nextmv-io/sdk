@@ -11,7 +11,7 @@ import (
 // Alias is an interface that allows for sampling from a discrete
 // distribution in O(1) time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Alias = c.Alias
 
@@ -22,7 +22,7 @@ type Alias = c.Alias
 // return 0 with probability 1/6, 1 with probability 1/3 and 2 with
 // probability 1/2.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewAlias(weights []float64) (Alias, error) {
 	return c.NewAlias(weights)
@@ -31,7 +31,7 @@ func NewAlias(weights []float64) (Alias, error) {
 // NewLocation creates a new Location. An error is returned if the longitude is
 // not between (-180, 180) or the latitude is not between (-90, 90).
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewLocation(longitude float64, latitude float64) (Location, error) {
 	return c.NewLocation(longitude, latitude)
@@ -40,7 +40,7 @@ func NewLocation(longitude float64, latitude float64) (Location, error) {
 // NewInvalidLocation creates a new invalid Location. Longitude and latitude
 // are not important.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewInvalidLocation() Location {
 	return c.NewInvalidLocation()
@@ -48,25 +48,25 @@ func NewInvalidLocation() Location {
 
 // Locations is a slice of Location.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Locations = c.Locations
 
 // Location represents a physical location on the earth.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Location = c.Location
 
 // BoundingBox contains information about a box.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type BoundingBox = c.BoundingBox
 
 // NewInvalidBoundingBox returns an invalid bounding box.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewInvalidBoundingBox() BoundingBox {
 	return c.NewInvalidBoundingBox()
@@ -74,7 +74,7 @@ func NewInvalidBoundingBox() BoundingBox {
 
 // NewBoundingBox returns a bounding box for the given locations.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewBoundingBox(locations Locations) BoundingBox {
 	return c.NewBoundingBox(locations)
@@ -82,19 +82,19 @@ func NewBoundingBox(locations Locations) BoundingBox {
 
 // DistanceUnit is the unit of distance.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type DistanceUnit = c.DistanceUnit
 
 // Distance is a distance in a given unit.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Distance = c.Distance
 
 // NewDistance returns a new distance.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewDistance(
 	value float64,
@@ -105,7 +105,7 @@ func NewDistance(
 
 // NewDuration returns a new duration by unit.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewDuration(unit DurationUnit) time.Duration {
 	return c.NewDuration(unit)
@@ -113,19 +113,19 @@ func NewDuration(unit DurationUnit) time.Duration {
 
 // DurationUnit is the unit of duration.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type DurationUnit = c.DurationUnit
 
 // FastHaversine is a fast approximation of the haversine distance.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type FastHaversine = c.FastHaversine
 
 // NewFastHaversine returns a new FastHaversine.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewFastHaversine(lat float64) FastHaversine {
 	return c.NewFastHaversine(lat)
@@ -135,7 +135,7 @@ func NewFastHaversine(lat float64) FastHaversine {
 // Haversine formula. Haversine is a good approximation for short
 // distances (up to a few hundred kilometers).
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Haversine(from, to Location) (Distance, error) {
 	return c.Haversine(from, to)
@@ -143,7 +143,7 @@ func Haversine(from, to Location) (Distance, error) {
 
 // Intersect returns the intersection of two slices.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Intersect[T comparable](a []T, b []T) []T {
 	return c.Intersect[T](a, b)
@@ -153,7 +153,7 @@ func Intersect[T comparable](a []T, b []T) []T {
 // function f to determine the value of each item. If n is greater than
 // the length of items, all items are returned.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NSmallest[T any](items []T, f func(T) float64, n int) []T {
 	return c.NSmallest[T](items, f, n)
@@ -162,92 +162,92 @@ func NSmallest[T any](items []T, f func(T) float64, n int) []T {
 // Meters is the distance travelled by light in a vacuum in
 // 1/299,792,458 seconds.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 const Meters = c.Meters
 
 // Kilometers is 1000 meters.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 const Kilometers = c.Kilometers
 
 // Miles is 1609.34 meters.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 const Miles = c.Miles
 
 // KilometersPerHour is a speed unit of kilometers per hour.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 var KilometersPerHour = c.KilometersPerHour
 
 // MetersPerSecond is a speed unit of meters per second.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 var MetersPerSecond = c.MetersPerSecond
 
 // MilesPerHour is a speed unit of miles per hour.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 var MilesPerHour = c.MilesPerHour
 
 const (
 	// NanoSecond is 1/1,000,000,000 of a second.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	NanoSecond = c.NanoSecond
 	// MicroSecond is 1/1,000,000 of a second.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	MicroSecond = c.MicroSecond
 	// MilliSecond is 1/1,000 of a second.//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	MilliSecond = c.MilliSecond
 	// Second is the SI unit of time.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	Second = c.Second
 	// Minute is 60 seconds.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	Minute = c.Minute
 	// Hour is 60 minutes.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	Hour = c.Hour
 	// Day is 24 hours.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// Use [github.com/nextmv-io/sdk/common] instead.
 	Day = c.Day
 )
 
 // Speed is the interface for a speed.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Speed = c.Speed
 
 // SpeedUnit represents a unit of speed.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type SpeedUnit = c.SpeedUnit
 
 // NewSpeed creates a new speed.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewSpeed(
 	distance float64,
@@ -258,7 +258,7 @@ func NewSpeed(
 
 // NewSpeedUnit returns a new speed unit.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewSpeedUnit(
 	distanceUnit DistanceUnit,
@@ -269,13 +269,13 @@ func NewSpeedUnit(
 
 // Statistics describes statistics.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Statistics = c.Statistics
 
 // NewStatistics creates a new statistics object.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NewStatistics[T any](v []T, f func(T) float64) Statistics {
 	return c.NewStatistics[T](v, f)
@@ -283,7 +283,7 @@ func NewStatistics[T any](v []T, f func(T) float64) Statistics {
 
 // Filter filters a slice using a predicate function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Filter[T any](v []T, f func(T) bool) []T {
 	return c.Filter[T](v, f)
@@ -292,7 +292,7 @@ func Filter[T any](v []T, f func(T) bool) []T {
 // Unique is a universal duplicate removal function for type instances in
 // a slice that implement the comparable interface.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Unique[T comparable](s []T) []T {
 	return c.Unique[T](s)
@@ -302,7 +302,7 @@ func Unique[T comparable](s []T) []T {
 // a slice that implement the comparable interface. The function f is used to
 // extract the comparable value from the type instance.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	return c.UniqueDefined[T, I](items, f)
@@ -310,7 +310,7 @@ func UniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 
 // NotUnique returns the duplicate instances.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NotUnique[T comparable](s []T) []T {
 	return c.NotUnique[T](s)
@@ -319,7 +319,7 @@ func NotUnique[T comparable](s []T) []T {
 // NotUniqueDefined returns the instances for which f returns identical
 // values.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func NotUniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 	return c.NotUniqueDefined[T, I](items, f)
@@ -327,7 +327,7 @@ func NotUniqueDefined[T any, I comparable](items []T, f func(T) I) []T {
 
 // GroupBy groups the elements of a slice by a key function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
 	return c.GroupBy[T, K](s, f)
@@ -335,7 +335,7 @@ func GroupBy[T any, K comparable](s []T, f func(T) K) map[K][]T {
 
 // Map maps a slice of type T to a slice of type R using the function f.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Map[T any, R any](v []T, f func(T) R) []R {
 	return c.Map[T, R](v, f)
@@ -344,7 +344,7 @@ func Map[T any, R any](v []T, f func(T) R) []R {
 // MapSlice maps a slice of type T to a slice of type R using the function f
 // returning a slice of R.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func MapSlice[T any, R any](v []T, f func(T) []R) []R {
 	return c.MapSlice[T, R](v, f)
@@ -352,7 +352,7 @@ func MapSlice[T any, R any](v []T, f func(T) []R) []R {
 
 // FindIndex returns the first index i satisfying predicate(s[i]).
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func FindIndex[E any](s []E, predicate func(E) bool) int {
 	return c.FindIndex[E](s, predicate)
@@ -360,7 +360,7 @@ func FindIndex[E any](s []E, predicate func(E) bool) int {
 
 // AllTrue returns true if all the given predicate evaluations are true.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func AllTrue[E any](s []E, predicate func(E) bool) bool {
 	return c.AllTrue[E](s, predicate)
@@ -368,7 +368,7 @@ func AllTrue[E any](s []E, predicate func(E) bool) bool {
 
 // AllFalse returns true if all the given predicate evaluations is false.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func AllFalse[E any](s []E, predicate func(E) bool) bool {
 	return c.AllFalse[E](s, predicate)
@@ -377,7 +377,7 @@ func AllFalse[E any](s []E, predicate func(E) bool) bool {
 // All returns true if all the given predicate evaluations evaluate to
 // condition.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func All[E any](s []E, condition bool, predicate func(E) bool) bool {
 	return c.All[E](s, condition, predicate)
@@ -386,7 +386,7 @@ func All[E any](s []E, condition bool, predicate func(E) bool) bool {
 // HasTrue returns true if any of the given predicate evaluations evaluate to
 // true.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func HasTrue[E any](s []E, predicate func(E) bool) bool {
 	return c.HasTrue[E](s, predicate)
@@ -395,7 +395,7 @@ func HasTrue[E any](s []E, predicate func(E) bool) bool {
 // HasFalse returns true if any of the given predicate evaluations evaluate to
 // false.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func HasFalse[E any](s []E, predicate func(E) bool) bool {
 	return c.HasFalse[E](s, predicate)
@@ -403,7 +403,7 @@ func HasFalse[E any](s []E, predicate func(E) bool) bool {
 
 // Has returns true if any of the given predicate evaluations is condition.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Has[E any](s []E, condition bool, predicate func(E) bool) bool {
 	return c.Has[E](s, condition, predicate)
@@ -412,7 +412,7 @@ func Has[E any](s []E, condition bool, predicate func(E) bool) bool {
 // CopyMap copies all key/value pairs in source adding them to destination.
 // If a key exists in both maps, the value in destination is overwritten.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](
 	destination M1,
@@ -422,7 +422,7 @@ func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](
 
 // DefensiveCopy returns a defensive copy of a slice.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func DefensiveCopy[T any](v []T) []T {
 	return c.DefensiveCopy[T](v)
@@ -430,7 +430,7 @@ func DefensiveCopy[T any](v []T) []T {
 
 // WithinTolerance returns true if a and b are within the given tolerance.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func WithinTolerance(a, b, tolerance float64) bool {
 	return c.WithinTolerance(a, b, tolerance)
@@ -438,7 +438,7 @@ func WithinTolerance(a, b, tolerance float64) bool {
 
 // Truncate truncates a float64 to the given unit.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Truncate(f float64, unit float64) float64 {
 	return c.Truncate(f, unit)
@@ -447,7 +447,7 @@ func Truncate(f float64, unit float64) float64 {
 // DurationValue returns the value of a duration in the given time unit.
 // Will panic if the time unit is zero.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func DurationValue(
 	distance Distance,
@@ -461,7 +461,7 @@ func DurationValue(
 // empty, panic is raised. If source is nil, a new source is created using the
 // current time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func RandomElement[T any](
 	source *rand.Rand,
@@ -475,7 +475,7 @@ func RandomElement[T any](
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func RandomElements[T any](
 	source *rand.Rand,
@@ -490,7 +490,7 @@ func RandomElements[T any](
 // returned. If n is less than or equal to zero, an empty slice is returned.
 // If source is nil, a new source is created using the current time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func RandomElementIndices[T any](
 	source *rand.Rand,
@@ -504,7 +504,7 @@ func RandomElementIndices[T any](
 // already been used, a new index is generated. If source is nil, a new source
 // is created using the current time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 	return c.RandomIndex(source, size, indicesUsed)
@@ -513,7 +513,7 @@ func RandomIndex(source *rand.Rand, size int, indicesUsed map[int]bool) int {
 // Shuffle returns a shuffled copy of the given slice. If source is nil, a new
 // source is created using the current time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Shuffle[T any](source *rand.Rand, slice []T) []T {
 	return c.Shuffle[T](source, slice)
@@ -523,7 +523,7 @@ func Shuffle[T any](source *rand.Rand, slice []T) []T {
 // calculate the value. The value is only calculated once, and the result
 // is cached for subsequent calls.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func DefineLazy[T any](f func() T) c.Lazy[T] {
 	return c.DefineLazy(f)
@@ -533,13 +533,13 @@ func DefineLazy[T any](f func() T) c.Lazy[T] {
 // using this type constraint for a generic parameter, the parameter can be used
 // as a map key and it can be sorted.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 type Comparable = c.Comparable
 
 // Keys returns a slice of all values in the given map.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Keys[M ~map[K]V, K Comparable, V any](m M) []K {
 	return c.Keys(m)
@@ -547,7 +547,7 @@ func Keys[M ~map[K]V, K Comparable, V any](m M) []K {
 
 // Values returns a slice of all values in the given map.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Values[M ~map[K]V, K Comparable, V any](m M) []V {
 	return c.Values(m)
@@ -557,7 +557,7 @@ func Values[M ~map[K]V, K Comparable, V any](m M) []V {
 // keys. It provides a function which will be called for each key/value pair.
 // The function should return true to stop iteration.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func RangeMap[M ~map[K]V, K Comparable, V any](
 	m M,
@@ -568,7 +568,7 @@ func RangeMap[M ~map[K]V, K Comparable, V any](
 
 // Reverse reverses the given slice in place and returns it.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // Use [github.com/nextmv-io/sdk/common] instead.
 func Reverse[T any](slice []T) []T {
 	return c.Reverse(slice)

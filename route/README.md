@@ -1,6 +1,6 @@
 # Route
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 Use [nextroute][nextroute] instead.
 
 Package `route` provides vehicle routing functionalities. Routing models direct

@@ -8,12 +8,12 @@ import (
 
 // A Key for a Map.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Key interface{ int | string }
 
 // A Map stores key-value pairs in a Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Map[K Key, V any] interface {
 	/*
 		Delete a Key from the Map.
@@ -26,7 +26,7 @@ type Map[K Key, V any] interface {
 			)
 			s2 := s1.Apply(m.Delete(42)) // {13: bar}
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Delete(K) Change
 
@@ -40,7 +40,7 @@ type Map[K Key, V any] interface {
 			m.Get(s2, 42) // (foo, true)
 			m.Get(s2, 88) // (_, false)
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Get(Store, K) (V, bool)
 
@@ -56,7 +56,7 @@ type Map[K Key, V any] interface {
 			m.Len(s1) // 0
 			m.Len(s2) // 2
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Len(Store) int
 
@@ -71,7 +71,7 @@ type Map[K Key, V any] interface {
 			)
 			m.Map(s2) // map[int]string{42: "foo", 13: "bar"}
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Map(Store) map[K]V
 
@@ -83,7 +83,7 @@ type Map[K Key, V any] interface {
 			s2 := s1.Apply(m.Set(42, "foo")) // 42 -> foo
 			s3 := s2.Apply(m.Set(42, "bar")) // 42 -> bar
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Set(K, V) Change
 }
@@ -95,7 +95,7 @@ NewMap returns a new NewMap and stores it in a Store.
 	m1 := store.NewMap[int, [2]float64](s) // map of {int -> [2]float64}
 	m2 := store.NewMap[string, int](s)     // map of {string -> int}
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 */
 func NewMap[K Key, V any](s Store) Map[K, V] {
 	p := mapProxy[K, V]{}
@@ -115,7 +115,7 @@ func NewMap[K Key, V any](s Store) Map[K, V] {
 // Since type constraints cannot cross the plugin boundary bidirectionally, we
 // simulate a union type.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type mapProxy[K Key, V any] struct {
 	mapInt    Map[int, any]
 	mapString Map[string, any]
@@ -123,7 +123,7 @@ type mapProxy[K Key, V any] struct {
 
 // Implements Map.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 
 func (m mapProxy[K, V]) Delete(key K) Change {
 	k := any(key)

@@ -16,7 +16,7 @@ These measures implement route.ByIndex.
 These matrix-generating functions can also take one or more options
 that allow you to configure the routes that will be included in the matrices.
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 It is used with the router engine which was replaced by
 [github.com/nextmv-io/sdk/measure/here].
 */

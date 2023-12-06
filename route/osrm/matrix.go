@@ -15,7 +15,7 @@ func overrideZeroes(m route.ByIndex, points []route.Point) route.ByIndex {
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func DistanceMatrix(
@@ -36,7 +36,7 @@ func DistanceMatrix(
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func DurationMatrix(
@@ -57,7 +57,7 @@ func DurationMatrix(
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func DistanceDurationMatrices(

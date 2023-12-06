@@ -180,6 +180,6 @@ Writes this output to stdout:
 	  }
 	}
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 */
 package store

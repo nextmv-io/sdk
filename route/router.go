@@ -11,21 +11,21 @@ import (
 
 // A Router is an engine that solves Vehicle Routing Problems.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Router interface {
 	// Options configures the router with the given options. An error is
 	// returned if validation issues exist.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Options(...Option) error
 
 	// Solver receives solve options and returns a Solver interface.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Solver(store.Options) (store.Solver, error)
@@ -53,7 +53,7 @@ type Router interface {
 					p := router.Plan()
 					vehicles, unassigned := p.Get(s).Vehicles, p.Get(s).Unassigned
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 		It is used with the router engine which was replaced by
 		[github.com/nextmv-io/sdk/nextroute].
 	*/
@@ -61,7 +61,7 @@ type Router interface {
 
 	// Format configures a custom output format for a solution.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Format(func(*Plan) any)
@@ -71,33 +71,33 @@ type Router interface {
 // solver data structures. Certain router options that customize solver
 // internals have to work with this data structure.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type PartialPlan interface {
 	// Unassigned returns an Integer Domain with unassigned stop indices.
 	// These are stops explicitly excluded from being served by a vehicle.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Unassigned() model.Domain
 	// Unplanned returns an Integer Domain with not yet assigned or unassigned
 	// stops indices.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Unplanned() model.Domain
 	// Value return the value of this plan.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Value() int
 	// Vehicles returns a slice of vehicles part of this partial plan.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Vehicles() []PartialVehicle
@@ -107,20 +107,20 @@ type PartialPlan interface {
 // data structures. Certain router options that customize solver internals have
 // to work with this data structure.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type PartialVehicle interface {
 	// ID returns the vehicle ID.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	ID() string
 	// Updater returns either nil in case no custom VehicleUpdater was used or
 	// the custom VehicleUpdater that was used for this vehicle.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Updater() VehicleUpdater
@@ -128,13 +128,13 @@ type PartialVehicle interface {
 	// indices. The first and last indices are always the starting and ending
 	// locations of the vehicle, respectively.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Route() []int
 	// Value return the value of vehicle. Usually this is the cost of the route.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Value() int
@@ -144,7 +144,7 @@ type PartialVehicle interface {
 	// waiting time before a time window opens, which is when the service
 	// actually starts (ETS).
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/nextroute].
 	Times() measure.Times
@@ -152,7 +152,7 @@ type PartialVehicle interface {
 
 // Plan describes a solution to a Vehicle Routing Problem.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Plan struct {
@@ -163,7 +163,7 @@ type Plan struct {
 // PlannedVehicle holds information about the vehicle in a solution to a Vehicle
 // Routing Problem.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type PlannedVehicle struct {
@@ -176,7 +176,7 @@ type PlannedVehicle struct {
 // PlannedStop describes a stop as part of a Vehicle's route of solution
 // to a Vehicle Routing Problem.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type PlannedStop struct {
@@ -188,7 +188,7 @@ type PlannedStop struct {
 
 // Stop to service in a Vehicle Routing Problem.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Stop struct {
@@ -198,7 +198,7 @@ type Stop struct {
 
 // TimeWindow represents a time window for a shift of a vehicle or a stop.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type TimeWindow struct {
@@ -208,7 +208,7 @@ type TimeWindow struct {
 
 // Backlog represents the backlog, a list of stops for a vehicle.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Backlog struct {
@@ -218,7 +218,7 @@ type Backlog struct {
 
 // Alternate represents alternate stops, a list of stops for a vehicle.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Alternate struct {
@@ -231,7 +231,7 @@ type Alternate struct {
 // attribute defines what the allowed time is for vehicles arriving to stops
 // before the window is open.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Window struct {
@@ -242,7 +242,7 @@ type Window struct {
 // ServiceGroup holds a group of stops and the service time duration (in
 // seconds) to be added for every approach to one of the stops in the group.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type ServiceGroup struct {
@@ -252,7 +252,7 @@ type ServiceGroup struct {
 
 // Position represents a geographical location.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Position struct {
@@ -263,7 +263,7 @@ type Position struct {
 // Job represents a combination of one pick-up and one drop-off that must be
 // served together with the pick-up preceding the drop-off.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Job struct {
@@ -274,7 +274,7 @@ type Job struct {
 // Attributes holds the ID of a vehicle or stop and corresponding compatibility
 // attributes for that vehicle/stop.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Attributes struct {
@@ -294,7 +294,7 @@ type Service struct {
 
 // Limit holds a measure which will be limited by the given value.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Limit struct {
@@ -308,7 +308,7 @@ type Limit struct {
 // composable, meaning that several options may be used or none at all. The
 // options, unless otherwise noted, can be used independently of each other.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func NewRouter(

@@ -13,17 +13,17 @@ const (
 	// Minimize indicates the solution space is being searched to find the
 	// smallest possible value.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Minimize Sense = iota
 	// Maximize indicates the solution space is being searched to find the
 	// biggest possible value.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Maximize
 	// Satisfy indicates the solution space is being searched to find
 	// operationally valid Stores.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Satisfy
 )
 
@@ -41,7 +41,7 @@ directly and chained):
 The variables and logic stored define a solution space. This space is searched
 to make decisions.
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 */
 type Store interface {
 	/*
@@ -54,7 +54,7 @@ type Store interface {
 				x.Set(x.Get(s) * 2),
 			)
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Apply(...Change) Store
 
@@ -71,7 +71,7 @@ type Store interface {
 				}
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Bound(Bounder) Store
 
@@ -84,7 +84,7 @@ type Store interface {
 				return map[string]int{"x": x.Get(s)}
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Format(Formatter) Store
 
@@ -108,7 +108,7 @@ type Store interface {
 				)
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Generate(func(Store) Generator) Store
 
@@ -128,7 +128,7 @@ type Store interface {
 				return []store.Change{}
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Propagate(...Propagator) Store
 
@@ -146,7 +146,7 @@ type Store interface {
 				return x.Get(s)%2 == 0
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Validate(Condition) Store
 
@@ -161,73 +161,73 @@ type Store interface {
 				return v * v
 			})
 
-		Deprecated: This package is deprecated and will be removed in the future.
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Value(Valuer) Store
 
 	// Maximizer builds a solver that searches the space defined by the Store
 	// to maximize a value.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Maximizer(Options) Solver
 
 	// Minimizer builds a solver that searches the space defined by the Store
 	// to minimize a value.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Minimizer(Options) Solver
 
 	// Satisfier builds a solver that searches the space defined by the Store
 	// to satisfy operational validity.
 	//
-	// Deprecated: This package is deprecated and will be removed in the future.
+	// Deprecated: This package is deprecated and will be removed in the next major release.
 	Satisfier(Options) Solver
 }
 
 // A Generator is used to generate new Stores (children) from an existing one
 // (parent). It is meant to be used with the store.Generate function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Generator any
 
 // Condition represents a logical condition on a Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Condition func(Store) bool
 
 // Change a Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Change func(Store)
 
 // Formatter maps a Store to any type with a JSON representation. It is meant
 // to be used with the store.Format function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Formatter func(Store) any
 
 // Bounder maps a Store to monotonically tightening bounds. It is meant to be
 // used with the store.Bound function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Bounder func(Store) Bounds
 
 // Propagator propagates Changes to a Store. It is meant to be used with the
 // store.Propagate function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Propagator func(Store) []Change
 
 // Valuer maps a Store to an integer value. It is meant to be used with the
 // store.Value function.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Valuer func(Store) int
 
 // Sense specifies whether one is maximizing, minimizing, or satisfying.
 // Default is set to minimization.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Sense int
 
 func (s Sense) String() string {
@@ -245,7 +245,7 @@ func (s Sense) String() string {
 
 // Options for a solver.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Options struct {
 	Sense Sense
 	// Tags are custom key-value pairs that the user defines for
@@ -273,7 +273,7 @@ type Options struct {
 
 // MarshalJSON Options.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func (o Options) MarshalJSON() ([]byte, error) {
 	search := map[string]any{}
 	search["buffer"] = o.Search.Buffer
@@ -303,7 +303,7 @@ func (o Options) MarshalJSON() ([]byte, error) {
 // Diagram options. The Store search is based on Decision Diagrams. These
 // options configure the mechanics of using DD.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Diagram struct {
 	// Maximum Width of the Decision Diagram.
 	Width int `usage:"diagram width" default:"10"`
@@ -317,7 +317,7 @@ type Diagram struct {
 
 // MarshalJSON Diagram.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func (d Diagram) MarshalJSON() ([]byte, error) {
 	m := map[string]any{"width": d.Width}
 	m["expansion"] = d.Expansion
@@ -338,7 +338,7 @@ type Limits struct {
 
 // MarshalJSON Limits.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func (l Limits) MarshalJSON() ([]byte, error) {
 	m := map[string]any{}
 	m["duration"] = l.Duration.String()
@@ -355,7 +355,7 @@ func (l Limits) MarshalJSON() ([]byte, error) {
 // A Solver searches a space and finds the best Solution possible, this is, the
 // best collection of variable assignments in an operationally valid Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Solver interface {
 	// All Solutions found by the Solver. Loop over the channel values to get
 	// the solutions.
@@ -374,7 +374,7 @@ type Solver interface {
 // Solution of a decision automation problem. A Solution is an operationally
 // valid Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Solution struct {
 	// Store of the Solution. If nil, it means that the solution is
 	// operationally invalid.
@@ -384,7 +384,7 @@ type Solution struct {
 
 // Statistics of the search.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Statistics struct {
 	// Bounds of the store. Nil when using a Satisfier.
 	Bounds *Bounds `json:"bounds,omitempty"`
@@ -396,7 +396,7 @@ type Statistics struct {
 
 // Search statistics of the Store generation.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Search struct {
 	// Generated stores in the search.
 	Generated int `json:"generated"`
@@ -418,7 +418,7 @@ type Search struct {
 
 // Time statistics.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Time struct {
 	Start   time.Time     `json:"start"`
 	Elapsed time.Duration `json:"elapsed"`
@@ -426,7 +426,7 @@ type Time struct {
 
 // MarshalJSON Time.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func (t Time) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]any{
 		"start":           t.Start,
@@ -439,7 +439,7 @@ func (t Time) MarshalJSON() ([]byte, error) {
 // lower value and an upper value. If the lower and upper value are the same,
 // the bounds have converged.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Bounds struct {
 	Lower int `json:"lower"`
 	Upper int `json:"upper"`
@@ -447,7 +447,7 @@ type Bounds struct {
 
 // New returns a new Store.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func New() Store {
 	connect.Connect(con, &newFunc)
 	return newFunc()
@@ -456,7 +456,7 @@ func New() Store {
 // And uses the conditional "AND" logical operator on all given conditions. It
 // returns true if all conditions are true.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func And(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 	connect.Connect(con, &andFunc)
 	return andFunc(c1, c2, conditions...)
@@ -464,7 +464,7 @@ func And(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 
 // False is a convenience function that is always false.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func False(s Store) bool {
 	connect.Connect(con, &falseFunc)
 	return falseFunc(s)
@@ -472,7 +472,7 @@ func False(s Store) bool {
 
 // Not negates the given condition.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Not(c Condition) Condition {
 	connect.Connect(con, &notFunc)
 	return notFunc(c)
@@ -481,7 +481,7 @@ func Not(c Condition) Condition {
 // Or uses the conditional "OR" logical operator on all given conditions. It
 // returns true if at least one condition is true.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Or(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 	connect.Connect(con, &orFunc)
 	return orFunc(c1, c2, conditions...)
@@ -489,7 +489,7 @@ func Or(c1 Condition, c2 Condition, conditions ...Condition) Condition {
 
 // True is a convenience function that is always true.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func True(s Store) bool {
 	connect.Connect(con, &trueFunc)
 	return trueFunc(s)
@@ -498,7 +498,7 @@ func True(s Store) bool {
 // Xor uses the conditional "Exclusive OR" logical operator on all given
 // conditions. It returns true if, and only if, the conditions are different.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Xor(c1, c2 Condition) Condition {
 	connect.Connect(con, &xorFunc)
 	return xorFunc(c1, c2)
@@ -511,7 +511,7 @@ these sensitive defaults.
 	opt := store.DefaultOptions()
 	opt.Limits.Duration = time.Duration(5) * time.Second
 
-Deprecated: This package is deprecated and will be removed in the future.
+Deprecated: This package is deprecated and will be removed in the next major release.
 */
 func DefaultOptions() Options {
 	connect.Connect(con, &defaultOptionsFunc)
@@ -521,7 +521,7 @@ func DefaultOptions() Options {
 // Eager way of generating new Stores. The Generator uses the list of Stores
 // upfront in the order they are provided.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Eager(s ...Store) Generator {
 	connect.Connect(con, &eagerFunc)
 	return eagerFunc(s...)
@@ -532,7 +532,7 @@ func Eager(s ...Store) Generator {
 // nil Store is returned, the generator is not used anymore by the current
 // parent.
 //
-// Deprecated: This package is deprecated and will be removed in the future.
+// Deprecated: This package is deprecated and will be removed in the next major release.
 func Lazy(c func() bool, f func() Store) Generator {
 	connect.Connect(con, &lazyFunc)
 	return lazyFunc(c, f)
