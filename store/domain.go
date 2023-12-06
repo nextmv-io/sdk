@@ -6,7 +6,7 @@ import (
 
 // A Domain of integers.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 type Domain interface {
 	/*
 		Add values to a Domain.
@@ -18,7 +18,7 @@ type Domain interface {
 			d.Domain(s1) // {1, 3, 5}}
 			d.Domain(s2) // [1, 5]]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Add(...int) Change
 
@@ -32,7 +32,7 @@ type Domain interface {
 			d.Domain(s1) // {[1, 10], [101, 110]}
 			d.Domain(s2) // [101, 110]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	AtLeast(int) Change
 
@@ -46,7 +46,7 @@ type Domain interface {
 			d.Domain(s1) // {[1, 10], [101, 110]}
 			d.Domain(s2) // [1, 10]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	AtMost(int) Change
 
@@ -60,7 +60,7 @@ type Domain interface {
 			d2 := store.Multiple(s, -1, 1)
 			d1.Cmp(s, d2) // > 0
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Cmp(Store, Domain) int
 
@@ -72,7 +72,7 @@ type Domain interface {
 			d.Contains(s, 5)  // true
 			d.Contains(s, 15) // false
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Contains(Store, int) bool
 
@@ -83,7 +83,7 @@ type Domain interface {
 			d := store.NewDomain(s, model.NewRange(1, 10))
 			d.Domain(s) // model.NewDomain(model.NewRange(1, 10))
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Domain(Store) model.Domain
 
@@ -96,7 +96,7 @@ type Domain interface {
 			d1.Empty(s) // true
 			d2.Empty(s) // false
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Empty(Store) bool
 
@@ -107,7 +107,7 @@ type Domain interface {
 			d := store.NewDomain(s, model.NewRange(1, 10), model.NewRange(-5, -1))
 			d.Len(s) // 15
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Len(Store) int
 
@@ -120,7 +120,7 @@ type Domain interface {
 			d1.Max(s) // returns (_, false)
 			d2.Max(s) // returns (10, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Max(Store) (int, bool)
 
@@ -133,7 +133,7 @@ type Domain interface {
 			d1.Min(s) // returns (_, false)
 			d2.Min(s) // returns (-5, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Min(Store) (int, bool)
 
@@ -147,7 +147,7 @@ type Domain interface {
 			d.Domain(s1) // [1, 5]
 			d.Domain(s2) // {1, 3, 5}
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Remove([]int) Change
 
@@ -158,7 +158,7 @@ type Domain interface {
 			d := store.NewDomain(s, model.NewRange(1, 5))
 			d.Slice(s) // [1, 2, 3, 4, 5]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Slice(Store) []int
 
@@ -173,7 +173,7 @@ type Domain interface {
 			d2.Value(s) // returns (42, true)
 			d3.Value(s) // returns (0, false)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Value(Store) (int, bool)
 }
@@ -189,7 +189,7 @@ NewDomain creates a Domain of integers and stores it in a Store.
 		model.NewRange(20, 29),
 	)
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 func NewDomain(s Store, ranges ...model.Range) Domain {
 	return domainProxy{domain: NewVar(s, model.NewDomain(ranges...))}
@@ -202,7 +202,7 @@ Store.
 	s := store.New()
 	fortyTwo := store.Singleton(s, 42)
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 func Singleton(s Store, value int) Domain {
 	return domainProxy{domain: NewVar(s, model.Singleton(value))}
@@ -215,7 +215,7 @@ in a Store.
 	s := store.New()
 	even := store.Multiple(s, 2, 4, 6, 8)
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 func Multiple(s Store, values ...int) Domain {
 	return domainProxy{domain: NewVar(s, model.Multiple(values...))}
@@ -227,7 +227,7 @@ type domainProxy struct {
 
 // Implements store.Domain.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 
 func (d domainProxy) Add(values ...int) Change {
 	return func(s Store) {

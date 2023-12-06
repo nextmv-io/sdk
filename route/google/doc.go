@@ -11,7 +11,7 @@ authentication.
     But it is recommended to pass in waypoints encoded as a polyline with "enc:"
     as a prefix to get a more precise polyline for each leg of the route.
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 It is used with the router engine which was replaced by
 [github.com/nextmv-io/sdk/measure/google].
 */

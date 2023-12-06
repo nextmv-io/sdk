@@ -41,6 +41,6 @@ input path flag:
 		-runner.input.path ./data.csv.gz \
 		-runner.output.path output.json
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 package dataframe

@@ -6,7 +6,7 @@ import "github.com/nextmv-io/sdk/route"
 // a polyline from start to end and the second parameter returns a list of
 // polylines, one per leg.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func Polyline(

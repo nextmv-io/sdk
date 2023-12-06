@@ -51,7 +51,7 @@ type matrixResponse struct {
 // them accordingly. You can find more about usage limits here in the official
 // google maps documentation for the distance matrix, usage and billing.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/google].
 func DistanceDurationMatrices(c *maps.Client, r *maps.DistanceMatrixRequest) (
@@ -359,7 +359,7 @@ func makeDirectionsRequest(
 // returns a polyline from start to end and the second parameter returns a list
 // of polylines, one per leg.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/google].
 func Polylines(

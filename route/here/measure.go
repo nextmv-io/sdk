@@ -18,14 +18,14 @@ import (
 // Client represents a HERE maps client. See official documentation for HERE
 // topics, getting started.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/here].
 type Client interface {
 	// DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 	// if there are more than 500 points given.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/here].
 	DistanceMatrix(
@@ -36,7 +36,7 @@ type Client interface {
 	// DurationMatrix retrieves a HERE duration matrix. It uses the async HERE API
 	// if there are more than 500 points given.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/here].
 	DurationMatrix(
@@ -48,7 +48,7 @@ type Client interface {
 	// DistanceDurationMatrices retrieves a HERE distance and duration matrix. It
 	// uses the async HERE API if there are more than 500 points given.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/here].
 	DistanceDurationMatrices(
@@ -81,7 +81,7 @@ const (
 
 // NewClient returns a new OSRM Client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/here].
 func NewClient(apiKey string, opts ...ClientOption) Client {
@@ -128,7 +128,7 @@ func cleanPoints(points []route.Point) []route.Point {
 // DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 // if there are more than 500 points given.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DistanceMatrix(
@@ -148,7 +148,7 @@ func (c *client) DistanceMatrix(
 // DurationMatrix retrieves a HERE duration matrix. It uses the async HERE API
 // if there are more than 500 points given.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DurationMatrix(
@@ -169,7 +169,7 @@ func (c *client) DurationMatrix(
 // DistanceDurationMatrices retrieves a HERE distance and duration matrix. It
 // uses the async HERE API if there are more than 500 points given.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DistanceDurationMatrices(

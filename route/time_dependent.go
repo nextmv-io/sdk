@@ -12,7 +12,7 @@ import (
 // measure is to be used as a Unix timestamp. ByIndexAndTime is to be used with
 // NewTimeDependentMeasure which a slice of ByIndexAndTime.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type ByIndexAndTime struct {
@@ -32,7 +32,7 @@ type client struct {
 // measure is given with an endTime (exclusive) up until the measure will be
 // used and a fallback measure.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func NewTimeDependentMeasure(

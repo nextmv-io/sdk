@@ -23,7 +23,7 @@ import (
 
 // Endpoint defines the OSRM endpoint to be used.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Endpoint string
@@ -31,13 +31,13 @@ type Endpoint string
 const (
 	// TableEndpoint is used to retrieve distance and duration matrices.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	TableEndpoint Endpoint = "table"
 	// RouteEndpoint is used to retrieve polylines for a set of points.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	RouteEndpoint Endpoint = "route"
@@ -45,13 +45,13 @@ const (
 
 // Client represents an OSRM client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Client interface {
 	// Table requests a distance and/or duration table from an OSRM server.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	Table(
@@ -64,7 +64,7 @@ type Client interface {
 	// Get performs a GET against the OSRM server returning the response
 	// body and an error.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	Get(uri string) ([]byte, error)
@@ -72,7 +72,7 @@ type Client interface {
 	// it to the OSRM server. The indices of the points will be maintained.
 	// Distances / durations for these points will be set to 0.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	IgnoreEmpty(ignore bool)
@@ -81,14 +81,14 @@ type Client interface {
 	// Setting the snap radius to a value = 0 results in an unlimited snapping
 	// radius.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	SnapRadius(radius int) error
 	// ScaleFactor is used in conjunction with duration calculations. Scales the
 	// table duration values by this number. This does not affect distances.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	ScaleFactor(factor float64) error
@@ -96,7 +96,7 @@ type Client interface {
 	// MaxTableSize should be configured with the same value as the OSRM
 	// server's max-table-size setting, default is 100
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	MaxTableSize(size int) error
@@ -105,7 +105,7 @@ type Client interface {
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
 	//
-	// Deprecated: This package is deprecated and will be removed in a future.
+	// Deprecated: This package is deprecated and will be removed in the future.
 	// It is used with the router engine which was replaced by
 	// [github.com/nextmv-io/sdk/measure/osrm].
 	Polyline(points []route.Point) (string, []string, error)
@@ -113,7 +113,7 @@ type Client interface {
 
 // NewClient returns a new OSRM Client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func NewClient(host string, opts ...ClientOption) Client {
@@ -134,7 +134,7 @@ func NewClient(host string, opts ...ClientOption) Client {
 
 // DefaultClient creates a new OSRM Client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func DefaultClient(host string, useCache bool) Client {
@@ -489,7 +489,7 @@ type tableResponse struct {
 
 // TableOptions is a function that configures a tableConfig.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type TableOptions func(*tableConfig)
@@ -505,7 +505,7 @@ type tableConfig struct {
 // duration data enabled, telling the OSRM server to include duration data in
 // the response table data.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func WithDuration() TableOptions {
@@ -518,7 +518,7 @@ func WithDuration() TableOptions {
 // distance data enabled, telling the OSRM server to include distance data in
 // the response table data.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func WithDistance() TableOptions {
@@ -529,7 +529,7 @@ func WithDistance() TableOptions {
 
 // ClientOption can pass options to be used with an OSRM client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type ClientOption func(*client)
@@ -537,7 +537,7 @@ type ClientOption func(*client)
 // WithClientTransport overwrites the RoundTripper used by the internal
 // http.Client.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func WithClientTransport(rt http.RoundTripper) ClientOption {
@@ -552,7 +552,7 @@ func WithClientTransport(rt http.RoundTripper) ClientOption {
 
 // WithCache configures the maximum number of results cached.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func WithCache(maxItems int) ClientOption {
@@ -567,7 +567,7 @@ func WithCache(maxItems int) ClientOption {
 // ParallelRuns set the number of parallel calls to the OSRM server. If 0 is
 // passed, the default value of 16 will be used.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func ParallelRuns(runs int) TableOptions {
@@ -610,7 +610,7 @@ func pointsParameter(points []route.Point) string {
 
 // RouteResponse holds the route response from the OSRM server.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type RouteResponse struct {
@@ -621,7 +621,7 @@ type RouteResponse struct {
 
 // Route partially represents the OSRM Route object.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Route struct {
@@ -631,7 +631,7 @@ type Route struct {
 
 // Leg partially represents the OSRM Leg object.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Leg struct {
@@ -640,7 +640,7 @@ type Leg struct {
 
 // Step partially represents the OSRM Step object.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Step struct {
@@ -651,7 +651,7 @@ type Step struct {
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func (c *client) Polyline(points []route.Point) (string, []string, error) {

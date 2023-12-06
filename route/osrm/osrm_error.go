@@ -2,7 +2,7 @@ package osrm
 
 // NewError returns a new NewError.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 func NewError(err string, inputErr bool) Error {
@@ -11,7 +11,7 @@ func NewError(err string, inputErr bool) Error {
 
 // Error is an error that reflects an error that is the user's fault.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure/osrm].
 type Error struct {

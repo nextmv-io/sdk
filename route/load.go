@@ -9,7 +9,7 @@ import (
 // ByPointLoader can be embedded in schema structs and unmarshals a ByPoint JSON
 // object into the appropriate implementation.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 type ByPointLoader struct {
@@ -35,7 +35,7 @@ type byPointJSON struct {
 
 // MarshalJSON returns the JSON representation for the underlying ByPoint.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 func (l ByPointLoader) MarshalJSON() ([]byte, error) {
@@ -45,7 +45,7 @@ func (l ByPointLoader) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON converts the bytes into the appropriate implementation of
 // ByPoint.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
@@ -75,7 +75,7 @@ func (l *ByPointLoader) UnmarshalJSON(b []byte) error {
 
 // To returns the underlying ByPoint.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 func (l *ByPointLoader) To() ByPoint {
@@ -85,7 +85,7 @@ func (l *ByPointLoader) To() ByPoint {
 // ByIndexLoader can be embedded in schema structs and unmarshals a ByIndex JSON
 // object into the appropriate implementation.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 type ByIndexLoader struct {
@@ -113,7 +113,7 @@ type byIndexJSON struct {
 
 // MarshalJSON returns the JSON representation for the underlying Byindex.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 func (l ByIndexLoader) MarshalJSON() ([]byte, error) {
@@ -123,7 +123,7 @@ func (l ByIndexLoader) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON converts the bytes into the appropriate implementation of
 // ByIndex.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/measure].
 func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {

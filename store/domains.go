@@ -6,7 +6,7 @@ import (
 
 // Domains of integers.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 type Domains interface {
 	/*
 		Add values to a Domain by index.
@@ -16,7 +16,7 @@ type Domains interface {
 			s2 := s1.Apply(d.Add(1, 41, 43))
 			d.Domains(s2)                                 // [42, [41,43], 42]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Add(int, ...int) Change
 
@@ -28,7 +28,7 @@ type Domains interface {
 			s2 := s1.Apply(d.Assign(0, 10))
 			d.Domains(s2)                                 // [10, 42, 42]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Assign(int, int) Change
 
@@ -44,7 +44,7 @@ type Domains interface {
 			s2 := s1.Apply(d.AtLeast(1, 50))
 			d.Domains(s2) // [[1, 100], [50, 100]]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	AtLeast(int, int) Change
 
@@ -60,7 +60,7 @@ type Domains interface {
 			s2 := s1.Apply(d.AtMost(1, 50))
 			d.Domains(s2) // [[1, 100], [1, 50]]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	AtMost(int, int) Change
 
@@ -74,7 +74,7 @@ type Domains interface {
 			d2 := store.Repeat(s, 3, model.Singleton(43)) // [43, 43]]
 			d1.Cmp(s, d2) // < 0
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Cmp(Store, Domains) int
 
@@ -86,7 +86,7 @@ type Domains interface {
 			d.Domain(s, 0) // {}
 			d.Domain(s, 1) // 42
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Domain(Store, int) model.Domain
 
@@ -97,7 +97,7 @@ type Domains interface {
 			d := store.NewDomains(s, model.NewDomain(), model.Singleton(42))
 			d.Domains(s) // [{}, 42}
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Domains(Store) model.Domains
 
@@ -108,7 +108,7 @@ type Domains interface {
 			d := store.NewDomains(s, model.NewDomain())
 			d.Empty(s) // true
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Empty(Store) bool
 
@@ -119,7 +119,7 @@ type Domains interface {
 			d := store.Repeat(s, 5, model.NewDomain())
 			d.Len(s) // 5
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Len(Store) int
 
@@ -131,7 +131,7 @@ type Domains interface {
 			s2 := s1.Apply(d.Remove(0, []int{13}))
 			d.Domains(s2) // {42}
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Remove(int, []int) Change
 
@@ -142,7 +142,7 @@ type Domains interface {
 			d := store.Repeat(s, 5, model.Singleton(42))
 			d.Singleton(s) // true
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Singleton(Store) bool
 
@@ -153,7 +153,7 @@ type Domains interface {
 			d := store.NewDomains(s, model.NewDomain(), model.Multiple(1, 3))
 			d.Slices(s) // [[], [1, 2, 3]]
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Slices(Store) [][]int
 
@@ -166,7 +166,7 @@ type Domains interface {
 			d.Values(s1) // ([42, 42, 42], true)
 			d.Values(s2) // ([], false)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Values(Store) ([]int, bool)
 
@@ -186,7 +186,7 @@ type Domains interface {
 			)
 			d.First(s) // (1, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	First(Store) (int, bool)
 
@@ -204,7 +204,7 @@ type Domains interface {
 		    )
 		    d.Largest(s) // (2, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Largest(Store) (int, bool)
 
@@ -223,7 +223,7 @@ type Domains interface {
 		    )
 		    d.Last(s) // (2, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Last(Store) (int, bool)
 
@@ -242,7 +242,7 @@ type Domains interface {
 		    )
 			d.Maximum(s) // (1, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Maximum(Store) (int, bool)
 
@@ -261,7 +261,7 @@ type Domains interface {
 		    )
 			d.Minimum(s) // (2, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Minimum(Store) (int, bool)
 
@@ -279,7 +279,7 @@ type Domains interface {
 		    )
 		    d.Smallest(s) // (1, true)
 
-		Deprecated: This package is deprecated and will be removed in a future.
+		Deprecated: This package is deprecated and will be removed in the future.
 	*/
 	Smallest(Store) (int, bool)
 }
@@ -295,7 +295,7 @@ NewDomains creates a sequence of Domains and stores the sequence in a Store.
 		model.Multiple(1, 3, 5, 7),
 	)
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 func NewDomains(s Store, domains ...model.Domain) Domains {
 	return domainsProxy{domains: NewVar(s, model.NewDomains(domains...))}
@@ -307,7 +307,7 @@ Repeat a Domain n times and store the sequence in a Store.
 	s := store.New()
 	d := store.Repeat(s, 3, model.NewDomain(model.NewRange(1, 10)))
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 */
 func Repeat(s Store, n int, domain model.Domain) Domains {
 	return domainsProxy{domains: NewVar(s, model.Repeat(n, domain))}
@@ -319,7 +319,7 @@ type domainsProxy struct {
 
 // Implements store.Domains.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 
 func (d domainsProxy) Add(i int, v ...int) Change {
 	return func(s Store) {

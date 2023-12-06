@@ -10,7 +10,7 @@ import (
 
 // An Option configures a Router.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type Option func(Router) error
@@ -18,7 +18,7 @@ type Option func(Router) error
 // Starts sets the starting locations indexed by vehicle. The length must match
 // the vehicles' length.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Starts(starts []Position) Option {
@@ -29,7 +29,7 @@ func Starts(starts []Position) Option {
 // Ends sets the ending locations indexed by vehicle. The length must match the
 // vehicles' length.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Ends(ends []Position) Option {
@@ -40,7 +40,7 @@ func Ends(ends []Position) Option {
 // InitializationCosts set the vehicle initialization costs indexed by vehicle.
 // The length must match the vehicles' length.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func InitializationCosts(initializationCosts []float64) Option {
@@ -56,7 +56,7 @@ func InitializationCosts(initializationCosts []float64) Option {
 // this option may be used several times with the corresponding quantities and
 // capacities.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Capacity(quantities []int, capacities []int) Option {
@@ -68,7 +68,7 @@ func Capacity(quantities []int, capacities []int) Option {
 // one argument as a slice of jobs. Each job defines a pick-up and drop-off by
 // ID. The pick-up must precede the drop-off in the route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Precedence(precedences []Job) Option {
@@ -79,7 +79,7 @@ func Precedence(precedences []Job) Option {
 // Services adds a service time to the given stops. For stops not in the slice,
 // a service time of zero seconds is applied.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Services(serviceTimes []Service) Option {
@@ -99,7 +99,7 @@ If the Measures option is not used, a default Haversine measure will be used. If
 the TimeMeasures option is not used, the measures will be scaled with a constant
 velocity of 10 m/s.
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 */
@@ -115,7 +115,7 @@ func Shifts(shifts []TimeWindow) Option {
 //
 // PLEASE NOTE: this option requires using the Shift option.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Windows(windows []Window) Option {
@@ -132,7 +132,7 @@ func Windows(windows []Window) Option {
 //
 // PLEASE NOTE: this option requires using the Shift option.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func MultiWindows(windows [][]TimeWindow, maxWaitTimes []int) Option {
@@ -143,7 +143,7 @@ func MultiWindows(windows [][]TimeWindow, maxWaitTimes []int) Option {
 // Unassigned sets the unassigned penalties indexed by stop. The length must
 // match the stops' length.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Unassigned(penalties []int) Option {
@@ -154,7 +154,7 @@ func Unassigned(penalties []int) Option {
 // Backlogs sets the backlog for the specified vehicles. A backlog is an
 // unordered list of stops that a vehicle has to serve.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Backlogs(backlogs []Backlog) Option {
@@ -170,7 +170,7 @@ func Backlogs(backlogs []Backlog) Option {
 // hybrid solver that uses decision diagrams and ALNS. This is the default
 // solver that the router engine uses.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Minimize() Option {
@@ -181,7 +181,7 @@ func Minimize() Option {
 // Maximize sets the solver type of the router to maximize the value with a
 // hybrid solver that uses decision diagrams and ALNS.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Maximize() Option {
@@ -202,7 +202,7 @@ func Maximize() Option {
 // PLEASE NOTE: If you want to limit the route's duration or length please use
 // the options LimitDistance and LimitDuration, respectively.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
@@ -214,7 +214,7 @@ func Limits(routeLimits []Limit, ignoreTriangular bool) Option {
 // values are indexed by vehicle and must be given in meters. To not limit a
 // route to any value, use model.MaxInt.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
@@ -226,7 +226,7 @@ func LimitDistances(maxDistances []float64, ignoreTriangular bool) Option {
 // The values are indexed by vehicle and must be given in seconds. To not limit
 // a route to any value, use model.MaxInt.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
@@ -240,7 +240,7 @@ func LimitDurations(maxDurations []float64, ignoreTriangular bool) Option {
 // given, locations can be assigned together in the same routes without the need
 // to assign any other locations to that route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Grouper(groups [][]string) Option {
@@ -259,7 +259,7 @@ func Grouper(groups [][]string) Option {
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func ValueFunctionMeasures(
@@ -280,7 +280,7 @@ func ValueFunctionMeasures(
 // `TimeTracker` from the `state` and use it to get access to time information
 // the route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func ValueFunctionDependentMeasures(
@@ -304,7 +304,7 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 */
@@ -328,7 +328,7 @@ PLEASE NOTE: When defining a custom TravelTimeMeasure, this measure must not
 account for any service times. To account for services times please use the
 Services option.
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 */
@@ -342,7 +342,7 @@ func TravelTimeDependentMeasures(timeMeasures []measure.DependentByIndex) Option
 // distance measures are provided, a default haversine measure will be used to
 // calculate distances between stops.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func TravelDistanceMeasures(
@@ -358,7 +358,7 @@ func TravelDistanceMeasures(
 // with any vehicle. Vehicles that are not provided are only compatible with
 // stops without attributes.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Attribute(vehicles []Attributes, stops []Attributes) Option {
@@ -373,7 +373,7 @@ func Attribute(vehicles []Attributes, stops []Attributes) Option {
 // threads are calculated based on the number of machine processors, using
 // the following expression: runtime.GOMAXPROCS(0) / 2.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Threads(threads int) Option {
@@ -386,7 +386,7 @@ func Threads(threads int) Option {
 // into this option, and any other stops from the list of stops that solve the
 // TSP/VRP cost optimally.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Alternates(alternates []Alternate) Option {
@@ -398,7 +398,7 @@ func Alternates(alternates []Alternate) Option {
 // TravelTimeMeasure based on haversine distance and is indexed by vehicle. The
 // length must match the vehicles' length.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Velocities(velocities []float64) Option {
@@ -410,7 +410,7 @@ func Velocities(velocities []float64) Option {
 // Whenever a stop in the group is visited from another stop that is not part
 // of it, the specified duration is added.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func ServiceGroups(serviceGroups []ServiceGroup) Option {
@@ -423,7 +423,7 @@ func ServiceGroups(serviceGroups []ServiceGroup) Option {
 // into the solution. If no custom location selector is given, the location with
 // the lowest index will be inserted next.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Selector(selector func(PartialPlan) model.Domain) Option {
@@ -438,7 +438,7 @@ func Selector(selector func(PartialPlan) model.Domain) Option {
 // the vehicle's solution value received an update.
 // See the documentation of Update() for example usage.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type VehicleUpdater interface {
@@ -455,7 +455,7 @@ type VehicleUpdater interface {
 // knowledge can be used to more efficiently update the value of a plan. See the
 // documentation of route.Update() for example usage.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type PlanUpdater interface {
@@ -486,7 +486,7 @@ default value is used and it corresponds to the configured measure.
 To achieve efficient customizations, always try to update the components of the
 store that changed.
 
-Deprecated: This package is deprecated and will be removed in a future.
+Deprecated: This package is deprecated and will be removed in the future.
 It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 */
@@ -502,7 +502,7 @@ func Update(v VehicleUpdater, f PlanUpdater) Option {
 // returns an IntDomain representing vehicles that cannot service the domain of
 // locations.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func FilterWithRoute(
@@ -521,7 +521,7 @@ func FilterWithRoute(
 // underlying engine will try to assign the locations to each vehicle in that
 // returned order.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Sorter(
@@ -539,7 +539,7 @@ func Sorter(
 // VehicleConstraint defines an interface that needs to be implemented when
 // creating a custom vehicle constraint.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 type VehicleConstraint interface {
@@ -555,7 +555,7 @@ type VehicleConstraint interface {
 // arguments, the constraint to be applied and a list of vehicles, indexed by
 // ID, to which the constraint shall be applied.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Constraint(constraint VehicleConstraint, ids []string) Option {
@@ -568,7 +568,7 @@ func Constraint(constraint VehicleConstraint, ids []string) Option {
 // all locations are compatible with all vehicles and, thus, any location can be
 // inserted into any route.
 //
-// Deprecated: This package is deprecated and will be removed in a future.
+// Deprecated: This package is deprecated and will be removed in the future.
 // It is used with the router engine which was replaced by
 // [github.com/nextmv-io/sdk/nextroute].
 func Filter(compatible func(vehicle, location int) bool) Option {
