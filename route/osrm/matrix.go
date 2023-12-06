@@ -14,6 +14,10 @@ func overrideZeroes(m route.ByIndex, points []route.Point) route.ByIndex {
 // returns a Matrix. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func DistanceMatrix(
 	c Client, points []route.Point,
 	parallelQueries int,
@@ -31,6 +35,10 @@ func DistanceMatrix(
 // returns a Matrix. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func DurationMatrix(
 	c Client, points []route.Point,
 	parallelQueries int,
@@ -48,6 +56,10 @@ func DurationMatrix(
 // server and returns a Matrix of each. ParallelQueries specifies the number of
 // parallel queries to be made, pass 0 to calculate a default, based on the
 // number of points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func DistanceDurationMatrices(
 	c Client,
 	points []route.Point,

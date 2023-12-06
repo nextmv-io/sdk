@@ -8,6 +8,8 @@ import (
 )
 
 // Slice manages an immutable slice container of some type in a Store.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
 type Slice[T any] interface {
 	/*
 		Append one or more values to the end of a Slice.
@@ -16,6 +18,8 @@ type Slice[T any] interface {
 			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
 			s2 := s1.Apply(x.Append(4, 5))
 			x.Slice(s2) // [1, 2, 3, 4, 5]
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Append(value T, values ...T) Change
 
@@ -25,6 +29,8 @@ type Slice[T any] interface {
 			s := store.New()
 			x := store.NewSlice(s, 1, 2, 3)
 			x.Get(s, 2) // 3
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Get(Store, int) T
 
@@ -35,6 +41,8 @@ type Slice[T any] interface {
 			x := store.NewSlice(s1, "a", "b", "c")
 			s2 := s1.Apply(x.Insert(2, "d", "e"))
 			x.Slice(s2) // [a, b, d, e, c]
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Insert(index int, value T, values ...T) Change
 
@@ -44,6 +52,8 @@ type Slice[T any] interface {
 			s := store.New()
 			x := store.NewSlice(s, 1, 2, 3)
 			x.Len(s) // 3
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Len(Store) int
 
@@ -54,6 +64,8 @@ type Slice[T any] interface {
 			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
 			s2 := s1.Apply(x.Prepend(4, 5))
 			x.Slice(s2) // [4, 5, 1, 2, 3]
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Prepend(value T, values ...T) Change
 
@@ -64,6 +76,8 @@ type Slice[T any] interface {
 			x := store.NewSlice(s1, 1, 2, 3) // [1, 2, 3]
 			s2 := s1.Apply(x.Remove(1, 1))
 			x.Slice(s2) // [1, 3]
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Remove(start, end int) Change
 
@@ -73,6 +87,8 @@ type Slice[T any] interface {
 			x := store.NewSlice(s1, "a", "b", "c") // [a, b, c]
 			s2 := s1.Apply(x.Set(1, "d"))
 			x.Slice(s2) // [a, d, c]
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Set(int, T) Change
 
@@ -82,6 +98,8 @@ type Slice[T any] interface {
 			s := store.New()
 			x := store.NewSlice(s, 1, 2, 3)
 			x.Slice(s) // []int{1, 2, 3}
+
+		Deprecated: This package is deprecated and will be removed in the next major release.
 	*/
 	Slice(Store) []T
 }
@@ -92,6 +110,8 @@ NewSlice returns a new NewSlice and stores it in a Store.
 	s := store.New()
 	x := store.NewSlice[int](s)        // []int{}
 	y := store.NewSlice(s, 3.14, 2.72) // []float64{3.14, 2.72}
+
+Deprecated: This package is deprecated and will be removed in the next major release.
 */
 func NewSlice[T any](s Store, values ...T) Slice[T] {
 	connect.Connect(con, &newSliceFunc)
@@ -103,6 +123,8 @@ type sliceProxy[T any] struct {
 }
 
 // Implements Slice.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
 
 func (s sliceProxy[T]) Append(value T, values ...T) Change {
 	return s.slice.Append(value, anySlice(values)...)
@@ -142,6 +164,8 @@ func (s sliceProxy[T]) Slice(store Store) []T {
 }
 
 // Implements fmt.Stringer.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
 
 func (s sliceProxy[T]) String() string {
 	var x []T
@@ -149,6 +173,8 @@ func (s sliceProxy[T]) String() string {
 }
 
 // Implements json.Marshaler.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
 
 func (s sliceProxy[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.String())

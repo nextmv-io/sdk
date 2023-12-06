@@ -15,20 +15,40 @@ import (
 // >>> DistanceClient implementation
 
 // DistanceClient represents a RoutingKit distance client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 type DistanceClient interface {
 	// Measure returns a route.ByPoint that can calculate the road network
 	// distance between any two points found within the provided mapFile.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error)
 	// Matrix returns a route.ByIndex that represents the road network distance
 	// matrix as a measure.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error)
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Polyline(points []route.Point) (string, []string, error)
 }
 
 // NewDistanceClient returns a new RoutingKit client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func NewDistanceClient(
 	mapFile string,
 	profile routingkit.Profile,
@@ -52,12 +72,20 @@ type distanceClient struct {
 
 // Measure returns a route.ByPoint that can calculate the road network distance
 // between any two points found within the provided mapFile.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c distanceClient) Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error) {
 	return newByPoint(c.client, c.mapFile, radius, cacheSize, c.profile, fallback)
 }
 
 // Matrix returns a route.ByIndex that represents the road network distance
 // matrix as a measure.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c distanceClient) Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error) {
 	return newMatrix(c.client, c.mapFile, 0, srcs, dests, c.profile, nil)
 }
@@ -65,6 +93,10 @@ func (c distanceClient) Matrix(srcs []route.Point, dests []route.Point) (route.B
 // Polyline requests polylines for the given points. The first parameter
 // returns a polyline from start to end and the second parameter returns a list
 // of polylines, one per leg.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c distanceClient) Polyline(points []route.Point) (string, []string, error) {
 	return getPolyLine(points, c.client.Route)
 }
@@ -72,20 +104,40 @@ func (c distanceClient) Polyline(points []route.Point) (string, []string, error)
 // >>> DurationClient implementation
 
 // DurationClient represents a RoutingKit duration client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 type DurationClient interface {
 	// Measure returns a route.ByPoint that can calculate the road network
 	// travel time between any two points found within the provided mapFile.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error)
 	// Matrix returns a route.ByIndex that represents the road network travel
 	// time matrix as a measure.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error)
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/routingkit].
 	Polyline(points []route.Point) (string, []string, error)
 }
 
 // NewDurationClient returns a new RoutingKit client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func NewDurationClient(
 	mapFile string,
 	profile routingkit.Profile,
@@ -109,12 +161,20 @@ type durationClient struct {
 
 // Measure returns a route.ByPoint that can calculate the road network travel
 // time between any two points found within the provided mapFile.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c durationClient) Measure(radius float64, cacheSize int64, fallback route.ByPoint) (route.ByPoint, error) {
 	return newDurationByPoint(c.client, c.mapFile, radius, cacheSize, c.profile, fallback)
 }
 
 // Matrix returns a route.ByIndex that represents the road network travel time
 // matrix as a measure.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c durationClient) Matrix(srcs []route.Point, dests []route.Point) (route.ByIndex, error) {
 	return newDurationMatrix(c.client, c.mapFile, 0, srcs, dests, c.profile, nil)
 }
@@ -122,6 +182,10 @@ func (c durationClient) Matrix(srcs []route.Point, dests []route.Point) (route.B
 // Polyline requests polylines for the given points. The first parameter
 // returns a polyline from start to end and the second parameter returns a list
 // of polylines, one per leg.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func (c durationClient) Polyline(points []route.Point) (string, []string, error) {
 	return getPolyLine(points, c.client.Route)
 }
@@ -148,6 +212,10 @@ var Pedestrian = routingkit.Pedestrian
 // points can be snapped to the road network, a cache size in bytes (1 << 30 = 1
 // GB), a profile and a measure that is used in case no travel time can be
 // computed.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func DurationByPoint(
 	mapFile string,
 	radius float64,
@@ -250,6 +318,10 @@ func (b durationByPoint) MarshalJSON() ([]byte, error) {
 // radius in which points can be snapped to the road network, a cache size in
 // bytes (1 << 30 = 1 GB), a profile and a measure that is used in case no
 // travel time can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func ByPoint(
 	mapFile string,
 	radius float64,
@@ -358,6 +430,10 @@ func (b byPoint) MarshalJSON() ([]byte, error) {
 // In addition to the mapFile, srcs and dests it needs a radius in which points
 // can be snapped to the road network, a profile and a measure that is used in
 // case no distances can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func Matrix(
 	mapFile string,
 	radius float64,
@@ -434,6 +510,10 @@ func (m matrix) MarshalJSON() ([]byte, error) {
 // In addition to the mapFile, srcs and dests it needs a radius in which points
 // can be snapped to the road network, a profile and a measure that is used in
 // case no travel durations can be computed.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 func DurationMatrix(
 	mapFile string,
 	radius float64,

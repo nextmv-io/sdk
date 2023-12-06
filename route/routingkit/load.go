@@ -10,6 +10,10 @@ import (
 
 // ByPointLoader can be embedded in schema structs and unmarshals a ByPoint JSON
 // object into the appropriate implementation, including a routingkit.ByPoint.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 type ByPointLoader struct {
 	byPoint route.ByPoint
 }
@@ -81,6 +85,10 @@ func (l *ByPointLoader) To() route.ByPoint {
 
 // ByIndexLoader can be embedded in schema structs and unmarshals a ByIndex JSON
 // object into the appropriate implementation, including a routingkit.ByIndex.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 type ByIndexLoader struct {
 	byIndex route.ByIndex
 }
@@ -157,6 +165,10 @@ func (l *ByIndexLoader) To() route.ByIndex {
 
 // ProfileLoader can be embedded in schema structs and unmarshals a
 // routingkit.Profile JSON object into the appropriate implementation.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/routingkit].
 type ProfileLoader struct {
 	profile *routingkit.Profile
 }
