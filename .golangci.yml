@@ -356,4 +356,6 @@ issues:
       linters: 
         - govet
       text: structtag
-      
+    - path: nextroute/decode/tsplib\.go
+      linters:
+        - gocyclo

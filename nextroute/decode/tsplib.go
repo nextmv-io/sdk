@@ -1,3 +1,4 @@
+// Package decode implements a parser for TSPLIB instances.
 package decode
 
 import (
@@ -10,7 +11,16 @@ import (
 
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/schema"
+	"github.com/nextmv-io/sdk/run/decode"
 )
+
+// TSPLIB creates a TSPLIB decoder.
+func TSPLIB() decode.Decoder {
+	return TSPLIBDecoder{}
+}
+
+// TSPLIBDecoder is a Decoder that decodes a json into a struct.
+type TSPLIBDecoder struct{}
 
 const (
 	inUndefined  = iota
@@ -21,7 +31,11 @@ const (
 )
 
 // Parse a tsplib instance from the given reader to the nextroute input format.
-func Parse(reader io.Reader, input *schema.Input) error {
+func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
+	input, ok := anyInput.(*schema.Input)
+	if !ok {
+		return fmt.Errorf("input is not of type schema.Input")
+	}
 	// Prepare
 	scanner := bufio.NewScanner(reader)
 	var byPoint measure.ByPoint
@@ -35,6 +49,7 @@ func Parse(reader io.Reader, input *schema.Input) error {
 	section := inUndefined
 	explicit := false
 	measureGiven := false
+	matrix = &[][]float64{}
 scanLoop: // Label scanner loop to break out of nested switch statements
 	for scanner.Scan() {
 		// Get line and make sure there is whitespace around the delimiter
@@ -96,11 +111,10 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			continue
 		}
 
-		// Get the number of the associated request
-		number, _ := strconv.Atoi(s[0])
-
 		switch section {
 		case inCoords:
+			// Get the number of the associated request
+			number, _ := strconv.Atoi(s[0])
 			// Create a request for the coordinates
 			x, _ := strconv.ParseFloat(s[1], 64)
 			y, _ := strconv.ParseFloat(s[2], 64)
@@ -113,8 +127,14 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			numbers = append(numbers, number)
 		case inEdgeWeight:
 			// Create requests from edges
-			matrix = &[][]float64{}
+			row := make([]float64, len(s))
+			for index, v := range s {
+				row[index], _ = strconv.ParseFloat(v, 64)
+			}
+			*matrix = append(*matrix, row)
 		case inDemand:
+			// Get the number of the associated request
+			number, _ := strconv.Atoi(s[0])
 			// Set demand for request
 			l := stopsByNumber[number]
 			quantity, _ := strconv.Atoi(s[1])
@@ -125,6 +145,8 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 				depots[number] = struct{}{}
 			}
 		case inDepot:
+			// Get the number of the associated request
+			number, _ := strconv.Atoi(s[0])
 			// Skip section terminal
 			if number == -1 {
 				continue
@@ -150,14 +172,21 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 	}
 
 	// Aggregate stops
-	for _, number := range numbers {
-		stop := stopsByNumber[number]
-		if _, ok := depots[number]; ok {
-			// Skip depot locations
-			continue
+	if len(numbers) != 0 && len(stopsByNumber) == len(numbers) {
+		for _, number := range numbers {
+			stop := stopsByNumber[number]
+			if _, ok := depots[number]; ok {
+				// Skip depot locations
+				continue
+			}
+			// Add request
+			input.Stops = append(input.Stops, stop)
 		}
-		// Add request
-		input.Stops = append(input.Stops, stop)
+	} else {
+		// the matrix defines how many stops there are
+		for i := 0; i < len(*matrix); i++ {
+			input.Stops = append(input.Stops, schema.Stop{})
+		}
 	}
 
 	// Determine depot 'request' (choose min index, if multiple are given)

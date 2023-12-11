@@ -9,7 +9,6 @@ import (
 )
 
 func TestDecodeTspLibParser(t *testing.T) {
-	// read file in instances/120.2.vrp
 	reader, err := os.Open("instances/120.2.vrp")
 	if err != nil {
 		t.Error(err)
