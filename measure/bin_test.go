@@ -25,9 +25,8 @@ func TestBin(t *testing.T) {
 				return 2
 			} else if from == 2 && to == 3 {
 				return 3
-			} else {
-				return 0
 			}
+			return 0
 		},
 	)
 

@@ -4,14 +4,19 @@ import (
 	"errors"
 	"sort"
 
+	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/model"
 )
 
 // ByIndexAndTime holds a Measure and an EndTime (exclusive) up until this
 // measure is to be used as a Unix timestamp. ByIndexAndTime is to be used with
 // NewTimeDependentMeasure which a slice of ByIndexAndTime.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/nextroute].
 type ByIndexAndTime struct {
-	Measure ByIndex
+	Measure measure.ByIndex
 	EndTime int
 }
 
@@ -26,11 +31,15 @@ type client struct {
 // It takes a startTime (e.g. vehicle start) byIndexAndTime measures, where each
 // measure is given with an endTime (exclusive) up until the measure will be
 // used and a fallback measure.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/nextroute].
 func NewTimeDependentMeasure(
 	startTime int,
 	measures []ByIndexAndTime,
-	fallback ByIndex,
-) (DependentByIndex, error) {
+	fallback measure.ByIndex,
+) (measure.DependentByIndex, error) {
 	measuresCopy := make([]ByIndexAndTime, len(measures))
 	copy(measuresCopy, measures)
 	sort.SliceStable(measuresCopy, func(i, j int) bool {
@@ -55,15 +64,15 @@ func NewTimeDependentMeasure(
 
 	cacheTimes(startTime, c)
 
-	return DependentIndexed(true, c.cost()), nil
+	return measure.DependentIndexed(true, c.cost()), nil
 }
 
 func (c *client) cost() func(
 	from,
 	to int,
-	data *VehicleData,
+	data *measure.VehicleData,
 ) float64 {
-	return func(from, to int, data *VehicleData) float64 {
+	return func(from, to int, data *measure.VehicleData) float64 {
 		if data.Index == -1 || data.Times.EstimatedDeparture == nil {
 			return c.fallbackMeasure.Measure.Cost(from, to)
 		}
