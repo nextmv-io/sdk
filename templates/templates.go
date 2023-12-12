@@ -66,6 +66,38 @@ var (
 	//go:embed pyomo/requirements.txt
 	PyomoRequirements string
 
+	// ShiftCreationManifest is the app manifest file in the shift-creation template.
+	//go:embed shift-creation/app.yaml
+	ShiftCreationManifest string
+	// ShiftCreationMain is the main.py file in the shift-creation template.
+	//go:embed shift-creation/main.py
+	ShiftCreationMain string
+	// ShiftCreationInput is the input.json file in the shift-creation template.
+	//go:embed shift-creation/input.json
+	ShiftCreationInput string
+	// ShiftCreationReadme is the README.md file in the shift-creation template.
+	//go:embed shift-creation/README.md
+	ShiftCreationReadme string
+	// ShiftCreationRequirements is the requirements.txt file in the shift-creation template.
+	//go:embed shift-creation/requirements.txt
+	ShiftCreationRequirements string
+
+	// ShiftAssignmentManifest is the app manifest file in the shift-assignment template.
+	//go:embed shift-assignment/app.yaml
+	ShiftAssignmentManifest string
+	// ShiftAssignmentMain is the main.py file in the shift-assignment template.
+	//go:embed shift-assignment/main.py
+	ShiftAssignmentMain string
+	// ShiftAssignmentInput is the input.json file in the shift-assignment template.
+	//go:embed shift-assignment/input.json
+	ShiftAssignmentInput string
+	// ShiftAssignmentReadme is the README.md file in the shift-assignment template.
+	//go:embed shift-assignment/README.md
+	ShiftAssignmentReadme string
+	// ShiftAssignmentRequirements is the requirements.txt file in the shift-assignment template.
+	//go:embed shift-assignment/requirements.txt
+	ShiftAssignmentRequirements string
+
 	// ShiftSchedulingMain is the main.go file in the
 	// shift-scheduling template.
 	//go:embed shift-scheduling/main.go
