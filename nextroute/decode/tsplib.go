@@ -14,23 +14,29 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
-// TSPLIB creates a TSPLIB decoder.
-func TSPLIB() decode.Decoder {
-	return TSPLIBDecoder{}
+// TSPLIB creates a TSPLIB decoder. numberOfVehicles is the number of vehicles
+// in case they are not defined in the instance.
+func TSPLIB(numberOfVehicles int) decode.Decoder {
+	return TSPLIBDecoder{
+		numberOfVehicles: numberOfVehicles,
+	}
 }
 
 // TSPLIBDecoder is a Decoder that decodes a json into a struct.
-type TSPLIBDecoder struct{}
+type TSPLIBDecoder struct {
+	numberOfVehicles int
+}
 
 const (
-	inUndefined  = iota
-	inCoords     = iota
-	inEdgeWeight = iota
-	inDemand     = iota
-	inDepot      = iota
+	inUndefined         = iota
+	inCoords            = iota
+	inEdgeWeight        = iota
+	inDemand            = iota
+	inDepot             = iota
+	inPickupAndDelivery = iota
 )
 
-// Parse a tsplib instance from the given reader to the nextroute input format.
+// Decode a tsplib instance from the given reader to the nextroute input format.
 func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
 	input, ok := anyInput.(*schema.Input)
 	if !ok {
@@ -62,6 +68,8 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 
 		// Check for new section start
 		switch s[0] {
+		case "VEHICLES":
+			j.numberOfVehicles, _ = strconv.Atoi(s[2])
 		case "CAPACITY":
 			capacity, _ = strconv.Atoi(s[2])
 			continue
@@ -101,6 +109,10 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Start of section defining the depots
 			section = inDepot
 			continue
+		case "PICKUP_AND_DELIVERY_SECTION":
+			// Start of section defining pickup and delivery requests
+			section = inPickupAndDelivery
+			continue
 		case "END", "EOF":
 			// End of file
 			break scanLoop
@@ -123,6 +135,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 					Lat: x,
 					Lon: y,
 				},
+				ID: fmt.Sprint(number),
 			}
 			numbers = append(numbers, number)
 		case inEdgeWeight:
@@ -138,7 +151,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Set demand for request
 			l := stopsByNumber[number]
 			quantity, _ := strconv.Atoi(s[1])
-			l.Quantity = -quantity // We need negative quantities as these are pickups
+			l.Quantity = -quantity // negative quantity indicates demand
 			stopsByNumber[number] = l
 			// If demand is zero, it must be a depot - mark it
 			if l.Quantity == 0 {
@@ -159,6 +172,8 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 					"error parsing instance: depot %d in DEPOT section was not represented with 0 demand in DEMAND section", number)
 				return err
 			}
+		case inPickupAndDelivery:
+			return fmt.Errorf("pickup and delivery requests are not supported")
 		}
 	}
 
@@ -169,24 +184,6 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 	// If explicit was defined but no distances were given, that is an error
 	if explicit && matrix == nil {
 		return fmt.Errorf("explicit edge weights indicated but not found")
-	}
-
-	// Aggregate stops
-	if len(numbers) != 0 && len(stopsByNumber) == len(numbers) {
-		for _, number := range numbers {
-			stop := stopsByNumber[number]
-			if _, ok := depots[number]; ok {
-				// Skip depot locations
-				continue
-			}
-			// Add request
-			input.Stops = append(input.Stops, stop)
-		}
-	} else {
-		// the matrix defines how many stops there are
-		for i := 0; i < len(*matrix); i++ {
-			input.Stops = append(input.Stops, schema.Stop{})
-		}
 	}
 
 	// Determine depot 'request' (choose min index, if multiple are given)
@@ -204,23 +201,220 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			}
 		}
 	}
+
+	// Use 1 as depot number, if no locations are given
+	if depotNumber == math.MaxInt32 {
+		depotNumber = 1
+	}
 	depot := stopsByNumber[depotNumber]
 
+	// Aggregate stops
+	if len(numbers) != 0 && len(stopsByNumber) == len(numbers) {
+		for _, number := range numbers {
+			stop := stopsByNumber[number]
+			if _, ok := depots[number]; ok {
+				// Skip depot locations
+				continue
+			}
+			// Add request
+			input.Stops = append(input.Stops, stop)
+		}
+	} else {
+		// the matrix defines how many stops there are
+		for i := 0; i < len(*matrix); i++ {
+			// matrix is 0 indexed, but stops are 1 indexed
+			if i+1 == depotNumber {
+				continue
+			}
+			stop := schema.Stop{
+				ID: fmt.Sprint(i + 1),
+				// location 1,1 is a dummy location
+				Location: schema.Location{
+					Lat: 1,
+					Lon: 1,
+				},
+			}
+			if stopByNumber, ok := stopsByNumber[i+1]; ok {
+				stop.Quantity = stopByNumber.Quantity
+			}
+			input.Stops = append(input.Stops, stop)
+		}
+	}
+
 	// Create estimated / sufficient vehicles
-	for i := 0; i < 10; i++ {
+	for i := 0; i < j.numberOfVehicles; i++ {
 		input.Vehicles = append(input.Vehicles, schema.Vehicle{
+			ID:            fmt.Sprint(i),
 			StartLocation: &depot.Location,
 			EndLocation:   &depot.Location,
 			Capacity:      capacity,
 		})
 	}
 
-	input.DurationMatrix = matrix
+	size := len(input.Stops) + 2*len(input.Vehicles)
+	floats := make([][]float64, size)
 
 	if byPoint != nil {
-		// Create duration matrix
-		return fmt.Errorf("implement me")
+		for i := 0; i < len(input.Stops); i++ {
+			floats[i] = make([]float64, size)
+			for j := 0; j < len(input.Stops); j++ {
+				floats[i][j] = byPoint.Cost(
+					measure.Point{
+						input.Stops[i].Location.Lon,
+						input.Stops[i].Location.Lat,
+					},
+					measure.Point{
+						input.Stops[j].Location.Lon,
+						input.Stops[j].Location.Lat,
+					},
+				)
+			}
+			for j := 0; j < 2*len(input.Vehicles); j += 2 {
+				floats[i][j+len(input.Stops)] = byPoint.Cost(
+					measure.Point{
+						input.Stops[i].Location.Lon,
+						input.Stops[i].Location.Lat,
+					},
+					measure.Point{
+						input.Vehicles[j/2].StartLocation.Lon,
+						input.Vehicles[j/2].StartLocation.Lat,
+					},
+				)
+				floats[i][j+1+len(input.Stops)] = byPoint.Cost(
+					measure.Point{
+						input.Stops[i].Location.Lon,
+						input.Stops[i].Location.Lat,
+					},
+					measure.Point{
+						input.Vehicles[j/2].EndLocation.Lon,
+						input.Vehicles[j/2].EndLocation.Lat,
+					},
+				)
+			}
+		}
+		for i := 0; i < 2*len(input.Vehicles); i += 2 {
+			for x := 0; x < 2; x++ {
+				if x == 0 {
+					floats[i+len(input.Stops)] = make([]float64, size)
+					for j := 0; j < len(input.Stops); j++ {
+						floats[i+len(input.Stops)][j] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].StartLocation.Lon,
+								input.Vehicles[i/2].StartLocation.Lat,
+							},
+							measure.Point{
+								input.Stops[j].Location.Lon,
+								input.Stops[j].Location.Lat,
+							},
+						)
+					}
+					for j := 0; j < len(input.Vehicles); j++ {
+						floats[i+len(input.Stops)][j+len(input.Stops)] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].StartLocation.Lon,
+								input.Vehicles[i/2].StartLocation.Lat,
+							},
+							measure.Point{
+								input.Vehicles[j].StartLocation.Lon,
+								input.Vehicles[j].StartLocation.Lat,
+							},
+						)
+						floats[i+len(input.Stops)][j+1+len(input.Stops)] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].StartLocation.Lon,
+								input.Vehicles[i/2].StartLocation.Lat,
+							},
+							measure.Point{
+								input.Vehicles[j].EndLocation.Lon,
+								input.Vehicles[j].EndLocation.Lat,
+							},
+						)
+					}
+				} else {
+					floats[i+1+len(input.Stops)] = make([]float64, size)
+					for j := 0; j < len(input.Stops); j++ {
+						floats[i+1+len(input.Stops)][j] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].EndLocation.Lon,
+								input.Vehicles[i/2].EndLocation.Lat,
+							},
+							measure.Point{
+								input.Stops[j].Location.Lon,
+								input.Stops[j].Location.Lat,
+							},
+						)
+					}
+					for j := 0; j < len(input.Vehicles); j++ {
+						floats[i+1+len(input.Stops)][j+len(input.Stops)] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].EndLocation.Lon,
+								input.Vehicles[i/2].EndLocation.Lat,
+							},
+							measure.Point{
+								input.Vehicles[j].StartLocation.Lon,
+								input.Vehicles[j].StartLocation.Lat,
+							},
+						)
+						floats[i+1+len(input.Stops)][j+1+len(input.Stops)] = byPoint.Cost(
+							measure.Point{
+								input.Vehicles[i/2].EndLocation.Lon,
+								input.Vehicles[i/2].EndLocation.Lat,
+							},
+							measure.Point{
+								input.Vehicles[j].EndLocation.Lon,
+								input.Vehicles[j].EndLocation.Lat,
+							},
+						)
+					}
+				}
+			}
+		}
+
+		input.DurationMatrix = &floats
+		input.DistanceMatrix = &floats
+
+		return nil
 	}
+
+	depotRowSeen := false
+	depotIndexInMatrix := depotNumber - 1
+
+	for rowIndex := 0; rowIndex <= size; rowIndex++ {
+		if rowIndex == depotIndexInMatrix {
+			depotRowSeen = true
+			continue
+		}
+		effectiveRowIndex := rowIndex
+		if depotRowSeen {
+			effectiveRowIndex--
+		}
+		var row []float64
+		if rowIndex < len(*matrix) {
+			row = (*matrix)[rowIndex]
+		} else {
+			row = (*matrix)[depotIndexInMatrix]
+		}
+		floats[effectiveRowIndex] = make([]float64, size)
+		depotColumnSeen := false
+		for i := 0; i <= size; i++ {
+			if i == depotIndexInMatrix {
+				depotColumnSeen = true
+				continue
+			}
+			effectiveI := i
+			if depotColumnSeen {
+				effectiveI--
+			}
+			if i < len(row) {
+				floats[effectiveRowIndex][effectiveI] = row[i]
+			} else {
+				floats[effectiveRowIndex][effectiveI] = row[depotIndexInMatrix]
+			}
+		}
+	}
+
+	input.DurationMatrix = &floats
+	input.DistanceMatrix = &floats
 
 	return nil
 }
