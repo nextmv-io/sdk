@@ -132,8 +132,8 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			y, _ := strconv.ParseFloat(s[2], 64)
 			stopsByNumber[number] = schema.Stop{
 				Location: schema.Location{
-					Lat: x,
-					Lon: y,
+					Lon: x,
+					Lat: y,
 				},
 				ID: fmt.Sprint(number),
 			}
