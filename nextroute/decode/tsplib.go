@@ -14,17 +14,13 @@ import (
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
-// TSPLIB creates a TSPLIB decoder. numberOfVehicles is the number of vehicles
-// in case they are not defined in the instance.
-func TSPLIB(numberOfVehicles int) decode.Decoder {
-	return TSPLIBDecoder{
-		numberOfVehicles: numberOfVehicles,
-	}
+// TSPLIB creates a TSPLIB decoder.
+func TSPLIB() decode.Decoder {
+	return TSPLIBDecoder{}
 }
 
 // TSPLIBDecoder is a Decoder that decodes a json into a struct.
 type TSPLIBDecoder struct {
-	numberOfVehicles int
 }
 
 const (
@@ -42,13 +38,21 @@ func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
 	if !ok {
 		return fmt.Errorf("input is not of type schema.Input")
 	}
+	stopDefaults := schema.StopDefaults{}
+	vehicleDefaults := schema.VehicleDefaults{}
+	defaults := schema.Defaults{
+		Stops:    &stopDefaults,
+		Vehicles: &vehicleDefaults,
+	}
+	input.Defaults = &defaults
+
+	numberOfVehicles := 0
 	// Prepare
 	scanner := bufio.NewScanner(reader)
 	var byPoint measure.ByPoint
 	var matrix *[][]float64
 
 	// Parse file
-	var capacity int
 	numbers := []int{}
 	stopsByNumber := map[int]schema.Stop{}
 	depots := map[int]struct{}{}
@@ -69,9 +73,33 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 		// Check for new section start
 		switch s[0] {
 		case "VEHICLES":
-			j.numberOfVehicles, _ = strconv.Atoi(s[2])
+			nrOfVehicles, err := strconv.Atoi(s[2])
+			if err != nil {
+				return err
+			}
+			numberOfVehicles = nrOfVehicles
 		case "CAPACITY":
-			capacity, _ = strconv.Atoi(s[2])
+			capacity, err := strconv.Atoi(s[2])
+			if err != nil {
+				return err
+			}
+			input.Defaults.Vehicles.Capacity = capacity
+			continue
+		case "DISTANCE":
+			// parse float
+			floatDuration, err := strconv.ParseFloat(s[2], 64)
+			if err != nil {
+				return err
+			}
+			maxDuration := int(floatDuration)
+			input.Defaults.Vehicles.MaxDuration = &maxDuration
+			continue
+		case "SERVICE_TIME":
+			serviceTime, err := strconv.Atoi(s[2])
+			if err != nil {
+				return err
+			}
+			input.Defaults.Stops.Duration = &serviceTime
 			continue
 		case "EDGE_WEIGHT_TYPE":
 			measureGiven = true
@@ -126,10 +154,13 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 		switch section {
 		case inCoords:
 			// Get the number of the associated request
-			number, _ := strconv.Atoi(s[0])
+			number, err := strconv.Atoi(s[0])
+			if err != nil {
+				return err
+			}
 			// Create a request for the coordinates
-			x, _ := strconv.ParseFloat(s[1], 64)
-			y, _ := strconv.ParseFloat(s[2], 64)
+			x, err := strconv.ParseFloat(s[1], 64)
+			y, err := strconv.ParseFloat(s[2], 64)
 			stopsByNumber[number] = schema.Stop{
 				Location: schema.Location{
 					Lon: x,
@@ -142,15 +173,22 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Create requests from edges
 			row := make([]float64, len(s))
 			for index, v := range s {
-				row[index], _ = strconv.ParseFloat(v, 64)
+				weight, err := strconv.ParseFloat(v, 64)
+				if err != nil {
+					return err
+				}
+				row[index] = weight
 			}
 			*matrix = append(*matrix, row)
 		case inDemand:
 			// Get the number of the associated request
-			number, _ := strconv.Atoi(s[0])
+			number, err := strconv.Atoi(s[0])
+			if err != nil {
+				return err
+			}
 			// Set demand for request
 			l := stopsByNumber[number]
-			quantity, _ := strconv.Atoi(s[1])
+			quantity, err := strconv.Atoi(s[1])
 			l.Quantity = -quantity // negative quantity indicates demand
 			stopsByNumber[number] = l
 			// If demand is zero, it must be a depot - mark it
@@ -159,7 +197,10 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			}
 		case inDepot:
 			// Get the number of the associated request
-			number, _ := strconv.Atoi(s[0])
+			number, err := strconv.Atoi(s[0])
+			if err != nil {
+				return err
+			}
 			// Skip section terminal
 			if number == -1 {
 				continue
@@ -184,6 +225,10 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 	// If explicit was defined but no distances were given, that is an error
 	if explicit && matrix == nil {
 		return fmt.Errorf("explicit edge weights indicated but not found")
+	}
+
+	if numberOfVehicles == 0 {
+		return fmt.Errorf("no vehicles defined")
 	}
 
 	// Determine depot 'request' (choose min index, if multiple are given)
@@ -242,12 +287,11 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 	}
 
 	// Create estimated / sufficient vehicles
-	for i := 0; i < j.numberOfVehicles; i++ {
+	for i := 0; i < numberOfVehicles; i++ {
 		input.Vehicles = append(input.Vehicles, schema.Vehicle{
 			ID:            fmt.Sprint(i),
 			StartLocation: &depot.Location,
 			EndLocation:   &depot.Location,
-			Capacity:      capacity,
 		})
 	}
 
