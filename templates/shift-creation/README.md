@@ -1,6 +1,8 @@
 # Shift creation with OR-Tools
 
-This is an example of how to use OR-Tools to solve a shift creation problem. The goal is to select/create a number of shifts according to a given demand that will later be filled by employees.
+This is an example of how to use OR-Tools to solve a shift creation problem. The
+goal is to select/create a number of shifts according to a given demand that
+will later be filled by employees.
 
 ## Usage
 
