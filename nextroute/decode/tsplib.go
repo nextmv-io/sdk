@@ -3,6 +3,7 @@ package decode
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"math"
@@ -79,13 +80,13 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 		case "VEHICLES":
 			nrOfVehicles, err := strconv.Atoi(s[2])
 			if err != nil {
-				return err
+				return errors.New("error parsing number of vehicles: " + err.Error())
 			}
 			numberOfVehicles = nrOfVehicles
 		case "CAPACITY":
 			capacity, err := strconv.Atoi(s[2])
 			if err != nil {
-				return err
+				return errors.New("error parsing capacity: " + err.Error())
 			}
 			input.Defaults.Vehicles.Capacity = capacity
 			continue
@@ -93,7 +94,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// parse float
 			floatDuration, err := strconv.ParseFloat(s[2], 64)
 			if err != nil {
-				return err
+				return errors.New("error parsing distance: " + err.Error())
 			}
 			maxDuration := int(floatDuration)
 			input.Defaults.Vehicles.MaxDuration = &maxDuration
@@ -101,7 +102,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 		case "SERVICE_TIME":
 			serviceTime, err := strconv.Atoi(s[2])
 			if err != nil {
-				return err
+				return errors.New("error parsing service time: " + err.Error())
 			}
 			input.Defaults.Stops.Duration = &serviceTime
 			continue
@@ -160,16 +161,16 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Get the number of the associated request
 			number, err := strconv.Atoi(s[0])
 			if err != nil {
-				return err
+				return errors.New("error parsing number in NODE_COORD_SECTION: " + err.Error())
 			}
 			// Create a request for the coordinates
 			x, err := strconv.ParseFloat(s[1], 64)
 			if err != nil {
-				return err
+				return errors.New("error parsing x coordinate in NODE_COORD_SECTION: " + err.Error())
 			}
 			y, err := strconv.ParseFloat(s[2], 64)
 			if err != nil {
-				return err
+				return errors.New("error parsing y coordinate in NODE_COORD_SECTION: " + err.Error())
 			}
 			stopsByNumber[number] = schema.Stop{
 				Location: schema.Location{
@@ -193,7 +194,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			for index, v := range s {
 				weight, err := strconv.ParseFloat(v, 64)
 				if err != nil {
-					return err
+					return errors.New("error parsing edge weight in EDGE_WEIGHT_SECTION: " + err.Error())
 				}
 				row[index] = weight
 			}
@@ -202,13 +203,13 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Get the number of the associated request
 			number, err := strconv.Atoi(s[0])
 			if err != nil {
-				return err
+				return errors.New("error parsing number in DEMAND_SECTION: " + err.Error())
 			}
 			// Set demand for request
 			l := stopsByNumber[number]
 			quantity, err := strconv.Atoi(s[1])
 			if err != nil {
-				return err
+				return errors.New("error parsing demand in DEMAND_SECTION: " + err.Error())
 			}
 			l.Quantity = -quantity // negative quantity indicates demand
 			stopsByNumber[number] = l
@@ -220,7 +221,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Get the number of the associated request
 			number, err := strconv.Atoi(s[0])
 			if err != nil {
-				return err
+				return errors.New("error parsing number in DEPOT_SECTION: " + err.Error())
 			}
 			// Skip section terminal
 			if number == -1 {
