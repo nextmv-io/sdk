@@ -55,6 +55,10 @@ func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
 	// Parse file
 	numbers := []int{}
 	stopsByNumber := map[int]schema.Stop{}
+	// these are used to scale the coordinates to the range -180, 180 and -90,
+	// 90 because the TSPLIB format allow arbitrary coordinates but nextroute
+	// only supports coordinates in that range.
+	maxLon, maxLat := 0.0, 0.0
 	depots := map[int]struct{}{}
 	section := inUndefined
 	explicit := false
@@ -160,7 +164,13 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			}
 			// Create a request for the coordinates
 			x, err := strconv.ParseFloat(s[1], 64)
+			if err != nil {
+				return err
+			}
 			y, err := strconv.ParseFloat(s[2], 64)
+			if err != nil {
+				return err
+			}
 			stopsByNumber[number] = schema.Stop{
 				Location: schema.Location{
 					Lon: x,
@@ -169,6 +179,14 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 				ID: fmt.Sprint(number),
 			}
 			numbers = append(numbers, number)
+			xAbs := math.Abs(x)
+			if xAbs > maxLon {
+				maxLon = xAbs
+			}
+			yAbs := math.Abs(y)
+			if yAbs > maxLat {
+				maxLat = yAbs
+			}
 		case inEdgeWeight:
 			// Create requests from edges
 			row := make([]float64, len(s))
@@ -189,6 +207,9 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			// Set demand for request
 			l := stopsByNumber[number]
 			quantity, err := strconv.Atoi(s[1])
+			if err != nil {
+				return err
+			}
 			l.Quantity = -quantity // negative quantity indicates demand
 			stopsByNumber[number] = l
 			// If demand is zero, it must be a depot - mark it
@@ -412,6 +433,22 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 					}
 				}
 			}
+		}
+
+		// scale the coordinates to the range -180, 180 and -90, 90
+		for i := 0; i < len(input.Stops); i++ {
+			stop := input.Stops[i]
+			stop.Location.Lon = input.Stops[i].Location.Lon / maxLon * 180
+			stop.Location.Lat = input.Stops[i].Location.Lat / maxLat * 90
+			input.Stops[i] = stop
+		}
+		for i := 0; i < len(input.Vehicles); i++ {
+			vehicle := input.Vehicles[i]
+			vehicle.StartLocation.Lon = input.Vehicles[i].StartLocation.Lon / maxLon * 180
+			vehicle.StartLocation.Lat = input.Vehicles[i].StartLocation.Lat / maxLat * 90
+			vehicle.EndLocation.Lon = input.Vehicles[i].EndLocation.Lon / maxLon * 180
+			vehicle.EndLocation.Lat = input.Vehicles[i].EndLocation.Lat / maxLat * 90
+			input.Vehicles[i] = vehicle
 		}
 
 		input.DurationMatrix = &floats
