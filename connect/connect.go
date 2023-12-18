@@ -29,10 +29,6 @@ func NewConnector(slug, prefix string) *Connector {
 
 // Connect connects a method with its implementation.
 func Connect[T any](c *Connector, target *T, suffix ...string) {
-	if _, ok := c.connected[target]; ok {
-		return
-	}
-
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
 
