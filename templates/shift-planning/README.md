@@ -7,8 +7,7 @@ will later be filled by employees.
 ## Usage
 
 ```bash
-python main.py -input data/input.json -output output.json -duration 30
-python plot.py -input output.json
+python main.py -input input.json -output output.json -duration 30
 ```
 
 ## Model formulation
