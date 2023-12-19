@@ -66,21 +66,21 @@ var (
 	//go:embed pyomo/requirements.txt
 	PyomoRequirements string
 
-	// ShiftCreationManifest is the app manifest file in the shift-creation template.
-	//go:embed shift-creation/app.yaml
-	ShiftCreationManifest string
-	// ShiftCreationMain is the main.py file in the shift-creation template.
-	//go:embed shift-creation/main.py
-	ShiftCreationMain string
-	// ShiftCreationInput is the input.json file in the shift-creation template.
-	//go:embed shift-creation/input.json
-	ShiftCreationInput string
-	// ShiftCreationReadme is the README.md file in the shift-creation template.
-	//go:embed shift-creation/README.md
-	ShiftCreationReadme string
-	// ShiftCreationRequirements is the requirements.txt file in the shift-creation template.
-	//go:embed shift-creation/requirements.txt
-	ShiftCreationRequirements string
+	// ShiftPlanningManifest is the app manifest file in the shift-planning template.
+	//go:embed shift-planning/app.yaml
+	ShiftPlanningManifest string
+	// ShiftPlanningMain is the main.py file in the shift-planning template.
+	//go:embed shift-planning/main.py
+	ShiftPlanningMain string
+	// ShiftPlanningInput is the input.json file in the shift-planning template.
+	//go:embed shift-planning/input.json
+	ShiftPlanningInput string
+	// ShiftPlanningReadme is the README.md file in the shift-planning template.
+	//go:embed shift-planning/README.md
+	ShiftPlanningReadme string
+	// ShiftPlanningRequirements is the requirements.txt file in the shift-planning template.
+	//go:embed shift-planning/requirements.txt
+	ShiftPlanningRequirements string
 
 	// ShiftAssignmentManifest is the app manifest file in the shift-assignment template.
 	//go:embed shift-assignment/app.yaml
