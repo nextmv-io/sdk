@@ -60,6 +60,8 @@ func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
 	// 90 because the TSPLIB format allow arbitrary coordinates but nextroute
 	// only supports coordinates in that range.
 	maxLon, maxLat := 0.0, 0.0
+	dimension := 0
+	edgeWeightFormat := "undefined"
 	depots := map[int]struct{}{}
 	section := inUndefined
 	explicit := false
@@ -83,6 +85,12 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 				return errors.New("error parsing number of vehicles: " + err.Error())
 			}
 			numberOfVehicles = nrOfVehicles
+		case "DIMENSION":
+			_dimension, err := strconv.Atoi(s[2])
+			if err != nil {
+				return errors.New("error parsing dimension: " + err.Error())
+			}
+			dimension = _dimension
 		case "CAPACITY":
 			capacity, err := strconv.Atoi(s[2])
 			if err != nil {
@@ -122,7 +130,12 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			}
 			continue
 		case "EDGE_WEIGHT_FORMAT":
-			if s[2] != "FULL_MATRIX" {
+			switch s[2] {
+			case "FULL_MATRIX":
+				edgeWeightFormat = "FULL_MATRIX"
+			case "LOWER_ROW":
+				edgeWeightFormat = "LOWER_ROW"
+			default:
 				return fmt.Errorf("unsupported edge weight format: %s", s[2])
 			}
 			continue
@@ -189,8 +202,11 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 				maxLat = yAbs
 			}
 		case inEdgeWeight:
+			if dimension == 0 {
+				return errors.New("dimension must be defined before EDGE_WEIGHT_SECTION")
+			}
 			// Create requests from edges
-			row := make([]float64, len(s))
+			row := make([]float64, dimension)
 			for index, v := range s {
 				weight, err := strconv.ParseFloat(v, 64)
 				if err != nil {
@@ -310,10 +326,12 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 
 	// Create estimated / sufficient vehicles
 	for i := 0; i < numberOfVehicles; i++ {
+		startLocation := depot.Location
+		endLocation := depot.Location
 		input.Vehicles = append(input.Vehicles, schema.Vehicle{
 			ID:            fmt.Sprint(i),
-			StartLocation: &depot.Location,
-			EndLocation:   &depot.Location,
+			StartLocation: &startLocation,
+			EndLocation:   &endLocation,
 		})
 	}
 
@@ -461,42 +479,63 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 	depotRowSeen := false
 	depotIndexInMatrix := depotNumber - 1
 
-	for rowIndex := 0; rowIndex <= size; rowIndex++ {
-		if rowIndex == depotIndexInMatrix {
+	for i := 0; i <= size; i++ {
+		if i == depotIndexInMatrix {
 			depotRowSeen = true
 			continue
 		}
-		effectiveRowIndex := rowIndex
+		effectiveRowIndex := i
 		if depotRowSeen {
 			effectiveRowIndex--
 		}
 		var row []float64
-		if rowIndex < len(*matrix) {
-			row = (*matrix)[rowIndex]
-		} else {
-			row = (*matrix)[depotIndexInMatrix]
-		}
 		floats[effectiveRowIndex] = make([]float64, size)
 		depotColumnSeen := false
-		for i := 0; i <= size; i++ {
-			if i == depotIndexInMatrix {
+		for j := 0; j <= size; j++ {
+			rowIndex := i
+			colIndex := j
+			if rowIndex >= len(*matrix) {
+				rowIndex = depotIndexInMatrix
+			}
+			if colIndex >= len(*matrix) {
+				colIndex = depotIndexInMatrix
+			}
+			if edgeWeightFormat == "LOWER_ROW" {
+				if colIndex > rowIndex {
+					colIndex, rowIndex = rowIndex, colIndex
+				}
+			}
+			row = (*matrix)[rowIndex]
+			if j == depotIndexInMatrix {
 				depotColumnSeen = true
 				continue
 			}
-			effectiveI := i
+			effectiveI := j
 			if depotColumnSeen {
 				effectiveI--
 			}
-			if i < len(row) {
-				floats[effectiveRowIndex][effectiveI] = row[i]
-			} else {
-				floats[effectiveRowIndex][effectiveI] = row[depotIndexInMatrix]
-			}
+			floats[effectiveRowIndex][effectiveI] = row[colIndex]
 		}
 	}
 
 	input.DurationMatrix = &floats
 	input.DistanceMatrix = &floats
+
+	// scale the coordinates to the range -180, 180 and -90, 90
+	for i := 0; i < len(input.Stops); i++ {
+		stop := input.Stops[i]
+		stop.Location.Lon = input.Stops[i].Location.Lon / maxLon * 180
+		stop.Location.Lat = input.Stops[i].Location.Lat / maxLat * 90
+		input.Stops[i] = stop
+	}
+	for i := 0; i < len(input.Vehicles); i++ {
+		vehicle := input.Vehicles[i]
+		vehicle.StartLocation.Lon = input.Vehicles[i].StartLocation.Lon / maxLon * 180
+		vehicle.StartLocation.Lat = input.Vehicles[i].StartLocation.Lat / maxLat * 90
+		vehicle.EndLocation.Lon = input.Vehicles[i].EndLocation.Lon / maxLon * 180
+		vehicle.EndLocation.Lat = input.Vehicles[i].EndLocation.Lat / maxLat * 90
+		input.Vehicles[i] = vehicle
+	}
 
 	return nil
 }
