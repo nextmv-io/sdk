@@ -45,11 +45,11 @@ def main() -> None:
 
     # Read input data, solve the problem and write the solution.
     input_data = read_input(args.input)
-    log("Solving shift-assignment:")
-    log(f"  - shifts: {len(input_data.get('shifts', []))}")
-    log(f"  - workers: {len(input_data.get('workers', []))}")
-    log(f"  - rules: {len(input_data.get('rules', []))}")
-    log(f"  - max duration: {args.duration} seconds")
+    # log("Solving shift-assignment:")
+    # log(f"  - shifts: {len(input_data.get('shifts', []))}")
+    # log(f"  - workers: {len(input_data.get('workers', []))}")
+    # log(f"  - rules: {len(input_data.get('rules', []))}")
+    # log(f"  - max duration: {args.duration} seconds")
     solution = solve(input_data, args.duration)
     write_output(args.output, solution)
 
@@ -194,11 +194,11 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
         "schema": "v1",
     }
 
-    log(f"  - status: {statistics['result']['custom']['status']}")
-    log(f"  - duration: {statistics['result']['duration']} seconds")
-    log(f"  - value: {statistics['result']['value']}")
-    log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
-    log(f"  - total workers: {statistics['result']['custom']['total_workers']}")
+    # log(f"  - status: {statistics['result']['custom']['status']}")
+    # log(f"  - duration: {statistics['result']['duration']} seconds")
+    # log(f"  - value: {statistics['result']['value']}")
+    # log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
+    # log(f"  - total workers: {statistics['result']['custom']['total_workers']}")
 
     return {
         "solutions": [schedule],

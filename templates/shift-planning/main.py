@@ -46,10 +46,10 @@ def main() -> None:
 
     # Read input data, solve the problem and write the solution.
     input_data = read_input(args.input)
-    log("Solving shift-creation:")
-    log(f"  - shifts-templates: {len(input_data.get('shifts', []))}")
-    log(f"  - demands: {len(input_data.get('demands', []))}")
-    log(f"  - max duration: {args.duration} seconds")
+    # log("Solving shift-creation:")
+    # log(f"  - shifts-templates: {len(input_data.get('shifts', []))}")
+    # log(f"  - demands: {len(input_data.get('demands', []))}")
+    # log(f"  - max duration: {args.duration} seconds")
     solution = solve(input_data, args.duration)
     write_output(args.output, solution)
 
@@ -149,9 +149,9 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
         "schema": "v1",
     }
 
-    log(f"  - status: {statistics['result']['custom']['status']}")
-    log(f"  - duration: {statistics['result']['duration']} seconds")
-    log(f"  - value: {statistics['result']['value']}")
+    # log(f"  - status: {statistics['result']['custom']['status']}")
+    # log(f"  - duration: {statistics['result']['duration']} seconds")
+    # log(f"  - value: {statistics['result']['value']}")
 
     return {
         "solutions": [schedule],
