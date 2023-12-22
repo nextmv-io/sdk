@@ -11,7 +11,7 @@ func NewSolveOperator(
 	probability float64,
 	canResultInImprovement bool,
 	parameters sdkAlns.SolveParameters[nextroute.Solution],
-) sdkAlns.SolveOperator[nextroute.Solution] {
+) SolveOperator {
 	connect.Connect(con, &newSolveOperator)
 	return newSolveOperator(
 		probability,

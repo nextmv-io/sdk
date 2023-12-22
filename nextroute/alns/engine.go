@@ -31,7 +31,7 @@ var (
 
 	newParallelSolver func() sdkAlns.ParallelSolver[nextroute.Solution]
 
-	newConstSolveParameter func(int) sdkAlns.SolveParameter[nextroute.Solution]
+	newConstSolveParameter func(int) SolveParameter
 
 	newSolveParameter func(
 		startValue int,
@@ -41,7 +41,7 @@ var (
 		maxValue int,
 		snapBackAfterImprovement bool,
 		zigzag bool,
-	) sdkAlns.SolveParameter[nextroute.Solution]
+	) SolveParameter
 
 	newSolver func() (sdkAlns.Solver[nextroute.Solution, sdkAlns.SolveOptions], error)
 )

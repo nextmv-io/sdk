@@ -1,13 +1,11 @@
 package alns
 
 import (
-	sdkAlns "github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
-	"github.com/nextmv-io/sdk/nextroute"
 )
 
 // NewConstSolveParameter creates a new constant solve parameter for nextroute.
-func NewConstSolveParameter(value int) sdkAlns.SolveParameter[nextroute.Solution] {
+func NewConstSolveParameter(value int) SolveParameter {
 	connect.Connect(con, &newConstSolveParameter)
 	return newConstSolveParameter(value)
 }
@@ -21,7 +19,7 @@ func NewSolveParameter(
 	maxValue int,
 	snapBackAfterImprovement bool,
 	zigzag bool,
-) sdkAlns.SolveParameter[nextroute.Solution] {
+) SolveParameter {
 	connect.Connect(con, &newSolveParameter)
 	return newSolveParameter(
 		startValue,
