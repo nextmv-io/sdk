@@ -23,6 +23,12 @@ var (
 
 	newSolveOperatorIndex func() int
 
+	newSolveOperator func(
+		probability float64,
+		canResultInImprovement bool,
+		parameters sdkAlns.SolveParameters[nextroute.Solution],
+	) sdkAlns.SolveOperator[nextroute.Solution]
+
 	newParallelSolver func() sdkAlns.ParallelSolver[nextroute.Solution]
 
 	newConstSolveParameter func(int) sdkAlns.SolveParameter[nextroute.Solution]
