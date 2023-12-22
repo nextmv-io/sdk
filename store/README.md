@@ -1,5 +1,7 @@
 # Store
 
+Deprecated: This package is deprecated and will be removed in the next major release.
+
 Package `store` provides a modeling kit for decision automation problems. It is
 based on the paradigm of "decisions as code". The base interface is the
 [Store][Store]: a space defined by variables and logic. The underlying

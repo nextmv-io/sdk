@@ -17,9 +17,17 @@ import (
 
 // Client represents a HERE maps client. See official documentation for HERE
 // topics, getting started.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/here].
 type Client interface {
 	// DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 	// if there are more than 500 points given.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/here].
 	DistanceMatrix(
 		ctx context.Context,
 		points []route.Point,
@@ -27,6 +35,10 @@ type Client interface {
 	) (route.ByIndex, error)
 	// DurationMatrix retrieves a HERE duration matrix. It uses the async HERE API
 	// if there are more than 500 points given.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/here].
 	DurationMatrix(
 		ctx context.Context,
 		points []route.Point,
@@ -35,6 +47,10 @@ type Client interface {
 
 	// DistanceDurationMatrices retrieves a HERE distance and duration matrix. It
 	// uses the async HERE API if there are more than 500 points given.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/here].
 	DistanceDurationMatrices(
 		ctx context.Context,
 		points []route.Point,
@@ -64,6 +80,10 @@ const (
 )
 
 // NewClient returns a new OSRM Client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/here].
 func NewClient(apiKey string, opts ...ClientOption) Client {
 	c := &client{
 		schemeHost:              fmt.Sprintf("https://%s", defaultHereAPIHost),
@@ -107,6 +127,10 @@ func cleanPoints(points []route.Point) []route.Point {
 
 // DistanceMatrix retrieves a HERE distance matrix. It uses the async HERE API
 // if there are more than 500 points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DistanceMatrix(
 	ctx context.Context,
 	points []route.Point,
@@ -123,6 +147,10 @@ func (c *client) DistanceMatrix(
 
 // DurationMatrix retrieves a HERE duration matrix. It uses the async HERE API
 // if there are more than 500 points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DurationMatrix(
 	ctx context.Context,
 	points []route.Point,
@@ -140,6 +168,10 @@ func (c *client) DurationMatrix(
 
 // DistanceDurationMatrices retrieves a HERE distance and duration matrix. It
 // uses the async HERE API if there are more than 500 points given.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/here].
 func (c *client) DistanceDurationMatrices(
 	ctx context.Context,
 	points []route.Point,
