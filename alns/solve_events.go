@@ -13,6 +13,7 @@ type SolveEvents[T Solution[T]] struct {
 	Iterated          *events.BaseEvent[SolveInformation[T]]
 	ContextDone       *events.BaseEvent[SolveInformation[T]]
 	Start             *events.BaseEvent[SolveInformation[T]]
+	Reset             *events.BaseEvent[SolveInformation[T]]
 	Done              *events.BaseEvent[SolveInformation[T]]
 }
 
@@ -26,6 +27,7 @@ func NewSolveEvents[T Solution[T]]() SolveEvents[T] {
 		Iterated:          &events.BaseEvent[SolveInformation[T]]{},
 		ContextDone:       &events.BaseEvent[SolveInformation[T]]{},
 		Start:             &events.BaseEvent[SolveInformation[T]]{},
+		Reset:             &events.BaseEvent[SolveInformation[T]]{},
 		Done:              &events.BaseEvent[SolveInformation[T]]{},
 	}
 }

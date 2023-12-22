@@ -52,4 +52,6 @@ type ParallelSolver[T Solution[T]] interface {
 	BaseSolver[T, ParallelSolveOptions[T]]
 	SetSolverFactory(NewSolverFactory[T])
 	SetSolveOptionsFactory(NewSolveOptionsFactory[T])
+	// SolveEvents returns the solve-events used by the solver.
+	SolveEvents() SolveEvents[T]
 }

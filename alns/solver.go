@@ -20,7 +20,7 @@ type Solver[T Solution[T], Options any] interface {
 	Random() *rand.Rand
 
 	// Reset will reset the solver to use solution as work solution.
-	Reset(solution Solution[T])
+	Reset(solution Solution[T], solveInformation SolveInformation[T])
 
 	// SolveOperators returns the solve-operators used by the solver.
 	SolveOperators() SolveOperators[T]
