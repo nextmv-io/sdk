@@ -454,19 +454,19 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			}
 		}
 
-		// scale the coordinates to the range -180, 180 and -90, 90
+		// scale the coordinates to the range -0.2, 0.2 and -0.1, 0.1
 		for i := 0; i < len(input.Stops); i++ {
 			stop := input.Stops[i]
-			stop.Location.Lon = input.Stops[i].Location.Lon / maxLon * 180
-			stop.Location.Lat = input.Stops[i].Location.Lat / maxLat * 90
+			stop.Location.Lon = input.Stops[i].Location.Lon / maxLon * .2
+			stop.Location.Lat = input.Stops[i].Location.Lat / maxLat * .1
 			input.Stops[i] = stop
 		}
 		for i := 0; i < len(input.Vehicles); i++ {
 			vehicle := input.Vehicles[i]
-			vehicle.StartLocation.Lon = input.Vehicles[i].StartLocation.Lon / maxLon * 180
-			vehicle.StartLocation.Lat = input.Vehicles[i].StartLocation.Lat / maxLat * 90
-			vehicle.EndLocation.Lon = input.Vehicles[i].EndLocation.Lon / maxLon * 180
-			vehicle.EndLocation.Lat = input.Vehicles[i].EndLocation.Lat / maxLat * 90
+			vehicle.StartLocation.Lon = input.Vehicles[i].StartLocation.Lon / maxLon * .2
+			vehicle.StartLocation.Lat = input.Vehicles[i].StartLocation.Lat / maxLat * .1
+			vehicle.EndLocation.Lon = input.Vehicles[i].EndLocation.Lon / maxLon * .2
+			vehicle.EndLocation.Lat = input.Vehicles[i].EndLocation.Lat / maxLat * .1
 			input.Vehicles[i] = vehicle
 		}
 
