@@ -219,7 +219,8 @@ func DurationValue(
 	speed Speed,
 	timeUnit time.Duration,
 ) float64 {
-	if timeUnit.Seconds() == 0 {
+	tSeconds := timeUnit.Seconds()
+	if tSeconds == 0 {
 		panic(
 			fmt.Errorf(
 				"time unit is zero in duration calculation",
@@ -228,7 +229,7 @@ func DurationValue(
 	}
 	seconds := distance.Value(Meters) / speed.Value(MetersPerSecond)
 
-	return seconds / timeUnit.Seconds()
+	return seconds / tSeconds
 }
 
 // RandomElement returns a random element from the given slice. If the slice is
