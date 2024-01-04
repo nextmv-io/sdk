@@ -18,6 +18,10 @@ linters-settings:
         - github.com/nextmv-io/sdk/route/here
         - github.com/nextmv-io/sdk/route/google
         - github.com/nextmv-io/sdk/route/routingkit
+        - github.com/nextmv-io/sdk/measure/here
+        - github.com/nextmv-io/sdk/measure/osrm
+        - github.com/nextmv-io/sdk/measure/google
+        - github.com/nextmv-io/sdk/measure/routingkit
         - googlemaps.github.io/maps
         - github.com/dgraph-io/ristretto
         - go.uber.org/mock
@@ -202,8 +206,15 @@ issues:
     - path: nextroute/factory/model\.go
       linters:
         - lll
-
+    # Deactivate line length in construction.go because of go tags
+    - path: nextroute/factory/construction\.go
+      linters:
+        - lll
     # Tag should be 'measure' in both cases ByPoint and ByIndex
+    - path: measure/load\.go
+      linters:
+        - tagliatelle
+      text: measure
     - path: route/load\.go
       linters:
         - tagliatelle
@@ -219,13 +230,21 @@ issues:
         - gocyclo
 
     # Using math/rand is fine here
-    - path: nextroute/common/alias_test\.go
+    - path: common/alias_test\.go
       linters:
         - gosec
       text: G404
-    - path: nextroute/common/utils\.go
+    # Complexity is fine here because of the nature of the code
+    - path: common/boundingbox_test\.go
+      linters:
+        - gocyclo
+    - path: common/utils\.go
       linters:
         - gomodguard
+    - path: measure/osrm/matrix_test\.go
+      linters:
+        - gosec
+      text: G404
     - path: route/osrm/matrix_test\.go
       linters:
         - gosec
@@ -315,6 +334,49 @@ issues:
         - unparam
       text: cloudDuration
 
+    # Now that route, store and dataframes are deprecated
+    # we get staticcheck errors.
+    - path: templates/legacy
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: route
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: route/google/client\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: run/legacy_runner\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: run/simple_runner\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: run/runner_option_legacy\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: nextroute/schema/router\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: store
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: measure/location\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+    - path: measure/location_test\.go
+      linters:
+        - staticcheck
+      text: "SA1019:"
+
     # The linter suggests switching an if-elseif-else statement to use switch.
     # This is not reasonable right now because the conditions are complex.
     - path: templates/legacy/cluster-tsp/helper\.go
@@ -351,6 +413,6 @@ issues:
       text: G404
     # This tag is used by our validation engine and it is valid.
     - path: nextroute/schema/input\.go
-      linters: 
+      linters:
         - govet
       text: structtag

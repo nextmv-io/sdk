@@ -22,18 +22,38 @@ import (
 )
 
 // Endpoint defines the OSRM endpoint to be used.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type Endpoint string
 
 const (
 	// TableEndpoint is used to retrieve distance and duration matrices.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	TableEndpoint Endpoint = "table"
 	// RouteEndpoint is used to retrieve polylines for a set of points.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	RouteEndpoint Endpoint = "route"
 )
 
 // Client represents an OSRM client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type Client interface {
 	// Table requests a distance and/or duration table from an OSRM server.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	Table(
 		points []route.Point,
 		opts ...TableOptions,
@@ -43,31 +63,59 @@ type Client interface {
 	)
 	// Get performs a GET against the OSRM server returning the response
 	// body and an error.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	Get(uri string) ([]byte, error)
 	// IgnoreEmpty removes empty / zero points from the request before sending
 	// it to the OSRM server. The indices of the points will be maintained.
 	// Distances / durations for these points will be set to 0.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	IgnoreEmpty(ignore bool)
 	// SnapRadius limits snapping a point to the street network to given radius
 	// in meters.
 	// Setting the snap radius to a value = 0 results in an unlimited snapping
 	// radius.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	SnapRadius(radius int) error
 	// ScaleFactor is used in conjunction with duration calculations. Scales the
 	// table duration values by this number. This does not affect distances.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	ScaleFactor(factor float64) error
 
 	// MaxTableSize should be configured with the same value as the OSRM
 	// server's max-table-size setting, default is 100
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	MaxTableSize(size int) error
 
 	// Polyline requests polylines for the given points. The first parameter
 	// returns a polyline from start to end and the second parameter returns a
 	// list of polylines, one per leg.
+	//
+	// Deprecated: This package is deprecated and will be removed in the next major release.
+	// It is used with the router engine which was replaced by
+	// [github.com/nextmv-io/sdk/measure/osrm].
 	Polyline(points []route.Point) (string, []string, error)
 }
 
 // NewClient returns a new OSRM Client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func NewClient(host string, opts ...ClientOption) Client {
 	c := &client{
 		host:         host,
@@ -85,6 +133,10 @@ func NewClient(host string, opts ...ClientOption) Client {
 }
 
 // DefaultClient creates a new OSRM Client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func DefaultClient(host string, useCache bool) Client {
 	opts := []ClientOption{}
 	if useCache {
@@ -231,6 +283,10 @@ func (c *client) Table(points []route.Point, opts ...TableOptions) (
 
 	for _, opt := range opts {
 		opt(cfg)
+	}
+
+	if len(points) == 0 {
+		return nil, nil, fmt.Errorf("cannot request distances/durations for empty points")
 	}
 
 	// Remove empty points, if requested.
@@ -432,6 +488,10 @@ type tableResponse struct {
 }
 
 // TableOptions is a function that configures a tableConfig.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type TableOptions func(*tableConfig)
 
 // tableConfig defines options for the table configuration.
@@ -444,6 +504,10 @@ type tableConfig struct {
 // WithDuration returns a TableOptions function for composing a tableConfig with
 // duration data enabled, telling the OSRM server to include duration data in
 // the response table data.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func WithDuration() TableOptions {
 	return func(c *tableConfig) {
 		c.withDuration = true
@@ -453,6 +517,10 @@ func WithDuration() TableOptions {
 // WithDistance returns a TableOptions function for composing a tableConfig with
 // distance data enabled, telling the OSRM server to include distance data in
 // the response table data.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func WithDistance() TableOptions {
 	return func(c *tableConfig) {
 		c.withDistance = true
@@ -460,10 +528,18 @@ func WithDistance() TableOptions {
 }
 
 // ClientOption can pass options to be used with an OSRM client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type ClientOption func(*client)
 
 // WithClientTransport overwrites the RoundTripper used by the internal
 // http.Client.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func WithClientTransport(rt http.RoundTripper) ClientOption {
 	if rt == nil {
 		rt = http.DefaultTransport
@@ -475,6 +551,10 @@ func WithClientTransport(rt http.RoundTripper) ClientOption {
 }
 
 // WithCache configures the maximum number of results cached.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func WithCache(maxItems int) ClientOption {
 	return func(c *client) {
 		c.useCache = true
@@ -486,6 +566,10 @@ func WithCache(maxItems int) ClientOption {
 
 // ParallelRuns set the number of parallel calls to the OSRM server. If 0 is
 // passed, the default value of 16 will be used.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func ParallelRuns(runs int) TableOptions {
 	return func(c *tableConfig) {
 		if runs > 0 {
@@ -525,6 +609,10 @@ func pointsParameter(points []route.Point) string {
 }
 
 // RouteResponse holds the route response from the OSRM server.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type RouteResponse struct {
 	Code    string  `json:"code"`
 	Routes  []Route `json:"routes"`
@@ -532,17 +620,29 @@ type RouteResponse struct {
 }
 
 // Route partially represents the OSRM Route object.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type Route struct {
 	Geometry string `json:"geometry"`
 	Legs     []Leg  `json:"legs"`
 }
 
 // Leg partially represents the OSRM Leg object.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type Leg struct {
 	Steps []Step `json:"steps"`
 }
 
 // Step partially represents the OSRM Step object.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 type Step struct {
 	Geometry string `json:"geometry"`
 }
@@ -550,7 +650,15 @@ type Step struct {
 // Creates polylines for the given points. First return parameter is a polyline
 // from start to end, second parameter is a list of polylines per leg in the
 // route.
+//
+// Deprecated: This package is deprecated and will be removed in the next major release.
+// It is used with the router engine which was replaced by
+// [github.com/nextmv-io/sdk/measure/osrm].
 func (c *client) Polyline(points []route.Point) (string, []string, error) {
+	if len(points) == 0 {
+		return "", []string{}, fmt.Errorf("cannot create polyline for empty points")
+	}
+
 	// Turn points slice into OSRM-friendly semicolon-delimited point pairs
 	// []{{1,2}, {3,4}} => "1,2;3,4"
 	pointsParameter := pointsParameter(points)

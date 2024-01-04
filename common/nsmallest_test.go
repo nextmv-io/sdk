@@ -3,7 +3,7 @@ package common_test
 import (
 	"testing"
 
-	"github.com/nextmv-io/sdk/nextroute/common"
+	"github.com/nextmv-io/sdk/common"
 )
 
 type TestItem interface {

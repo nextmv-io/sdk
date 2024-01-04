@@ -10,5 +10,9 @@ authentication.
   - Distance API: At minimum, the request requires the origin and destination.
     But it is recommended to pass in waypoints encoded as a polyline with "enc:"
     as a prefix to get a more precise polyline for each leg of the route.
+
+Deprecated: This package is deprecated and will be removed in the next major release.
+It is used with the router engine which was replaced by
+[github.com/nextmv-io/sdk/measure/google].
 */
 package google

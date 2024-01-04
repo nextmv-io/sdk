@@ -1,10 +1,5 @@
 package run
 
-import (
-	"github.com/nextmv-io/sdk/run/decode"
-	"github.com/nextmv-io/sdk/store"
-)
-
 // RunnerOption configures a Runner.
 type RunnerOption[RunnerConfig, Input, Option, Solution any] func(
 	Runner[RunnerConfig, Input, Option, Solution],
@@ -30,18 +25,6 @@ func InputValidate[
 	return func(r Runner[RunnerConfig, Input, Option, Solution]) {
 		r.SetInputValidator(v)
 	}
-}
-
-// Decode sets the decoder of a runner. This is a legacy function. Alternatively
-// use InputDecode.
-func Decode[RunnerConfig, Input any, Decoder decode.Decoder](
-	d Decoder,
-) func(
-	Runner[RunnerConfig, Input, store.Options, store.Solution],
-) {
-	return InputDecode[RunnerConfig, Input, store.Options, store.Solution](
-		GenericDecoder[Input](d),
-	)
 }
 
 // OptionDecode sets the options decoder of a runner.

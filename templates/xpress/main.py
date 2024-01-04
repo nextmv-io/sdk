@@ -5,7 +5,7 @@ Template for working with FICO Xpress.
 import argparse
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 try:
     import xpress as xp
@@ -54,7 +54,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the problem.
@@ -86,10 +86,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     _, status = problem.optimize()
 
     # Determines which items were chosen.
-    chosen_items = []
-    for item in items:
-        if problem.getSolution(item["variable"]) > 0.9:
-            chosen_items.append(item["item"])
+    chosen_items = [item["item"] for item in items if problem.getSolution(item["variable"]) > 0.9]
 
     # Creates the statistics.
     statistics = {
@@ -116,17 +113,18 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
 
 
 def log(message: str) -> None:
-    """Logs a message. We need to use stderr since stdout is used for the solution."""
+    """Logs a message. We need to use stderr since stdout is used for the
+    solution."""
 
     print(message, file=sys.stderr)
 
 
-def read_input(input_path) -> Dict[str, Any]:
+def read_input(input_path) -> dict[str, Any]:
     """Reads the input from stdin or a given input file."""
 
     input_file = {}
     if input_path:
-        with open(input_path, "r", encoding="utf-8") as file:
+        with open(input_path, encoding="utf-8") as file:
             input_file = json.load(file)
     else:
         input_file = json.load(sys.stdin)
