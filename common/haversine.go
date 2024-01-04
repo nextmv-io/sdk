@@ -22,7 +22,15 @@ func Haversine(from, to Location) (Distance, error) {
 				to.IsValid(),
 			)
 	}
+	return NewDistance(
+		Float64Haversine(from, to),
+		Meters,
+	), nil
+}
 
+// Float64Haversine calculates the distance between two locations using the
+// Haversine formula. It does check for invalid locations.
+func Float64Haversine(from, to Location) float64 {
 	x1 := degreesToRadian(from.Longitude())
 	y1 := degreesToRadian(from.Latitude())
 	x2 := degreesToRadian(to.Longitude())
@@ -35,10 +43,7 @@ func Haversine(from, to Location) (Distance, error) {
 	sdx := math.Sin(dx / 2)
 	a := (sdy * sdy) + math.Cos(y1)*math.Cos(y2)*sdx*sdx
 
-	return NewDistance(
-		2*radius*math.Atan2(math.Sqrt(a), math.Sqrt(1-a)),
-		Meters,
-	), nil
+	return 2 * radius * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
 }
 
 func degreesToRadian(d float64) float64 {
