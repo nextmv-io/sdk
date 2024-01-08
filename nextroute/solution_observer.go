@@ -70,6 +70,56 @@ type SolutionUnPlanObserver interface {
 	OnUnPlanSucceeded(planUnit SolutionPlanStopsUnit)
 }
 
+// OnEstimatedIsViolatedWithStopObserver is called when the delta constraint score has
+// been estimated. The stop is provided to check on which stop the constraint
+// is violated or not.
+type OnEstimatedIsViolatedWithStopObserver interface {
+	// OnEstimatedIsViolatedWithStop is called when the delta constraint score has
+	// been estimated.
+	OnEstimatedIsViolatedWithStop(
+		constraint ModelConstraint,
+		isViolated bool,
+		planPositionsHint StopPositionsHint,
+		stop ModelStop,
+	)
+}
+
+// OnConstraintCheckObserver is an interface to observe the constraint check.
+type OnConstraintCheckObserver interface {
+	// OnCheckedConstraintWithStop is called when a stop constraint has been checked.
+	OnCheckedConstraintWithStop(
+		constraint ModelConstraint,
+		feasible bool,
+		stop ModelStop,
+	)
+
+	// OnCheckedConstraintWithVehicle is called when a vehicle constraint has been checked.
+	OnCheckedConstraintWithVehicle(
+		constraint ModelConstraint,
+		feasible bool,
+		vehicle SolutionVehicle,
+	)
+}
+
+// OnPlanFailedWithConstraintObserver is an interface to observe the constraint check.
+// The stop is provided to check on which stop the constraint is violated.
+type OnPlanFailedWithConstraintObserver interface {
+	// OnPlanFailedWithConstraint is called when a move has failed to be planned.
+	OnPlanFailedWithConstraint(
+		stop ModelStop,
+		constraint ModelConstraint,
+	)
+}
+
+// OnPlanFailedWithConstraintObservers is a slice of OnPlanFailedWithConstraintObserver.
+type OnPlanFailedWithConstraintObservers []OnPlanFailedWithConstraintObserver
+
+// OnConstraintCheckObservers is a slice of OnConstraintCheckObserver.
+type OnConstraintCheckObservers []OnConstraintCheckObserver
+
+// OnEstimatedIsViolatedWithStopObservers is a slice of OnEstimatedIsViolatedWithStopObserver.
+type OnEstimatedIsViolatedWithStopObservers []OnEstimatedIsViolatedWithStopObserver
+
 // SolutionUnPlanObservers is a slice of SolutionUnPlanObserver.
 type SolutionUnPlanObservers []SolutionUnPlanObserver
 
@@ -78,6 +128,9 @@ type SolutionUnPlanObservers []SolutionUnPlanObserver
 type SolutionObserved interface {
 	SolutionObserver
 	SolutionUnPlanObserver
+	OnEstimatedIsViolatedWithStopObserver
+	OnConstraintCheckObserver
+	OnPlanFailedWithConstraintObserver
 
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
@@ -86,6 +139,15 @@ type SolutionObserved interface {
 	// AddSolutionUnPlanObserver adds the given solution un-plan observer to the
 	// solution observed.
 	AddSolutionUnPlanObserver(observer SolutionUnPlanObserver)
+
+	// AddOnConstraintCheckObserver adds the given observer to the solution.
+	AddOnConstraintCheckObserver(observer OnConstraintCheckObserver)
+
+	// AddOnPlanFailedWithConstraintObserver adds the given observer to the solution.
+	AddOnPlanFailedWithConstraintObserver(observer OnPlanFailedWithConstraintObserver)
+
+	// AddOnEstimatedIsViolatedWithStopObserver adds the given observer to the solution.
+	AddOnEstimatedIsViolatedWithStopObserver(observer OnEstimatedIsViolatedWithStopObserver)
 
 	// RemoveSolutionObserver remove the given solution observer from the
 	// solution observed.
