@@ -71,8 +71,8 @@ type SolutionUnPlanObserver interface {
 	OnUnPlanSucceeded(planUnit SolutionPlanStopsUnit)
 }
 
-// OnInitialSolutionConstraintObserver is an interface to observe the constraint check.
-type OnInitialSolutionConstraintObserver interface {
+// InitialSolutionConstraintObserver is an interface to observe the constraint check.
+type InitialSolutionConstraintObserver interface {
 	// OnStopConstraintChecked is called when a stop constraint has been checked.
 	OnStopConstraintChecked(
 		constraint ModelConstraint,
@@ -88,8 +88,8 @@ type OnInitialSolutionConstraintObserver interface {
 	)
 }
 
-// OnConstraintCheckObservers is a slice of OnConstraintCheckObserver.
-type OnConstraintCheckObservers []OnInitialSolutionConstraintObserver
+// InitialSolutionConstraintObservers is a slice of OnInitialSolutionConstraintObserver.
+type InitialSolutionConstraintObservers []InitialSolutionConstraintObserver
 
 // SolutionUnPlanObservers is a slice of SolutionUnPlanObserver.
 type SolutionUnPlanObservers []SolutionUnPlanObserver
@@ -99,7 +99,7 @@ type SolutionUnPlanObservers []SolutionUnPlanObserver
 type SolutionObserved interface {
 	SolutionObserver
 	SolutionUnPlanObserver
-	OnInitialSolutionConstraintObserver
+	InitialSolutionConstraintObserver
 
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
@@ -109,8 +109,12 @@ type SolutionObserved interface {
 	// solution observed.
 	AddSolutionUnPlanObserver(observer SolutionUnPlanObserver)
 
-	// AddOnConstraintCheckObserver adds the given observer to the solution.
-	AddOnConstraintCheckObserver(observer OnInitialSolutionConstraintObserver)
+	// AddOnInitialSolutionConstraintObserver adds the given observer to the solution.
+	AddInitialSolutionConstraintObserver(observer InitialSolutionConstraintObserver)
+
+	// RemoveOnInitialSolutionConstraintObserver remove the given solution observer from the
+	// solution observed.
+	RemoveInitialSolutionConstraintObserver(observer InitialSolutionConstraintObserver)
 
 	// RemoveSolutionObserver remove the given solution observer from the
 	// solution observed.
@@ -122,6 +126,9 @@ type SolutionObserved interface {
 
 	// SolutionObservers returns the solution observers.
 	SolutionObservers() SolutionObservers
+
+	// OnInitialSolutionConstraintObservers returns the solution un-plan observers.
+	InitialSolutionConstraintObservers() InitialSolutionConstraintObservers
 
 	// SolutionUnPlanObservers returns the solution un-plan observers.
 	SolutionUnPlanObservers() SolutionUnPlanObservers
