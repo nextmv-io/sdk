@@ -18,11 +18,27 @@ type SolutionObserver interface {
 		constraint ModelConstraint,
 		violation CheckedAt,
 	)
+
 	// OnCheckedConstraint is called when a constraint has been checked.
-	OnCheckedConstraint(
+	OnSolutionConstraintChecked(
 		constraint ModelConstraint,
 		feasible bool,
 	)
+
+	// OnStopConstraintChecked is called when a stop constraint has been checked.
+	OnStopConstraintChecked(
+		stop SolutionStop,
+		constraint ModelConstraint,
+		feasible bool,
+	)
+
+	// OnVehicleConstraintChecked is called when a vehicle constraint has been checked.
+	OnVehicleConstraintChecked(
+		vehicle SolutionVehicle,
+		constraint ModelConstraint,
+		feasible bool,
+	)
+
 	// OnEstimateIsViolated is called when the delta constraint is going to be
 	// estimated if it will be violated
 	OnEstimateIsViolated(
@@ -71,26 +87,6 @@ type SolutionUnPlanObserver interface {
 	OnUnPlanSucceeded(planUnit SolutionPlanStopsUnit)
 }
 
-// InitialSolutionConstraintObserver is an interface to observe the constraint check.
-type InitialSolutionConstraintObserver interface {
-	// OnStopConstraintChecked is called when a stop constraint has been checked.
-	OnStopConstraintChecked(
-		stop SolutionStop,
-		constraint ModelConstraint,
-		feasible bool,
-	)
-
-	// OnVehicleConstraintChecked is called when a vehicle constraint has been checked.
-	OnVehicleConstraintChecked(
-		vehicle SolutionVehicle,
-		constraint ModelConstraint,
-		feasible bool,
-	)
-}
-
-// InitialSolutionConstraintObservers is a slice of OnInitialSolutionConstraintObserver.
-type InitialSolutionConstraintObservers []InitialSolutionConstraintObserver
-
 // SolutionUnPlanObservers is a slice of SolutionUnPlanObserver.
 type SolutionUnPlanObservers []SolutionUnPlanObserver
 
@@ -99,7 +95,6 @@ type SolutionUnPlanObservers []SolutionUnPlanObserver
 type SolutionObserved interface {
 	SolutionObserver
 	SolutionUnPlanObserver
-	InitialSolutionConstraintObserver
 
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
@@ -108,13 +103,6 @@ type SolutionObserved interface {
 	// AddSolutionUnPlanObserver adds the given solution un-plan observer to the
 	// solution observed.
 	AddSolutionUnPlanObserver(observer SolutionUnPlanObserver)
-
-	// AddOnInitialSolutionConstraintObserver adds the given observer to the solution.
-	AddInitialSolutionConstraintObserver(observer InitialSolutionConstraintObserver)
-
-	// RemoveOnInitialSolutionConstraintObserver remove the given solution observer from the
-	// solution observed.
-	RemoveInitialSolutionConstraintObserver(observer InitialSolutionConstraintObserver)
 
 	// RemoveSolutionObserver remove the given solution observer from the
 	// solution observed.
@@ -126,9 +114,6 @@ type SolutionObserved interface {
 
 	// SolutionObservers returns the solution observers.
 	SolutionObservers() SolutionObservers
-
-	// OnInitialSolutionConstraintObservers returns the solution un-plan observers.
-	InitialSolutionConstraintObservers() InitialSolutionConstraintObservers
 
 	// SolutionUnPlanObservers returns the solution un-plan observers.
 	SolutionUnPlanObservers() SolutionUnPlanObservers
