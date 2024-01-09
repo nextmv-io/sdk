@@ -31,6 +31,7 @@ type SolutionObserver interface {
 	// OnEstimatedIsViolated is called when the delta constraint score
 	// has been estimated.
 	OnEstimatedIsViolated(
+		move SolutionMoveStops,
 		constraint ModelConstraint,
 		isViolated bool,
 		planPositionsHint StopPositionsHint,
@@ -51,7 +52,7 @@ type SolutionObserver interface {
 	// OnPlan is called when a move is going to be planned.
 	OnPlan(move SolutionMove)
 	// OnPlanFailed is called when a move has failed to be planned.
-	OnPlanFailed(move SolutionMove)
+	OnPlanFailed(move SolutionMoveStops, constraint ModelConstraint)
 	// OnPlanSucceeded is called when a move has succeeded to be planned.
 	OnPlanSucceeded(move SolutionMove)
 }
@@ -70,55 +71,25 @@ type SolutionUnPlanObserver interface {
 	OnUnPlanSucceeded(planUnit SolutionPlanStopsUnit)
 }
 
-// OnEstimatedIsViolatedWithStopObserver is called when the delta constraint score has
-// been estimated. The stop is provided to check on which stop the constraint
-// is violated or not.
-type OnEstimatedIsViolatedWithStopObserver interface {
-	// OnEstimatedIsViolatedWithStop is called when the delta constraint score has
-	// been estimated.
-	OnEstimatedIsViolatedWithStop(
-		constraint ModelConstraint,
-		isViolated bool,
-		planPositionsHint StopPositionsHint,
-		stop ModelStop,
-	)
-}
-
-// OnConstraintCheckObserver is an interface to observe the constraint check.
-type OnConstraintCheckObserver interface {
-	// OnCheckedConstraintWithStop is called when a stop constraint has been checked.
-	OnCheckedConstraintWithStop(
+// OnInitialSolutionConstraintObserver is an interface to observe the constraint check.
+type OnInitialSolutionConstraintObserver interface {
+	// OnStopConstraintChecked is called when a stop constraint has been checked.
+	OnStopConstraintChecked(
 		constraint ModelConstraint,
 		feasible bool,
 		stop ModelStop,
 	)
 
-	// OnCheckedConstraintWithVehicle is called when a vehicle constraint has been checked.
-	OnCheckedConstraintWithVehicle(
+	// OnVehicleConstraintChecked is called when a vehicle constraint has been checked.
+	OnVehicleConstraintChecked(
 		constraint ModelConstraint,
 		feasible bool,
 		vehicle SolutionVehicle,
 	)
 }
 
-// OnPlanFailedWithConstraintObserver is an interface to observe the constraint check.
-// The stop is provided to check on which stop the constraint is violated.
-type OnPlanFailedWithConstraintObserver interface {
-	// OnPlanFailedWithConstraint is called when a move has failed to be planned.
-	OnPlanFailedWithConstraint(
-		stop ModelStop,
-		constraint ModelConstraint,
-	)
-}
-
-// OnPlanFailedWithConstraintObservers is a slice of OnPlanFailedWithConstraintObserver.
-type OnPlanFailedWithConstraintObservers []OnPlanFailedWithConstraintObserver
-
 // OnConstraintCheckObservers is a slice of OnConstraintCheckObserver.
-type OnConstraintCheckObservers []OnConstraintCheckObserver
-
-// OnEstimatedIsViolatedWithStopObservers is a slice of OnEstimatedIsViolatedWithStopObserver.
-type OnEstimatedIsViolatedWithStopObservers []OnEstimatedIsViolatedWithStopObserver
+type OnConstraintCheckObservers []OnInitialSolutionConstraintObserver
 
 // SolutionUnPlanObservers is a slice of SolutionUnPlanObserver.
 type SolutionUnPlanObservers []SolutionUnPlanObserver
@@ -128,9 +99,7 @@ type SolutionUnPlanObservers []SolutionUnPlanObserver
 type SolutionObserved interface {
 	SolutionObserver
 	SolutionUnPlanObserver
-	OnEstimatedIsViolatedWithStopObserver
-	OnConstraintCheckObserver
-	OnPlanFailedWithConstraintObserver
+	OnInitialSolutionConstraintObserver
 
 	// AddSolutionObserver adds the given solution observer to the solution
 	// observed.
@@ -141,13 +110,7 @@ type SolutionObserved interface {
 	AddSolutionUnPlanObserver(observer SolutionUnPlanObserver)
 
 	// AddOnConstraintCheckObserver adds the given observer to the solution.
-	AddOnConstraintCheckObserver(observer OnConstraintCheckObserver)
-
-	// AddOnPlanFailedWithConstraintObserver adds the given observer to the solution.
-	AddOnPlanFailedWithConstraintObserver(observer OnPlanFailedWithConstraintObserver)
-
-	// AddOnEstimatedIsViolatedWithStopObserver adds the given observer to the solution.
-	AddOnEstimatedIsViolatedWithStopObserver(observer OnEstimatedIsViolatedWithStopObserver)
+	AddOnConstraintCheckObserver(observer OnInitialSolutionConstraintObserver)
 
 	// RemoveSolutionObserver remove the given solution observer from the
 	// solution observed.
