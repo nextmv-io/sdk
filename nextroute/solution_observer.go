@@ -18,11 +18,27 @@ type SolutionObserver interface {
 		constraint ModelConstraint,
 		violation CheckedAt,
 	)
-	// OnCheckedConstraint is called when a constraint has been checked.
-	OnCheckedConstraint(
+
+	// OnSolutionConstraintChecked is called when a constraint has been checked.
+	OnSolutionConstraintChecked(
 		constraint ModelConstraint,
 		feasible bool,
 	)
+
+	// OnStopConstraintChecked is called when a stop constraint has been checked.
+	OnStopConstraintChecked(
+		stop SolutionStop,
+		constraint ModelConstraint,
+		feasible bool,
+	)
+
+	// OnVehicleConstraintChecked is called when a vehicle constraint has been checked.
+	OnVehicleConstraintChecked(
+		vehicle SolutionVehicle,
+		constraint ModelConstraint,
+		feasible bool,
+	)
+
 	// OnEstimateIsViolated is called when the delta constraint is going to be
 	// estimated if it will be violated
 	OnEstimateIsViolated(
@@ -31,6 +47,7 @@ type SolutionObserver interface {
 	// OnEstimatedIsViolated is called when the delta constraint score
 	// has been estimated.
 	OnEstimatedIsViolated(
+		move SolutionMove,
 		constraint ModelConstraint,
 		isViolated bool,
 		planPositionsHint StopPositionsHint,
@@ -51,7 +68,7 @@ type SolutionObserver interface {
 	// OnPlan is called when a move is going to be planned.
 	OnPlan(move SolutionMove)
 	// OnPlanFailed is called when a move has failed to be planned.
-	OnPlanFailed(move SolutionMove)
+	OnPlanFailed(move SolutionMove, constraint ModelConstraint)
 	// OnPlanSucceeded is called when a move has succeeded to be planned.
 	OnPlanSucceeded(move SolutionMove)
 }
