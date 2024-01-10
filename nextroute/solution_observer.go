@@ -19,7 +19,7 @@ type SolutionObserver interface {
 		violation CheckedAt,
 	)
 
-	// OnCheckedConstraint is called when a constraint has been checked.
+	// OnSolutionConstraintChecked is called when a constraint has been checked.
 	OnSolutionConstraintChecked(
 		constraint ModelConstraint,
 		feasible bool,
