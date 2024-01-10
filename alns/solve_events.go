@@ -8,7 +8,7 @@ import (
 type SolveEvents[T Solution[T]] struct {
 	OperatorExecuting *events.BaseEvent1[SolveInformation[T]]
 	OperatorExecuted  *events.BaseEvent1[SolveInformation[T]]
-	ImprovementFound  *events.BaseEvent1[SolveInformation[T]]
+	NewBestSolution   *events.BaseEvent1[SolveInformation[T]]
 	Iterating         *events.BaseEvent1[SolveInformation[T]]
 	Iterated          *events.BaseEvent1[SolveInformation[T]]
 	ContextDone       *events.BaseEvent1[SolveInformation[T]]
@@ -22,7 +22,7 @@ func NewSolveEvents[T Solution[T]]() SolveEvents[T] {
 	return SolveEvents[T]{
 		OperatorExecuting: &events.BaseEvent1[SolveInformation[T]]{},
 		OperatorExecuted:  &events.BaseEvent1[SolveInformation[T]]{},
-		ImprovementFound:  &events.BaseEvent1[SolveInformation[T]]{},
+		NewBestSolution:   &events.BaseEvent1[SolveInformation[T]]{},
 		Iterating:         &events.BaseEvent1[SolveInformation[T]]{},
 		Iterated:          &events.BaseEvent1[SolveInformation[T]]{},
 		ContextDone:       &events.BaseEvent1[SolveInformation[T]]{},

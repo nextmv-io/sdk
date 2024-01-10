@@ -50,6 +50,9 @@ type SolveOptions struct {
 type Solver interface {
 	alns.Progressioner
 	alns.Solver[Solution, SolveOptions]
+
+	// Model returns the model of the solver.
+	Model() Model
 }
 
 // IntParameterOptions are the options for an integer parameter.
