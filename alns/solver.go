@@ -10,6 +10,12 @@ import (
 type Solver[T Solution[T], Options any] interface {
 	BaseSolver[T, Options]
 
+	// HasBestSolution returns true if the solver has a best solution.
+	HasBestSolution() bool
+
+	// HasWorkSolution returns true if the solver has a work solution.
+	HasWorkSolution() bool
+
 	// WorkSolution returns the current work solution.
 	WorkSolution() T
 
