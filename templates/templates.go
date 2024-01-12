@@ -66,37 +66,37 @@ var (
 	//go:embed knapsack-pyomo/requirements.txt
 	KnapsackPyomoRequirements string
 
-	// ShiftPlanningManifest is the app manifest file in the shift-planning template.
-	//go:embed shift-planning/app.yaml
-	ShiftPlanningManifest string
-	// ShiftPlanningMain is the main.py file in the shift-planning template.
-	//go:embed shift-planning/main.py
-	ShiftPlanningMain string
-	// ShiftPlanningInput is the input.json file in the shift-planning template.
-	//go:embed shift-planning/input.json
-	ShiftPlanningInput string
-	// ShiftPlanningReadme is the README.md file in the shift-planning template.
-	//go:embed shift-planning/README.md
-	ShiftPlanningReadme string
-	// ShiftPlanningRequirements is the requirements.txt file in the shift-planning template.
-	//go:embed shift-planning/requirements.txt
-	ShiftPlanningRequirements string
+	// ShiftPlanningOrtoolsManifest is the app manifest file in the shift-planning template.
+	//go:embed shift-planning-ortools/app.yaml
+	ShiftPlanningOrtoolsManifest string
+	// ShiftPlanningOrtoolsMain is the main.py file in the shift-planning template.
+	//go:embed shift-planning-ortools/main.py
+	ShiftPlanningOrtoolsMain string
+	// ShiftPlanningOrtoolsInput is the input.json file in the shift-planning template.
+	//go:embed shift-planning-ortools/input.json
+	ShiftPlanningOrtoolsInput string
+	// ShiftPlanningOrtoolsReadme is the README.md file in the shift-planning template.
+	//go:embed shift-planning-ortools/README.md
+	ShiftPlanningOrtoolsReadme string
+	// ShiftPlanningOrtoolsRequirements is the requirements.txt file in the shift-planning template.
+	//go:embed shift-planning-ortools/requirements.txt
+	ShiftPlanningOrtoolsRequirements string
 
-	// ShiftAssignmentManifest is the app manifest file in the shift-assignment template.
-	//go:embed shift-assignment/app.yaml
-	ShiftAssignmentManifest string
-	// ShiftAssignmentMain is the main.py file in the shift-assignment template.
-	//go:embed shift-assignment/main.py
-	ShiftAssignmentMain string
-	// ShiftAssignmentInput is the input.json file in the shift-assignment template.
-	//go:embed shift-assignment/input.json
-	ShiftAssignmentInput string
-	// ShiftAssignmentReadme is the README.md file in the shift-assignment template.
-	//go:embed shift-assignment/README.md
-	ShiftAssignmentReadme string
-	// ShiftAssignmentRequirements is the requirements.txt file in the shift-assignment template.
-	//go:embed shift-assignment/requirements.txt
-	ShiftAssignmentRequirements string
+	// ShiftAssignmentOrtoolsManifest is the app manifest file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/app.yaml
+	ShiftAssignmentOrtoolsManifest string
+	// ShiftAssignmentOrtoolsMain is the main.py file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/main.py
+	ShiftAssignmentOrtoolsMain string
+	// ShiftAssignmentOrtoolsInput is the input.json file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/input.json
+	ShiftAssignmentOrtoolsInput string
+	// ShiftAssignmentOrtoolsReadme is the README.md file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/README.md
+	ShiftAssignmentOrtoolsReadme string
+	// ShiftAssignmentOrtoolsRequirements is the requirements.txt file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/requirements.txt
+	ShiftAssignmentOrtoolsRequirements string
 
 	// ShiftSchedulingMain is the main.go file in the
 	// shift-scheduling template.
