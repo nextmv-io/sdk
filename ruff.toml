@@ -14,3 +14,6 @@ select = [
 # Rule configuration.
 line-length = 120
 
+[extend-per-file-ignores]
+"templates/shift-assignment/main.py" = ["C901"]
+

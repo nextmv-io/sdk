@@ -1,11 +1,16 @@
+"""
+Test for the shift-planning app.
+"""
+
 import argparse
 import collections
 import os
 import pathlib
-import pytest
 import re
 import subprocess
 import sys
+
+import pytest
 
 READY = False
 UPDATE = False
