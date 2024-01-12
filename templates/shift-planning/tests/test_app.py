@@ -113,7 +113,7 @@ def _run_test(test: AppTest) -> None:
     else:
         # Compare output with golden output file
         expected = ""
-        with open(test.golden_output, "r") as f:
+        with open(test.golden_output) as f:
             expected = f.read()
         assert output == expected
 

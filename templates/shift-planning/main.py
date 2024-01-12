@@ -235,7 +235,7 @@ def get_coverage(
     for s in concrete_shifts:
         times.add(s["start_time"])
         times.add(s["end_time"])
-    times = list(sorted(times))
+    times = sorted(times)
 
     # Create unique time periods
     periods = []
@@ -307,7 +307,7 @@ def read_input(input_path) -> dict[str, Any]:
 
     input_file = {}
     if input_path:
-        with open(input_path, "r", encoding="utf-8") as file:
+        with open(input_path, encoding="utf-8") as file:
             input_file = json.load(file)
     else:
         input_file = json.load(sys.stdin)
@@ -329,7 +329,7 @@ def write_output(output_path, output) -> None:
 def custom_serial(obj):
     """JSON serializer for objects not serializable by default serializer."""
 
-    if isinstance(obj, (datetime.datetime, datetime.date)):
+    if isinstance(obj | (datetime.datetime, datetime.date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
 
