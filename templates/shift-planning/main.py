@@ -329,7 +329,7 @@ def write_output(output_path, output) -> None:
 def custom_serial(obj):
     """JSON serializer for objects not serializable by default serializer."""
 
-    if isinstance(obj | (datetime.datetime, datetime.date)):
+    if isinstance(obj, (datetime.datetime | datetime.date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
 

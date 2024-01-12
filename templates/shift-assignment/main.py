@@ -252,7 +252,7 @@ def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
 def custom_serial(obj):
     """JSON serializer for objects not serializable by default serializer."""
 
-    if isinstance(obj | (datetime.datetime, datetime.date)):
+    if isinstance(obj, (datetime.datetime | datetime.date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
 
