@@ -6,7 +6,7 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 from ortools.linear_solver import pywraplp
 
@@ -54,7 +54,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
@@ -276,7 +276,7 @@ def get_coverage(
 
 
 def convert_data(
-    input_data: Dict[str, Any]
+    input_data: dict[str, Any]
 ) -> tuple[
     list[dict[str, Any]],
     list[dict[str, Any]],
@@ -302,7 +302,7 @@ def log(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def read_input(input_path) -> Dict[str, Any]:
+def read_input(input_path) -> dict[str, Any]:
     """Reads the input from stdin or a given input file."""
 
     input_file = {}

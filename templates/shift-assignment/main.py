@@ -6,7 +6,7 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 from ortools.linear_solver import pywraplp
 
@@ -54,7 +54,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
@@ -167,7 +167,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
             ],
         }
         schedule["number_assigned_workers"] = len(
-            set(s["worker_id"] for s in schedule["assigned_shifts"])
+            {s["worker_id"] for s in schedule["assigned_shifts"]}
         )
         active_workers = schedule["number_assigned_workers"]
         total_workers = len(workers)
@@ -205,7 +205,7 @@ def solve(input_data: Dict[str, Any], duration: int) -> Dict[str, Any]:
     }
 
 
-def convert_input(input_data: Dict[str, Any]) -> tuple[list, list, dict]:
+def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
     """Converts the input data to the format expected by the model."""
     workers = input_data["workers"]
     shifts = input_data["shifts"]
@@ -252,7 +252,7 @@ def convert_input(input_data: Dict[str, Any]) -> tuple[list, list, dict]:
 def custom_serial(obj):
     """JSON serializer for objects not serializable by default serializer."""
 
-    if isinstance(obj, (datetime.datetime, datetime.date)):
+    if isinstance(obj | (datetime.datetime, datetime.date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
 
@@ -263,12 +263,12 @@ def log(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def read_input(input_path) -> Dict[str, Any]:
+def read_input(input_path) -> dict[str, Any]:
     """Reads the input from stdin or a given input file."""
 
     input_file = {}
     if input_path:
-        with open(input_path, "r", encoding="utf-8") as file:
+        with open(input_path, encoding="utf-8") as file:
             input_file = json.load(file)
     else:
         input_file = json.load(sys.stdin)
