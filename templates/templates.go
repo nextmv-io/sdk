@@ -34,37 +34,37 @@ var (
 	//go:embed nextroute/app.yaml
 	NextrouteManifest string
 
-	// OrtoolsManifest is the app manifest file in the ortools template.
-	//go:embed ortools/app.yaml
-	OrtoolsManifest string
-	// OrtoolsMain is the main.py file in the ortools template.
-	//go:embed ortools/main.py
-	OrtoolsMain string
-	// OrtoolsInput is the input.json file in the ortools template.
-	//go:embed ortools/input.json
-	OrtoolsInput string
-	// OrtoolsReadme is the README.md file in the ortools template.
-	//go:embed ortools/README.md
-	OrtoolsReadme string
-	// OrtoolsRequirements is the requirements.txt file in the ortools template.
-	//go:embed ortools/requirements.txt
-	OrtoolsRequirements string
+	// KnapsackOrtoolsManifest is the app manifest file in the ortools template.
+	//go:embed knapsack-ortools/app.yaml
+	KnapsackOrtoolsManifest string
+	// KnapsackOrtoolsMain is the main.py file in the ortools template.
+	//go:embed knapsack-ortools/main.py
+	KnapsackOrtoolsMain string
+	// KnapsackOrtoolsInput is the input.json file in the ortools template.
+	//go:embed knapsack-ortools/input.json
+	KnapsackOrtoolsInput string
+	// KnapsackOrtoolsReadme is the README.md file in the ortools template.
+	//go:embed knapsack-ortools/README.md
+	KnapsackOrtoolsReadme string
+	// KnapsackOrtoolsRequirements is the requirements.txt file in the ortools template.
+	//go:embed knapsack-ortools/requirements.txt
+	KnapsackOrtoolsRequirements string
 
-	// PyomoManifest is the app manifest file in the pyomo template.
-	//go:embed pyomo/app.yaml
-	PyomoManifest string
-	// PyomoMain is the main.py file in the pyomo template.
-	//go:embed pyomo/main.py
-	PyomoMain string
-	// PyomoInput is the input.json file in the pyomo template.
-	//go:embed pyomo/input.json
-	PyomoInput string
-	// PyomoReadme is the README.md file in the pyomo template.
-	//go:embed pyomo/README.md
-	PyomoReadme string
-	// PyomoRequirements is the requirements.txt file in the pyomo template.
-	//go:embed pyomo/requirements.txt
-	PyomoRequirements string
+	// KnapsackPyomoManifest is the app manifest file in the pyomo template.
+	//go:embed knapsack-pyomo/app.yaml
+	KnapsackPyomoManifest string
+	// KnapsackPyomoMain is the main.py file in the pyomo template.
+	//go:embed knapsack-pyomo/main.py
+	KnapsackPyomoMain string
+	// KnapsackPyomoInput is the input.json file in the pyomo template.
+	//go:embed knapsack-pyomo/input.json
+	KnapsackPyomoInput string
+	// KnapsackPyomoReadme is the README.md file in the pyomo template.
+	//go:embed knapsack-pyomo/README.md
+	KnapsackPyomoReadme string
+	// KnapsackPyomoRequirements is the requirements.txt file in the pyomo template.
+	//go:embed knapsack-pyomo/requirements.txt
+	KnapsackPyomoRequirements string
 
 	// ShiftPlanningManifest is the app manifest file in the shift-planning template.
 	//go:embed shift-planning/app.yaml
