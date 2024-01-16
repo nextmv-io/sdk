@@ -72,10 +72,10 @@ var (
 	newLatestArrival func(
 		StopTimeExpression,
 	) (LatestArrival, error)
-	newMaximumConstraint func(
+	newMaximum func(
 		ModelExpression,
 		VehicleTypeExpression,
-	) (MaximumConstraint, error)
+	) (Maximum, error)
 	newComposedPerVehicleTypeExpression func(
 		ModelExpression,
 	) ComposedPerVehicleTypeExpression
