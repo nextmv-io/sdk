@@ -4,7 +4,7 @@ import json
 import sys
 from typing import Any
 
-from pyomo.environ import ConcreteModel, Var, Objective, Constraint, SolverFactory, Binary
+import pyomo.environ as pyo
 
 # Duration parameter for the solver.
 SUPPORTED_PROVIDER_DURATIONS = {
@@ -72,42 +72,48 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         )
 
     # Creates the solver.
-    solver = SolverFactory(provider)  # Use an appropriate solver name
+    solver = pyo.SolverFactory(provider)  # Use an appropriate solver name
     solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration * 1000  # Pyomo time limit is in milliseconds
 
     # Prepare data
     workers, shifts, rules_per_worker = convert_input(input_data)
 
     # Create binary variables indicating whether a worker is assigned to a shift
-    model = ConcreteModel()
-    model.x_assign = Var(
+    model = pyo.ConcreteModel()
+    model.x_assign = pyo.Var(
         [(e["id"], s["id"]) for e in workers for s in shifts],
-        within=Binary,
+        within=pyo.Binary,
     )
 
     # >>> Constraints
 
     # Each shift must have the required number of workers
     for s in shifts:
-        model.add_constraint(
-            sum(model.x_assign[(e["id"], s["id"])] for e in workers) == s["count"],
+        model.add_component(
             f"Shift_{s['id']}",
+            pyo.Constraint(
+                expr=sum(model.x_assign[(e["id"], s["id"])] for e in workers) == s["count"]
+            ),
         )
 
     # Each worker must be assigned to at least their minimum number of shifts
     for e in workers:
         rules = rules_per_worker[e["id"]]
-        model.add_constraint(
-            sum(model.x_assign[(e["id"], s["id"])] for s in shifts) >= rules["min_shifts"],
-            f"worker_{e['id']}",
+        model.add_component(
+            f"worker_{e['id']}_min",
+            pyo.Constraint(
+                expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) >= rules["min_shifts"]
+            ),
         )
 
     # Each worker must be assigned to at most their maximum number of shifts
     for e in workers:
         rules = rules_per_worker[e["id"]]
-        model.add_constraint(
-            sum(model.x_assign[(e["id"], s["id"])] for s in shifts) <= rules["max_shifts"],
-            f"worker_{e['id']}",
+        model.add_component(
+            f"worker_{e['id']}_max",
+            pyo.Constraint(
+                expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) <= rules["max_shifts"]
+            ),
         )
 
     # Ensure that the minimum rest time between shifts is respected
@@ -126,11 +132,12 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                     continue
                 # The two shifts are closer to each other than the minimum rest time, so we need to ensure that
                 # the worker is not assigned to both.
-                model.add_constraint(
-                    model.x_assign[(e["id"], shift1["id"])]
-                    + model.x_assign[(e["id"], shift2["id"])]
-                    <= 1,
+                model.add_component(
                     f"Rest_{e['id']}_{shift1['id']}_{shift2['id']}",
+                    pyo.Constraint(expr=model.x_assign[(e["id"], shift1["id"])]
+                    + model.x_assign[(e["id"], shift2["id"])]
+                    <= 1
+                    ),
                 )
 
     # Ensure that availabilities are respected
@@ -140,7 +147,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 a["start_time"] <= s["start_time"] and a["end_time"] >= s["end_time"]
                 for a in e["availability"]
             ):
-                model.x_assign[(e["id"], s["id"])].set_bounds(0, 0)
+                model.x_assign[(e["id"], s["id"])]
 
     # Ensure that workers are qualified for the shift
     for e in workers:
@@ -150,16 +157,17 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 continue
             if "qualifications" not in e:
                 # A qualification is required for the shift, but the worker has none (worker cannot be assigned)
-                model.x_assign[(e["id"], s["id"])].set_bounds(0, 0)
+                model.x_assign[(e["id"], s["id"])]
                 continue
             if s["qualification"] not in e["qualifications"]:
                 # The worker does not have the required qualification (worker cannot be assigned)
-                model.x_assign[(e["id"], s["id"])].set_bounds(0, 0)
+                model.x_assign[(e["id"], s["id"])]
 
-    # Define the objective function (if needed)
-    # model.set_objective(...)
+    # Creates the solver.
+    solver = pyo.SolverFactory(provider)  # Use an appropriate solver name
+    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration * 1000  # Pyomo time limit is in milliseconds
 
-    # Solves the problem.
+    # Solve the model.
     results = solver.solve(model)
 
     # Convert to solution format.
@@ -189,18 +197,18 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     statistics = {
         "result": {
             "custom": {
-                "constraints": len(model.constraints),
-                "provider": "Pyomo",
+                "constraints": model.nconstraints(),
+                "provider": provider,
                 "status": STATUS.get(results.solver.termination_condition, "unknown"),
-                "variables": len(model.x_assign),
+                "variables": model.nvariables(),
                 "active_workers": active_workers,
                 "total_workers": total_workers,
             },
-            "duration": results.solver.wallclock_time,
-            "value": None,  # Add the objective value if needed
+            "duration": results.solver.time,
+            "value": None,
         },
         "run": {
-            "duration": results.solver.wallclock_time,
+            "duration": results.solver.time,
         },
         "schema": "v1",
     }
