@@ -24,7 +24,7 @@ def main() -> None:
     """Entry point for the template."""
 
     parser = argparse.ArgumentParser(
-        description="Solve shift-creation with OR-Tools MIP."
+        description="Solve shift-planning with OR-Tools MIP."
     )
     parser.add_argument(
         "-input",

@@ -22,7 +22,7 @@ STATUS = {
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Solve shift-creation with Pyomo."
+        description="Solve shift-planning with Pyomo."
     )
     parser.add_argument(
         "-input",
