@@ -42,6 +42,11 @@ def main() -> None:
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
     )
+    parser.add_argument(
+        "-provider",
+        default="SCIP",
+        help="Solver provider. Default is SCIP.",
+    )
     args = parser.parse_args()
 
     # Read input data, solve the problem and write the solution.
@@ -50,15 +55,14 @@ def main() -> None:
     log(f"  - shifts-templates: {len(input_data.get('shifts', []))}")
     log(f"  - demands: {len(input_data.get('demands', []))}")
     log(f"  - max duration: {args.duration} seconds")
-    solution = solve(input_data, args.duration)
+    solution = solve(input_data, args.duration, args.provider)
     write_output(args.output, solution)
 
 
-def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
-    provider = "SCIP"
     solver = pywraplp.Solver.CreateSolver(provider)
     solver.SetTimeLimit(duration * 1000)
 
