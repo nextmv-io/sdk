@@ -82,6 +82,22 @@ var (
 	//go:embed shift-planning-ortools/requirements.txt
 	ShiftPlanningOrtoolsRequirements string
 
+	// ShiftPlanningPyomoManifest is the app manifest file in the shift-planning template.
+	//go:embed shift-planning-pyomo/app.yaml
+	ShiftPlanningPyomoManifest string
+	// ShiftPlanningPyomoMain is the main.py file in the shift-planning template.
+	//go:embed shift-planning-pyomo/main.py
+	ShiftPlanningPyomoMain string
+	// ShiftPlanningPyomoInput is the input.json file in the shift-planning template.
+	//go:embed shift-planning-pyomo/input.json
+	ShiftPlanningPyomoInput string
+	// ShiftPlanningPyomoReadme is the README.md file in the shift-planning template.
+	//go:embed shift-planning-pyomo/README.md
+	ShiftPlanningPyomoReadme string
+	// ShiftPlanningPyomoRequirements is the requirements.txt file in the shift-planning template.
+	//go:embed shift-planning-pyomo/requirements.txt
+	ShiftPlanningPyomoRequirements string
+
 	// ShiftAssignmentOrtoolsManifest is the app manifest file in the shift-assignment template.
 	//go:embed shift-assignment-ortools/app.yaml
 	ShiftAssignmentOrtoolsManifest string
