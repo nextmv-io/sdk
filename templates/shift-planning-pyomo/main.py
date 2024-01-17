@@ -48,7 +48,7 @@ def main() -> None:
     args = parser.parse_args()
 
     input_data = read_input(args.input)
-    log("Solving shift-creation:")
+    log("Solving shift-planning:")
     log(f"  - shifts-templates: {len(input_data.get('shifts', []))}")
     log(f"  - demands: {len(input_data.get('demands', []))}")
     log(f"  - max duration: {args.duration} seconds")

@@ -51,7 +51,7 @@ def main() -> None:
 
     # Read input data, solve the problem and write the solution.
     input_data = read_input(args.input)
-    log("Solving shift-creation:")
+    log("Solving shift-planning:")
     log(f"  - shifts-templates: {len(input_data.get('shifts', []))}")
     log(f"  - demands: {len(input_data.get('demands', []))}")
     log(f"  - max duration: {args.duration} seconds")
