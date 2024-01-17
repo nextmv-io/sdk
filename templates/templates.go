@@ -102,4 +102,32 @@ var (
 	// XpressRequirements is the requirements.txt file in the xpress template.
 	//go:embed xpress/requirements.txt
 	XpressRequirements string
+
+	// OrtoolsJavaManifest is the app manifest file in the ortools-java template.
+	//go:embed ortools-java/app.yaml
+	OrtoolsJavaManifest string
+	// OrtoolsJavaReadme is the README.md file in the ortools-java template.
+	//go:embed ortools-java/README.md
+	OrtoolsJavaReadme string
+	// OrtoolsJavaInput is the input.json file in the ortools-java template.
+	//go:embed ortools-java/input.json
+	OrtoolsJavaInput string
+	// OrtoolsJavaPom is the pom.xml file in the ortools-java template.
+	//go:embed ortools-java/pom.xml
+	OrtoolsJavaPom string
+	// OrtoolsJavaSrcInput is the Input.java file in the ortools-java template.
+	//go:embed ortools-java/src/main/java/com/nextmv/example/Input.java
+	OrtoolsJavaSrcInput string
+	// OrtoolsJavaSrcItem is the Item.java file in the ortools-java template.
+	//go:embed ortools-java/src/main/java/com/nextmv/example/Item.java
+	OrtoolsJavaSrcItem string
+	// OrtoolsJavaSrcMain is the Main.java file in the ortools-java template.
+	//go:embed ortools-java/src/main/java/com/nextmv/example/Main.java
+	OrtoolsJavaSrcMain string
+	// OrtoolsJavaSrcOptions is the Options.java file in the ortools-java template.
+	//go:embed ortools-java/src/main/java/com/nextmv/example/Options.java
+	OrtoolsJavaSrcOptions string
+	// OrtoolsJavaSrcOutput is the Output.java file in the ortools-java template.
+	//go:embed ortools-java/src/main/java/com/nextmv/example/Output.java
+	OrtoolsJavaSrcOutput string
 )
