@@ -42,10 +42,10 @@ func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr err
 		if err != nil {
 			log.Fatal(err)
 		}
+		if s.Properties == nil {
+			s.Properties = map[string]*humaSchema.Schema{}
+		}
 		if _, ok := s.Properties[RecordedOutputKey]; !ok {
-			if s.Properties == nil {
-				s.Properties = map[string]*humaSchema.Schema{}
-			}
 			s.Properties[RecordedOutputKey] = &humaSchema.Schema{}
 		}
 		// serialize s to json
