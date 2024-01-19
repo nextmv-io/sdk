@@ -18,6 +18,17 @@ type Maximum interface {
 	// Maximum returns the maximum expression which defines the maximum
 	// cumulative value that can be assigned to a vehicle type.
 	Maximum() VehicleTypeExpression
+
+	// PenaltyOffset returns the penalty offset. Penalty offset is used to
+	// offset the penalty. The penalty offset is added to the penalty if there
+	// is at least one violation.
+	PenaltyOffset() float64
+
+	// SetPenaltyOffset sets the penalty offset. Penalty offset is used to
+	// offset the penalty. The penalty offset is added to the penalty if there
+	// is at least one violation. The default penalty offset is 0.0 and it can
+	// be changed by this method and must be positive.
+	SetPenaltyOffset(penaltyOffset float64) error
 }
 
 // NewMaximum creates a new maximum constraint/objective. If you add it as a
