@@ -8,30 +8,30 @@ import (
 )
 
 var (
-	// MipMain is the main.go file in the mip template.
-	//go:embed mip/main.go
-	MipMain string
-	// MipInput is the input.json file in the mip template.
-	//go:embed mip/input.json
-	MipInput string
-	// MipReadme is the README.md file in the mip template.
-	//go:embed mip/README.md
-	MipReadme string
-	// MipManifest is the app.yaml file in the mip template.
-	//go:embed mip/app.yaml
-	MipManifest string
+	// KnapsackGoMain is the main.go file in the mip template.
+	//go:embed knapsack-gosdk/main.go
+	KnapsackGoMain string
+	// KnapsackGoInput is the input.json file in the mip template.
+	//go:embed knapsack-gosdk/input.json
+	KnapsackGoInput string
+	// KnapsackGoReadme is the README.md file in the mip template.
+	//go:embed knapsack-gosdk/README.md
+	KnapsackGoReadme string
+	// KnapsackGoManifest is the app.yaml file in the mip template.
+	//go:embed knapsack-gosdk/app.yaml
+	KnapsackGoManifest string
 
 	// NextrouteMain is the main.go file in the nextroute template.
-	//go:embed nextroute/main.go
+	//go:embed nextroute-gosdk/main.go
 	NextrouteMain string
 	// NextrouteInput is the input.json file in the nextroute template.
-	//go:embed nextroute/input.json
+	//go:embed nextroute-gosdk/input.json
 	NextrouteInput string
 	// NextrouteReadme is the README.md file in the nextroute template.
-	//go:embed nextroute/README.md
+	//go:embed nextroute-gosdk/README.md
 	NextrouteReadme string
 	// NextrouteManifest is the app.yaml file in the nextroute template.
-	//go:embed nextroute/app.yaml
+	//go:embed nextroute-gosdk/app.yaml
 	NextrouteManifest string
 
 	// KnapsackOrtoolsManifest is the app manifest file in the ortools template.

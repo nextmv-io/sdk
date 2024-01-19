@@ -1,0 +1,69 @@
+{
+  "solutions": [
+    {
+      "planned_shifts": [
+        {
+          "id": "welder_monday-early",
+          "shift_id": "welder",
+          "time_id": "monday-early",
+          "start_time": "2023-11-20T06:00:00+02:00",
+          "end_time": "2023-11-20T14:00:00+02:00",
+          "qualification": "welding",
+          "count": 2
+        },
+        {
+          "id": "welder_monday-late",
+          "shift_id": "welder",
+          "time_id": "monday-late",
+          "start_time": "2023-11-20T14:00:00+02:00",
+          "end_time": "2023-11-20T22:00:00+02:00",
+          "qualification": "welding",
+          "count": 2
+        },
+        {
+          "id": "welder_monday-night",
+          "shift_id": "welder",
+          "time_id": "monday-night",
+          "start_time": "2023-11-20T22:00:00+02:00",
+          "end_time": "2023-11-21T06:00:00+02:00",
+          "qualification": "welding",
+          "count": 1
+        },
+        {
+          "id": "normal_monday-early",
+          "shift_id": "normal",
+          "time_id": "monday-early",
+          "start_time": "2023-11-20T06:00:00+02:00",
+          "end_time": "2023-11-20T14:00:00+02:00",
+          "qualification": "",
+          "count": 8
+        },
+        {
+          "id": "normal_monday-late",
+          "shift_id": "normal",
+          "time_id": "monday-late",
+          "start_time": "2023-11-20T14:00:00+02:00",
+          "end_time": "2023-11-20T22:00:00+02:00",
+          "qualification": "",
+          "count": 8
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "result": {
+      "custom": {
+        "constraints": 6,
+        "provider": "cbc",
+        "status": "optimal",
+        "variables": 6
+      },
+      "duration": 0.038600921630859375,
+      "value": 1350.0
+    },
+    "run": {
+      "duration": 0.038600921630859375
+    },
+    "schema": "v1"
+  }
+}
