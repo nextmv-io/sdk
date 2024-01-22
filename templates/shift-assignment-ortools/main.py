@@ -6,7 +6,7 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any, Dict
+from typing import Any
 
 from ortools.linear_solver import pywraplp
 
@@ -59,7 +59,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
@@ -179,7 +179,7 @@ def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str,
                 if x_assign[(e["id"], s["id"])].solution_value() > 0.5
             ],
         }
-        active_workers = len(set(s["worker_id"] for s in schedule["assigned_shifts"]))
+        active_workers = len({s["worker_id"] for s in schedule["assigned_shifts"]})
         total_workers = len(workers)
 
     # Creates the statistics.
@@ -216,7 +216,7 @@ def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str,
     }
 
 
-def convert_input(input_data: Dict[str, Any]) -> tuple[list, list, dict]:
+def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
     """Converts the input data to the format expected by the model."""
     workers = input_data["workers"]
     shifts = input_data["shifts"]
@@ -278,12 +278,12 @@ def log(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def read_input(input_path) -> Dict[str, Any]:
+def read_input(input_path) -> dict[str, Any]:
     """Reads the input from stdin or a given input file."""
 
     input_file = {}
     if input_path:
-        with open(input_path, "r", encoding="utf-8") as file:
+        with open(input_path, encoding="utf-8") as file:
             input_file = json.load(file)
     else:
         input_file = json.load(sys.stdin)
