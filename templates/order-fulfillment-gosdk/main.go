@@ -35,7 +35,6 @@ func main() {
 
 type input struct {
 	Items                           []item                                     `json:"items"`
-	WeightCapacity                  int                                        `json:"weight_capacity"`
 	DistributionCenters             []distributionCenter                       `json:"distribution_centers"`
 	CarrierCapacities               map[string]map[string]float64              `json:"carrier_capacities"`
 	CarrierDeliveryCosts            map[string]map[string]map[string][]float64 `json:"carrier_delivery_costs"`
