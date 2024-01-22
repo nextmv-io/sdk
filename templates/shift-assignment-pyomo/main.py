@@ -206,7 +206,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "provider": provider,
                 "status": STATUS.get(results.solver.termination_condition, "unknown"),
                 "variables": model.nvariables(),
-                "constraints": solver.nconstraints(),
+                "constraints": model.nconstraints(),
                 "active_workers": active_workers,
                 "total_workers": total_workers,
             },
@@ -220,7 +220,6 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
-    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
     log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
     log(f"  - total workers: {statistics['result']['custom']['total_workers']}")

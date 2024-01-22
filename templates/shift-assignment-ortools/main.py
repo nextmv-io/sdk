@@ -205,7 +205,6 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
-    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
     log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
     log(f"  - total workers: {statistics['result']['custom']['total_workers']}")

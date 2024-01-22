@@ -213,7 +213,6 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
-    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
     log(f"  - planned shifts: {statistics['result']['custom']['planned_shifts']}")
     log(f"  - planned count: {statistics['result']['custom']['planned_count']}")
