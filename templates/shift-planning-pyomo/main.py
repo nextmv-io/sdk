@@ -2,18 +2,17 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any, List
+from typing import Any
 
 from pyomo.environ import (
     ConcreteModel,
-    Objective,
     Constraint,
-    Var,
     NonNegativeIntegers,
-    maximize,
-    minimize,
+    Objective,
     SolverFactory,
     TerminationCondition,
+    Var,
+    minimize,
 )
 
 # Status of the solver after optimizing.
@@ -192,8 +191,10 @@ def solve(
                 "shift_cost": model.shift_cost_track(),
                 "under_supply": model.underSupply() if has_solution and "under_supply_cost" in options else 0.0,
                 "over_supply": model.overSupply() if has_solution and "over_supply_cost" in options else 0.0,
-                "over_supply_cost": model.overSupply() * options["over_supply_cost"] if has_solution and "over_supply_cost" in options else 0.0,
-                "under_supply_cost": model.underSupply() * options["under_supply_cost"] if has_solution and "under_supply_cost" in options else 0.0,
+                "over_supply_cost": model.overSupply() * options["over_supply_cost"]
+                if has_solution and "over_supply_cost" in options else 0.0,
+                "under_supply_cost": model.underSupply() * options["under_supply_cost"]
+                if has_solution and "under_supply_cost" in options else 0.0,
             },
             "duration": results.solver.time,
             "value": model.obj(),
@@ -233,8 +234,8 @@ class UniqueQualificationDemandPeriod:
         start_time: datetime.datetime,
         end_time: datetime.datetime,
         qualification: str,
-        covering_shifts: List[str],
-        demands: List[str],
+        covering_shifts: list[str],
+        demands: list[str],
     ):
         """Creates a new unique time-period and qualification combination."""
 
@@ -250,7 +251,7 @@ class UniqueQualificationDemandPeriod:
         return f"{self.start_time.isoformat()}_{self.end_time.isoformat()}_{self.qualification}"
 
 
-def get_concrete_shifts(shifts: List[dict[str, Any]]) -> List[dict[str, Any]]:
+def get_concrete_shifts(shifts: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # Convert shift templates into concrete shifts. I.e., for every shift and every time
     # it can be planned, we create a concrete shift.
     # While most characteristics are given on the shift itself (except for the time), many
@@ -288,8 +289,8 @@ def get_concrete_shifts(shifts: List[dict[str, Any]]) -> List[dict[str, Any]]:
 
 
 def get_demand_coverage_periods(
-    concrete_shifts: List[dict[str, Any]], demands: List[dict[str, Any]]
-) -> List[UniqueQualificationDemandPeriod]:
+    concrete_shifts: list[dict[str, Any]], demands: list[dict[str, Any]]
+) -> list[UniqueQualificationDemandPeriod]:
     """
     Determines all unique time-periods with demand for a qualification. It returns all
     demands contributing and all shifts potentially covering this time period.
@@ -355,8 +356,8 @@ def get_demand_coverage_periods(
 def convert_data(
     input_data: dict[str, Any]
 ) -> tuple[
-    List[dict[str, Any]],
-    List[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
 ]:
     """Converts the input data into the format expected by the model."""
     shifts = input_data["shifts"]
