@@ -120,7 +120,7 @@ func computeAssignments(i input) []assignment {
 	return assignments
 }
 
-func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
+func solver(_ context.Context, i input, opts option) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
