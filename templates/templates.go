@@ -114,6 +114,22 @@ var (
 	//go:embed shift-assignment-ortools/requirements.txt
 	ShiftAssignmentOrtoolsRequirements string
 
+	// ShiftAssignmentPyomoManifest is the app manifest file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/app.yaml
+	ShiftAssignmentPyomoManifest string
+	// ShiftAssignmentPyomoMain is the main.py file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/main.py
+	ShiftAssignmentPyomoMain string
+	// ShiftAssignmentPyomoInput is the input.json file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/input.json
+	ShiftAssignmentPyomoInput string
+	// ShiftAssignmentPyomoReadme is the README.md file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/README.md
+	ShiftAssignmentPyomoReadme string
+	// ShiftAssignmentPyomoRequirements is the requirements.txt file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/requirements.txt
+	ShiftAssignmentPyomoRequirements string
+
 	// ShiftSchedulingMain is the main.go file in the
 	// shift-scheduling template.
 	//go:embed shift-scheduling/main.go
