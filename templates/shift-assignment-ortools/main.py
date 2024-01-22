@@ -6,7 +6,7 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any
+from typing import Any, Dict
 
 from ortools.linear_solver import pywraplp
 
@@ -41,6 +41,11 @@ def main() -> None:
         help="Max runtime duration (in seconds). Default is 30.",
         type=int,
     )
+    parser.add_argument(
+        "-provider",
+        default="SCIP",
+        help="Solver provider. Default is SCIP.",
+    )
     args = parser.parse_args()
 
     # Read input data, solve the problem and write the solution.
@@ -50,15 +55,14 @@ def main() -> None:
     log(f"  - workers: {len(input_data.get('workers', []))}")
     log(f"  - rules: {len(input_data.get('rules', []))}")
     log(f"  - max duration: {args.duration} seconds")
-    solution = solve(input_data, args.duration)
+    solution = solve(input_data, args.duration, args.provider)
     write_output(args.output, solution)
 
 
-def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
+def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Creates the solver.
-    provider = "SCIP"
     solver = pywraplp.Solver.CreateSolver(provider)
     solver.SetTimeLimit(duration * 1000)
 
@@ -146,6 +150,15 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
                 # The worker does not have the required qualification (worker cannot be assigned)
                 x_assign[(e["id"], s["id"])].SetBounds(0, 0)
 
+    # >>> Objective
+    objective = solver.Objective()
+    for e in workers:
+        for s in shifts:
+            pref = e["preferences"].get(s["id"], 0)
+            if pref > 0:
+                objective.SetCoefficient(x_assign[(e["id"], s["id"])], pref)
+    objective.SetMaximization()
+
     # Solves the problem.
     status = solver.Solve()
 
@@ -156,8 +169,8 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
         schedule = {
             "assigned_shifts": [
                 {
-                    "start": s["start_time"],
-                    "end": s["end_time"],
+                    "start_time": s["start_time"],
+                    "end_time": s["end_time"],
                     "worker_id": e["id"],
                     "shift_id": s["id"],
                 }
@@ -166,20 +179,17 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
                 if x_assign[(e["id"], s["id"])].solution_value() > 0.5
             ],
         }
-        schedule["number_assigned_workers"] = len(
-            {s["worker_id"] for s in schedule["assigned_shifts"]}
-        )
-        active_workers = schedule["number_assigned_workers"]
+        active_workers = len(set(s["worker_id"] for s in schedule["assigned_shifts"]))
         total_workers = len(workers)
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": solver.NumConstraints(),
                 "provider": provider,
                 "status": STATUS.get(status, "unknown"),
                 "variables": solver.NumVariables(),
+                "constraints": solver.NumConstraints(),
                 "active_workers": active_workers,
                 "total_workers": total_workers,
             },
@@ -195,6 +205,7 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
+    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
     log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
     log(f"  - total workers: {statistics['result']['custom']['total_workers']}")
@@ -205,7 +216,7 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     }
 
 
-def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
+def convert_input(input_data: Dict[str, Any]) -> tuple[list, list, dict]:
     """Converts the input data to the format expected by the model."""
     workers = input_data["workers"]
     shifts = input_data["shifts"]
@@ -223,6 +234,10 @@ def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
     for r in input_data["rules"]:
         r["min_shifts"] = r.get("min_shifts", 0)
         r["max_shifts"] = r.get("max_shifts", 1000)
+
+    # Add default values for workers
+    for e in workers:
+        e["preferences"] = e.get("preferences", {})
 
     # Merge availabilities of workers that start right where another one ends
     for e in workers:
@@ -252,7 +267,7 @@ def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
 def custom_serial(obj):
     """JSON serializer for objects not serializable by default serializer."""
 
-    if isinstance(obj, (datetime.datetime | datetime.date)):
+    if isinstance(obj, (datetime.datetime, datetime.date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
 
@@ -263,12 +278,12 @@ def log(message: str) -> None:
     print(message, file=sys.stderr)
 
 
-def read_input(input_path) -> dict[str, Any]:
+def read_input(input_path) -> Dict[str, Any]:
     """Reads the input from stdin or a given input file."""
 
     input_file = {}
     if input_path:
-        with open(input_path, encoding="utf-8") as file:
+        with open(input_path, "r", encoding="utf-8") as file:
             input_file = json.load(file)
     else:
         input_file = json.load(sys.stdin)

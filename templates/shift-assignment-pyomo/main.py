@@ -163,6 +163,15 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 # The worker does not have the required qualification (worker cannot be assigned)
                 model.x_assign[(e["id"], s["id"])]
 
+    # >>> Objective
+    model.objective = pyo.Objective(
+    expr=sum(
+        e["preferences"].get(s["id"], 0) * model.x_assign[(e["id"], s["id"])]
+        for e in workers for s in shifts
+    ),
+    sense=pyo.maximize
+)
+
     # Creates the solver.
     solver = pyo.SolverFactory(provider)  # Use an appropriate solver name
     solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration * 1000  # Pyomo time limit is in milliseconds
@@ -177,8 +186,8 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         schedule = {
             "assigned_shifts": [
                 {
-                    "start": s["start_time"],
-                    "end": s["end_time"],
+                    "start_time": s["start_time"],
+                    "end_time": s["end_time"],
                     "worker_id": e["id"],
                     "shift_id": s["id"],
                 }
@@ -187,20 +196,17 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 if model.x_assign[(e["id"], s["id"])].value > 0.5
             ],
         }
-        schedule["number_assigned_workers"] = len(
-            {s["worker_id"] for s in schedule["assigned_shifts"]}
-        )
-        active_workers = schedule["number_assigned_workers"]
+        active_workers = len(set(s["worker_id"] for s in schedule["assigned_shifts"]))
         total_workers = len(workers)
 
     # Creates the statistics.
     statistics = {
         "result": {
             "custom": {
-                "constraints": model.nconstraints(),
                 "provider": provider,
                 "status": STATUS.get(results.solver.termination_condition, "unknown"),
                 "variables": model.nvariables(),
+                "constraints": model.nconstraints(),
                 "active_workers": active_workers,
                 "total_workers": total_workers,
             },
@@ -214,6 +220,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
+    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
     log(f"  - active workers: {statistics['result']['custom']['active_workers']}")
     log(f"  - total workers: {statistics['result']['custom']['total_workers']}")
@@ -242,6 +249,10 @@ def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
     for r in input_data["rules"]:
         r["min_shifts"] = r.get("min_shifts", 0)
         r["max_shifts"] = r.get("max_shifts", 1000)
+
+    # Add default values for workers
+    for e in workers:
+        e["preferences"] = e.get("preferences", {})
 
     # Merge availabilities of workers that start right where another one ends
     for e in workers:

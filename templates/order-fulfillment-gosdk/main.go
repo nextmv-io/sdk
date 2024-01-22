@@ -1,4 +1,3 @@
-// package main holds the implementation of the order fulfillment model.
 package main
 
 import (

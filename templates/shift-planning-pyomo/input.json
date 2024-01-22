@@ -1,7 +1,7 @@
 {
   "options": {
-    "over_supply_cost": 100,
-    "under_supply_cost": 1000
+    "under_supply_cost": 1000,
+    "over_supply_cost": 100
   },
   "shifts": [
     {
@@ -59,7 +59,7 @@
     {
       "start_time": "2023-11-20T06:00:00+02:00",
       "end_time": "2023-11-20T14:00:00+02:00",
-      "count": 2,
+      "count": 3,
       "qualification": "welding"
     },
     {

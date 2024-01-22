@@ -68,55 +68,96 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
 
     # Prepare data
     shifts, demands = convert_data(input_data)
+    options = input_data.get("options", {})
 
     # Generate concrete shifts from shift templates.
     concrete_shifts = get_concrete_shifts(shifts)
 
     # Determine all unique time periods in which demands occur and the shifts covering them.
-    periods = get_coverage(concrete_shifts, demands)
+    periods = get_demand_coverage_periods(concrete_shifts, demands)
+
+    # Determine the time we need to cover.
+    required_hours = sum((p.end_time - p.start_time).seconds for p in periods) / 3600
 
     # Create integer variables indicating how many times a shift is planned.
     x_assign = {}
     for s in concrete_shifts:
-        x_assign[(s["id"])] = solver.IntVar(
+        x_assign[s["id"]] = solver.IntVar(
             s["min_workers"],
             s["max_workers"] if s["max_workers"] >= 0 else solver.infinity(),
             f'Planned_{s["id"]}',
         )
-    # x_over, x_under = {}, {}
-    # for p in periods:
-    #     x_over[p] = solver.IntVar(0, solver.infinity(), f"Over_{p}")
-    #     x_under[p] = solver.IntVar(0, solver.infinity(), f"Under_{p}")
+
+    # Create variables for tracking various costs.
+    if "under_supply_cost" in options:
+        x_under = {}
+        for p in periods:
+            x_under[p] = solver.NumVar(0, solver.infinity(), f"UnderSupply_{p}")
+        underSupply = solver.NumVar(0, solver.infinity(), "UnderSupply")
+    if "over_supply_cost" in options:
+        overSupply = solver.NumVar(0, solver.infinity(), "OverSupply")
+    shift_cost = solver.NumVar(0, solver.infinity(), "ShiftCost")
 
     # Objective function: minimize the cost of the planned shifts
-    solver.Minimize(
-        solver.Sum([x_assign[s["id"]] * s["cost"] for s in concrete_shifts])
-        # + solver.Sum(
-        #     [
-        #         x_over[p] * (p.end_time - p.start_time) * p.demands[0]["over_cost"]
-        #         for p in periods
-        #     ]
-        # )
-    )
-
-    # TODO: over-supply / under-supply costs
+    obj_expr = solver.Sum([0])
+    if "under_supply_cost" in options:
+        obj_expr += underSupply * options["under_supply_cost"]
+    if "over_supply_cost" in options:
+        obj_expr += overSupply * options["over_supply_cost"]
+    obj_expr += shift_cost
+    solver.Minimize(obj_expr)
 
     # >> Constraints
 
-    # We need to make sure that all demands are covered
+    # We need to make sure that all demands are covered (or track under supply).
     for p in periods:
+        expression = solver.Sum([x_assign[s["id"]] for s in p.covering_shifts])
+        if "under_supply_cost" in options:
+            expression += x_under[p]
         solver.Add(
-            solver.Sum([x_assign[s["id"]] for s in p.covering_shifts])
-            # + x_over[p]
-            # - x_under[p]
-            >= sum(d["count"] for d in p.demands),
+            expression == sum(d["count"] for d in p.demands),
             f"DemandCover_{p.start_time}_{p.end_time}_{p.qualification}",
         )
+
+    # Track under supply
+    if "under_supply_cost" in options:
+        solver.Add(
+            underSupply
+            == solver.Sum(
+                [
+                    x_under[p] * (p.end_time - p.start_time).seconds / 3600
+                    for p in periods
+                ]
+            ),
+            "UnderSupply",
+        )
+
+    # Track over supply
+    if "over_supply_cost" in options:
+        solver.Add(
+            overSupply
+            == solver.Sum(
+                [
+                    x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600
+                    for s in concrete_shifts
+                ]
+            )
+            - required_hours,
+            "OverSupply",
+        )
+
+    # Track shift cost
+    solver.Add(
+        shift_cost
+        == solver.Sum([x_assign[s["id"]] * s["cost"] for s in concrete_shifts]),
+        "ShiftCost",
+    )
 
     # Solves the problem.
     status = solver.Solve()
 
     # Convert to solution format.
+    has_solution = status in ANY_SOLUTION
     schedule = {
         "planned_shifts": [
             {
@@ -131,7 +172,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
             for s in concrete_shifts
             if x_assign[(s["id"])].solution_value() > 0.5
         ]
-        if status in ANY_SOLUTION
+        if has_solution
         else [],
     }
 
@@ -139,13 +180,31 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     statistics = {
         "result": {
             "custom": {
-                "constraints": solver.NumConstraints(),
                 "provider": provider,
                 "status": STATUS.get(status, "unknown"),
+                "has_solution": has_solution,
+                "constraints": solver.NumConstraints(),
                 "variables": solver.NumVariables(),
+                "planned_shifts": len(schedule["planned_shifts"]),
+                "planned_count": sum(s["count"] for s in schedule["planned_shifts"]),
+                "shift_cost": shift_cost.solution_value() if has_solution else 0,
+                "under_supply": underSupply.solution_value()
+                if has_solution and "under_supply_cost" in options
+                else 0.0,
+                "over_supply": overSupply.solution_value()
+                if has_solution and "over_supply_cost" in options
+                else 0.0,
+                "over_supply_cost": overSupply.solution_value()
+                * options["over_supply_cost"]
+                if has_solution and "over_supply_cost" in options
+                else 0.0,
+                "under_supply_cost": underSupply.solution_value()
+                * options["under_supply_cost"]
+                if has_solution and "under_supply_cost" in options
+                else 0.0,
             },
             "duration": solver.WallTime() / 1000,
-            "value": solver.Objective().Value() if status in ANY_SOLUTION else None,
+            "value": solver.Objective().Value() if has_solution else None,
         },
         "run": {
             "duration": solver.WallTime() / 1000,
@@ -154,7 +213,15 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
     log(f"  - status: {statistics['result']['custom']['status']}")
+    log(f"  - duration: {statistics['result']['duration']} seconds")
     log(f"  - value: {statistics['result']['value']}")
+    log(f"  - planned shifts: {statistics['result']['custom']['planned_shifts']}")
+    log(f"  - planned count: {statistics['result']['custom']['planned_count']}")
+    log(f"  - under supply: {statistics['result']['custom']['under_supply']}")
+    log(f"  - over supply: {statistics['result']['custom']['over_supply']}")
+    log(f"  - shift cost: {statistics['result']['custom']['shift_cost']}")
+    log(f"  - over supply cost: {statistics['result']['custom']['over_supply_cost']}")
+    log(f"  - under supply cost: {statistics['result']['custom']['under_supply_cost']}")
 
     return {
         "solutions": [schedule],
@@ -162,7 +229,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     }
 
 
-class UniqueTimeQualificationPeriod:
+class UniqueQualificationDemandPeriod:
     """
     Represents a unique time-period and qualification combination. It lists all demands
     causing the need for this qualification in this time period, as well as all shifts
@@ -184,6 +251,11 @@ class UniqueTimeQualificationPeriod:
         self.qualification = qualification
         self.covering_shifts = covering_shifts
         self.demands = demands
+
+    def __str__(self) -> str:
+        """Returns a string representation of this object."""
+
+        return f"{self.start_time.isoformat()}_{self.end_time.isoformat()}_{self.qualification}"
 
 
 def get_concrete_shifts(shifts: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -223,56 +295,65 @@ def get_concrete_shifts(shifts: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return concrete_shifts
 
 
-def get_coverage(
+def get_demand_coverage_periods(
     concrete_shifts: list[dict[str, Any]], demands: list[dict[str, Any]]
-) -> list[UniqueTimeQualificationPeriod]:
+) -> list[UniqueQualificationDemandPeriod]:
     """
-    Determines all unique time-period and qualification combinations. Furthermore, returns
-    the demands contributing to each one of them as well as the shifts covering them.
+    Determines all unique time-periods with demand for a qualification. It returns all
+    demands contributing and all shifts potentially covering this time period.
     """
 
-    # Determine all unique times
-    times = set()
+    # Group demands by their required qualification
+    demands_per_qualification = {}
     for d in demands:
-        times.add(d["start_time"])
-        times.add(d["end_time"])
-    for s in concrete_shifts:
-        times.add(s["start_time"])
-        times.add(s["end_time"])
-    times = sorted(times)
+        qualification = d["qualification"] if "qualification" in d else ""
+        if qualification not in demands_per_qualification:
+            demands_per_qualification[qualification] = []
+        demands_per_qualification[qualification].append(d)
 
-    # Create unique time periods
-    periods = []
-    for i in range(len(times) - 1):
-        start, end = times[i], times[i + 1]
-        # Determine demands contributing to this time period
-        associated_demands = [
-            d for d in demands if d["start_time"] <= start and d["end_time"] >= end
+    # Determine all concrete shifts covering a demand
+    shifts_per_qualification = {}
+    for q in demands_per_qualification:
+        shifts_per_qualification[q] = [
+            s for s in concrete_shifts if q == s["qualification"]
         ]
-        # Determine all qualification dimensions we need to consider, use empty string for
-        # no qualification required
-        qualifications = set()
-        for d in associated_demands:
-            qualifications.add(d["qualification"] if "qualification" in d else "")
-        # Create a unique time period for each qualification dimension
-        for q in qualifications:
+
+    # Determine all unique time periods
+    periods = []
+    for q in demands_per_qualification:
+        # Determine all unique times for this qualification
+        times = set()
+        for d in demands_per_qualification[q]:
+            times.add(d["start_time"])
+            times.add(d["end_time"])
+        for s in shifts_per_qualification[q]:
+            times.add(s["start_time"])
+            times.add(s["end_time"])
+        times = sorted(times)
+
+        # Create unique time periods
+        for i in range(len(times) - 1):
+            start, end = times[i], times[i + 1]
+            # Collect all shifts covering this time period and demands contributing to it
+            covering_shifts = [
+                s
+                for s in shifts_per_qualification[q]
+                if s["start_time"] <= start and s["end_time"] >= end
+            ]
+            contributing_demands = [
+                d
+                for d in demands_per_qualification[q]
+                if d["start_time"] <= start and d["end_time"] >= end
+            ]
+            if not any(contributing_demands):
+                continue
             periods.append(
-                UniqueTimeQualificationPeriod(
+                UniqueQualificationDemandPeriod(
                     start,
                     end,
                     q,
-                    [
-                        s
-                        for s in concrete_shifts
-                        if s["start_time"] <= start
-                        and s["end_time"] >= end
-                        and (q == "" or q == s["qualification"])
-                    ],
-                    [
-                        d
-                        for d in associated_demands
-                        if q == "" or q == d["qualification"]
-                    ],
+                    covering_shifts,
+                    contributing_demands,
                 )
             )
 
@@ -280,7 +361,7 @@ def get_coverage(
 
 
 def convert_data(
-    input_data: dict[str, Any]
+    input_data: dict[str, Any],
 ) -> tuple[
     list[dict[str, Any]],
     list[dict[str, Any]],
