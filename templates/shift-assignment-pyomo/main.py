@@ -211,7 +211,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "total_workers": total_workers,
             },
             "duration": results.solver.time,
-            "value": None,
+            "value": pyo.value(model.objective),
         },
         "run": {
             "duration": results.solver.time,
