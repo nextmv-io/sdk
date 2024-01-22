@@ -1,3 +1,4 @@
+// package main holds the implementation of a order fulfillment problem.
 package main
 
 import (
@@ -17,8 +18,6 @@ import (
 )
 
 // This is a Integer Programming model to solve the order fulfillment problem.
-// We created this model, by initializing the mip-knapsack template from the
-// nextmv CLI first and then modifying it to this specific use case.
 
 // To solve a mixed integer problem is to optimize a linear
 // objective function of many variables, subject to linear constraints.
@@ -44,7 +43,7 @@ type input struct {
 	CarrierDimensionalWeightFactors map[string]float64                         `json:"carrier_dimensional_weight_factors"`
 }
 
-// An item has a unique ID, an ordered quantity and a volume
+// An item has a unique ID, an ordered quantity and a volume.
 type item struct {
 	ItemID     string  `json:"item_id"`
 	Quantity   float64 `json:"quantity"`
@@ -58,13 +57,13 @@ func (i item) ID() string {
 }
 
 type distributionCenter struct {
-	DistributionCenterId string         `json:"distribution_center_id"`
+	DistributionCenterID string         `json:"distribution_center_id"`
 	Inventory            map[string]int `json:"inventory"`
 	HandlingCost         float64        `json:"handling_cost"`
 }
 
 func (i distributionCenter) ID() string {
-	return i.DistributionCenterId
+	return i.DistributionCenterID
 }
 
 type carrier struct {
@@ -73,7 +72,7 @@ type carrier struct {
 }
 
 func (i carrier) ID() string {
-	return i.DistributionCenter.DistributionCenterId + "-" + i.Carrier
+	return i.DistributionCenter.DistributionCenterID + "-" + i.Carrier
 }
 
 type assignment struct {
@@ -84,23 +83,18 @@ type assignment struct {
 }
 
 func (i assignment) ID() string {
-	return i.Item.ItemID + "-" + i.DistributionCenter.DistributionCenterId + "-" + i.Carrier + "-" + fmt.Sprint(i.Quantity)
+	return i.Item.ItemID + "-" + i.DistributionCenter.DistributionCenterID + "-" + i.Carrier + "-" + fmt.Sprint(i.Quantity)
 }
 
-type AssignmentOutput struct {
-	ItemId               string `json:"item"`
+type assignmentOutput struct {
+	ItemID               string `json:"item_id"`
 	Quantity             int    `json:"quantity"`
-	DistributionCenterId string `json:"distribution_center_id"`
-	CarrierId            string `json:"carrier_id"`
+	DistributionCenterID string `json:"distribution_center_id"`
+	CarrierID            string `json:"carrier_id"`
 }
 
 // The option for the solver.
 type option struct {
-	// A duration limit of 0 is treated as infinity. For cloud runs you need to
-	// set an explicit duration limit which is why it is currently set to 10s
-	// here in case no duration limit is set. For local runs there is no time
-	// limitation. If you want to make cloud runs for longer than 5 minutes,
-	// please contact: support@nextmv.io
 	Limits struct {
 		Duration time.Duration `json:"duration" default:"10s"`
 	} `json:"limits"`
@@ -110,7 +104,7 @@ func computeAssignments(i input) []assignment {
 	assignments := []assignment{}
 	for _, it := range i.Items {
 		for _, dc := range i.DistributionCenters {
-			for c := range i.CarrierCapacities[dc.DistributionCenterId] {
+			for c := range i.CarrierCapacities[dc.DistributionCenterID] {
 				for q := 0; q < int(it.Quantity); q++ {
 					newAssignment := assignment{
 						Item:               it,
@@ -142,7 +136,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	// create some helping data structures
 	distributionCenterCarrierCombinations := []carrier{}
 	for _, dc := range i.DistributionCenters {
-		for c := range i.CarrierCapacities[dc.DistributionCenterId] {
+		for c := range i.CarrierCapacities[dc.DistributionCenterID] {
 			newCarrier := carrier{
 				DistributionCenter: dc,
 				Carrier:            c,
@@ -151,28 +145,23 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		}
 	}
 
-	carrierList := []string{}
-	for c := range i.CarrierDimensionalWeightFactors {
-		carrierList = append(carrierList, c)
-	}
-
 	itemToAssignments := make(map[string][]assignment, len(i.Items))
 	distributionCenterToCarrierToAssignments := make(map[string]map[string][]assignment, len(i.DistributionCenters))
 	for _, as := range assignments {
-		itemId := as.Item.ItemID
-		_, ok := itemToAssignments[itemId]
+		itemID := as.Item.ItemID
+		_, ok := itemToAssignments[itemID]
 		if !ok {
-			itemToAssignments[itemId] = []assignment{}
+			itemToAssignments[itemID] = []assignment{}
 		}
-		itemToAssignments[itemId] = append(itemToAssignments[itemId], as)
-		if _, ok = distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId]; !ok {
-			distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId] = make(map[string][]assignment)
+		itemToAssignments[itemID] = append(itemToAssignments[itemID], as)
+		if _, ok = distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID]; !ok {
+			distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID] = make(map[string][]assignment)
 		}
-		if _, ok = distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId][as.Carrier]; !ok {
-			distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId][as.Carrier] = []assignment{}
+		if _, ok = distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID][as.Carrier]; !ok {
+			distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID][as.Carrier] = []assignment{}
 		}
-		distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId][as.Carrier] =
-			append(distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterId][as.Carrier], as)
+		distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID][as.Carrier] =
+			append(distributionCenterToCarrierToAssignments[as.DistributionCenter.DistributionCenterID][as.Carrier], as)
 	}
 
 	// x is a multimap representing a set of variables. It is initialized with a
@@ -185,59 +174,60 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		}, assignments)
 
 	// create another multimap which will hold the info about the number of
-	// cartons at each distribution center
+	// cartons at each distribution center.
 	cartons := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 1000.0)
 		}, distributionCenterCarrierCombinations)
 
 	// multimap for the total volume for each distribution center carrier
-	// combination
+	// combination.
 	volumes := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 1000.0)
 		}, distributionCenterCarrierCombinations)
 
 	// multimap for the total weight for each distribution center carrier
-	// combination
+	// combination.
 	weights := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 1000.0)
 		}, distributionCenterCarrierCombinations)
 
 	// multimap for the dimensional weights for each distribution center carrier
-	// combination
+	// combination.
 	dimensionalWeights := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 1000.0)
 		}, distributionCenterCarrierCombinations)
 
 	// multimap for the billable weights for each distribution center carrier
-	// combination
+	// combination.
 	billableWeights := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 1000.0)
 		}, distributionCenterCarrierCombinations)
 
-	// carrier -> distribution center -> weight tier index -> bool var
+	// carrier -> distribution center -> weight tier index -> bool var.
 	weightTierVariables := make(map[string]map[string]map[int]mip.Bool)
 	for _, combi := range distributionCenterCarrierCombinations {
-		_, ok := weightTierVariables[combi.DistributionCenter.DistributionCenterId]
+		_, ok := weightTierVariables[combi.DistributionCenter.DistributionCenterID]
 		if !ok {
-			weightTierVariables[combi.DistributionCenter.DistributionCenterId] = make(map[string]map[int]mip.Bool)
+			weightTierVariables[combi.DistributionCenter.DistributionCenterID] = make(map[string]map[int]mip.Bool)
 		}
-		_, ok = weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier]
+		_, ok = weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier]
 		if !ok {
-			weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier] = make(map[int]mip.Bool)
+			weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier] = make(map[int]mip.Bool)
 		}
-		weightTiersLength := len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"])
+		weightTiersLength :=
+			len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"])
 		for k := 0; k < weightTiersLength+1; k++ {
-			weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k] = m.NewBool()
+			weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k] = m.NewBool()
 		}
 	}
 
 	// multimap for the delivery costs for each distribution center carrier
-	// combination
+	// combination.
 	deliveryCosts := model.NewMultiMap(
 		func(...carrier) mip.Float {
 			return m.NewFloat(0.0, 100000.0)
@@ -246,7 +236,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	// We want to minimize the costs for fulfilling the order.
 	m.Objective().SetMinimize()
 
-	/* Fulfilment constraint -> ensure all items are assigned */
+	// Fulfilment constraint -> ensure all items are assigned.
 	for _, item := range i.Items {
 		fulfillment := m.NewConstraint(
 			mip.Equal,
@@ -257,13 +247,13 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		}
 	}
 
-	/* Carrier capacity constraint -> consider the carrier capacities in the
-	solution; carrier capacity is considered in volume */
-	for dcId, dc := range distributionCenterToCarrierToAssignments {
-		for cId, list := range dc {
+	// Carrier capacity constraint -> consider the carrier capacities in the
+	// solution; carrier capacity is considered in volume.
+	for dcID, dc := range distributionCenterToCarrierToAssignments {
+		for cID, list := range dc {
 			carrier := m.NewConstraint(
 				mip.LessThanOrEqual,
-				i.CarrierCapacities[dcId][cId],
+				i.CarrierCapacities[dcID][cID],
 			)
 			for _, as := range list {
 				carrier.NewTerm(as.Item.UnitVolume*as.Item.Quantity, x.Get(as))
@@ -272,7 +262,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	}
 
 	/* Inventory constraint -> Consider the inventory of each item at the
-	distribution centers */
+	distribution centers. */
 	for _, item := range i.Items {
 		for _, dc := range i.DistributionCenters {
 			inventory := m.NewConstraint(
@@ -280,7 +270,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 				float64(dc.Inventory[item.ItemID]),
 			)
 			for _, a := range itemToAssignments[item.ItemID] {
-				if a.DistributionCenter.DistributionCenterId == dc.DistributionCenterId {
+				if a.DistributionCenter.DistributionCenterID == dc.DistributionCenterID {
 					inventory.NewTerm(float64(a.Quantity), x.Get(a))
 				}
 			}
@@ -289,11 +279,11 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 
 	/* carton computation -> look at every distribution center and accumulate
 	the volume of all the assigned items, use the carton volume from the input to
-	compute the number of cartons that are necessary */
-	/* volume computation -> compute the volume for each distribution center -
-	carrier combination */
-	/* weight computation -> compute the weight for each
-	distribution center - carrier combination */
+	compute the number of cartons that are necessary.
+	volume computation -> compute the volume for each distribution center -
+	carrier combination.
+	weight computation -> compute the weight for each
+	distribution center - carrier combination. */
 	for _, dc := range distributionCenterCarrierCombinations {
 		cartonConstr := m.NewConstraint(
 			mip.Equal,
@@ -314,7 +304,8 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		weightConstr.NewTerm(-1, weights.Get(dc))
 
 		for _, a := range assignments {
-			if a.DistributionCenter.DistributionCenterId == dc.DistributionCenter.DistributionCenterId && a.Carrier == dc.Carrier {
+			if a.DistributionCenter.DistributionCenterID == dc.DistributionCenter.DistributionCenterID &&
+				a.Carrier == dc.Carrier {
 				cartonConstr.NewTerm(a.Item.UnitVolume*float64(a.Quantity)*1/i.CartonVolume, x.Get(a))
 				volumeConstr.NewTerm(a.Item.UnitVolume*float64(a.Quantity), x.Get(a))
 				weightConstr.NewTerm(a.Item.UnitWeight*float64(a.Quantity), x.Get(a))
@@ -324,10 +315,10 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 
 	/* dimensional weight computation -> by using the carrier specific
 	dimensional weight factor, the dimensional weight of each shipnode carrier
-	combination is determined */
-	/* billable weight computation -> computes the billable weight for each
+	combination is determined.
+	billable weight computation -> computes the billable weight for each
 	distribution center carrier combination, which is the max between the actual
-	weight and the dimensional weight of that combination */
+	weight and the dimensional weight of that combination. */
 	for _, combi := range distributionCenterCarrierCombinations {
 		dimWeightConstr := m.NewConstraint(
 			mip.Equal,
@@ -338,7 +329,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 
 		/* Due to the fact that the billable weight will be used in the
 		objective function and we're trying to minimize cost, the billable weight will
-		be either set to the actual weight or to the dimensional weight */
+		be either set to the actual weight or to the dimensional weight. */
 		billableWeightConstr1 := m.NewConstraint(
 			mip.GreaterThanOrEqual,
 			0.0,
@@ -354,30 +345,36 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		billableWeightConstr2.NewTerm(-1.0, dimensionalWeights.Get(combi))
 	}
 
-	/* only one weight tier -> for each carrier, only a single weight tier can
-	be selected*/
+	/* Only one weight tier -> for each carrier, only a single weight tier can
+	be selected. */
 	for _, dc := range i.DistributionCenters {
 		for c := range i.CarrierDimensionalWeightFactors {
 			tiersConstraint := m.NewConstraint(mip.Equal, 1.0)
-			weightTiersLength := len(i.CarrierDeliveryCosts[dc.DistributionCenterId][c]["weight_tiers"])
+			weightTiersLength := len(i.CarrierDeliveryCosts[dc.DistributionCenterID][c]["weight_tiers"])
 			for k := 0; k < weightTiersLength+1; k++ {
-				tiersConstraint.NewTerm(1.0, weightTierVariables[dc.DistributionCenterId][c][k])
+				tiersConstraint.NewTerm(1.0, weightTierVariables[dc.DistributionCenterID][c][k])
 			}
 		}
 	}
 
-	/* weight tier upper limit -> used to determine actual weight tier of a
+	/* Weight tier upper limit -> used to determine actual weight tier of a
 	distribution center carrier combination*/
 	for _, combi := range distributionCenterCarrierCombinations {
 		upperConstraint := m.NewConstraint(mip.LessThanOrEqual, 0.0)
 		upperConstraint.NewTerm(1, billableWeights.Get(combi))
-		weightTiersLength := len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"])
+		weightTiersLength :=
+			len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"])
 		for k := 0; k < weightTiersLength+1; k++ {
 			if k == weightTiersLength {
-				upperConstraint.NewTerm(-totalWeight, weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				upperConstraint.NewTerm(
+					-totalWeight,
+					weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k],
+				)
 			} else {
-				upperConstraint.NewTerm(-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"][k],
-					weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				upperConstraint.NewTerm(
+					-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"][k],
+					weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k],
+				)
 			}
 		}
 	}
@@ -386,13 +383,16 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	distribution center carrier combination */
 	for _, combi := range distributionCenterCarrierCombinations {
 		lowerConstraint := m.NewConstraint(mip.LessThanOrEqual, 0.0)
-		weightTiersLength := len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"])
+		weightTiersLength :=
+			len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"])
 		for k := 0; k < weightTiersLength+1; k++ {
 			if k == 0 {
-				lowerConstraint.NewTerm(0, weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				lowerConstraint.NewTerm(0, weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k])
 			} else {
-				lowerConstraint.NewTerm(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"][k-1],
-					weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				lowerConstraint.NewTerm(
+					i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"][k-1],
+					weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k],
+				)
 			}
 		}
 		lowerConstraint.NewTerm(-1, billableWeights.Get(combi))
@@ -403,14 +403,19 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	for _, combi := range distributionCenterCarrierCombinations {
 		costsConstraint := m.NewConstraint(mip.Equal, 0.0)
 		costsConstraint.NewTerm(1, deliveryCosts.Get(combi))
-		weightTiersLength := len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_tiers"])
+		weightTiersLength :=
+			len(i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_tiers"])
 		for k := 0; k < weightTiersLength+1; k++ {
 			if k == weightTiersLength {
-				costsConstraint.NewTerm(-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_rates"][k-1],
-					weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				costsConstraint.NewTerm(
+					-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_rates"][k-1],
+					weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k],
+				)
 			} else {
-				costsConstraint.NewTerm(-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterId][combi.Carrier]["weight_rates"][k],
-					weightTierVariables[combi.DistributionCenter.DistributionCenterId][combi.Carrier][k])
+				costsConstraint.NewTerm(
+					-i.CarrierDeliveryCosts[combi.DistributionCenter.DistributionCenterID][combi.Carrier]["weight_rates"][k],
+					weightTierVariables[combi.DistributionCenter.DistributionCenterID][combi.Carrier][k],
+				)
 			}
 		}
 	}
@@ -425,22 +430,22 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		m.Objective().NewTerm(combination.DistributionCenter.HandlingCost, cartons.Get(combination)) // handling costs
 	}
 
-	// We create a solver using the 'highs' provider
+	// We create a solver using the 'highs' provider.
 	solver, err := mip.NewSolver("highs", m)
 	if err != nil {
 		return schema.Output{}, err
 	}
 
-	// We create the solve options we will use
+	// We create the solve options we will use.
 	solveOptions := mip.SolveOptions{}
 
-	// Limit the solve to a maximum duration
+	// Limit the solve to a maximum duration.
 	solveOptions.Duration = opts.Limits.Duration
 
-	// Set the relative gap to 0% (highs' default is 5%)
+	// Set the relative gap to 0% (highs' default is 5%).
 	solveOptions.MIP.Gap.Relative = 0.0
 
-	// Set verbose level to see a more detailed output
+	// Set verbose level to see a more detailed output.
 	solveOptions.Verbosity = mip.Off
 
 	solution, err := solver.Solve(solveOptions)
@@ -448,7 +453,7 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 		return schema.Output{}, err
 	}
 
-	output, err := format(solution, i, x, assignments,
+	output, err := format(solution, x, assignments,
 		distributionCenterCarrierCombinations, cartons, volumes,
 		dimensionalWeights, weights, billableWeights,
 		weightTierVariables, deliveryCosts,
@@ -460,8 +465,8 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	return output, nil
 }
 
-type OflSolution struct {
-	Assignments        []AssignmentOutput     `json:"assignments"`
+type oflSolution struct {
+	Assignments        []assignmentOutput     `json:"assignments"`
 	Cartons            map[string]float64     `json:"cartons"`
 	Status             string                 `json:"status"`
 	Value              float64                `json:"value"`
@@ -473,14 +478,13 @@ type OflSolution struct {
 	DeliveryCosts      map[string]float64     `json:"delivery_costs"`
 }
 
-type CustomResultStatistics struct {
+type customResultStatistics struct {
 	DeliveryCosts float64 `json:"delivery_costs"`
 	HandlingCosts float64 `json:"handling_costs"`
 }
 
 func format(
 	solution mip.Solution,
-	i input,
 	x model.MultiMap[mip.Bool, assignment],
 	assignments []assignment,
 	carriers []carrier,
@@ -492,7 +496,6 @@ func format(
 	weightTierVariables map[string]map[string]map[int]mip.Bool,
 	deliveryCosts model.MultiMap[mip.Float, carrier],
 ) (output schema.Output, err error) {
-
 	o := schema.Output{}
 
 	o.Version = schema.Version{
@@ -503,11 +506,11 @@ func format(
 	result := statistics.Result{}
 	run := statistics.Run{}
 
-	t := round(solution.RunTime().Seconds(), 2)
+	t := round(solution.RunTime().Seconds())
 	run.Duration = &t
 	result.Duration = &t
 
-	oflSolution := OflSolution{}
+	oflSolution := oflSolution{}
 	oflSolution.Status = "infeasible"
 
 	if solution != nil && solution.HasValues() {
@@ -517,18 +520,18 @@ func format(
 			oflSolution.Status = "suboptimal"
 		}
 
-		oflSolution.Value = round(solution.ObjectiveValue(), 2)
-		val := statistics.Float64(round(solution.ObjectiveValue(), 2))
+		oflSolution.Value = round(solution.ObjectiveValue())
+		val := statistics.Float64(round(solution.ObjectiveValue()))
 		result.Value = &val
 
-		assignmentList := make([]AssignmentOutput, 0)
+		assignmentList := make([]assignmentOutput, 0)
 		for _, assignment := range assignments {
 			if solution.Value(x.Get(assignment)) > 0.5 {
-				ao := AssignmentOutput{
-					ItemId:               assignment.Item.ItemID,
+				ao := assignmentOutput{
+					ItemID:               assignment.Item.ItemID,
 					Quantity:             assignment.Quantity,
-					DistributionCenterId: assignment.DistributionCenter.DistributionCenterId,
-					CarrierId:            assignment.Carrier,
+					DistributionCenterID: assignment.DistributionCenter.DistributionCenterID,
+					CarrierID:            assignment.Carrier,
 				}
 				assignmentList = append(assignmentList, ao)
 			}
@@ -558,23 +561,23 @@ func format(
 			totalDeliveryCosts += delc
 			totalHandlingCosts += handc
 
-			oflSolution.Cartons[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = cs
-			oflSolution.Volumes[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = v
-			oflSolution.DimensionalWeights[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = dw
-			oflSolution.Weights[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = w
-			oflSolution.BillableWeights[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = bw
-			oflSolution.DeliveryCosts[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = delc
-			oflSolution.WeightTiers[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier] = make(map[int]int)
-			for key, tier := range weightTierVariables[c.DistributionCenter.DistributionCenterId][c.Carrier] {
-				oflSolution.WeightTiers[c.DistributionCenter.DistributionCenterId+"-"+c.Carrier][key] = int(solution.Value(tier))
+			oflSolution.Cartons[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = cs
+			oflSolution.Volumes[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = v
+			oflSolution.DimensionalWeights[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = dw
+			oflSolution.Weights[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = w
+			oflSolution.BillableWeights[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = bw
+			oflSolution.DeliveryCosts[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = delc
+			oflSolution.WeightTiers[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier] = make(map[int]int)
+			for key, tier := range weightTierVariables[c.DistributionCenter.DistributionCenterID][c.Carrier] {
+				oflSolution.WeightTiers[c.DistributionCenter.DistributionCenterID+"-"+c.Carrier][key] = int(solution.Value(tier))
 			}
 		}
 
 		o.Solutions = append(o.Solutions, oflSolution)
 
-		customResultStatistics := CustomResultStatistics{
-			DeliveryCosts: round(totalDeliveryCosts, 2),
-			HandlingCosts: round(totalHandlingCosts, 2),
+		customResultStatistics := customResultStatistics{
+			DeliveryCosts: round(totalDeliveryCosts),
+			HandlingCosts: round(totalHandlingCosts),
 		}
 
 		result.Custom = customResultStatistics
@@ -582,7 +585,6 @@ func format(
 		stats.Result = &result
 		stats.Run = &run
 		o.Statistics = stats
-
 	} else {
 		return output, errors.New("no solution found")
 	}
@@ -590,7 +592,8 @@ func format(
 	return o, nil
 }
 
-func round(value float64, precision int) float64 {
+func round(value float64) float64 {
+	precision := 2
 	ratio := math.Pow(10, float64(precision))
 	round := math.Round(value*ratio) / ratio
 
