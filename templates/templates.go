@@ -151,6 +151,23 @@ var (
 	//go:embed shift-scheduling/app.yaml
 	ShiftSchedulingManifest string
 
+	// OrderFulfillmentMain is the main.go file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/main.go
+	OrderFulfillmentMain string
+	// OrderFulfillmentInput is the input.json file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/input.json
+	OrderFulfillmentInput string
+	// OrderFulfillmentReadme is the README.md file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/README.md
+	OrderFulfillmentReadme string
+	// OrderFulfillmentManifest is the app.yaml file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/app.yaml
+	OrderFulfillmentManifest string
+
 	// XpressManifest is the app manifest file in the xpress template.
 	//go:embed xpress/app.yaml
 	XpressManifest string
