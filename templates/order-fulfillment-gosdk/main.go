@@ -432,20 +432,16 @@ func solver(ctx context.Context, i input, opts option) (schema.Output, error) {
 	}
 
 	// We create the solve options we will use
-	solveOptions := mip.NewSolveOptions()
+	solveOptions := mip.SolveOptions{}
 
 	// Limit the solve to a maximum duration
-	if err = solveOptions.SetMaximumDuration(opts.Limits.Duration); err != nil {
-		return schema.Output{}, err
-	}
+	solveOptions.Duration = opts.Limits.Duration
 
 	// Set the relative gap to 0% (highs' default is 5%)
-	if err = solveOptions.SetMIPGapRelative(0); err != nil {
-		return schema.Output{}, err
-	}
+	solveOptions.MIP.Gap.Relative = 0.0
 
 	// Set verbose level to see a more detailed output
-	solveOptions.SetVerbosity(mip.Off)
+	solveOptions.Verbosity = mip.Off
 
 	solution, err := solver.Solve(solveOptions)
 	if err != nil {
