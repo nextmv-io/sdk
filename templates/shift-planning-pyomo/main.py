@@ -2,9 +2,9 @@ import argparse
 import datetime
 import json
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
-from pyomo.environ import ConcreteModel, Var, Constraint, SolverFactory, Objective, minimize, NonNegativeReals
+from pyomo.environ import ConcreteModel, Constraint, NonNegativeReals, Objective, SolverFactory, Var, minimize
 
 # Duration parameter for the solver.
 SUPPORTED_PROVIDER_DURATIONS = {
@@ -16,7 +16,7 @@ def main() -> None:
     """Entry point for the app."""
 
     parser = argparse.ArgumentParser(
-        description="Solve shift-assignment with OR-Tools MIP."
+        description="Solve shift-planning with Pyomo."
     )
     parser.add_argument(
         "-input",
@@ -52,7 +52,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     shifts, demands = convert_data(input_data)
     options = input_data.get("options", {})
 
@@ -67,7 +67,14 @@ def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str,
     # Create variables
     x_assign = {}
     for s in concrete_shifts:
-        x_assign[s["id"]] = Var(within=NonNegativeReals, bounds=(s["min_workers"], s["max_workers"] if s["max_workers"] >= 0 else None), name=f'Planned_{s["id"]}')
+        x_assign[s["id"]] = Var(
+            within=NonNegativeReals,
+            bounds=(
+                    s["min_workers"],
+                    s["max_workers"] if s["max_workers"] >= 0 else None
+                ),
+            name=f'Planned_{s["id"]}'
+        )
     if "under_supply_cost" in options:
         x_under = {}
         for p in periods:
@@ -81,24 +88,41 @@ def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str,
     required_hours = sum((p.end_time - p.start_time).seconds / 3600 for p in periods)
 
     # Objective function
-    obj_expr = sum(0 for _ in x_assign) + sum(underSupply * options["under_supply_cost"] for underSupply in x_under.values()) if "under_supply_cost" in options else 0
+    obj_expr = sum(0 for _ in x_assign)
+    obj_expr += sum(
+        underSupply * options["under_supply_cost"]
+        for underSupply in x_under.values()) if "under_supply_cost" in options else 0
     obj_expr += overSupply * options["over_supply_cost"] if "over_supply_cost" in options else 0
     obj_expr += shift_cost
     model.objective = Objective(expr=obj_expr, sense=minimize)
 
     # Constraints
     for p in periods:
-        expression = sum(x_assign[s["id"]] for s in p.covering_shifts) + x_under[p] if "under_supply_cost" in options else 0
-        model.add_component(f'DemandCover_{p.start_time}_{p.end_time}_{p.qualification}', Constraint(expr=expression == sum(d["count"] for d in p.demands)))
+        expression = sum(x_assign[s["id"]]
+                         for s in p.covering_shifts) + x_under[p] if "under_supply_cost" in options else 0
+        model.add_component(
+            f'DemandCover_{p.start_time}_{p.end_time}_{p.qualification}',
+            Constraint(expr=expression == sum(d["count"] for d in p.demands))
+        )
 
     if "under_supply_cost" in options:
         for p in x_under:
-            model.add_component(f'UnderSupply_{p}', Constraint(expr=x_under[p] * (p.end_time - p.start_time).seconds / 3600 == x_under[p]))
+            model.add_component(
+                f'UnderSupply_{p}',
+                Constraint(expr=x_under[p] * (p.end_time - p.start_time).seconds / 3600 == x_under[p]))
 
     if "over_supply_cost" in options:
-        model.add_component('OverSupply', Constraint(expr=overSupply == sum(x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600 for s in concrete_shifts) - required_hours))
+        model.add_component(
+            'OverSupply',
+            Constraint(expr=overSupply == sum(
+                x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600
+                for s in concrete_shifts) - required_hours)
+            )
 
-    model.add_component('ShiftCost', Constraint(expr=shift_cost == sum(x_assign[s["id"]] * s["cost"] for s in concrete_shifts)))
+    model.add_component(
+        'ShiftCost',
+        Constraint(expr=shift_cost == sum(x_assign[s["id"]] * s["cost"] for s in concrete_shifts))
+    )
 
     # Creates the solver.
     solver = SolverFactory(provider)
@@ -139,10 +163,16 @@ def solve(input_data: Dict[str, Any], duration: int, provider: str) -> Dict[str,
                 "planned_shifts": len(schedule["planned_shifts"]),
                 "planned_count": sum(s["count"] for s in schedule["planned_shifts"]),
                 "shift_cost": shift_cost.value if has_solution else 0,
-                "under_supply": sum(x_under[p].value * (p.end_time - p.start_time).seconds / 3600 for p in x_under.keys()) if has_solution and "under_supply_cost" in input_data.get("options", {}) else 0.0,
-                "over_supply": overSupply.value if has_solution and "over_supply_cost" in input_data.get("options", {}) else 0.0,
-                "over_supply_cost": overSupply.value * input_data["options"]["over_supply_cost"] if has_solution and "over_supply_cost" in input_data.get("options", {}) else 0.0,
-                "under_supply_cost": sum(x_under[p].value for p in x_under.keys()) * input_data["options"]["under_supply_cost"] if has_solution and "under_supply_cost" in input_data.get("options", {}) else 0.0,
+                "under_supply": sum(
+                    x_under[p].value * (p.end_time - p.start_time).seconds / 3600
+                    for p in x_under.keys()) if has_solution and "under_supply_cost" in options else 0.0,
+                "over_supply": overSupply.value if has_solution and "over_supply_cost" in options else 0.0,
+                "over_supply_cost": overSupply.value * options["over_supply_cost"]
+                if has_solution and "over_supply_cost" in options else 0.0,
+                "under_supply_cost": sum(
+                    x_under[p].value
+                    for p in x_under.keys()) * options["under_supply_cost"]
+                    if has_solution and "under_supply_cost" in options else 0.0,
             },
             "duration": results.solver.wallclock_time / 1000,
             "value": model.objective.expr() if has_solution else None,
