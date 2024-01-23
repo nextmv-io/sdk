@@ -66,6 +66,22 @@ var (
 	//go:embed knapsack-pyomo/requirements.txt
 	KnapsackPyomoRequirements string
 
+	// RoutingOrtoolsManifest is the app manifest file in the pyomo template.
+	//go:embed routing-ortools/app.yaml
+	RoutingOrtoolsManifest string
+	// RoutingOrtoolsMain is the main.py file in the pyomo template.
+	//go:embed routing-ortools/main.py
+	RoutingOrtoolsMain string
+	// RoutingOrtoolsInput is the input.json file in the pyomo template.
+	//go:embed routing-ortools/input.json
+	RoutingOrtoolsInput string
+	// RoutingOrtoolsReadme is the README.md file in the pyomo template.
+	//go:embed routing-ortools/README.md
+	RoutingOrtoolsReadme string
+	// RoutingOrtoolsRequirements is the requirements.txt file in the pyomo template.
+	//go:embed routing-ortools/requirements.txt
+	RoutingOrtoolsRequirements string
+
 	// ShiftPlanningOrtoolsManifest is the app manifest file in the shift-planning template.
 	//go:embed shift-planning-ortools/app.yaml
 	ShiftPlanningOrtoolsManifest string
