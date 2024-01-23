@@ -1,8 +1,8 @@
 # Shift planning with Pyomo
 
-This is an example of how to use [Pyomo][pyomo] to solve a shift planning problem. The
-goal is to select/plan a number of shifts according to a given demand and
-qualification that will later be filled by employees.
+This is an example of how to use [Pyomo][pyomo] to solve a shift planning
+problem. The goal is to select/plan a number of shifts according to a given
+demand and qualification that will later be filled by employees.
 
 The most important files created are `main.py` and `input.json`.
 
