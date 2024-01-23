@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"time"
 
 	"github.com/nextmv-io/sdk"
 	"github.com/nextmv-io/sdk/mip"
@@ -92,11 +91,9 @@ type assignmentOutput struct {
 	CarrierID            string `json:"carrier_id"`
 }
 
-// The option for the solver.
-type option struct {
-	Limits struct {
-		Duration time.Duration `json:"duration" default:"10s"`
-	} `json:"limits"`
+// The options for the solver.
+type options struct {
+	Solve mip.SolveOptions `json:"solve,omitempty"`
 }
 
 func computeAssignments(i input) []assignment {
@@ -119,7 +116,7 @@ func computeAssignments(i input) []assignment {
 	return assignments
 }
 
-func solver(_ context.Context, i input, opts option) (schema.Output, error) {
+func solver(_ context.Context, i input, opts options) (schema.Output, error) {
 	// We start by creating a MIP model.
 	m := mip.NewModel()
 
@@ -439,8 +436,7 @@ func solver(_ context.Context, i input, opts option) (schema.Output, error) {
 	solveOptions := mip.SolveOptions{}
 
 	// Limit the solve to a maximum duration.
-	solveOptions.Duration = opts.Limits.Duration
-
+	solveOptions.Duration = opts.Solve.Duration
 	// Set the relative gap to 0% (highs' default is 5%).
 	solveOptions.MIP.Gap.Relative = 0.0
 
