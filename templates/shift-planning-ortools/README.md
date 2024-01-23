@@ -1,29 +1,31 @@
-# Shift creation with OR-Tools
+# Shift planning with OR-Tools
 
-This is an example of how to use OR-Tools to solve a shift creation problem. The
-goal is to select/create a number of shifts according to a given demand that
-will later be filled by employees.
+This is an example of how to use [OR-Tools][or-tools] to solve a shift planning problem. The
+goal is to select/plan a number of shifts according to a given demand and
+qualification that will later be filled by employees.
+
+The most important files created are `main.py` and `input.json`.
+
+* `main.py` implements a MIP knapsack solver.
+* `input.json` is a sample input file.
 
 ## Usage
 
-```bash
-python main.py -input input.json -output output.json -duration 30
-```
+Follow these steps to run locally.
 
-## Model formulation
+1. Make sure that all the required packages are installed:
 
-TODO: add model formulation
+    ```bash
+    pip3 install -r requirements.txt
+    ```
 
-### Variables
+1. Run the command below to check that everything works as expected:
 
-- $x_{s,t}$: number of times
+    ```bash
+    python3 main.py -input input.json -output output.json -duration 30
+    ```
 
-### Parameters
+1. A file `output.json` should have been created with the optimal knapsack
+   solution.
 
-- $p_{i,j}$: preference of employee $i$ for shift $j$
-- $d_{j}$: number of employees needed for shift $j$
-- $m_{i}$: max number of shifts employee $i$ can work
-
-- Each employee has a max
-
-This sentence uses `$` delimiters to show math inline:  $\sqrt{3x-1}+(1+x)^2$
+[or-tools]: https://developers.google.com/optimization

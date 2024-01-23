@@ -16,15 +16,6 @@ import (
 	"github.com/nextmv-io/sdk/run/statistics"
 )
 
-// This is a Integer Programming model to solve the order fulfillment problem.
-
-// To solve a mixed integer problem is to optimize a linear
-// objective function of many variables, subject to linear constraints.
-// The order fulfillment problem is a typical decision problem in e-commerce and
-// the retailer industry. It needs to be determined which distribution centers
-// are used and which carriers should be considered for the transportation of
-// the order to the customer. Of course these are not all aspects of the order
-// fulfillment problem, but these decisions will be the focus of this model.
 func main() {
 	err := run.CLI(solver).Run(context.Background())
 	if err != nil {

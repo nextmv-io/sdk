@@ -1,23 +1,12 @@
 # Nextmv MIP knapsack template
 
-This template demonstrates how to solve a Mixed Integer Programming problem
-using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS). To run
-this beta template, please contact support@nextmv.io for access to the Nextmv
-HiGHS interface.
+This is a Integer Programming model to solve the order fulfillment problem.
 
-To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
-function of many variables, subject to linear constraints. We demonstrate this
-by solving the knapsack problem.
-
-Knapsack is a classic combinatorial optimization problem. Given a collection of
-items with a value and weight, our objective is to maximize the total value
-without exceeding the weight capacity of the knapsack.
-
-The input defines a number of items which have an id to identify the item, a
-weight and a value. There is also a volume, which is currently unused in the
-template but can be used to extend the template to a multi-dimensional knapsack.
-Additionally there are two capacities, one for weight and one for volume (again,
-the latter one is not used in this template).
+The order fulfillment problem is a typical decision problem in e-commerce and
+the retailer industry. It needs to be determined which distribution centers
+are used and which carriers should be considered for the transportation of
+the order to the customer. Of course these are not all aspects of the order
+fulfillment problem, but these decisions will be the focus of this model.
 
 The most important files created are `main.go` and `input.json`.
 
@@ -29,7 +18,7 @@ Run the command below to see if everything works as expected:
 
 ```bash
 nextmv sdk run . -- -runner.input.path input.json \
-  -runner.output.path output.json -limits.duration 10s
+  -runner.output.path output.json -solve.duration 10s
 ```
 
 A file `output.json` should have been created with the optimal knapsack
