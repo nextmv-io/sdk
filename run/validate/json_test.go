@@ -41,6 +41,21 @@ func TestNextrouteAdditionalAttributeInput(t *testing.T) {
 	}
 }
 
+// TestNextrouteRecordedOutput validates the input template against the schema.
+// It contains a pre-recorded output and therefore schema validation should
+// succeed.
+func TestNextrouteRecordedOutput(t *testing.T) {
+	// read input file
+	file, err := os.Open("testdata/nextroute_input_recorded_output.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = validate.JSON[schema.Input](nil)(context.Background(), file)
+	if err != nil {
+		t.Fatal("did not expect a validation error, got:", err)
+	}
+}
+
 // TestNextrouteMissingFieldInput validates the input template against the
 // schema.
 // The input is missing a required field and therefore schema validation should
