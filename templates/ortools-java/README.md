@@ -19,12 +19,11 @@ After that you can run the `main.jar` file with the following command:
 java -jar main.jar --input input.json
 ```
 
-You can also push the `main.jar` file to Nextmv platform and run it there. Take
-a look at the `app.yml` file to see how the `main.jar` file is referenced.
-
-```bash
-nextmv app push -a <app-name>
-```
+You can also push the `main.jar` file to the Nextmv Cloud and run it remotely.
+Take a look at the documentation on how to
+[deploy](https://www.nextmv.io/docs/platform/deploy-app/custom-apps) and
+[run](https://www.nextmv.io/docs/platform/run-app-remotely/nextmv-cli) an app in
+the Nextmv Cloud.
 
 ## References
 
