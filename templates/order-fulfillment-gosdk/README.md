@@ -1,4 +1,4 @@
-# Nextmv MIP knapsack template
+# Nextmv order fulfillment template
 
 This is a Integer Programming model to solve the order fulfillment problem.
 
