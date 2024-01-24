@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import logging
 import sys
 from typing import Any
 
@@ -68,6 +69,9 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
             f"Unsupported provider: {provider}. The supported providers are: "
             f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
         )
+
+    # Silence all Pyomo logging.
+    logging.getLogger("pyomo.core").setLevel(logging.ERROR)
 
     # Prepare data
     workers, shifts, rules_per_worker = convert_input(input_data)

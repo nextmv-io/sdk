@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import logging
 import sys
 from typing import Any
 
@@ -65,6 +66,9 @@ def main() -> None:
 def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
+    # Silence all Pyomo logging.
+    logging.getLogger("pyomo.core").setLevel(logging.ERROR)
+
     # Create the Pyomo model
     model = ConcreteModel()
 
@@ -83,6 +87,12 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
 
     # Create integer variables indicating how many times a shift is planned.
     model.x_assign = Var([(s["id"],) for s in concrete_shifts], within=NonNegativeIntegers)
+
+    # Bound assignment variables by the minimum and maximum number of workers.
+    for s in concrete_shifts:
+        model.x_assign[s["id"]].setlb(s["min_workers"])
+        if s["max_workers"] >= 0:
+            model.x_assign[s["id"]].setub(s["max_workers"])
 
     # Create variables for tracking various costs.
     if "under_supply_cost" in options:
@@ -169,7 +179,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "variables": model.nvariables(),
                 "planned_shifts": len(schedule["planned_shifts"]),
                 "planned_count": sum(s["count"] for s in schedule["planned_shifts"]),
-                "shift_cost": model.shift_cost_track(),
+                "shift_cost": model.shift_cost() if val else 0.0,
                 "under_supply": model.underSupply() if val and "under_supply_cost" in options else 0.0,
                 "over_supply": model.overSupply() if val and "over_supply_cost" in options else 0.0,
                 "over_supply_cost": model.overSupply() * options["over_supply_cost"]

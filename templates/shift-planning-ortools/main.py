@@ -23,9 +23,7 @@ ANY_SOLUTION = [pywraplp.Solver.FEASIBLE, pywraplp.Solver.OPTIMAL]
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(
-        description="Solve shift-planning with OR-Tools MIP."
-    )
+    parser = argparse.ArgumentParser(description="Solve shift-planning with OR-Tools MIP.")
     parser.add_argument(
         "-input",
         default="",
@@ -122,13 +120,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     # Track under supply
     if "under_supply_cost" in options:
         solver.Add(
-            underSupply
-            == solver.Sum(
-                [
-                    x_under[p] * (p.end_time - p.start_time).seconds / 3600
-                    for p in periods
-                ]
-            ),
+            underSupply == solver.Sum([x_under[p] * (p.end_time - p.start_time).seconds / 3600 for p in periods]),
             "UnderSupply",
         )
 
@@ -137,10 +129,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         solver.Add(
             overSupply
             == solver.Sum(
-                [
-                    x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600
-                    for s in concrete_shifts
-                ]
+                [x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600 for s in concrete_shifts]
             )
             - required_hours,
             "OverSupply",
@@ -148,8 +137,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
 
     # Track shift cost
     solver.Add(
-        shift_cost
-        == solver.Sum([x_assign[s["id"]] * s["cost"] for s in concrete_shifts]),
+        shift_cost == solver.Sum([x_assign[s["id"]] * s["cost"] for s in concrete_shifts]),
         "ShiftCost",
     )
 
@@ -191,15 +179,11 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "under_supply": underSupply.solution_value()
                 if has_solution and "under_supply_cost" in options
                 else 0.0,
-                "over_supply": overSupply.solution_value()
+                "over_supply": overSupply.solution_value() if has_solution and "over_supply_cost" in options else 0.0,
+                "over_supply_cost": overSupply.solution_value() * options["over_supply_cost"]
                 if has_solution and "over_supply_cost" in options
                 else 0.0,
-                "over_supply_cost": overSupply.solution_value()
-                * options["over_supply_cost"]
-                if has_solution and "over_supply_cost" in options
-                else 0.0,
-                "under_supply_cost": underSupply.solution_value()
-                * options["under_supply_cost"]
+                "under_supply_cost": underSupply.solution_value() * options["under_supply_cost"]
                 if has_solution and "under_supply_cost" in options
                 else 0.0,
             },
@@ -313,9 +297,7 @@ def get_demand_coverage_periods(
     # Determine all concrete shifts covering a demand
     shifts_per_qualification = {}
     for q in demands_per_qualification:
-        shifts_per_qualification[q] = [
-            s for s in concrete_shifts if q == s["qualification"]
-        ]
+        shifts_per_qualification[q] = [s for s in concrete_shifts if q == s["qualification"]]
 
     # Determine all unique time periods
     periods = []
@@ -335,14 +317,10 @@ def get_demand_coverage_periods(
             start, end = times[i], times[i + 1]
             # Collect all shifts covering this time period and demands contributing to it
             covering_shifts = [
-                s
-                for s in shifts_per_qualification[q]
-                if s["start_time"] <= start and s["end_time"] >= end
+                s for s in shifts_per_qualification[q] if s["start_time"] <= start and s["end_time"] >= end
             ]
             contributing_demands = [
-                d
-                for d in demands_per_qualification[q]
-                if d["start_time"] <= start and d["end_time"] >= end
+                d for d in demands_per_qualification[q] if d["start_time"] <= start and d["end_time"] >= end
             ]
             if not any(contributing_demands):
                 continue
