@@ -68,18 +68,6 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     # Define cost of each arc.
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-    # Add Distance constraint.
-    dimension_name = "Distance"
-    routing.AddDimension(
-        transit_callback_index,
-        0,  # no slack
-        3000,  # vehicle maximum travel distance
-        True,  # start cumul to zero
-        dimension_name,
-    )
-    distance_dimension = routing.GetDimensionOrDie(dimension_name)
-    distance_dimension.SetGlobalSpanCostCoefficient(100)
-
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
@@ -90,54 +78,68 @@ def solve(input_data: dict[str, Any], duration: int) -> dict[str, Any]:
     solution = routing.SolveWithParameters(search_parameters)
     end_time = time.time()
 
-    # Determine the routes.
-    routes = []
-    max_route_distance = 0
-    max_stops_in_vehicle = 0
-    min_stops_in_vehicle = len(input_data["distance_matrix"])
-    activated_vehicles = 0
-    for vehicle_id in range(input_data["num_vehicles"]):
-        index = routing.Start(vehicle_id)
-        route_distance = 0
-        stops = []
-        while not routing.IsEnd(index):
+    if solution is not None:
+        # Determine the routes.
+        routes = []
+        max_route_distance = 0
+        max_stops_in_vehicle = 0
+        min_stops_in_vehicle = len(input_data["distance_matrix"])
+        activated_vehicles = 0
+        for vehicle_id in range(input_data["num_vehicles"]):
+            index = routing.Start(vehicle_id)
+            route_distance = 0
+            stops = []
+            while not routing.IsEnd(index):
+                stops.append(manager.IndexToNode(index))
+                previous_index = index
+                index = solution.Value(routing.NextVar(index))
+                route_distance += routing.GetArcCostForVehicle(
+                    previous_index,
+                    index,
+                    vehicle_id,
+                )
             stops.append(manager.IndexToNode(index))
-            previous_index = index
-            index = solution.Value(routing.NextVar(index))
-            route_distance += routing.GetArcCostForVehicle(
-                previous_index,
-                index,
-                vehicle_id,
-            )
-        stops.append(manager.IndexToNode(index))
-        route = {
-            "vehicle": vehicle_id,
-            "distance": route_distance,
-            "stops": stops,
-        }
-        routes.append(route)
-        max_route_distance = max(route_distance, max_route_distance)
-        activated_vehicles += 1
-        max_stops_in_vehicle = max(max_stops_in_vehicle, len(stops) - 2)
-        min_stops_in_vehicle = min(min_stops_in_vehicle, len(stops) - 2)
+            route = {
+                "vehicle": vehicle_id,
+                "distance": route_distance,
+                "stops": stops,
+            }
+            routes.append(route)
+            max_route_distance = max(route_distance, max_route_distance)
+            activated_vehicles += 1
+            max_stops_in_vehicle = max(max_stops_in_vehicle, len(stops) - 2)
+            min_stops_in_vehicle = min(min_stops_in_vehicle, len(stops) - 2)
 
-    # Creates the statistics.
-    statistics = {
-        "result": {
-            "custom": {
-                "activated_vehicles": activated_vehicles,
-                "max_route_distance": max_route_distance,
-                "max_stops_in_vehicle": max_stops_in_vehicle,
-                "min_stops_in_vehicle": min_stops_in_vehicle,
+        # Creates the statistics.
+        statistics = {
+            "result": {
+                "custom": {
+                    "activated_vehicles": activated_vehicles,
+                    "max_route_distance": max_route_distance,
+                    "max_stops_in_vehicle": max_stops_in_vehicle,
+                    "min_stops_in_vehicle": min_stops_in_vehicle,
+                },
+                "duration": end_time - start_time,
+                "value": solution.ObjectiveValue(),
             },
-            "duration": end_time - start_time,
-            "value": solution.ObjectiveValue(),
-        },
-        "run": {
-            "duration": end_time - start_time,
-        },
-        "schema": "v1",
-    }
+            "run": {
+                "duration": end_time - start_time,
+            },
+            "schema": "v1",
+        }
+    else:
+        routes = []
+        statistics = {
+            "result": {
+                "custom": {},
+                "duration": end_time - start_time,
+                "value": None,
+            },
+            "run": {
+                "duration": end_time - start_time,
+            },
+            "schema": "v1",
+        }
 
     return {
         "solutions": [{"vehicles": routes}],
