@@ -9,20 +9,20 @@ Java templates in Nextmv require a `main.jar` as an entry point. Running the
 following command will generate a `main.jar` in the root direcotry of the
 project.
 
-```sh
+```bash
 mvn package
 ```
 
 After that you can run the `main.jar` file with the following command:
 
-```sh
+```bash
 java -jar main.jar --input input.json
 ```
 
 You can also push the `main.jar` file to Nextmv platform and run it there. Take
 a look at the `app.yml` file to see how the `main.jar` file is referenced.
 
-```sh
+```bash
 nextmv app push -a <app-name>
 ```
 
