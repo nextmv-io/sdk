@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk"
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -103,7 +102,7 @@ type FleetOutputStop struct {
 func format(
 	ctx context.Context,
 	duration time.Duration,
-	progressioner alns.Progressioner,
+	progressioner nextroute.Progressioner,
 	toSolutionOutputFn func(nextroute.Solution) (any, error),
 	solutions ...nextroute.Solution,
 ) (FleetOutput, error) {
@@ -139,7 +138,7 @@ func format(
 
 	seriesData := common.Map(
 		progressionValues,
-		func(progressionEntry alns.ProgressionEntry) statistics.DataPoint {
+		func(progressionEntry nextroute.ProgressionEntry) statistics.DataPoint {
 			return statistics.DataPoint{
 				X: statistics.Float64(progressionEntry.ElapsedSeconds),
 				Y: statistics.Float64(progressionEntry.Value),
