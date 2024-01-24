@@ -13,24 +13,22 @@ from pyomo.environ import (
     TerminationCondition,
     Var,
     minimize,
+    value,
 )
 
 # Status of the solver after optimizing.
 STATUS = {
-    TerminationCondition.feasible: "feasible",
+    TerminationCondition.feasible: "suboptimal",
     TerminationCondition.infeasible: "infeasible",
     TerminationCondition.optimal: "optimal",
     TerminationCondition.unbounded: "unbounded",
 }
-ANY_SOLUTION = [TerminationCondition.feasible, TerminationCondition.optimal]
 
 
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(
-        description="Solve shift-planning with Pyomo."
-    )
+    parser = argparse.ArgumentParser(description="Solve shift-planning with Pyomo.")
     parser.add_argument(
         "-input",
         default="",
@@ -64,9 +62,7 @@ def main() -> None:
     write_output(args.output, solution)
 
 
-def solve(
-    input_data: dict[str, Any], duration: int, provider: str
-) -> dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     # Create the Pyomo model
@@ -86,15 +82,11 @@ def solve(
     required_hours = sum((p.end_time - p.start_time).seconds for p in periods) / 3600
 
     # Create integer variables indicating how many times a shift is planned.
-    model.x_assign = Var(
-        [(s["id"],) for s in concrete_shifts], within=NonNegativeIntegers
-    )
+    model.x_assign = Var([(s["id"],) for s in concrete_shifts], within=NonNegativeIntegers)
 
     # Create variables for tracking various costs.
     if "under_supply_cost" in options:
-        model.x_under = Var(
-            [(p,) for p in periods], within=NonNegativeIntegers
-        )
+        model.x_under = Var([(p,) for p in periods], within=NonNegativeIntegers)
         model.underSupply = Var(within=NonNegativeIntegers)
     if "over_supply_cost" in options:
         model.overSupply = Var(within=NonNegativeIntegers)
@@ -107,50 +99,39 @@ def solve(
     if "over_supply_cost" in options:
         obj_expr += model.overSupply * options["over_supply_cost"]
     obj_expr += model.shift_cost
-    model.obj = Objective(expr=obj_expr, sense=minimize)
+    model.objective = Objective(expr=obj_expr, sense=minimize)
 
     # Constraints
 
     # We need to make sure that all demands are covered (or track under supply).
     for p in periods:
         constraint_name = f"DemandCover_{p.start_time}_{p.end_time}_{p.qualification}"
-        if constraint_name in model.component_map(Constraint):
-            model.del_component(constraint_name)
-
         # Add the new constraint
         model.add_component(
             constraint_name,
             Constraint(
-                expr=sum([model.x_assign[s["id"]] for s in p.covering_shifts]) ==
-                sum(d["count"] for d in p.demands)
-    )
-)
+                expr=sum([model.x_assign[s["id"]] for s in p.covering_shifts]) == sum(d["count"] for d in p.demands)
+            ),
+        )
 
     # Track under supply
     if "under_supply_cost" in options:
         model.under_supply = Constraint(
             expr=model.underSupply
-            == sum(
-                model.x_under[p] * (p.end_time - p.start_time).seconds / 3600
-                for p in periods
-            )
+            == sum(model.x_under[p] * (p.end_time - p.start_time).seconds / 3600 for p in periods)
         )
 
     # Track over supply
     if "over_supply_cost" in options:
         model.over_supply = Constraint(
             expr=model.overSupply
-            == sum(
-                model.x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600
-                for s in concrete_shifts
-            )
+            == sum(model.x_assign[s["id"]] * (s["end_time"] - s["start_time"]).seconds / 3600 for s in concrete_shifts)
             - required_hours
         )
 
     # Track shift cost
     model.shift_cost_track = Constraint(
-        expr=model.shift_cost
-        == sum(model.x_assign[s["id"]] * s["cost"] for s in concrete_shifts)
+        expr=model.shift_cost == sum(model.x_assign[s["id"]] * s["cost"] for s in concrete_shifts)
     )
 
     # Solve the model.
@@ -158,7 +139,7 @@ def solve(
     results = solver.solve(model, tee=False, timelimit=duration)
 
     # Convert to solution format.
-    has_solution = results.solver.termination_condition in ANY_SOLUTION
+    val = value(model.objective, exception=False)
     schedule = {
         "planned_shifts": [
             {
@@ -173,7 +154,7 @@ def solve(
             for s in concrete_shifts
             if model.x_assign[s["id"]].value > 0.5
         ]
-        if has_solution
+        if val
         else [],
     }
 
@@ -183,21 +164,23 @@ def solve(
             "custom": {
                 "provider": provider,
                 "status": STATUS.get(results.solver.termination_condition, "unknown"),
-                "has_solution": has_solution,
+                "has_solution": val is not None,
                 "constraints": model.nconstraints(),
                 "variables": model.nvariables(),
                 "planned_shifts": len(schedule["planned_shifts"]),
                 "planned_count": sum(s["count"] for s in schedule["planned_shifts"]),
                 "shift_cost": model.shift_cost_track(),
-                "under_supply": model.underSupply() if has_solution and "under_supply_cost" in options else 0.0,
-                "over_supply": model.overSupply() if has_solution and "over_supply_cost" in options else 0.0,
+                "under_supply": model.underSupply() if val and "under_supply_cost" in options else 0.0,
+                "over_supply": model.overSupply() if val and "over_supply_cost" in options else 0.0,
                 "over_supply_cost": model.overSupply() * options["over_supply_cost"]
-                if has_solution and "over_supply_cost" in options else 0.0,
+                if val and "over_supply_cost" in options
+                else 0.0,
                 "under_supply_cost": model.underSupply() * options["under_supply_cost"]
-                if has_solution and "under_supply_cost" in options else 0.0,
+                if val and "under_supply_cost" in options
+                else 0.0,
             },
             "duration": results.solver.time,
-            "value": model.obj(),
+            "value": val,
         },
         "run": {
             "duration": results.solver.time,
@@ -306,9 +289,7 @@ def get_demand_coverage_periods(
     # Determine all concrete shifts covering a demand
     shifts_per_qualification = {}
     for q in demands_per_qualification:
-        shifts_per_qualification[q] = [
-            s for s in concrete_shifts if q == s["qualification"]
-        ]
+        shifts_per_qualification[q] = [s for s in concrete_shifts if q == s["qualification"]]
 
     # Determine all unique time periods
     periods = []
@@ -328,14 +309,10 @@ def get_demand_coverage_periods(
             start, end = times[i], times[i + 1]
             # Collect all shifts covering this time period and demands contributing to it
             covering_shifts = [
-                s
-                for s in shifts_per_qualification[q]
-                if s["start_time"] <= start and s["end_time"] >= end
+                s for s in shifts_per_qualification[q] if s["start_time"] <= start and s["end_time"] >= end
             ]
             contributing_demands = [
-                d
-                for d in demands_per_qualification[q]
-                if d["start_time"] <= start and d["end_time"] >= end
+                d for d in demands_per_qualification[q] if d["start_time"] <= start and d["end_time"] >= end
             ]
             if not any(contributing_demands):
                 continue
@@ -353,7 +330,7 @@ def get_demand_coverage_periods(
 
 
 def convert_data(
-    input_data: dict[str, Any]
+    input_data: dict[str, Any],
 ) -> tuple[
     list[dict[str, Any]],
     list[dict[str, Any]],
@@ -371,6 +348,7 @@ def convert_data(
         d["end_time"] = datetime.datetime.fromisoformat(d["end_time"])
         d["qualification"] = d["qualification"] if "qualification" in d else ""
     return shifts, demands
+
 
 def log(message: str) -> None:
     """Logs a message. We need to use stderr since stdout is used for the solution."""

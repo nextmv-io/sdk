@@ -14,19 +14,17 @@ SUPPORTED_PROVIDER_DURATIONS = {
 
 # Status of the solver after optimizing.
 STATUS = {
-    "suboptimal": "suboptimal",
-    "infeasible": "infeasible",
-    "optimal": "optimal",
-    "unbounded": "unbounded",
+    pyo.TerminationCondition.feasible: "suboptimal",
+    pyo.TerminationCondition.infeasible: "infeasible",
+    pyo.TerminationCondition.optimal: "optimal",
+    pyo.TerminationCondition.unbounded: "unbounded",
 }
 
 
 def main() -> None:
     """Entry point for the app."""
 
-    parser = argparse.ArgumentParser(
-        description="Solve shift-assignment with Pyomo."
-    )
+    parser = argparse.ArgumentParser(description="Solve shift-assignment with Pyomo.")
     parser.add_argument(
         "-input",
         default="",
@@ -64,16 +62,12 @@ def main() -> None:
 def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
-     # Make sure the provider is supported.
+    # Make sure the provider is supported.
     if provider not in SUPPORTED_PROVIDER_DURATIONS:
         raise ValueError(
             f"Unsupported provider: {provider}. The supported providers are: "
             f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
         )
-
-    # Creates the solver.
-    solver = pyo.SolverFactory(provider)  # Use an appropriate solver name
-    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration * 1000  # Pyomo time limit is in milliseconds
 
     # Prepare data
     workers, shifts, rules_per_worker = convert_input(input_data)
@@ -91,9 +85,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     for s in shifts:
         model.add_component(
             f"Shift_{s['id']}",
-            pyo.Constraint(
-                expr=sum(model.x_assign[(e["id"], s["id"])] for e in workers) == s["count"]
-            ),
+            pyo.Constraint(expr=sum(model.x_assign[(e["id"], s["id"])] for e in workers) == s["count"]),
         )
 
     # Each worker must be assigned to at least their minimum number of shifts
@@ -101,9 +93,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         rules = rules_per_worker[e["id"]]
         model.add_component(
             f"worker_{e['id']}_min",
-            pyo.Constraint(
-                expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) >= rules["min_shifts"]
-            ),
+            pyo.Constraint(expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) >= rules["min_shifts"]),
         )
 
     # Each worker must be assigned to at most their maximum number of shifts
@@ -111,16 +101,12 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         rules = rules_per_worker[e["id"]]
         model.add_component(
             f"worker_{e['id']}_max",
-            pyo.Constraint(
-                expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) <= rules["max_shifts"]
-            ),
+            pyo.Constraint(expr=sum(model.x_assign[(e["id"], s["id"])] for s in shifts) <= rules["max_shifts"]),
         )
 
     # Ensure that the minimum rest time between shifts is respected
     for e in workers:
-        rest_time = datetime.timedelta(
-            hours=rules_per_worker[e["id"]]["min_rest_hours_between_shifts"]
-        )
+        rest_time = datetime.timedelta(hours=rules_per_worker[e["id"]]["min_rest_hours_between_shifts"])
         for s1, shift1 in enumerate(shifts):
             for s2, shift2 in enumerate(shifts):
                 if s1 >= s2:
@@ -134,9 +120,8 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 # the worker is not assigned to both.
                 model.add_component(
                     f"Rest_{e['id']}_{shift1['id']}_{shift2['id']}",
-                    pyo.Constraint(expr=model.x_assign[(e["id"], shift1["id"])]
-                    + model.x_assign[(e["id"], shift2["id"])]
-                    <= 1
+                    pyo.Constraint(
+                        expr=model.x_assign[(e["id"], shift1["id"])] + model.x_assign[(e["id"], shift2["id"])] <= 1
                     ),
                 )
 
@@ -144,10 +129,9 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     for e in workers:
         for s in shifts:
             if not any(
-                a["start_time"] <= s["start_time"] and a["end_time"] >= s["end_time"]
-                for a in e["availability"]
+                a["start_time"] <= s["start_time"] and a["end_time"] >= s["end_time"] for a in e["availability"]
             ):
-                model.x_assign[(e["id"], s["id"])]
+                model.x_assign[(e["id"], s["id"])].fix(0)
 
     # Ensure that workers are qualified for the shift
     for e in workers:
@@ -157,24 +141,23 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 continue
             if "qualifications" not in e:
                 # A qualification is required for the shift, but the worker has none (worker cannot be assigned)
-                model.x_assign[(e["id"], s["id"])]
+                model.x_assign[(e["id"], s["id"])].fix(0)
                 continue
             if s["qualification"] not in e["qualifications"]:
                 # The worker does not have the required qualification (worker cannot be assigned)
-                model.x_assign[(e["id"], s["id"])]
+                model.x_assign[(e["id"], s["id"])].fix(0)
 
     # >>> Objective
     model.objective = pyo.Objective(
-    expr=sum(
-        e["preferences"].get(s["id"], 0) * model.x_assign[(e["id"], s["id"])]
-        for e in workers for s in shifts
-    ),
-    sense=pyo.maximize
-)
+        expr=sum(
+            e["preferences"].get(s["id"], 0) * model.x_assign[(e["id"], s["id"])] for e in workers for s in shifts
+        ),
+        sense=pyo.maximize,
+    )
 
     # Creates the solver.
     solver = pyo.SolverFactory(provider)  # Use an appropriate solver name
-    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration * 1000  # Pyomo time limit is in milliseconds
+    solver.options[SUPPORTED_PROVIDER_DURATIONS[provider]] = duration
 
     # Solve the model.
     results = solver.solve(model)
@@ -182,7 +165,8 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     # Convert to solution format.
     schedule = {}
     active_workers, total_workers = 0, 0
-    if results.solver.termination_condition == "optimal" or results.solver.termination_condition == "feasible":
+    value = pyo.value(model.objective, exception=False)
+    if value:
         schedule = {
             "assigned_shifts": [
                 {
@@ -211,7 +195,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "total_workers": total_workers,
             },
             "duration": results.solver.time,
-            "value": pyo.value(model.objective),
+            "value": value,
         },
         "run": {
             "duration": results.solver.time,
@@ -258,10 +242,7 @@ def convert_input(input_data: dict[str, Any]) -> tuple[list, list, dict]:
         e["availability"] = sorted(e["availability"], key=lambda x: x["start_time"])
         i = 0
         while i < len(e["availability"]) - 1:
-            if (
-                e["availability"][i]["end_time"]
-                == e["availability"][i + 1]["start_time"]
-            ):
+            if e["availability"][i]["end_time"] == e["availability"][i + 1]["start_time"]:
                 e["availability"][i]["end_time"] = e["availability"][i + 1]["end_time"]
                 del e["availability"][i + 1]
             else:
