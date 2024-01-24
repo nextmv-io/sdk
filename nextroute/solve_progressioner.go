@@ -1,4 +1,4 @@
-package alns
+package nextroute
 
 // Progressioner is an interface that can be implemented by a solver to indicate
 // that is can return the progression of the solver.

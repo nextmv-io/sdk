@@ -1,15 +1,23 @@
 package nextroute
 
 import (
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 )
 
+// SolveOperatorUnPlan is a solve operator that un-plans units.
+
+type SolveOperatorUnPlan interface {
+	SolveOperator
+
+	// NumberOfUnits returns the number of units of the solve operator.
+	NumberOfUnits() SolveParameter
+}
+
 // NewSolveOperatorUnPlan creates a new solve operator for nextroute that
-// unplans units.
+// un-plans units.
 func NewSolveOperatorUnPlan(
-	numberOfUnits alns.SolveParameter[Solution],
-) (alns.SolveOperator[Solution], error) {
+	numberOfUnits SolveParameter,
+) (SolveOperatorUnPlan, error) {
 	connect.Connect(con, &newSolveOperatorUnPlan)
 	return newSolveOperatorUnPlan(numberOfUnits)
 }

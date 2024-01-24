@@ -1,7 +1,9 @@
-package alns
+package nextroute
 
 import (
 	"context"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // SolveOperator is a solve-operator. A solve-operator is a function that
@@ -9,13 +11,13 @@ import (
 // probability. The probability is set by the SetProbability method. The
 // probability is used by the solver to determine if the solve-operator should
 // be executed. The probability is a value between 0 and 1. The manipulation of
-// the solution is implemented in the Execute method. The Execute method is
-// called by the solver. The Execute method is passed a SolveInformation
+// the solution is implemented in the Execute method. The Execute method will be
+// invoked by the solver. The Execute method receives a SolveInformation
 // instance that contains information about the current solution and the
 // solver. The Execute method should modify the current solution. The
 // Execute method should not modify the SolveInformation instance. The Execute
 // method should not modify the SolveOperator instance.
-type SolveOperator[T Solution[T]] interface {
+type SolveOperator interface {
 	// CanResultInImprovement returns true if the solve-operator can result in
 	// an improvement compared to the best solution. The solver uses this
 	// information to determine if the best solution should be replaced by
@@ -26,7 +28,7 @@ type SolveOperator[T Solution[T]] interface {
 	// solver. The Execute method is passed a SolveInformation instance that
 	// contains information about the current solution and the solver. The
 	// Execute method should modify the current solution.
-	Execute(context.Context, SolveInformation[T])
+	Execute(context.Context, SolveInformation)
 
 	// Index returns the unique index of the solve-operator.
 	Index() int
@@ -39,30 +41,42 @@ type SolveOperator[T Solution[T]] interface {
 	// solve-operator. The probability is set by the SetProbability method.
 	Probability() float64
 
-	// SetProbability sets the probability of the solve-operator.
-	SetProbability(probability float64) SolveOperator[T]
+	// SetProbability sets the probability of the solve-operator. Returns an
+	// error if the probability is not in the range [0, 1].
+	SetProbability(probability float64) error
 	// SolveParameters returns the solve-parameters of the solve-operator.
-	SolveParameters() SolveParameters[T]
+	SolveParameters() SolveParameters
 }
 
 // InterestedInBetterSolution is an interface that can be implemented by
 // solve-operators that are interested in being notified when a better solution
 // is found. The solver will call the OnBetterSolution method when a better
 // best-solution is found.
-type InterestedInBetterSolution[T Solution[T]] interface {
-	OnBetterSolution(SolveInformation[T])
+type InterestedInBetterSolution interface {
+	OnBetterSolution(SolveInformation)
 }
 
 // InterestedInStartSolve is an interface that can be implemented by
 // solve-operators that are interested in being notified when the solver starts
 // solving. The solver will call the OnStartSolve method when the solver starts
 // solving.
-type InterestedInStartSolve[T Solution[T]] interface {
-	OnStartSolve(SolveInformation[T])
+type InterestedInStartSolve interface {
+	OnStartSolve(SolveInformation)
 }
 
 // SolveOperators is a slice of solve-operators.
-type SolveOperators[T Solution[T]] []SolveOperator[T]
+type SolveOperators []SolveOperator
 
-// SolveOperatorOption is a function that configures a solve-operator.
-type SolveOperatorOption[T Solution[T]] func(s SolveOperator[T]) error
+// NewSolveOperator returns a new solve operator.
+func NewSolveOperator(
+	probability float64,
+	canResultInImprovement bool,
+	parameters SolveParameters,
+) SolveOperator {
+	connect.Connect(con, &newSolveOperator)
+	return newSolveOperator(
+		probability,
+		canResultInImprovement,
+		parameters,
+	)
+}

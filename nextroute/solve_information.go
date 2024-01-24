@@ -1,11 +1,9 @@
-package alns
+package nextroute
 
-import (
-	"time"
-)
+import "time"
 
-// SolveInformation defines the information available to the solver.
-type SolveInformation[T Solution[T]] interface {
+// SolveInformation contains information about the current solve.
+type SolveInformation interface {
 	// DeltaScore returns the delta score of the last executed solve operator.
 	DeltaScore() float64
 
@@ -13,12 +11,10 @@ type SolveInformation[T Solution[T]] interface {
 	Iteration() int
 
 	// Solver returns the solver.
-	Solver() Solver[T, SolveOptions]
-
+	Solver() Solver
 	// SolveOperators returns the solve-operators that has been executed in
 	// the current iteration.
-	SolveOperators() SolveOperators[T]
-
+	SolveOperators() SolveOperators
 	// Start returns the start time of the solver.
 	Start() time.Time
 }
