@@ -6,7 +6,7 @@ demand and qualification that will later be filled by employees.
 
 The most important files created are `main.py` and `input.json`.
 
-* `main.py` implements a MIP knapsack solver.
+* `main.py` implements a MIP shift planning solver.
 * `input.json` is a sample input file.
 
 ## Usage
@@ -25,6 +25,7 @@ Follow these steps to run locally.
     python3 main.py -input input.json -output output.json -duration 30
     ```
 
-1. A file `output.json` should have been created with a solution to the shift planning problem.
+1. A file `output.json` should have been created with a solution to the shift
+planning problem.
 
 [or-tools]: https://developers.google.com/optimization

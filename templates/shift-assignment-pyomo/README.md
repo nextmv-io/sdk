@@ -6,7 +6,7 @@ taking different factors into account such as availability and qualification.
 
 The most important files created are `main.py` and `input.json`.
 
-* `main.py` implements a MIP knapsack solver.
+* `main.py` implements a MIP shift assignment solver.
 * `input.json` is a sample input file.
 
 ## Usage
@@ -25,6 +25,7 @@ Follow these steps to run locally.
     python3 main.py -input input.json -output output.json -duration 30
     ```
 
-1. A file `output.json` should have been created with a solution to the shift assignment problem.
+1. A file `output.json` should have been created with a solution to the shift
+assignment problem.
 
 [pyomo]: http://www.pyomo.org/

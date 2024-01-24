@@ -21,7 +21,8 @@ nextmv sdk run . -- -runner.input.path input.json \
   -runner.output.path output.json -solve.duration 10s
 ```
 
-A file `output.json` should have been created with a solution to the order fulfillment problem.
+A file `output.json` should have been created with a solution to the order
+fulfillment problem.
 
 ## Next steps
 
