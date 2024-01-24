@@ -13,7 +13,7 @@ from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 def main():
     """Entry point for the template."""
-    parser = argparse.ArgumentParser(description="Solve problems with OR-Tools.")
+    parser = argparse.ArgumentParser(description="Solve a routing problem with OR-Tools.")
     parser.add_argument(
         "-input",
         default="",
