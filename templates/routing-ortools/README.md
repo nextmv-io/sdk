@@ -1,6 +1,6 @@
 # Routing with OR-Tools
 
-This app solves a routing problem using [OR-Tools][or-tools]. Given a distance
+This app solves an unconstrained routing problem using [OR-Tools][or-tools]. Given a distance
 matrix (and with it indirectly the stops), a number of vehicles and a depot.
 
 The most important files created are `main.py` and `input.json`.
