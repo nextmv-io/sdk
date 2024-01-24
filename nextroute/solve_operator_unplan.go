@@ -5,7 +5,6 @@ import (
 )
 
 // SolveOperatorUnPlan is a solve operator that un-plans units.
-
 type SolveOperatorUnPlan interface {
 	SolveOperator
 

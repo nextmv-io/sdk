@@ -2,9 +2,10 @@ package nextroute
 
 import (
 	"context"
-	"github.com/nextmv-io/sdk/connect"
 	"math/rand"
 	"time"
+
+	"github.com/nextmv-io/sdk/connect"
 )
 
 // NewParallelSolver creates a new parallel solver for the given work solutions.
