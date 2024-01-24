@@ -4,6 +4,7 @@ Template for working with Pyomo.
 
 import argparse
 import json
+import logging
 import sys
 from typing import Any
 
@@ -72,6 +73,9 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
             f"{', '.join(SUPPORTED_PROVIDER_DURATIONS.keys())}"
         )
 
+    # Silence all Pyomo logging.
+    logging.getLogger("pyomo.core").setLevel(logging.ERROR)
+
     # Creates the model.
     model = pyo.ConcreteModel()
 
@@ -105,8 +109,11 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
     # Solves the problem.
     results = solver.solve(model)
 
-    # Determines which items were chosen.
-    chosen_items = [item["item"] for item in items if item["variable"]() > 0.9]
+    # Convert to solution format.
+    value = pyo.value(model.objective, exception=False)
+    chosen_items = []
+    if value:
+        chosen_items = [item["item"] for item in items if item["variable"]() > 0.9]
 
     # Creates the statistics.
     statistics = {
@@ -118,7 +125,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
                 "variables": model.nvariables(),
             },
             "duration": results.solver.time,
-            "value": pyo.value(model.objective),
+            "value": value,
         },
         "run": {
             "duration": results.solver.time,

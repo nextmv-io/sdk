@@ -1,7 +1,8 @@
 # Nextmv MIP template
 
 This template demonstrates how to solve a Mixed Integer Programming problem
-using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS).
+using the open-source solver [HiGHS](https://github.com/ERGO-Code/HiGHS) with
+the Nextmv Go SDK.
 
 To solve a Mixed Integer Problem (MIP) is to optimize a linear objective
 function of many variables, subject to linear constraints. We demonstrate this

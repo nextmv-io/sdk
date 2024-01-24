@@ -14,3 +14,7 @@ select = [
 # Rule configuration.
 line-length = 120
 
+[extend-per-file-ignores]
+"templates/shift-assignment-ortools/main.py" = ["C901"]
+"templates/shift-planning-ortools/main.py" = ["C901"]
+"templates/shift-assignment-pyomo/main.py" = ["C901"]
