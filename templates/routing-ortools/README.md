@@ -26,6 +26,6 @@ Follow these steps to run locally.
     ```
 
 1. A file `output.json` should have been created with a solution to the routing
-problem. 
+problem.
 
 [or-tools]: https://developers.google.com/optimization
