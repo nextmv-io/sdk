@@ -25,7 +25,6 @@ Follow these steps to run locally.
     python3 main.py -input input.json -output output.json -duration 30
     ```
 
-1. A file `output.json` should have been created with the optimal knapsack
-   solution.
+1. A file `output.json` should have been created with a solution to the shift assignment problem.
 
 [pyomo]: http://www.pyomo.org/
