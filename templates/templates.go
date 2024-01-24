@@ -102,4 +102,32 @@ var (
 	// XpressRequirements is the requirements.txt file in the xpress template.
 	//go:embed xpress/requirements.txt
 	XpressRequirements string
+
+	// KnapsackJavaOrtoolsManifest is the app manifest file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/app.yaml
+	KnapsackJavaOrtoolsManifest string
+	// KnapsackJavaOrtoolsReadme is the README.md file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/README.md
+	KnapsackJavaOrtoolsReadme string
+	// KnapsackJavaOrtoolsInput is the input.json file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/input.json
+	KnapsackJavaOrtoolsInput string
+	// KnapsackJavaOrtoolsPom is the pom.xml file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/pom.xml
+	KnapsackJavaOrtoolsPom string
+	// KnapsackJavaOrtoolsSrcInput is the Input.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Input.java
+	KnapsackJavaOrtoolsSrcInput string
+	// KnapsackJavaOrtoolsSrcItem is the Item.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Item.java
+	KnapsackJavaOrtoolsSrcItem string
+	// KnapsackJavaOrtoolsSrcMain is the Main.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Main.java
+	KnapsackJavaOrtoolsSrcMain string
+	// KnapsackJavaOrtoolsSrcOptions is the Options.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Options.java
+	KnapsackJavaOrtoolsSrcOptions string
+	// KnapsackJavaOrtoolsSrcOutput is the Output.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Output.java
+	KnapsackJavaOrtoolsSrcOutput string
 )
