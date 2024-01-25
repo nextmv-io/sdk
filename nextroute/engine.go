@@ -250,8 +250,6 @@ var (
 		operators SolveOperators,
 	) (SolveOperatorOr, error)
 
-	newSolveOperatorIndex func() int
-
 	newSolveOperator func(
 		probability float64,
 		canResultInImprovement bool,
