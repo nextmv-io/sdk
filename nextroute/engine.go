@@ -190,7 +190,11 @@ var (
 
 	newSkeletonParallelSolver func(
 		Model,
-	) ParallelSolver
+	) (ParallelSolver, error)
+
+	defaultSolveOptionsFactory func() SolveOptionsFactory
+
+	defaultSolverFactory func() SolverFactory
 
 	newSolutionPlanUnitCollection func(
 		*rand.Rand,
@@ -264,7 +268,7 @@ var (
 		maxValue int,
 		snapBackAfterImprovement bool,
 		zigzag bool,
-	) SolveParameter
+	) (SolveParameter, error)
 
 	newSolveOperatorUnPlan func(
 		numberOfUnits SolveParameter,

@@ -45,7 +45,7 @@ func NewSolveParameter(
 	maxValue int,
 	snapBackAfterImprovement bool,
 	zigzag bool,
-) SolveParameter {
+) (SolveParameter, error) {
 	connect.Connect(con, &newSolveParameter)
 	return newSolveParameter(
 		startValue,

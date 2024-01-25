@@ -28,10 +28,7 @@ type SolveOperator interface {
 	// solver. The Execute method is passed a SolveInformation instance that
 	// contains information about the current solution and the solver. The
 	// Execute method should modify the current solution.
-	Execute(context.Context, SolveInformation)
-
-	// Index returns the unique index of the solve-operator.
-	Index() int
+	Execute(context.Context, SolveInformation) error
 
 	// Probability returns the probability of the solve-operator.
 	// The probability is a value between 0 and 1. The solver uses the

@@ -17,7 +17,7 @@ func NewParallelSolver(
 }
 
 // NewSkeletonParallelSolver creates a new parallel solver for nextroute.
-func NewSkeletonParallelSolver(model Model) ParallelSolver {
+func NewSkeletonParallelSolver(model Model) (ParallelSolver, error) {
 	connect.Connect(con, &newSkeletonParallelSolver)
 	return newSkeletonParallelSolver(model)
 }
@@ -31,6 +31,36 @@ type ParallelSolveOptions struct {
 	RunDeterministically bool          `json:"run_deterministically"  usage:"run the parallel solver deterministically"`
 }
 
+// DefaultSolveOptionsFactory creates a new SolveOptionsFactory.
+// This factory is used by the parallel solver to create new solve options for
+// a new run of a solver within the parallel solver. The default will
+// limit the run to a random draw in the range [200, 2000] iterations and 30
+// seconds.
+func DefaultSolveOptionsFactory() SolveOptionsFactory {
+	connect.Connect(con, &defaultSolveOptionsFactory)
+	return defaultSolveOptionsFactory()
+}
+
+// NewSolveOptionsFactory creates a new SolveOptionsFactory which is independent
+// of the state of the parallel solver. This factory will produce SolveOptions
+// which limit a search run in a cycle to the given number of iterations and
+// duration.
+func NewSolveOptionsFactory(iterations int, duration time.Duration) SolveOptionsFactory {
+	return func(_ ParallelSolveInformation) (SolveOptions, error) {
+		solveOptions := SolveOptions{
+			Iterations: iterations,
+			Duration:   duration,
+		}
+		return solveOptions, nil
+	}
+}
+
+// DefaultSolverFactory creates a new SolverFactory.
+func DefaultSolverFactory() SolverFactory {
+	connect.Connect(con, &defaultSolverFactory)
+	return defaultSolverFactory()
+}
+
 // ParallelSolver is the interface for parallel solver. The parallel solver will
 // run multiple solver in parallel and return the best solution. The parallel
 // solver will stop when the maximum duration is reached.
@@ -41,9 +71,9 @@ type ParallelSolver interface {
 	Model() Model
 
 	// SetSolverFactory sets the factory for creating new solver.
-	SetSolverFactory(NewSolverFactory)
+	SetSolverFactory(SolverFactory)
 	// SetSolveOptionsFactory sets the factory for creating new solve options.
-	SetSolveOptionsFactory(NewSolveOptionsFactory)
+	SetSolveOptionsFactory(SolveOptionsFactory)
 	// Solve starts the solving process using the given options. It returns the
 	// solutions as a channel.
 	Solve(context.Context, ParallelSolveOptions, ...Solution) (SolutionChannel, error)
@@ -51,18 +81,18 @@ type ParallelSolver interface {
 	SolveEvents() SolveEvents
 }
 
-// NewSolveOptionsFactory is a factory type for creating new solve options.
+// SolveOptionsFactory is a factory type for creating new solve options.
 // This factory is used by the parallel solver to create new solve options for
 // a new run of a solver.
-type NewSolveOptionsFactory func(
+type SolveOptionsFactory func(
 	information ParallelSolveInformation,
-) SolveOptions
+) (SolveOptions, error)
 
-// NewSolverFactory is a factory type for creating new solver. This factory is
+// SolverFactory is a factory type for creating new solver. This factory is
 // used by the parallel solver to create new solver for a new run.
-type NewSolverFactory func(
+type SolverFactory func(
 	information ParallelSolveInformation,
-	solution Solution) Solver
+	solution Solution) (Solver, error)
 
 // ParallelSolveInformation holds the information about the current parallel
 // solve run.
