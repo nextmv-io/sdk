@@ -13,7 +13,7 @@ import (
 // TestNextrouteTemplateInput validates the input template against the schema.
 func TestNextrouteTemplateInput(t *testing.T) {
 	// read input file
-	file, err := os.Open("../../templates/nextroute/input.json")
+	file, err := os.Open("../../templates/nextroute-gosdk/input.json")
 	if err != nil {
 		t.Fatal(err)
 	}

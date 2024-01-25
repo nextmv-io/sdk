@@ -8,63 +8,143 @@ import (
 )
 
 var (
-	// MipMain is the main.go file in the mip template.
-	//go:embed mip/main.go
-	MipMain string
-	// MipInput is the input.json file in the mip template.
-	//go:embed mip/input.json
-	MipInput string
-	// MipReadme is the README.md file in the mip template.
-	//go:embed mip/README.md
-	MipReadme string
-	// MipManifest is the app.yaml file in the mip template.
-	//go:embed mip/app.yaml
-	MipManifest string
+	// KnapsackGoMain is the main.go file in the mip template.
+	//go:embed knapsack-gosdk/main.go
+	KnapsackGoMain string
+	// KnapsackGoInput is the input.json file in the mip template.
+	//go:embed knapsack-gosdk/input.json
+	KnapsackGoInput string
+	// KnapsackGoReadme is the README.md file in the mip template.
+	//go:embed knapsack-gosdk/README.md
+	KnapsackGoReadme string
+	// KnapsackGoManifest is the app.yaml file in the mip template.
+	//go:embed knapsack-gosdk/app.yaml
+	KnapsackGoManifest string
 
 	// NextrouteMain is the main.go file in the nextroute template.
-	//go:embed nextroute/main.go
+	//go:embed nextroute-gosdk/main.go
 	NextrouteMain string
 	// NextrouteInput is the input.json file in the nextroute template.
-	//go:embed nextroute/input.json
+	//go:embed nextroute-gosdk/input.json
 	NextrouteInput string
 	// NextrouteReadme is the README.md file in the nextroute template.
-	//go:embed nextroute/README.md
+	//go:embed nextroute-gosdk/README.md
 	NextrouteReadme string
 	// NextrouteManifest is the app.yaml file in the nextroute template.
-	//go:embed nextroute/app.yaml
+	//go:embed nextroute-gosdk/app.yaml
 	NextrouteManifest string
 
-	// OrtoolsManifest is the app manifest file in the ortools template.
-	//go:embed ortools/app.yaml
-	OrtoolsManifest string
-	// OrtoolsMain is the main.py file in the ortools template.
-	//go:embed ortools/main.py
-	OrtoolsMain string
-	// OrtoolsInput is the input.json file in the ortools template.
-	//go:embed ortools/input.json
-	OrtoolsInput string
-	// OrtoolsReadme is the README.md file in the ortools template.
-	//go:embed ortools/README.md
-	OrtoolsReadme string
-	// OrtoolsRequirements is the requirements.txt file in the ortools template.
-	//go:embed ortools/requirements.txt
-	OrtoolsRequirements string
+	// KnapsackOrtoolsManifest is the app manifest file in the ortools template.
+	//go:embed knapsack-ortools/app.yaml
+	KnapsackOrtoolsManifest string
+	// KnapsackOrtoolsMain is the main.py file in the ortools template.
+	//go:embed knapsack-ortools/main.py
+	KnapsackOrtoolsMain string
+	// KnapsackOrtoolsInput is the input.json file in the ortools template.
+	//go:embed knapsack-ortools/input.json
+	KnapsackOrtoolsInput string
+	// KnapsackOrtoolsReadme is the README.md file in the ortools template.
+	//go:embed knapsack-ortools/README.md
+	KnapsackOrtoolsReadme string
+	// KnapsackOrtoolsRequirements is the requirements.txt file in the ortools template.
+	//go:embed knapsack-ortools/requirements.txt
+	KnapsackOrtoolsRequirements string
 
-	// PyomoManifest is the app manifest file in the pyomo template.
-	//go:embed pyomo/app.yaml
-	PyomoManifest string
-	// PyomoMain is the main.py file in the pyomo template.
-	//go:embed pyomo/main.py
-	PyomoMain string
-	// PyomoInput is the input.json file in the pyomo template.
-	//go:embed pyomo/input.json
-	PyomoInput string
-	// PyomoReadme is the README.md file in the pyomo template.
-	//go:embed pyomo/README.md
-	PyomoReadme string
-	// PyomoRequirements is the requirements.txt file in the pyomo template.
-	//go:embed pyomo/requirements.txt
-	PyomoRequirements string
+	// KnapsackPyomoManifest is the app manifest file in the pyomo template.
+	//go:embed knapsack-pyomo/app.yaml
+	KnapsackPyomoManifest string
+	// KnapsackPyomoMain is the main.py file in the pyomo template.
+	//go:embed knapsack-pyomo/main.py
+	KnapsackPyomoMain string
+	// KnapsackPyomoInput is the input.json file in the pyomo template.
+	//go:embed knapsack-pyomo/input.json
+	KnapsackPyomoInput string
+	// KnapsackPyomoReadme is the README.md file in the pyomo template.
+	//go:embed knapsack-pyomo/README.md
+	KnapsackPyomoReadme string
+	// KnapsackPyomoRequirements is the requirements.txt file in the pyomo template.
+	//go:embed knapsack-pyomo/requirements.txt
+	KnapsackPyomoRequirements string
+
+	// RoutingOrtoolsManifest is the app manifest file in the pyomo template.
+	//go:embed routing-ortools/app.yaml
+	RoutingOrtoolsManifest string
+	// RoutingOrtoolsMain is the main.py file in the pyomo template.
+	//go:embed routing-ortools/main.py
+	RoutingOrtoolsMain string
+	// RoutingOrtoolsInput is the input.json file in the pyomo template.
+	//go:embed routing-ortools/input.json
+	RoutingOrtoolsInput string
+	// RoutingOrtoolsReadme is the README.md file in the pyomo template.
+	//go:embed routing-ortools/README.md
+	RoutingOrtoolsReadme string
+	// RoutingOrtoolsRequirements is the requirements.txt file in the pyomo template.
+	//go:embed routing-ortools/requirements.txt
+	RoutingOrtoolsRequirements string
+
+	// ShiftPlanningOrtoolsManifest is the app manifest file in the shift-planning template.
+	//go:embed shift-planning-ortools/app.yaml
+	ShiftPlanningOrtoolsManifest string
+	// ShiftPlanningOrtoolsMain is the main.py file in the shift-planning template.
+	//go:embed shift-planning-ortools/main.py
+	ShiftPlanningOrtoolsMain string
+	// ShiftPlanningOrtoolsInput is the input.json file in the shift-planning template.
+	//go:embed shift-planning-ortools/input.json
+	ShiftPlanningOrtoolsInput string
+	// ShiftPlanningOrtoolsReadme is the README.md file in the shift-planning template.
+	//go:embed shift-planning-ortools/README.md
+	ShiftPlanningOrtoolsReadme string
+	// ShiftPlanningOrtoolsRequirements is the requirements.txt file in the shift-planning template.
+	//go:embed shift-planning-ortools/requirements.txt
+	ShiftPlanningOrtoolsRequirements string
+
+	// ShiftPlanningPyomoManifest is the app manifest file in the shift-planning template.
+	//go:embed shift-planning-pyomo/app.yaml
+	ShiftPlanningPyomoManifest string
+	// ShiftPlanningPyomoMain is the main.py file in the shift-planning template.
+	//go:embed shift-planning-pyomo/main.py
+	ShiftPlanningPyomoMain string
+	// ShiftPlanningPyomoInput is the input.json file in the shift-planning template.
+	//go:embed shift-planning-pyomo/input.json
+	ShiftPlanningPyomoInput string
+	// ShiftPlanningPyomoReadme is the README.md file in the shift-planning template.
+	//go:embed shift-planning-pyomo/README.md
+	ShiftPlanningPyomoReadme string
+	// ShiftPlanningPyomoRequirements is the requirements.txt file in the shift-planning template.
+	//go:embed shift-planning-pyomo/requirements.txt
+	ShiftPlanningPyomoRequirements string
+
+	// ShiftAssignmentOrtoolsManifest is the app manifest file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/app.yaml
+	ShiftAssignmentOrtoolsManifest string
+	// ShiftAssignmentOrtoolsMain is the main.py file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/main.py
+	ShiftAssignmentOrtoolsMain string
+	// ShiftAssignmentOrtoolsInput is the input.json file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/input.json
+	ShiftAssignmentOrtoolsInput string
+	// ShiftAssignmentOrtoolsReadme is the README.md file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/README.md
+	ShiftAssignmentOrtoolsReadme string
+	// ShiftAssignmentOrtoolsRequirements is the requirements.txt file in the shift-assignment template.
+	//go:embed shift-assignment-ortools/requirements.txt
+	ShiftAssignmentOrtoolsRequirements string
+
+	// ShiftAssignmentPyomoManifest is the app manifest file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/app.yaml
+	ShiftAssignmentPyomoManifest string
+	// ShiftAssignmentPyomoMain is the main.py file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/main.py
+	ShiftAssignmentPyomoMain string
+	// ShiftAssignmentPyomoInput is the input.json file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/input.json
+	ShiftAssignmentPyomoInput string
+	// ShiftAssignmentPyomoReadme is the README.md file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/README.md
+	ShiftAssignmentPyomoReadme string
+	// ShiftAssignmentPyomoRequirements is the requirements.txt file in the shift-assignment template.
+	//go:embed shift-assignment-pyomo/requirements.txt
+	ShiftAssignmentPyomoRequirements string
 
 	// ShiftSchedulingMain is the main.go file in the
 	// shift-scheduling template.
@@ -87,6 +167,23 @@ var (
 	//go:embed shift-scheduling/app.yaml
 	ShiftSchedulingManifest string
 
+	// OrderFulfillmentMain is the main.go file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/main.go
+	OrderFulfillmentMain string
+	// OrderFulfillmentInput is the input.json file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/input.json
+	OrderFulfillmentInput string
+	// OrderFulfillmentReadme is the README.md file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/README.md
+	OrderFulfillmentReadme string
+	// OrderFulfillmentManifest is the app.yaml file in the
+	// order-fulfillment template.
+	//go:embed order-fulfillment-gosdk/app.yaml
+	OrderFulfillmentManifest string
+
 	// XpressManifest is the app manifest file in the xpress template.
 	//go:embed xpress/app.yaml
 	XpressManifest string
@@ -102,4 +199,32 @@ var (
 	// XpressRequirements is the requirements.txt file in the xpress template.
 	//go:embed xpress/requirements.txt
 	XpressRequirements string
+
+	// KnapsackJavaOrtoolsManifest is the app manifest file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/app.yaml
+	KnapsackJavaOrtoolsManifest string
+	// KnapsackJavaOrtoolsReadme is the README.md file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/README.md
+	KnapsackJavaOrtoolsReadme string
+	// KnapsackJavaOrtoolsInput is the input.json file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/input.json
+	KnapsackJavaOrtoolsInput string
+	// KnapsackJavaOrtoolsPom is the pom.xml file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/pom.xml
+	KnapsackJavaOrtoolsPom string
+	// KnapsackJavaOrtoolsSrcInput is the Input.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Input.java
+	KnapsackJavaOrtoolsSrcInput string
+	// KnapsackJavaOrtoolsSrcItem is the Item.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Item.java
+	KnapsackJavaOrtoolsSrcItem string
+	// KnapsackJavaOrtoolsSrcMain is the Main.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Main.java
+	KnapsackJavaOrtoolsSrcMain string
+	// KnapsackJavaOrtoolsSrcOptions is the Options.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Options.java
+	KnapsackJavaOrtoolsSrcOptions string
+	// KnapsackJavaOrtoolsSrcOutput is the Output.java file in the knapsack-java-ortools template.
+	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Output.java
+	KnapsackJavaOrtoolsSrcOutput string
 )
