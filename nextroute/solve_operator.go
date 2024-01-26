@@ -41,8 +41,8 @@ type SolveOperator interface {
 	// SetProbability sets the probability of the solve-operator. Returns an
 	// error if the probability is not in the range [0, 1].
 	SetProbability(probability float64) error
-	// SolveParameters returns the solve-parameters of the solve-operator.
-	SolveParameters() SolveParameters
+	// Parameters returns the solve-parameters of the solve-operator.
+	Parameters() SolveParameters
 }
 
 // InterestedInBetterSolution is an interface that can be implemented by
