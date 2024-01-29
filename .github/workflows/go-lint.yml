@@ -10,14 +10,14 @@ jobs:
         MOD_PATH:
           [./, ./route/google, ./route/here, ./route/osrm, ./route/routingkit]
     steps:
+      - name: git clone
+        uses: actions/checkout@v4
+
       - name: set up go
         uses: actions/setup-go@v5
         with:
           go-version: 1.19.3
         id: go
-
-      - name: git clone
-        uses: actions/checkout@v4
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
