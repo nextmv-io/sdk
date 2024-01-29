@@ -3,7 +3,6 @@ package check
 import (
 	"context"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
 	runSchema "github.com/nextmv-io/sdk/run/schema"
@@ -26,7 +25,7 @@ var (
 		context.Context,
 		any,
 		Options,
-		alns.Progressioner,
+		nextroute.Progressioner,
 		...nextroute.Solution,
 	) (runSchema.Output, error)
 )

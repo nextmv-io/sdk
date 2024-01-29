@@ -3,7 +3,6 @@ package nextroute
 import (
 	"context"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/run/schema"
 )
@@ -20,7 +19,7 @@ type FormatOptions struct {
 func Format(
 	ctx context.Context,
 	options any,
-	progressioner alns.Progressioner,
+	progressioner Progressioner,
 	toSolutionOutputFn func(Solution) any,
 	solutions ...Solution,
 ) schema.Output {

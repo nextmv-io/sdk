@@ -1,6 +1,8 @@
 package nextroute
 
-import "github.com/nextmv-io/sdk/connect"
+import (
+	"github.com/nextmv-io/sdk/connect"
+)
 
 // StopPositionsHint is an interface that can be used to give a hint to the
 // solver about the next stop position. This can be used to speed up the

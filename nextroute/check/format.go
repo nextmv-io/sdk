@@ -3,7 +3,6 @@ package check
 import (
 	"context"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
 	runSchema "github.com/nextmv-io/sdk/run/schema"
@@ -16,7 +15,7 @@ func Format(
 	ctx context.Context,
 	options any,
 	checkOptions Options,
-	progressioner alns.Progressioner,
+	progressioner nextroute.Progressioner,
 	solutions ...nextroute.Solution,
 ) (runSchema.Output, error) {
 	connect.Connect(con, &format)

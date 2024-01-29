@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -72,10 +71,10 @@ var (
 	newLatestArrival func(
 		StopTimeExpression,
 	) (LatestArrival, error)
-	newMaximumConstraint func(
+	newMaximum func(
 		ModelExpression,
 		VehicleTypeExpression,
-	) (MaximumConstraint, error)
+	) (Maximum, error)
 	newComposedPerVehicleTypeExpression func(
 		ModelExpression,
 	) ComposedPerVehicleTypeExpression
@@ -158,8 +157,8 @@ var (
 		StopExpression,
 	) UnPlannedObjective
 	newExpressionObjective func(ModelExpression) ExpressionObjective
-	newSolverFactory       func() SolverFactory
-	newVehiclesObjective   func(
+
+	newVehiclesObjective func(
 		VehicleTypeExpression,
 	) VehiclesObjective
 	newVehiclesDurationObjective  func() VehiclesDurationObjective
@@ -181,9 +180,21 @@ var (
 		SolverOptions,
 	) (Solver, error)
 
+	newSkeletonSolver func(
+		Model,
+	) (Solver, error)
+
 	newParallelSolver func(
 		Model,
 	) (ParallelSolver, error)
+
+	newSkeletonParallelSolver func(
+		Model,
+	) (ParallelSolver, error)
+
+	defaultSolveOptionsFactory func() SolveOptionsFactory
+
+	defaultSolverFactory func() SolverFactory
 
 	newSolutionPlanUnitCollection func(
 		*rand.Rand,
@@ -220,7 +231,7 @@ var (
 	format func(
 		context.Context,
 		any,
-		alns.Progressioner,
+		Progressioner,
 		func(Solution) any,
 		...Solution,
 	) schema.Output
@@ -228,4 +239,44 @@ var (
 	newModelStopsDistanceQueries func(
 		ModelStops,
 	) (ModelStopsDistanceQueries, error)
+
+	newSolverOperatorAnd func(
+		probability float64,
+		operators SolveOperators,
+	) (SolveOperatorAnd, error)
+
+	newSolverOperatorOr func(
+		probability float64,
+		operators SolveOperators,
+	) (SolveOperatorOr, error)
+
+	newSolveOperator func(
+		probability float64,
+		canResultInImprovement bool,
+		parameters SolveParameters,
+	) SolveOperator
+
+	newConstSolveParameter func(int) SolveParameter
+
+	newSolveParameter func(
+		startValue int,
+		deltaAfterIterations int,
+		delta int,
+		minValue int,
+		maxValue int,
+		snapBackAfterImprovement bool,
+		zigzag bool,
+	) (SolveParameter, error)
+
+	newSolveOperatorUnPlan func(
+		numberOfUnits SolveParameter,
+	) (SolveOperatorUnPlan, error)
+
+	newSolveOperatorPlan func(
+		groupSize SolveParameter,
+	) (SolveOperatorPlan, error)
+
+	newSolveOperatorRestart func(
+		maximumIterations SolveParameter,
+	) (SolveOperatorRestart, error)
 )
