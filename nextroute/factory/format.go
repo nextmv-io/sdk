@@ -4,7 +4,6 @@ import (
 	"context"
 	"math"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
 	"github.com/nextmv-io/sdk/nextroute/schema"
@@ -16,7 +15,7 @@ import (
 func Format(
 	ctx context.Context,
 	options any,
-	progressioner alns.Progressioner,
+	progressioner nextroute.Progressioner,
 	solutions ...nextroute.Solution,
 ) runSchema.Output {
 	connect.Connect(con, &format)

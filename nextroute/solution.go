@@ -2,8 +2,8 @@ package nextroute
 
 import (
 	"context"
+	"math/rand"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 )
 
@@ -54,8 +54,6 @@ func NewClusterSolution(
 
 // Solution is a solution to a model.
 type Solution interface {
-	alns.Solution[Solution]
-
 	// BestMove returns the best move for the given solution plan unit. The
 	// best move is the move that has the lowest score. If there are no moves
 	// available for the given solution plan unit, a move is returned which
@@ -67,6 +65,8 @@ type Solution interface {
 	// ConstraintSolutionDataUpdater.UpdateConstraintSolutionData method of the
 	// constraint.
 	ConstraintData(constraint ModelConstraint) any
+	// Copy returns a deep copy of the solution.
+	Copy() Solution
 
 	// FixedPlanUnits returns the solution plan units that are fixed.
 	// Fixed plan units are plan units that are not allowed to be planned or
@@ -90,14 +90,17 @@ type Solution interface {
 	// a collection of solution plan units.
 	PlannedPlanUnits() ImmutableSolutionPlanUnitCollection
 
+	// Random returns the random number generator of the solution.
+	Random() *rand.Rand
+
+	// Score returns the score of the solution.
+	Score() float64
 	// SolutionPlanStopsUnit returns the [SolutionPlanStopsUnit] for the given
 	// model plan unit.
 	SolutionPlanStopsUnit(planUnit ModelPlanStopsUnit) SolutionPlanStopsUnit
-
 	// SolutionPlanUnit returns the [SolutionPlanUnit] for the given
 	// model plan unit.
 	SolutionPlanUnit(planUnit ModelPlanUnit) SolutionPlanUnit
-
 	// SolutionStop returns the solution stop for the given model stop.
 	SolutionStop(stop ModelStop) SolutionStop
 	// SolutionVehicle returns the solution vehicle for the given model vehicle.

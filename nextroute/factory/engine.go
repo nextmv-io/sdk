@@ -3,7 +3,6 @@ package factory
 import (
 	"context"
 
-	"github.com/nextmv-io/sdk/alns"
 	"github.com/nextmv-io/sdk/connect"
 	"github.com/nextmv-io/sdk/nextroute"
 	"github.com/nextmv-io/sdk/nextroute/common"
@@ -22,7 +21,7 @@ var (
 	format func(
 		context.Context,
 		any,
-		alns.Progressioner,
+		nextroute.Progressioner,
 		...nextroute.Solution,
 	) runSchema.Output
 
