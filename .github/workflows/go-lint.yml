@@ -11,7 +11,7 @@ jobs:
           [./, ./route/google, ./route/here, ./route/osrm, ./route/routingkit]
     steps:
       - name: set up go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: 1.19.3
         id: go
