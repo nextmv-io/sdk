@@ -256,6 +256,10 @@ var (
 		parameters SolveParameters,
 	) SolveOperator
 
+	newSolveObserver func(
+		string,
+	) (SolveObserver, error)
+
 	newConstSolveParameter func(int) SolveParameter
 
 	newSolveParameter func(
