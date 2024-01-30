@@ -2,8 +2,8 @@ package alns
 
 import "github.com/nextmv-io/sdk/nextroute"
 
-// ProgressionEntry in alns for backwards compatibility
+// ProgressionEntry in alns for backwards compatibility.
 type ProgressionEntry nextroute.ProgressionEntry
 
-// Progressioner in alns for backwards compatibility
+// Progressioner in alns for backwards compatibility.
 type Progressioner nextroute.Progressioner
