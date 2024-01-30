@@ -1,3 +1,4 @@
+// Package alns exports some types for backwards compatibility.
 package alns
 
 import "github.com/nextmv-io/sdk/nextroute"
