@@ -8,9 +8,10 @@ import (
 	"time"
 
 	"github.com/nextmv-io/sdk"
+	"github.com/nextmv-io/sdk/alns"
+	"github.com/nextmv-io/sdk/common"
 	"github.com/nextmv-io/sdk/measure"
 	"github.com/nextmv-io/sdk/nextroute"
-	"github.com/nextmv-io/sdk/nextroute/common"
 	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run"
 	"github.com/nextmv-io/sdk/run/statistics"
@@ -138,7 +139,7 @@ func format(
 
 	seriesData := common.Map(
 		progressionValues,
-		func(progressionEntry nextroute.ProgressionEntry) statistics.DataPoint {
+		func(progressionEntry alns.ProgressionEntry) statistics.DataPoint {
 			return statistics.DataPoint{
 				X: statistics.Float64(progressionEntry.ElapsedSeconds),
 				Y: statistics.Float64(progressionEntry.Value),
@@ -318,7 +319,7 @@ func toFleetVehicleOutput(vehicle nextroute.SolutionVehicle) (FleetOutputVehicle
 
 func toFleetObjectiveOutput(solution nextroute.Solution) FleetOutputSummary {
 	earlinessPenalty := 0
-	latenessPenatly := 0
+	latenessPenalty := 0
 	unassignedPenalty := 0.0
 	travelTime := 0.0
 	initCosts := 0
@@ -330,7 +331,7 @@ func toFleetObjectiveOutput(solution nextroute.Solution) FleetOutputSummary {
 		case "unplanned_penalty":
 			unassignedPenalty = solution.ObjectiveValue(t.Objective())
 		case "late_arrival_penalty":
-			latenessPenatly = int(solution.ObjectiveValue(t.Objective()))
+			latenessPenalty = int(solution.ObjectiveValue(t.Objective()))
 		case "vehicles_duration":
 			travelTime = solution.ObjectiveValue(t.Objective())
 		case "vehicle_activation_penalty":
@@ -356,7 +357,7 @@ func toFleetObjectiveOutput(solution nextroute.Solution) FleetOutputSummary {
 		Value:                           solution.ObjectiveValue(solution.Model().Objective()),
 		TotalTravelTime:                 int(travelTime),
 		TotalEarlinessPenalty:           &earlinessPenalty,
-		TotalLatenessPenalty:            &latenessPenatly,
+		TotalLatenessPenalty:            &latenessPenalty,
 		TotalUnassignedPenalty:          unassignedPenalty,
 		TotalTravelDistance:             travelDistance,
 		TotalVehicleInitializationCosts: initCosts,
