@@ -1,12 +1,11 @@
 """
-Template for working with Google OR-Tools.
+Template to solve a cost flow problem with Google OR-Tools.
 """
 
 import argparse
 import json
 import sys
 from typing import Any
-import time
 
 from ortools.graph.python import min_cost_flow
 
