@@ -34,15 +34,9 @@ def main() -> None:
         help="Path to output file. Default is stdout.",
     )
     parser.add_argument(
-        "-duration",
-        default=30,
-        help="Max runtime duration (in seconds). Default is 30.",
-        type=int,
-    )
-    parser.add_argument(
-        "-provider",
-        default="SCIP",
-        help="Solver provider. Default is SCIP.",
+        "-penalty",
+        default=3000,
+        help="A penalty added to the edges from dummy source to projects. Default is 3000.",
     )
     args = parser.parse_args()
 
@@ -51,14 +45,13 @@ def main() -> None:
     log("Best value flow for project to worker assignment:")
     log(f"  - projects: {len(input_data.get('projects', []))}")
     log(f"  - workers: {len(input_data.get('workers', []))}")
-    solution = solve(input_data, args.duration, args.provider)
+    log(f"  - penalty: {args.penalty}")
+    solution = solve(input_data, args.penalty)
     write_output(args.output, solution)
 
 
-def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
+def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
-
-    penalty = 3000
 
     total_available_time = 0
     total_required_time = 0
@@ -148,9 +141,7 @@ def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str,
         unit_costs.append(penalty)
 
     solver = min_cost_flow.SimpleMinCostFlow()
-    solver.SetTimeLimit(duration * 1000)
-    solver.SetSolverProvider(provider)
-    
+
     all_arcs = solver.add_arcs_with_capacity_and_unit_cost(
         start_nodes, end_nodes, capacities, unit_costs
     )
