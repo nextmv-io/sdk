@@ -5,6 +5,7 @@ Template to solve a cost flow problem with Google OR-Tools.
 import argparse
 import json
 import sys
+import time
 from typing import Any
 
 from ortools.graph.python import min_cost_flow
@@ -22,7 +23,7 @@ STATUS = {
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve cost-flow with OR-Tools MIP.")
+    parser = argparse.ArgumentParser(description="Solve cost-flow with OR-Tools.")
     parser.add_argument(
         "-input",
         default="",
@@ -83,7 +84,7 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     if total_available_time < total_required_time:
         supply.append(total_required_time - total_available_time)
     else:
-        supply.append(0)
+        supply.append(0.0)
 
     # dummy sink
     if total_required_time < total_available_time:
@@ -147,7 +148,11 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     )
     solver.set_nodes_supplies(range(0, len(supply)), supply)
 
+    start = time.process_time()
     status = solver.solve()
+    end = time.process_time()
+
+    wall_time = end - start
 
     solution_flows = solver.flows(all_arcs)
     costs = solution_flows * unit_costs * -1
@@ -175,10 +180,8 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
                 "number_of_fulfilled_projects": 0,
                 "number_of_unfulfilled_projects": 0
             },
-            "duration": solver.WallTime() / 1000,
-            "value": solver.Objective().Value()
-            if status == min_cost_flow.SimpleMinCostFlow.OPTIMAL or status == min_cost_flow.SimpleMinCostFlow.FEASIBLE
-            else None,
+            "duration": wall_time,
+            "value": solver.optimal_cost(),
         },
         "run": {
             "duration": solver.WallTime() / 1000,
