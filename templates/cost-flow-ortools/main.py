@@ -235,10 +235,10 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
         statistics["result"]["custom"]["number_of_unfilled_projects"] = len(input_data["projects"]) - fulfilled_projects
 
     log(f"  - status: {STATUS.get(status, 'unknown')}")
-    log(f" - value: {statistics['result']['value']}")
-    log(f" - total value of fulfilled projects: {solution['total_value_of_fulfilled_projects']}")
-    log(f" - number of fulfilled projects: {statistics['result']['custom']['number_of_fulfilled_projects']}")
-    log(f" - number of unfulfilled projects: {statistics['result']['custom']['number_of_unfilled_projects']}")
+    log(f"  - value: {statistics['result']['value']}")
+    log(f"  - total value of fulfilled projects: {solution['total_value_of_fulfilled_projects']}")
+    log(f"  - number of fulfilled projects: {statistics['result']['custom']['number_of_fulfilled_projects']}")
+    log(f"  - number of unfulfilled projects: {statistics['result']['custom']['number_of_unfilled_projects']}")
 
     return {
         "solutions": [solution],
