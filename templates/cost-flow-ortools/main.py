@@ -184,7 +184,7 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
             "value": solver.optimal_cost(),
         },
         "run": {
-            "duration": solver.WallTime() / 1000,
+            "duration": wall_time,
         },
         "schema": "v1",
     }
