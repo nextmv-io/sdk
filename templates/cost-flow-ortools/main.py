@@ -241,7 +241,7 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     log(f"  - number of unfulfilled projects: {statistics['result']['custom']['number_of_unfilled_projects']}")
 
     return {
-        "solutions": [solution],
+        "solution": solution,
         "statistics": statistics,
     }
 
