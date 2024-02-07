@@ -20,11 +20,10 @@ STATUS = {
     min_cost_flow.SimpleMinCostFlow.UNBALANCED: "unbalanced"
 }
 
-
 def main() -> None:
     """Entry point for the template."""
 
-    parser = argparse.ArgumentParser(description="Solve problems with OR-Tools.")
+    parser = argparse.ArgumentParser(description="Solve cost-flow with OR-Tools MIP.")
     parser.add_argument(
         "-input",
         default="",
@@ -35,6 +34,17 @@ def main() -> None:
         default="",
         help="Path to output file. Default is stdout.",
     )
+    parser.add_argument(
+        "-duration",
+        default=30,
+        help="Max runtime duration (in seconds). Default is 30.",
+        type=int,
+    )
+    parser.add_argument(
+        "-provider",
+        default="SCIP",
+        help="Solver provider. Default is SCIP.",
+    )
     args = parser.parse_args()
 
     # Read input data, solve the problem and write the solution.
@@ -42,11 +52,11 @@ def main() -> None:
     log("Best value flow for project to worker assignment:")
     log(f"  - projects: {len(input_data.get('projects', []))}")
     log(f"  - workers: {len(input_data.get('workers', []))}")
-    solution = solve(input_data)
+    solution = solve(input_data, args.duration, args.provider)
     write_output(args.output, solution)
 
 
-def solve(input_data: dict[str, Any]) -> dict[str, Any]:
+def solve(input_data: dict[str, Any], duration: int, provider: str) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
     penalty = 3000
@@ -139,17 +149,15 @@ def solve(input_data: dict[str, Any]) -> dict[str, Any]:
         unit_costs.append(penalty)
 
     solver = min_cost_flow.SimpleMinCostFlow()
-
+    solver.SetTimeLimit(duration * 1000)
+    solver.SetSolverProvider(provider)
+    
     all_arcs = solver.add_arcs_with_capacity_and_unit_cost(
         start_nodes, end_nodes, capacities, unit_costs
     )
     solver.set_nodes_supplies(range(0, len(supply)), supply)
 
-    start = time.process_time()
     status = solver.solve()
-    end = time.process_time()
-
-    wall_time = end - start
 
     solution_flows = solver.flows(all_arcs)
     costs = solution_flows * unit_costs * -1
@@ -177,11 +185,13 @@ def solve(input_data: dict[str, Any]) -> dict[str, Any]:
                 "number_of_fulfilled_projects": 0,
                 "number_of_unfulfilled_projects": 0
             },
-            "duration": wall_time,
-            "value": solver.optimal_cost(),
+            "duration": solver.WallTime() / 1000,
+            "value": solver.Objective().Value()
+            if status == min_cost_flow.SimpleMinCostFlow.OPTIMAL or status == min_cost_flow.SimpleMinCostFlow.FEASIBLE
+            else None,
         },
         "run": {
-            "duration": wall_time,
+            "duration": solver.WallTime() / 1000,
         },
         "schema": "v1",
     }
@@ -192,43 +202,50 @@ def solve(input_data: dict[str, Any]) -> dict[str, Any]:
     # value: what is the actual value of projects that can be
     # fulfilled (only considers projects that don't need the dummy source)
     solution = {"flows": [], "assignments": [], "status": STATUS.get(status, "unknown")}
-    total_value = 0
-    fulfilled_projects = 0
-    for i in range(0, len(solution_flows)):
-        solution["flows"].append(
-            {
-                "from": start_nodes[i],
-                "to": end_nodes[i],
-                "flow": int(solution_flows[i]),
-                "capacity": int(capacities[i]),
-                "value": int(costs[i])
-            }
-        )
-
-        # look at the flows between workers and projects to get the assignments
-        if solution_flows[i] > 0 and start_nodes[i] != 0 \
-                and end_nodes[i] != 1 and start_nodes[i] != 2 and end_nodes[i] != 3:
-            project_id = input_data["projects"][end_nodes[i] - 4 - len(input_data["workers"])]["id"]
-            solution["assignments"].append(
+    if status == min_cost_flow.SimpleMinCostFlow.OPTIMAL or status == min_cost_flow.SimpleMinCostFlow.FEASIBLE:
+        total_value = 0
+        fulfilled_projects = 0
+        for i in range(0, len(solution_flows)):
+            solution["flows"].append(
                 {
-                    "project": project_id,
-                    "worker": input_data["workers"][start_nodes[i] - 4]["id"],
-                    "value": input_data["projects"][end_nodes[i] - 4 - len(input_data["workers"])]["value"],
-                    "time_units": int(solution_flows[i]),
+                    "from": start_nodes[i],
+                    "to": end_nodes[i],
+                    "flow": int(solution_flows[i]),
+                    "capacity": int(capacities[i]),
+                    "value": int(costs[i])
                 }
             )
 
-            # Compute the number of projects that can be fulfilled with workers
-            project_to_open_time_units[project_id] -= int(solution_flows[i])
+            # look at the flows between workers and projects to get the assignments
+            if solution_flows[i] > 0 and start_nodes[i] != 0 \
+                    and end_nodes[i] != 1 and start_nodes[i] != 2 and end_nodes[i] != 3:
+                project_id = input_data["projects"][end_nodes[i] - 4 - len(input_data["workers"])]["id"]
+                solution["assignments"].append(
+                    {
+                        "project": project_id,
+                        "worker": input_data["workers"][start_nodes[i] - 4]["id"],
+                        "value": input_data["projects"][end_nodes[i] - 4 - len(input_data["workers"])]["value"],
+                        "time_units": int(solution_flows[i]),
+                    }
+                )
 
-    for pid in project_to_open_time_units:
-        if project_to_open_time_units[pid] == 0:
-            total_value += project_to_value[pid]
-            fulfilled_projects += 1
+                # Compute the number of projects that can be fulfilled with workers
+                project_to_open_time_units[project_id] -= int(solution_flows[i])
 
-    solution["total_value_of_fulfilled_projects"] = total_value
-    statistics["result"]["custom"]["number_of_fulfilled_projects"] = fulfilled_projects
-    statistics["result"]["custom"]["number_of_unfilled_projects"] = len(input_data["projects"]) - fulfilled_projects
+        for pid in project_to_open_time_units:
+            if project_to_open_time_units[pid] == 0:
+                total_value += project_to_value[pid]
+                fulfilled_projects += 1
+
+        solution["total_value_of_fulfilled_projects"] = total_value
+        statistics["result"]["custom"]["number_of_fulfilled_projects"] = fulfilled_projects
+        statistics["result"]["custom"]["number_of_unfilled_projects"] = len(input_data["projects"]) - fulfilled_projects
+
+    log(f"  - status: {STATUS.get(status, 'unknown')}")
+    log(f" - value: {statistics['result']['value']}")
+    log(f" - total value of fulfilled projects: {solution['total_value_of_fulfilled_projects']}")
+    log(f" - number of fulfilled projects: {statistics['result']['custom']['number_of_fulfilled_projects']}")
+    log(f" - number of unfulfilled projects: {statistics['result']['custom']['number_of_unfilled_projects']}")
 
     return {
         "solutions": [solution],
