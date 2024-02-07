@@ -47,7 +47,7 @@ def main() -> None:
     log(f"  - projects: {len(input_data.get('projects', []))}")
     log(f"  - workers: {len(input_data.get('workers', []))}")
     log(f"  - penalty: {args.penalty}")
-    solution = solve(input_data, args.penalty)
+    solution = solve(input_data, float(args.penalty))
     write_output(args.output, solution)
 
 
@@ -84,7 +84,7 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     if total_available_time < total_required_time:
         supply.append(total_required_time - total_available_time)
     else:
-        supply.append(0.0)
+        supply.append(0)
 
     # dummy sink
     if total_required_time < total_available_time:
