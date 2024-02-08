@@ -7,7 +7,7 @@ replace github.com/nextmv-io/sdk => ../../.
 require (
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/nextmv-io/go-routingkit v0.1.18
-	github.com/nextmv-io/sdk v1.3.0-dev.1
+	github.com/nextmv-io/sdk v1.3.0-dev.3
 	github.com/twpayne/go-polyline v1.1.1
 )
 
