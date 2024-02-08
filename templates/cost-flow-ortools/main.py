@@ -101,7 +101,6 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
         supply.append(0)
 
     # create edges: worker to project, consider skills
-    hasCorrectSkills = True
     for i in range(0, len(input_data["workers"])):
         worker = input_data["workers"][i]
         for j in range(0, len(input_data["projects"])):
