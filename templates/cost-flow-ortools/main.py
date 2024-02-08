@@ -255,12 +255,10 @@ def validateSkills(input_data: dict[str, Any]) -> Any:
         for skill in project["required_skills"]:
             if not any(skill in worker["skills"] for worker in input_data["workers"]):
                 return errorStatusOutput("input_skill_error")
-            
     for worker in input_data["workers"]:
         for skill in worker["skills"]:
             if not any(skill in project["required_skills"] for project in input_data["projects"]):
                 return errorStatusOutput("input_skill_error")
-            
     return None
 
 def errorStatusOutput(status: str) -> dict[str, Any]:
