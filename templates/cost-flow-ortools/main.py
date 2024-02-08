@@ -54,6 +54,10 @@ def main() -> None:
 def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
     """Solves the given problem and returns the solution."""
 
+    err = validateSkills(input_data)
+    if err:
+        return err
+
     total_available_time = 0
     total_required_time = 0
     project_to_open_time_units = {}
@@ -111,8 +115,6 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
                 end_nodes.append(structure_node_count + len(input_data["workers"]) + j)
                 capacities.append(worker["available_time"])  # assignment of a worker to a project
                 unit_costs.append(-1 * round(project["value"] / project["required_time"], 2))
-            else:
-                return errorStatusOutput("invalid_skills_data")
 
     # create edges: project to sink
     for i in range(0, len(input_data["projects"])):
@@ -246,6 +248,20 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
         "solution": solution,
         "statistics": statistics,
     }
+
+def validateSkills(input_data: dict[str, Any]) -> Any:
+    """Check that each project skill and each worker skill have a skill pair."""
+    for project in input_data["projects"]:
+        for skill in project["required_skills"]:
+            if not any(skill in worker["skills"] for worker in input_data["workers"]):
+                return errorStatusOutput("input_skill_error")
+            
+    for worker in input_data["workers"]:
+        for skill in worker["skills"]:
+            if not any(skill in project["required_skills"] for project in input_data["projects"]):
+                return errorStatusOutput("input_skill_error")
+            
+    return None
 
 def errorStatusOutput(status: str) -> dict[str, Any]:
     """Returns an error output with a given status."""
