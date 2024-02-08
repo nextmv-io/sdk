@@ -101,6 +101,7 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
         supply.append(0)
 
     # create edges: worker to project, consider skills
+    hasCorrectSkills = True
     for i in range(0, len(input_data["workers"])):
         worker = input_data["workers"][i]
         for j in range(0, len(input_data["projects"])):
@@ -111,6 +112,8 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
                 end_nodes.append(structure_node_count + len(input_data["workers"]) + j)
                 capacities.append(worker["available_time"])  # assignment of a worker to a project
                 unit_costs.append(-1 * round(project["value"] / project["required_time"], 2))
+            else:
+                return errorStatusOutput("invalid_skills_data")
 
     # create edges: project to sink
     for i in range(0, len(input_data["projects"])):
@@ -244,6 +247,39 @@ def solve(input_data: dict[str, Any], penalty: float) -> dict[str, Any]:
         "solution": solution,
         "statistics": statistics,
     }
+
+def errorStatusOutput(status: str) -> dict[str, Any]:
+    """Returns an error output with a given status."""
+
+    return {
+            "solution": {
+                "flows": [],
+                "assignments": [],
+                "status": f"{status}",
+            },
+            "statistics": {
+                "result": {
+                    "custom": {
+                        "number_of_edges": 0,
+                        "number_of_nodes": 0,
+                        "number_of_workers": 0,
+                        "number_of_projects": 0,
+                        "available_time_units": 0,
+                        "required_time_units": 0,
+                        "excess_time_units": 0,
+                        "unmet_time_units": 0,
+                        "number_of_fulfilled_projects": 0,
+                        "number_of_unfulfilled_projects": 0
+                    },
+                    "duration": 0,
+                    "value": 0,
+                },
+                "run": {
+                    "duration": 0,
+                },
+                "schema": "v1",
+            }
+        }
 
 
 def log(message: str) -> None:
