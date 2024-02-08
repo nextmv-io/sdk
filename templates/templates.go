@@ -227,4 +227,20 @@ var (
 	// KnapsackJavaOrtoolsSrcOutput is the Output.java file in the knapsack-java-ortools template.
 	//go:embed knapsack-java-ortools/src/main/java/com/nextmv/example/Output.java
 	KnapsackJavaOrtoolsSrcOutput string
+
+	// CostFlowOrtoolsManifest is the app manifest file in the cost-flow template.
+	//go:embed cost-flow-ortools/app.yaml
+	CostFlowOrtoolsManifest string
+	// CostFlowOrtoolsMain is the main.py file in the cost-flow template.
+	//go:embed cost-flow-ortools/main.py
+	CostFlowOrtoolsMain string
+	// CostFlowOrtoolsInput is the input.json file in the cost-flow template.
+	//go:embed cost-flow-ortools/input.json
+	CostFlowOrtoolsInput string
+	// CostFlowOrtoolsReadme is the README.md file in the cost-flow template.
+	//go:embed cost-flow-ortools/README.md
+	CostFlowOrtoolsReadme string
+	// CostFlowOrtoolsRequirements is the requirements.txt file in the cost-flow template.
+	//go:embed cost-flow-ortools/requirements.txt
+	CostFlowOrtoolsRequirements string
 )
