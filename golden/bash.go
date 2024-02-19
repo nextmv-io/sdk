@@ -29,7 +29,7 @@ func BashTest(
 
 	// Collect bash scripts.
 	var scripts []string
-	fn := func(path string, info os.FileInfo, _ error) error {
+	fn := func(path string, _ os.FileInfo, _ error) error {
 		// Only consider .sh files
 		if strings.HasSuffix(path, ".sh") {
 			scripts = append(scripts, path)

@@ -35,6 +35,7 @@ linters-settings:
         - github.com/google/uuid
         - github.com/xeipuuv/gojsonschema
         - github.com/danielgtaylor/huma
+        - github.com/sergi/go-diff/diffmatchpatch
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20

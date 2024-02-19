@@ -20,7 +20,7 @@ jobs:
         id: go
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
           version: v1.54.1
           working-directory: ${{ matrix.MOD_PATH }}
