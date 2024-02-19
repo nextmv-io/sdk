@@ -61,7 +61,7 @@ func Setup() {
 	safeDelete(binaryName)
 
 	// Compile testing binary
-	comp := exec.Command("go", "build", "-trimpath", "-o", binaryName)
+	comp := exec.Command("go", "build", "-o", binaryName)
 	if output, err := comp.CombinedOutput(); err != nil {
 		panic(fmt.Errorf(
 			"error compiling testing binary: %v\n%s",
