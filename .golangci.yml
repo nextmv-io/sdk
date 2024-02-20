@@ -35,6 +35,7 @@ linters-settings:
         - github.com/google/uuid
         - github.com/xeipuuv/gojsonschema
         - github.com/danielgtaylor/huma
+        - github.com/sergi/go-diff
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20
@@ -174,42 +175,12 @@ issues:
     - path: route/example_router_test\.go
       linters:
         - dupl
-    # Deactivate line length in solver.go because of go tags
-    - path: nextroute/solver\.go
-      linters:
-        - lll
-    - path: nextroute/solve_solver_parallel\.go
-      linters:
-        - lll
-    - path: nextroute/solve_solver\.go
-      linters:
-        - lll
-    # Deactivate line length because of go tags
-    - path: nextroute/check/options\.go
-      linters:
-        - lll
-    # Deactivate lll in schema due to go tags.
-    - path: nextroute/schema
-      linters:
-        - lll
     # Deactivate lll in route/example_option_test.go
     - path: route/example_option_test\.go
       linters:
         - lll
       # Deactivate lll in route/router.go
     - path: route/router\.go
-      linters:
-        - lll
-    # Deactivate line length in model.go because of go tags
-    - path: nextroute/model\.go
-      linters:
-        - lll
-    # Deactivate line length in factory/model.go because of go tags
-    - path: nextroute/factory/model\.go
-      linters:
-        - lll
-    # Deactivate line length in construction.go because of go tags
-    - path: nextroute/factory/construction\.go
       linters:
         - lll
     # Tag should be 'measure' in both cases ByPoint and ByIndex
@@ -221,10 +192,6 @@ issues:
       linters:
         - tagliatelle
       text: measure
-    # Cloud code for compatibility
-    - path: nextroute/schema/fleet_defaults\.go
-      linters:
-        - gocyclo
     # Using math/rand is fine here
     - path: common/alias_test\.go
       linters:
@@ -359,10 +326,6 @@ issues:
       linters:
         - staticcheck
       text: "SA1019:"
-    - path: nextroute/schema/router\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
     - path: store
       linters:
         - staticcheck
@@ -405,8 +368,24 @@ issues:
       linters:
         - revive
       text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
-    # This tag is used by our validation engine and it is valid.
-    - path: nextroute/schema/input\.go
+
+    # Deactivate line length in factory.
+    - path: 'nextroute/factory/.+\.go'
       linters:
-        - govet
-      text: structtag
+        - lll
+    # Deactivate cyclomatic complexity in legacy fleet support.
+    - path: nextroute/schema/fleet.+\.go
+      linters:
+        - gocyclo
+    # We need to allow long lines for json and runner tags in nextroute options.
+    - path: nextroute/.+solver.*\.go
+      linters:
+        - lll
+
+    # The golden file testing framework is only used internally and doesn't need
+    # to meet the same standards as the rest of the codebase for now.
+    - path: golden/.+\.go
+      linters:
+        - gocyclo
+        - nestif
+        - gosec
