@@ -377,6 +377,10 @@ issues:
     - path: nextroute/schema/fleet.+\.go
       linters:
         - gocyclo
+    # We need to allow long lines for json and runner tags in nextroute options.
+    - path: nextroute/.+solver.*\.go
+      linters:
+        - lll
 
     # The golden file testing framework is only used internally and doesn't need
     # to meet the same standards as the rest of the codebase for now.
@@ -385,8 +389,3 @@ issues:
         - gocyclo
         - nestif
         - gosec
-
-    # We need to allow long lines for json and runner tags in nextroute options.
-    - path: nextroute/.+solver.*\.go
-      linters:
-        - lll
