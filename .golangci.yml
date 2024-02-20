@@ -35,7 +35,7 @@ linters-settings:
         - github.com/google/uuid
         - github.com/xeipuuv/gojsonschema
         - github.com/danielgtaylor/huma
-        - github.com/sergi/go-diff/diffmatchpatch
+        - github.com/sergi/go-diff
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20
@@ -385,3 +385,8 @@ issues:
         - gocyclo
         - nestif
         - gosec
+
+    # We need to allow long lines for json and runner tags in nextroute options.
+    - path: nextroute/.+solver.*\.go
+      linters:
+        - lll
