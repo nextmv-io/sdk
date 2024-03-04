@@ -158,6 +158,8 @@ type ExecutionConfig struct {
 	// Args are the arguments to be passed to the entrypoint of the app to be
 	// executed. E.g., ["main.py"].
 	Args []string
+	// WorkDir is the working directory where the command will be executed.
+	WorkDir string
 	// InputFlag is the argument to be used to pass the input file to the app to
 	// be executed. E.g., "-input".
 	InputFlag string
@@ -201,6 +203,9 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		customArgs := config.ExecutionConfig.Args
 		customArgs = append(customArgs, args...)
 		command = exec.Command(config.ExecutionConfig.Command, customArgs...)
+		if config.ExecutionConfig.WorkDir != "" {
+			command.Dir = config.ExecutionConfig.WorkDir
+		}
 	}
 
 	command.Env = os.Environ()
