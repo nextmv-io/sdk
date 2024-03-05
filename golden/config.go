@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
 
@@ -158,7 +159,8 @@ type ExecutionConfig struct {
 	// Args are the arguments to be passed to the entrypoint of the app to be
 	// executed. E.g., ["main.py"].
 	Args []string
-	// WorkDir is the working directory where the command will be executed.
+	// WorkDir is the working directory where the command will be executed. When
+	// specified, the input file path will be adapted.
 	WorkDir string
 	// InputFlag is the argument to be used to pass the input file to the app to
 	// be executed. E.g., "-input".
@@ -176,6 +178,19 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 	isCustom := config.ExecutionConfig != nil
 	args := config.Args
 
+	// Adapt input path, if using custom working directory
+	if isCustom && config.ExecutionConfig.WorkDir != "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return nil, "", err
+		}
+		inputPath = filepath.Join(cwd, inputPath)
+	}
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+		return nil, "", fmt.Errorf("input file does not exist: %s", inputPath)
+	}
+
+	// When not handling I/O with stdin/stdout, use temporary files
 	if !config.UseStdIn {
 		inputFlag := "-runner.input.path"
 		if isCustom {
@@ -183,13 +198,11 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		}
 		args = append(args, inputFlag, inputPath)
 	}
-
 	if !config.UseStdOut {
 		outputFile, err := os.CreateTemp("", "output")
 		if err != nil {
 			return nil, "", err
 		}
-
 		tempFileName = outputFile.Name()
 		outputFlag := "-runner.output.path"
 		if isCustom {
@@ -198,6 +211,7 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		args = append(args, outputFlag, tempFileName)
 	}
 
+	// Assemble the command (switch working directory if needed)
 	command := exec.Command("./"+binaryName, args...)
 	if isCustom {
 		customArgs := config.ExecutionConfig.Args
@@ -208,11 +222,13 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		}
 	}
 
+	// Pass environment and add custom environment variables
 	command.Env = os.Environ()
 	for _, e := range config.Envs {
 		command.Env = append(command.Env, fmt.Sprintf("%s=%s", e[0], e[1]))
 	}
 
+	// Pipe input file to stdin, if using stdin
 	if config.UseStdIn {
 		file, err := os.Open(inputPath)
 		if err != nil {
