@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -157,7 +158,9 @@ type ExecutionConfig struct {
 	// "python3".
 	Command string
 	// Args are the arguments to be passed to the entrypoint of the app to be
-	// executed. E.g., ["main.py"].
+	// executed. E.g., ["main.py"]. If InputFlag and OutputFlag are not
+	// specified, then GOLDEN_INPUT and GOLDEN_OUTPUT are replaced by the input
+	// and output file paths, respectively.
 	Args []string
 	// WorkDir is the working directory where the command will be executed. When
 	// specified, the input file path will be adapted.
@@ -169,6 +172,15 @@ type ExecutionConfig struct {
 	// to be executed. E.g., "-output".
 	OutputFlag string
 }
+
+const (
+	// ArgInputReplacement is the placeholder for the input file path in the
+	// command arguments.
+	ArgInputReplacement = "GOLDEN_INPUT"
+	// ArgOutputReplacement is the placeholder for the output file path in the
+	// command arguments.
+	ArgOutputReplacement = "GOLDEN_OUTPUT"
+)
 
 // entrypoint returns the command to execute the algorithm for golden file
 // comparison and the name of a temporary file where the output will be stored,
@@ -211,6 +223,22 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 			outputFlag = config.ExecutionConfig.OutputFlag
 		}
 		args = append(args, outputFlag, tempFileName)
+	}
+
+	// Replace the input and output file paths in the command arguments
+	if isCustom && config.ExecutionConfig.InputFlag == "" {
+		for i, arg := range args {
+			if strings.Contains(arg, ArgInputReplacement) {
+				args[i] = strings.Replace(arg, ArgInputReplacement, inputPath, -1)
+			}
+		}
+	}
+	if isCustom && config.ExecutionConfig.OutputFlag == "" {
+		for i, arg := range args {
+			if strings.Contains(arg, ArgOutputReplacement) {
+				args[i] = strings.Replace(arg, ArgOutputReplacement, tempFileName, -1)
+			}
+		}
 	}
 
 	// Assemble the command (switch working directory if needed)
