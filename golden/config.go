@@ -229,14 +229,14 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 	if isCustom && config.ExecutionConfig.InputFlag == "" {
 		for i, arg := range args {
 			if strings.Contains(arg, ArgInputReplacement) {
-				args[i] = strings.Replace(arg, ArgInputReplacement, inputPath, -1)
+				args[i] = strings.ReplaceAll(arg, ArgInputReplacement, inputPath)
 			}
 		}
 	}
 	if isCustom && config.ExecutionConfig.OutputFlag == "" {
 		for i, arg := range args {
 			if strings.Contains(arg, ArgOutputReplacement) {
-				args[i] = strings.Replace(arg, ArgOutputReplacement, tempFileName, -1)
+				args[i] = strings.ReplaceAll(arg, ArgOutputReplacement, tempFileName)
 			}
 		}
 	}
