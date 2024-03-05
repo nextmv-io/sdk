@@ -199,6 +199,7 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		}
 		args = append(args, inputFlag, inputPath)
 	}
+
 	if !config.UseStdOut {
 		outputFile, err := os.CreateTemp("", "output")
 		if err != nil {
