@@ -186,6 +186,7 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		}
 		inputPath = filepath.Join(cwd, inputPath)
 	}
+
 	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
 		return nil, "", fmt.Errorf("input file does not exist: %s", inputPath)
 	}
