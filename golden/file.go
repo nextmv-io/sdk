@@ -89,7 +89,7 @@ func FileTest(t *testing.T, inputPath string, config Config) {
 			}
 
 			actualBytes := stdout.Bytes()
-			if !config.UseStdOut {
+			if !config.UseStdOut && !config.IgnoreStdOut {
 				if len(actualBytes) > 0 {
 					t.Fatal("expected no stdout bytes but got: ", string(actualBytes))
 				}

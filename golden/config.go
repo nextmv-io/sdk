@@ -33,6 +33,10 @@ type Config struct {
 	UseStdIn bool
 	// UseStdOut indicates whether to write output to stdout instead of a file.
 	UseStdOut bool
+	// IgnoreStdOut indicates whether to ignore the output of the command. This
+	// is useful when the command writes to a file and we are not interested in
+	// the output.
+	IgnoreStdOut bool
 	// TransientFields are keys that hold values which are transient (dynamic)
 	// in nature, such as the elapsed time, version, start time, etc. Transient
 	// fields have a special parsing in the .golden file and they are
@@ -203,50 +207,59 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 		return nil, "", fmt.Errorf("input file does not exist: %s", inputPath)
 	}
 
-	// When not handling I/O with stdin/stdout, use temporary files
-	if !config.UseStdIn {
-		inputFlag := "-runner.input.path"
-		if isCustom {
-			inputFlag = config.ExecutionConfig.InputFlag
-		}
-		args = append(args, inputFlag, inputPath)
+	// Append custom arguments to the command arguments, if using custom command
+	if isCustom {
+		args = append(config.ExecutionConfig.Args, args...)
 	}
 
+	// Handle how the input is passed to the command. If we are using stdin,
+	// then we can ignore the input path here. Otherwise, we either use the
+	// specified input flag or replace the placeholder in the command arguments.
+	if !config.UseStdIn {
+		if isCustom && config.ExecutionConfig.InputFlag == "" {
+			for i, arg := range args {
+				if strings.Contains(arg, ArgInputReplacement) {
+					args[i] = strings.ReplaceAll(arg, ArgInputReplacement, inputPath)
+				}
+			}
+		} else {
+			inputFlag := "-runner.input.path"
+			if config.ExecutionConfig.InputFlag != "" {
+				inputFlag = config.ExecutionConfig.InputFlag
+			}
+			args = append(args, inputFlag, inputPath)
+		}
+	}
+
+	// Handle how the output is passed to the command. If we are using stdout,
+	// then we can ignore the output path here. Otherwise, we either use the
+	// specified output flag or replace the placeholder in the command
+	// arguments.
 	if !config.UseStdOut {
 		outputFile, err := os.CreateTemp("", "output")
 		if err != nil {
 			return nil, "", err
 		}
 		tempFileName = outputFile.Name()
-		outputFlag := "-runner.output.path"
-		if isCustom {
-			outputFlag = config.ExecutionConfig.OutputFlag
-		}
-		args = append(args, outputFlag, tempFileName)
-	}
-
-	// Replace the input and output file paths in the command arguments
-	if isCustom && config.ExecutionConfig.InputFlag == "" {
-		for i, arg := range args {
-			if strings.Contains(arg, ArgInputReplacement) {
-				args[i] = strings.ReplaceAll(arg, ArgInputReplacement, inputPath)
+		if isCustom && config.ExecutionConfig.OutputFlag == "" {
+			for i, arg := range args {
+				if strings.Contains(arg, ArgOutputReplacement) {
+					args[i] = strings.ReplaceAll(arg, ArgOutputReplacement, tempFileName)
+				}
 			}
-		}
-	}
-	if isCustom && config.ExecutionConfig.OutputFlag == "" {
-		for i, arg := range args {
-			if strings.Contains(arg, ArgOutputReplacement) {
-				args[i] = strings.ReplaceAll(arg, ArgOutputReplacement, tempFileName)
+		} else {
+			outputFlag := "-runner.output.path"
+			if config.ExecutionConfig.OutputFlag != "" {
+				outputFlag = config.ExecutionConfig.OutputFlag
 			}
+			args = append(args, outputFlag, tempFileName)
 		}
 	}
 
 	// Assemble the command (switch working directory if needed)
 	command := exec.Command("./"+binaryName, args...)
 	if isCustom {
-		customArgs := config.ExecutionConfig.Args
-		customArgs = append(customArgs, args...)
-		command = exec.Command(config.ExecutionConfig.Command, customArgs...)
+		command = exec.Command(config.ExecutionConfig.Command, args...)
 		if config.ExecutionConfig.WorkDir != "" {
 			command.Dir = config.ExecutionConfig.WorkDir
 		}
