@@ -1,42 +1,78 @@
-# Creates the GH release entry
 name: release
+
 on:
-  push:
-    tags:
-      # Run on every proper semver tag
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-permissions:
-  contents: write
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: "The version to release"
+        required: true
+      IS_PRE_RELEASE:
+        description: "It IS a pre-release"
+        required: true
+        default: true
+        type: boolean
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.VERSION }}
+      GH_TOKEN: ${{ github.token }}
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+    permissions:
+      contents: write
     steps:
-      # Create the GH release
-      - name: Release
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: ensure proper tagging
         run: |
-          echo "Releasing version ${{ github.ref_name }} of route/routingkit"
-          gh release create -R nextmv-io/sdk "route/routingkit/${{ github.ref_name }}" \
-            --verify-tag \
-            --title "route/routingkit ${{ github.ref_name }}" \
-            --notes "Release of route/routingkit at ${{ github.ref_name }}"
-          echo "Releasing version ${{ github.ref_name }} of route/here"
-          gh release create -R nextmv-io/sdk "route/here/${{ github.ref_name }}" \
-            --verify-tag \
-            --title "route/here ${{ github.ref_name }}" \
-            --notes "Release of route/here at ${{ github.ref_name }}"
-          echo "Releasing version ${{ github.ref_name }} of route/osrm"
-          gh release create -R nextmv-io/sdk "route/osrm/${{ github.ref_name }}" \
-            --verify-tag \
-            --title "route/osrm ${{ github.ref_name }}" \
-            --notes "Release of route/osrm at ${{ github.ref_name }}"
-          echo "Releasing version ${{ github.ref_name }} of route/google"
-          gh release create -R nextmv-io/sdk "route/google/${{ github.ref_name }}" \
-            --verify-tag \
-            --title "route/google ${{ github.ref_name }}" \
-            --notes "Release of route/google at ${{ github.ref_name }}"
-          echo "Releasing version ${{ github.ref_name }} of SDK itself"
-          gh release create -R nextmv-io/sdk ${{ github.ref_name }} \
-            --verify-tag \
-            --generate-notes
+          echo "If it's a pre-release, the version should contain a hyphen"
+          if [ ${{ inputs.IS_PRE_RELEASE }} = true ]; then
+            if [[ $VERSION != *-* ]]; then
+              echo "Pre-release versions should contain a hyphen"
+              exit 1
+            fi
+          else
+            if [[ $VERSION == *-* ]]; then
+              echo "Release versions should not contain a hyphen"
+              exit 1
+            fi
+          fi
+      - name: configure git with the bot credentials
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
+
+          echo "${{ secrets.NEXTMVBOT_SIGNING_KEY }}" > ~/.ssh/signing.key
+          chmod 600 ~/.ssh/signing.key
+
+          git config --global user.name "nextmv-bot"
+          git config --global user.email "tech+gh-nextmv-bot@nextmv.io"
+          git config --global gpg.format ssh
+          git config --global user.signingkey ~/.ssh/signing.key
+
+          git clone git@github.com:nextmv-io/sdk.git
+
+          cd sdk
+          git checkout ${{ github.ref_name }}
+
+          git rev-parse --short HEAD
+
+      - name: push release tag
+        run: |
+          git tag $VERSION
+          git push origin $VERSION
+        working-directory: ./sdk
+
+      - name: create release
+        run: |
+          PRERELEASE_FLAG=""
+          if [ ${{ inputs.IS_PRE_RELEASE }} = true ]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          gh release create $VERSION \
+          --verify-tag \
+          --generate-notes \
+          --title $VERSION $PRERELEASE_FLAG
+        working-directory: ./sdk
