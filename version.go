@@ -34,7 +34,7 @@ func getVersion() string {
 
 	for _, dep := range bi.Deps {
 		// We only care about this repo being used as a dependency.
-		if !strings.HasPrefix(dep.Path, "github.com/nextmv-io/sdk") {
+		if !strings.HasPrefix(dep.Path, "github.com/nextmv-io/nextroute") {
 			continue
 		}
 
