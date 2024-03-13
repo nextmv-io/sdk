@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nextmv-io/sdk/route"
+	"github.com/nextmv-io/sdk/measure"
 )
 
 // Client represents a HERE maps client. See official documentation for HERE
@@ -22,24 +22,24 @@ type Client interface {
 	// if there are more than 500 points given.
 	DistanceMatrix(
 		ctx context.Context,
-		points []route.Point,
+		points []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error)
+	) (measure.ByIndex, error)
 	// DurationMatrix retrieves a HERE duration matrix. It uses the async HERE API
 	// if there are more than 500 points given.
 	DurationMatrix(
 		ctx context.Context,
-		points []route.Point,
+		points []measure.Point,
 		opts ...MatrixOption,
-	) (route.ByIndex, error)
+	) (measure.ByIndex, error)
 
 	// DistanceDurationMatrices retrieves a HERE distance and duration matrix. It
 	// uses the async HERE API if there are more than 500 points given.
 	DistanceDurationMatrices(
 		ctx context.Context,
-		points []route.Point,
+		points []measure.Point,
 		opts ...MatrixOption,
-	) (distances, durations route.ByIndex, err error)
+	) (distances, durations measure.ByIndex, err error)
 }
 
 type client struct {
@@ -94,12 +94,12 @@ func NewClient(apiKey string, opts ...ClientOption) Client {
 	return c
 }
 
-func cleanPoints(points []route.Point) []route.Point {
-	cleanPoints := make([]route.Point, len(points))
+func cleanPoints(points []measure.Point) []measure.Point {
+	cleanPoints := make([]measure.Point, len(points))
 	copy(cleanPoints, points)
 	for i, p := range cleanPoints {
 		if len(p) == 2 && p[0] == 0 && p[1] == 0 {
-			cleanPoints[i] = route.Point{}
+			cleanPoints[i] = measure.Point{}
 		}
 	}
 	return cleanPoints
@@ -109,9 +109,9 @@ func cleanPoints(points []route.Point) []route.Point {
 // if there are more than 500 points given.
 func (c *client) DistanceMatrix(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	opts ...MatrixOption,
-) (route.ByIndex, error) {
+) (measure.ByIndex, error) {
 	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		distances, _, err := c.fetchMatricesAsync(ctx, points, true, false, opts)
@@ -125,9 +125,9 @@ func (c *client) DistanceMatrix(
 // if there are more than 500 points given.
 func (c *client) DurationMatrix(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	opts ...MatrixOption,
-) (route.ByIndex, error) {
+) (measure.ByIndex, error) {
 	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		_, durations, err := c.fetchMatricesAsync(
@@ -142,9 +142,9 @@ func (c *client) DurationMatrix(
 // uses the async HERE API if there are more than 500 points given.
 func (c *client) DistanceDurationMatrices(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	opts ...MatrixOption,
-) (distances, durations route.ByIndex, err error) {
+) (distances, durations measure.ByIndex, err error) {
 	points = cleanPoints(points)
 	if len(points) > c.maxSyncPoints {
 		return c.fetchMatricesAsync(ctx, points, true, true, opts)
@@ -155,11 +155,11 @@ func (c *client) DistanceDurationMatrices(
 // fetchMatricesSync makes a call to the sync HERE API endpoint.
 func (c *client) fetchMatricesSync(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	includeDistance,
 	includeDuration bool,
 	opts []MatrixOption,
-) (distances, durations route.ByIndex, err error) {
+) (distances, durations measure.ByIndex, err error) {
 	resp, err := c.calculate(
 		ctx, points, false, includeDistance, includeDuration, opts...)
 	defer func() {
@@ -180,13 +180,13 @@ func (c *client) fetchMatricesSync(
 	}
 
 	if includeDistance {
-		distances = route.Matrix(reshape(
+		distances = measure.Matrix(reshape(
 			hereResponse.Matrix.Distances,
 			points,
 		))
 	}
 	if includeDuration {
-		durations = route.Matrix(reshape(
+		durations = measure.Matrix(reshape(
 			hereResponse.Matrix.TravelTimes,
 			points,
 		))
@@ -198,11 +198,11 @@ func (c *client) fetchMatricesSync(
 // fetchMatricesAsync makes a call to the async HERE API endpoint.
 func (c *client) fetchMatricesAsync( //nolint:gocyclo
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	includeDistance,
 	includeDuration bool,
 	opts []MatrixOption,
-) (distances, durations route.ByIndex, err error) {
+) (distances, durations measure.ByIndex, err error) {
 	statusURL, err := c.startAsyncCalculation(
 		ctx, points, includeDistance, includeDuration, opts...)
 	if err != nil {
@@ -303,13 +303,13 @@ func (c *client) fetchMatricesAsync( //nolint:gocyclo
 	}
 
 	if includeDistance {
-		distances = route.Matrix(reshape(
+		distances = measure.Matrix(reshape(
 			hereResponse.Matrix.Distances,
 			points,
 		))
 	}
 	if includeDuration {
-		durations = route.Matrix(reshape(
+		durations = measure.Matrix(reshape(
 			hereResponse.Matrix.TravelTimes,
 			points,
 		))
@@ -344,7 +344,7 @@ func urlWithAPIKey(u string, apiKey string) (string, error) {
 
 func (c *client) startAsyncCalculation(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	includeDistance, includeDuration bool,
 	opts ...MatrixOption,
 ) (string, error) {
@@ -424,7 +424,7 @@ func (c *client) poll(
 
 func (c *client) calculate(
 	ctx context.Context,
-	points []route.Point,
+	points []measure.Point,
 	async, includeDistance, includeDuration bool,
 	opts ...MatrixOption,
 ) (*http.Response, error) {
@@ -476,7 +476,7 @@ func (c *client) calculate(
 	return resp, nil
 }
 
-func reshape(m []int, points []route.Point) [][]float64 {
+func reshape(m []int, points []measure.Point) [][]float64 {
 	// TODO: this can happen when we construct the here points
 	// so we don't need to iterate over the matrix again
 	widthWithoutZeroes := 0

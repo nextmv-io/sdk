@@ -5,7 +5,6 @@ package sdk
 
 import (
 	_ "embed"
-	"os"
 	"runtime/debug"
 	"strings"
 )
@@ -19,11 +18,6 @@ var versionFallback string
 var VERSION = getVersion()
 
 func getVersion() string {
-	// If an override version is set, use it.
-	if v := os.Getenv("NEXTMV_SDK_OVERRIDE_VERSION"); v != "" {
-		return v
-	}
-
 	// Get version from module dependency.
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
