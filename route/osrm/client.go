@@ -163,6 +163,13 @@ func (c *client) IgnoreEmpty(ignore bool) {
 	c.removeEmpty = ignore
 }
 
+// WithIgnoreEmpty configures if empty points should be ignored.
+func WithIgnoreEmpty(ignore bool) ClientOption {
+	return func(c *client) {
+		c.removeEmpty = ignore
+	}
+}
+
 func (c *client) SnapRadius(radius int) error {
 	if radius < 0 {
 		return errors.New("radius must be >= 0")
@@ -198,10 +205,9 @@ func handleErrorStatus(resp *http.Response) error {
 		return err
 	}
 	if resp.StatusCode == http.StatusBadRequest {
-		errMsg := fmt.Sprintf("Error in input data when getting maps: %s", body)
-		return NewError(errMsg, true)
+		return NewError(string(body), true)
 	}
-	return NewError(fmt.Sprintf("error response from OSRM: %s", body), false)
+	return NewError(string(body), false)
 }
 
 // get performs a GET.
