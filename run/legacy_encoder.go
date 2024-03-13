@@ -84,7 +84,7 @@ func (g *legacyEncoder[Solution, Options]) Encode(
 	}
 	m := Output{
 		Version: schema.Version{
-			Sdk: sdk.VERSION,
+			"sdk": sdk.VERSION,
 		},
 		Options: options,
 	}
