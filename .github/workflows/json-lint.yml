@@ -16,4 +16,8 @@ jobs:
         run: npm install prettier@v2.7.1 --global
 
       - name: lint .json files with prettier
-        run: prettier -c "**/*.json"
+        run: |
+          # Only lint if there are .json files in the repo.
+          if [ -n "$(find . -type f -name '*.json')" ]; then
+            prettier -c "**/*.json"
+          fi
