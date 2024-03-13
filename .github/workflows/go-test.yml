@@ -10,7 +10,13 @@ jobs:
       fail-fast: false
       matrix:
         MOD_PATH:
-          [./, ./route/google, ./route/here, ./route/osrm, ./route/routingkit]
+          [
+            ./,
+            ./measure/google,
+            ./measure/here,
+            ./measure/osrm,
+            ./measure/routingkit,
+          ]
     steps:
       # Checks out the changes.
       - name: git clone
