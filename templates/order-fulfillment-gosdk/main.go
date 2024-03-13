@@ -485,7 +485,7 @@ func format(
 	o := schema.Output{}
 
 	o.Version = schema.Version{
-		Sdk: sdk.VERSION,
+		"sdk": sdk.VERSION,
 	}
 
 	stats := statistics.NewStatistics()
