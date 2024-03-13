@@ -1,7 +1,5 @@
 name: go-test
-on:
-  pull_request:
-    types: [opened, ready_for_review]
+on: [push]
 jobs:
   sdk-go-build-test:
     runs-on: ubuntu-latest
