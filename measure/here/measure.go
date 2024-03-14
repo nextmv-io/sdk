@@ -81,7 +81,7 @@ func NewClient(apiKey string, opts ...ClientOption) Client {
 	}
 
 	c.denyRedirectedRequests = append(c.denyRedirectedRequests, defaultHereAPIHost)
-	c.httpClient.CheckRedirect = func(r *http.Request, via []*http.Request) error {
+	c.httpClient.CheckRedirect = func(r *http.Request, _ []*http.Request) error {
 		for _, host := range c.denyRedirectedRequests {
 			if strings.HasSuffix(r.URL.Hostname(), host) {
 				return http.ErrUseLastResponse

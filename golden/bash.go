@@ -65,7 +65,7 @@ func BashTest(
 			}
 			// Write the output bytes to a .golden file, if the test is being
 			// updated.
-			goldenFile := script + ".golden"
+			goldenFile := script + goldenExtension
 			if *update || bashConfig.OutputProcessConfig.AlwaysUpdate {
 				if err := os.WriteFile(goldenFile, []byte(got), 0o644); err != nil {
 					t.Fatal("error writing bash output to file: ", err)

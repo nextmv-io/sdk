@@ -1,23 +1,17 @@
 module github.com/nextmv-io/sdk
 
-go 1.19
-
-replace github.com/nextmv-io/sdk/route/osrm => ./route/osrm
+go 1.21
 
 require (
 	github.com/danielgtaylor/huma v1.14.1
-	github.com/nextmv-io/sdk/route/osrm v1.0.3
 	github.com/sergi/go-diff v1.3.1
 	github.com/xeipuuv/gojsonschema v1.2.0
-	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
 )
 
 require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/schema v1.2.0
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/itzg/go-flagsfiller v1.9.1
-	github.com/twpayne/go-polyline v1.1.1
 )
 
 require (

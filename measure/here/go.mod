@@ -1,6 +1,6 @@
 module github.com/nextmv-io/sdk/measure/here
 
-go 1.19
+go 1.21
 
 replace github.com/nextmv-io/sdk => ../../.
 

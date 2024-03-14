@@ -153,11 +153,11 @@ func comparison(
 	inputPath string,
 	config Config,
 ) {
-	goldenPath := inputPath + ".golden"
+	goldenPath := inputPath + goldenExtension
 	if config.OutputProcessConfig.RelativeDestination != "" {
 		goldenPath = filepath.Join(
 			config.OutputProcessConfig.RelativeDestination,
-			filepath.Base(inputPath)+".golden",
+			filepath.Base(inputPath)+goldenExtension,
 		)
 	}
 
