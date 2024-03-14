@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// This will be needed for examples and tests within this repo only.
+// VERSION of Nextmv SDK.
 //
 //go:embed VERSION
 var versionFallback string
@@ -36,8 +36,6 @@ func getVersion() string {
 	}
 
 	// If this happens, we're running in a module in which sdk is not a
-	// dependency. In this case, we expect the NEXTMV_SDK_OVERRIDE_VERSION to be
-	// set. Thus, this is unexpected. So, return a string that helps us find the
-	// way back here.
-	return "no-overridden-version-found"
+	// dependency.
+	return versionFallback
 }

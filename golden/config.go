@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const goldenExtension = ".golden"
+
 // Config lets a user configure the golden file tests.
 type Config struct {
 	// VerifyFunc is used to validate output against input, if provided.
