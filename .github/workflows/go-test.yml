@@ -32,9 +32,9 @@ jobs:
       # Builds the Go code.
       - name: go build
         run: go build -v ./...
-        working-directory: sdk/${{ matrix.MOD_PATH }}
+        working-directory: ${{ matrix.MOD_PATH }}
 
       # Runs the Go tests.
       - name: go test
         run: go test ./...
-        working-directory: sdk/${{ matrix.MOD_PATH }}
+        working-directory: ${{ matrix.MOD_PATH }}
