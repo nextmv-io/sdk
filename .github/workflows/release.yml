@@ -58,13 +58,8 @@ jobs:
 
           git rev-parse --short HEAD
 
-      - name: bump version and tag
+      - name: push release tag
         run: |
-          echo "Bumping version to $VERSION"
-          echo "$VERSION" > VERSION
-          git add VERSION
-          git commit -m "Bump version to $VERSION"
-          git push origin ${{ github.ref_name }}
           git tag -s $VERSION -m "Release $VERSION"
           git push origin $VERSION
         working-directory: ./sdk
