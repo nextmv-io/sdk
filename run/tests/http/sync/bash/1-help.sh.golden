@@ -1,0 +1,16 @@
+Nextmv Hybrid Optimization Platform VERSION
+Usage:
+  -duration duration
+    	Sleep duration. (env DURATION) (default 1s)
+  -runner.http.address string
+    	The host address (env RUNNER_HTTP_ADDRESS) (default ":9000")
+  -runner.http.certificate string
+    	The certificate file path (env RUNNER_HTTP_CERTIFICATE)
+  -runner.http.key string
+    	The key file path (env RUNNER_HTTP_KEY)
+  -runner.http.maxparallel int
+    	The max number of requests (env RUNNER_HTTP_MAX_PARALLEL) (default 1)
+  -runner.http.readheadertimeout duration
+    	The maximum duration for reading the request headers (env RUNNER_HTTP_READ_HEADER_TIMEOUT) (default 1m0s)
+  -runner.output.solutions string
+    	Return all or last solution (env RUNNER_OUTPUT_SOLUTIONS) (default "last")

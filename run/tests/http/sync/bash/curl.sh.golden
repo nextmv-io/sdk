@@ -1,0 +1,13 @@
+{
+  "version": {
+    "sdk": "VERSION"
+  },
+  "options": {
+    "duration": 500000000
+  },
+  "solutions": [
+    {
+      "message": "Hello World!"
+    }
+  ]
+}

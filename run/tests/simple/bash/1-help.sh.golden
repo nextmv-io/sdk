@@ -1,0 +1,14 @@
+Nextmv Hybrid Optimization Platform VERSION
+Usage:
+  -duration duration
+    	Sleep duration. (env DURATION) (default 1s)
+  -runner.input.path string
+    	The input file path (env RUNNER_INPUT_PATH)
+  -runner.output.path string
+    	The output file path (env RUNNER_OUTPUT_PATH)
+  -runner.output.solutions string
+    	{all, last} (env RUNNER_OUTPUT_SOLUTIONS) (default "last")
+  -runner.profile.cpu string
+    	The CPU profile file path (env RUNNER_PROFILE_CPU)
+  -runner.profile.memory string
+    	The memory profile file path (env RUNNER_PROFILE_MEMORY)
