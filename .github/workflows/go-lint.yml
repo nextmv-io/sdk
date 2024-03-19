@@ -21,7 +21,7 @@ jobs:
 
       - name: determine Go version
         run: |
-          export GO_VERSION=$(cat .github/workflows/workflow-configuration.yml | yq '.go-version' -r)
+          export GO_VERSION=$(cat workflow-configuration.yml | yq '.go-version' -r)
           echo "Using Go version $GO_VERSION"
           echo "GO_VERSION=${GO_VERSION}" >> $GITHUB_ENV
 
