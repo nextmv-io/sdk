@@ -1,4 +1,4 @@
-Nextmv Hybrid Optimization Platform VERSION
+Nextmv Hybrid Optimization Platform
 Usage:
   -duration duration
     	Sleep duration. (env DURATION) (default 1s)
