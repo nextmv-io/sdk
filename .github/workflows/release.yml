@@ -91,7 +91,7 @@ jobs:
             popd
           done
           git add --all
-          git commit -m "Bump nested modules to $VERSION"
+          git commit -S -m "Bump nested modules to $VERSION"
           git push
           for module in $MODULES; do
             git tag -s $module/$VERSION -m "Release $module/$VERSION"
