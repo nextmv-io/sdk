@@ -1,0 +1,9 @@
+# Supported language versions.
+go-version: 1.22
+
+# All nested modules that also have to be released.
+nested_modules:
+  - measure/routingkit
+  - measure/osrm
+  - measure/google
+  - measure/here
