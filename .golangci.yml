@@ -198,4 +198,9 @@ issues:
       linters:
         - gocyclo
         - nestif
+    # The test is only used internally and doesn't need
+    # to meet the same standards as the rest of the codebase for now.
+    - path: run/tests/http/async/main\.go
+      linters:
         - gosec
+      text: G114
