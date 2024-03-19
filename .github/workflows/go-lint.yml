@@ -19,12 +19,6 @@ jobs:
       - name: git clone
         uses: actions/checkout@v4
 
-      - name: set up go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.22
-        id: go
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v4
         with:
