@@ -1,6 +1,6 @@
 {
   "version": {
-    "sdk": "VERSION"
+    "sdk": "(devel)"
   },
   "options": {
     "duration": 500000000

@@ -6,8 +6,5 @@
     {
       "message": "Hello World!"
     }
-  ],
-  "version": {
-    "sdk": "VERSION"
-  }
+  ]
 }
