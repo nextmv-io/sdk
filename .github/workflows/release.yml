@@ -78,7 +78,7 @@ jobs:
 
       - name: bump and tag nested modules
         run: |
-          export MODULES=$(cat .github/workflows/workflow-configuration.yml | yq '.nested_modules[]' -r)
+          export MODULES=$(cat workflow-configuration.yml | yq '.nested_modules[]' -r)
           for module in $MODULES; do
             echo "Bumping $module to $VERSION"
             pushd $module
@@ -86,8 +86,8 @@ jobs:
             go mod tidy
             popd
           done
-          git add go.mod go.sum
-          git commit -m "Bump sdk to $VERSION"
+          git add --all
+          git commit -m "Bump nested modules to $VERSION"
           git push
           for module in $MODULES; do
             git tag -s $module/$VERSION -m "Release $module/$VERSION"
