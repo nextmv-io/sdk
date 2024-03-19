@@ -18,7 +18,6 @@ func main() {
 	go func() {
 		handler := http.HandlerFunc(callback)
 		http.Handle("/callback", handler)
-		//nolint:gosec
 		err := http.ListenAndServe(":8080", nil)
 		if err != nil {
 			log.Fatal(err)

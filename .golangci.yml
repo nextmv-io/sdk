@@ -204,4 +204,3 @@ issues:
     - path: run/tests/http/async/main\.go
       linters:
         - gosec
-      text: G114
