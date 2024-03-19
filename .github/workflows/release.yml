@@ -36,7 +36,8 @@ jobs:
               exit 1
             fi
           fi
-      - name: configure git with the bot credentials
+
+      - name: configure git and clone
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -58,10 +59,44 @@ jobs:
 
           git rev-parse --short HEAD
 
+      - name: determine Go version
+        run: |
+          export GO_VERSION=$(cat workflow-configuration.yml | yq '.go-version' -r)
+          echo "Using Go version $GO_VERSION"
+          echo "GO_VERSION=${GO_VERSION}" >> $GITHUB_ENV
+        working-directory: ./sdk
+
+      - name: set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: |
+            **/go.sum
+            **/go.mod
+
       - name: push release tag
         run: |
           git tag -s $VERSION -m "Release $VERSION"
           git push origin $VERSION
+        working-directory: ./sdk
+
+      - name: bump and tag nested modules
+        run: |
+          export MODULES=$(cat workflow-configuration.yml | yq '.nested_modules[]' -r)
+          for module in $MODULES; do
+            echo "Bumping $module to $VERSION"
+            pushd $module
+            go get github.com/nextmv-io/sdk@$VERSION
+            go mod tidy
+            popd
+          done
+          git add --all
+          git commit -S -m "Bump nested modules to $VERSION"
+          git push
+          for module in $MODULES; do
+            git tag -s $module/$VERSION -m "Release $module/$VERSION"
+            git push origin $module/$VERSION
+          done
         working-directory: ./sdk
 
       - name: create release
