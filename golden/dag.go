@@ -61,7 +61,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		// Run the case and mark it as done.
 		t.Run(next.Name, func(t *testing.T) {
 			// Run the test case.
-			BashTest(t, next.Path, next.Config)
+			BashTestFile(t, next.Path, next.Config)
 		})
 		done[next.Name] = true
 
