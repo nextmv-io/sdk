@@ -3,10 +3,10 @@ package golden
 import "testing"
 
 type DagTestCase struct {
-	name   string
-	needs  []string
-	config BashConfig
-	path   string
+	Name   string
+	Needs  []string
+	Config BashConfig
+	Path   string
 }
 
 // DagTest runs a set of test cases in topological order.
@@ -40,7 +40,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		var next DagTestCase
 		for _, c := range open {
 			ready := true
-			for _, need := range c.needs {
+			for _, need := range c.Needs {
 				if !done[need] {
 					ready = false
 					break
@@ -53,20 +53,20 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		}
 
 		// If we didn't find a case to run, we have a cycle.
-		if next.name == "" {
+		if next.Name == "" {
 			t.Fatal("cycle detected")
 		}
 
 		// Run the case and mark it as done.
-		t.Run(next.name, func(t *testing.T) {
+		t.Run(next.Name, func(t *testing.T) {
 			// Run the test case.
-			BashTest(t, next.path, next.config)
+			BashTest(t, next.Path, next.Config)
 		})
-		done[next.name] = true
+		done[next.Name] = true
 
 		// Remove the case from the open list.
 		for i, c := range open {
-			if c.name == next.name {
+			if c.Name == next.Name {
 				open = append(open[:i], open[i+1:]...)
 				break
 			}
