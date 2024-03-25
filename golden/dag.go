@@ -2,6 +2,7 @@ package golden
 
 import "testing"
 
+// DagTestCase represents a test case in a directed acyclic graph (DAG) test.
 type DagTestCase struct {
 	Name   string
 	Needs  []string
