@@ -68,6 +68,8 @@ type BashConfig struct {
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// Envs specifies the environment variables to set for execution.
+	Envs [][2]string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
