@@ -50,6 +50,9 @@ func BashTest(
 	postProcessVolatileData(t, bashConfig)
 }
 
+// BashTestFile executes a golden file test for a single bash script. The
+// script is executed and the expected output is compared with the actual
+// output.
 func BashTestFile(
 	t *testing.T,
 	script string,
