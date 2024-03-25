@@ -6,7 +6,7 @@ replace github.com/nextmv-io/sdk => ../../.
 
 require (
 	github.com/google/go-cmp v0.5.6
-	github.com/nextmv-io/sdk v1.0.5-dev.0
+	github.com/nextmv-io/sdk v1.5.0-dev.6
 )
 
 require golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
