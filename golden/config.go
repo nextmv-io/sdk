@@ -150,7 +150,9 @@ type OutputProcessConfig struct {
 	// golden file before comparison.
 	VolatileRegexReplacements []VolatileRegexReplacement
 	// VolatileDataFiles are files that contain volatile data and should get
-	// post-processed to be more stable.
+	// post-processed to be more stable. This is only supported in directory
+	// mode ([BashTest]) of golden bash testing, i.e., this will be ignored in
+	// single file mode ([BashTestFile]).
 	VolatileDataFiles []string
 	// RelativeDestination is the relative path to the directory where the
 	// output file will be stored. If not provided, then the output file is
