@@ -10,13 +10,13 @@ problems. Please find the following packages:
 
 Please visit the official [Nextmv docs][docs] for comprehensive information.
 
-## Installation
+## Versioning
 
-Nextmv's SDK is meant to be used in Go projects. To download please run:
+We try our best to version our software thoughtfully and only break APIs and
+behaviors when we have a good reason to.
 
-```bash
-go get github.com/nextmv-io/sdk
-```
+- Minor (`v1.^.0`) tags: new features, might be breaking.
+- Patch (`v1.0.^`) tags: bug fixes.
 
 [run]: ./run
 [measure]: ./measure

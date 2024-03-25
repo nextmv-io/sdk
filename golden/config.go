@@ -226,7 +226,7 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 			}
 		} else {
 			inputFlag := "-runner.input.path"
-			if config.ExecutionConfig.InputFlag != "" {
+			if isCustom && config.ExecutionConfig.InputFlag != "" {
 				inputFlag = config.ExecutionConfig.InputFlag
 			}
 			args = append(args, inputFlag, inputPath)
@@ -251,7 +251,7 @@ func (config Config) entrypoint(inputPath string) (*exec.Cmd, string, error) {
 			}
 		} else {
 			outputFlag := "-runner.output.path"
-			if config.ExecutionConfig.OutputFlag != "" {
+			if isCustom && config.ExecutionConfig.OutputFlag != "" {
 				outputFlag = config.ExecutionConfig.OutputFlag
 			}
 			args = append(args, outputFlag, tempFileName)
