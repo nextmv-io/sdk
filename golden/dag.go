@@ -33,7 +33,6 @@ type DagTestCase struct {
 //	}
 //	golden.DagTest(t, cases)
 func DagTest(t *testing.T, cases []DagTestCase) {
-
 	validate(cases)
 
 	open := cases
