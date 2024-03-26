@@ -64,9 +64,6 @@ func BashTestFile(
 		// Execute a bash command which consists of executing a .sh file.
 		cmd := exec.Command("bash", script)
 
-		// Add additional command flags.
-		cmd.Args = append(cmd.Args, bashConfig.AdditionalCommandFlags...)
-
 		// Pass environment and add custom environment variables
 		cmd.Env = os.Environ()
 		for _, e := range bashConfig.Envs {
