@@ -67,9 +67,13 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		}
 
 		// Run the case and mark it as done.
+		config := BashConfig{}
+		if next.Config != nil {
+			config = *next.Config
+		}
 		t.Run(next.Name, func(t *testing.T) {
 			// Run the test case.
-			BashTestFile(t, next.Path, *next.Config)
+			BashTestFile(t, next.Path, config)
 		})
 		done[next.Name] = true
 
@@ -85,17 +89,12 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 
 func validate(cases []DagTestCase) error {
 	// Ensure that all cases have unique names.
-	// Ensure the configuration is not nil.
 	names := make(map[string]bool)
 	for _, c := range cases {
 		if names[c.Name] {
 			return fmt.Errorf("duplicate test case name: %s", c.Name)
 		}
 		names[c.Name] = true
-
-		if c.Config == nil {
-			return fmt.Errorf("nil config: %s", c.Name)
-		}
 	}
 
 	// Ensure that all dependencies are valid.
