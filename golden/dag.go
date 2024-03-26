@@ -33,6 +33,9 @@ type DagTestCase struct {
 //	}
 //	golden.DagTest(t, cases)
 func DagTest(t *testing.T, cases []DagTestCase) {
+
+	validate(cases)
+
 	open := cases
 	done := make(map[string]bool)
 
@@ -70,6 +73,26 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 			if c.Name == next.Name {
 				open = append(open[:i], open[i+1:]...)
 				break
+			}
+		}
+	}
+}
+
+func validate(cases []DagTestCase) {
+	// Ensure that all cases have unique names.
+	names := make(map[string]bool)
+	for _, c := range cases {
+		if names[c.Name] {
+			panic("duplicate test case name: " + c.Name)
+		}
+		names[c.Name] = true
+	}
+
+	// Ensure that all dependencies are valid.
+	for _, c := range cases {
+		for _, need := range c.Needs {
+			if !names[need] {
+				panic("unknown dependency: " + need)
 			}
 		}
 	}
