@@ -115,6 +115,14 @@ func BashTestFile(
 
 	// Test is executed.
 	t.Run(script, f)
+
+	// Run post-process functions.
+	for _, f := range bashConfig.PostProcessFunctions {
+		err := f()
+		if err != nil {
+			t.Fatalf("error running post-process function: %v", err)
+		}
+	}
 }
 
 func postProcessVolatileData(

@@ -70,6 +70,11 @@ type BashConfig struct {
 	OutputProcessConfig OutputProcessConfig
 	// Envs specifies the environment variables to set for execution.
 	Envs [][2]string
+	// PostProcessFunctions defines a list of functions to be executed after the bash
+	// script has been run. This can be used to make use of the output of the bash script
+	// and perform additional operations on it. The functions are executed in the order
+	// they are defined and are not used for comparison.
+	PostProcessFunctions []func() error
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
