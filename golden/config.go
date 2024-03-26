@@ -71,8 +71,6 @@ type BashConfig struct {
 	// WorkingDir is the directory where the bash script(s) will be
 	// executed.
 	WorkingDir string
-	// SkipScripts defines specific scripts to skip.
-	SkipScripts []string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in

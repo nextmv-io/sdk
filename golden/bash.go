@@ -66,13 +66,6 @@ func BashTestFile(
 ) {
 	// Function run by the test.
 	f := func(t *testing.T) {
-		// Skip this script if it is in the list of scripts to skip.
-		for _, s := range bashConfig.SkipScripts {
-			if script == s {
-				t.Skip("skipping script: ", script)
-			}
-		}
-
 		// Make script path absolute to avoid issues with custom working
 		// directories.
 		var err error
