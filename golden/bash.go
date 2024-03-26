@@ -67,6 +67,13 @@ func BashTestFile(
 			}
 		}
 
+		// Make script path absolute.
+		cwd, err := os.Getwd()
+		if err != nil {
+			t.Fatal("error getting current working directory: ", err)
+		}
+		script = filepath.Join(cwd, script)
+
 		// Execute a bash command which consists of executing a .sh file.
 		cmd := exec.Command("bash", script)
 
