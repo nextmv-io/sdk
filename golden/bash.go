@@ -60,8 +60,20 @@ func BashTestFile(
 ) {
 	// Function run by the test.
 	f := func(t *testing.T) {
+		// Skip this script if it is in the list of scripts to skip.
+		for _, s := range bashConfig.SkipScripts {
+			if script == s {
+				t.Skip("skipping script: ", script)
+			}
+		}
+
 		// Execute a bash command which consists of executing a .sh file.
 		cmd := exec.Command("bash", script)
+
+		// Set custom working directory if provided.
+		if bashConfig.WorkingDir != "" {
+			cmd.Dir = bashConfig.WorkingDir
+		}
 
 		// Run the command and gather the output bytes.
 		out, err := runCmd(cmd, bashConfig.DisplayStdout, bashConfig.DisplayStderr)
