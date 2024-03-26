@@ -1,12 +1,15 @@
 package golden
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 // DagTestCase represents a test case in a directed acyclic graph (DAG) test.
 type DagTestCase struct {
 	Name   string
 	Needs  []string
-	Config BashConfig
+	Config *BashConfig
 	Path   string
 }
 
@@ -33,7 +36,10 @@ type DagTestCase struct {
 //	}
 //	golden.DagTest(t, cases)
 func DagTest(t *testing.T, cases []DagTestCase) {
-	validate(cases)
+	err := validate(cases)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	open := cases
 	done := make(map[string]bool)
@@ -63,7 +69,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		// Run the case and mark it as done.
 		t.Run(next.Name, func(t *testing.T) {
 			// Run the test case.
-			BashTestFile(t, next.Path, next.Config)
+			BashTestFile(t, next.Path, *next.Config)
 		})
 		done[next.Name] = true
 
@@ -77,22 +83,29 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 	}
 }
 
-func validate(cases []DagTestCase) {
+func validate(cases []DagTestCase) error {
 	// Ensure that all cases have unique names.
+	// Ensure the configuration is not nil.
 	names := make(map[string]bool)
 	for _, c := range cases {
 		if names[c.Name] {
-			panic("duplicate test case name: " + c.Name)
+			return fmt.Errorf("duplicate test case name: %s", c.Name)
 		}
 		names[c.Name] = true
+
+		if c.Config == nil {
+			return fmt.Errorf("nil config: %s", c.Name)
+		}
 	}
 
 	// Ensure that all dependencies are valid.
 	for _, c := range cases {
 		for _, need := range c.Needs {
 			if !names[need] {
-				panic("unknown dependency: " + need)
+				return fmt.Errorf("unknown dependency: %s", need)
 			}
 		}
 	}
+
+	return nil
 }
