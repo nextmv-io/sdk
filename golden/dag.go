@@ -98,7 +98,15 @@ func validate(cases []DagTestCase) error {
 	}
 
 	// Ensure that all dependencies are valid.
+	// and that there is only one case with no dependencies.
+	hasNoNeeds := false
 	for _, c := range cases {
+		if len(c.Needs) == 0 {
+			if hasNoNeeds {
+				return fmt.Errorf("multiple cases with no dependencies")
+			}
+			hasNoNeeds = true
+		}
 		for _, need := range c.Needs {
 			if !names[need] {
 				return fmt.Errorf("unknown dependency: %s", need)
