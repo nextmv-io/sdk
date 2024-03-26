@@ -74,7 +74,7 @@ type BashConfig struct {
 	// script has been run. This can be used to make use of the output of the bash script
 	// and perform additional operations on it. The functions are executed in the order
 	// they are defined and are not used for comparison.
-	PostProcessFunctions []func() error
+	PostProcessFunctions []func(goldenFile string) error
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
