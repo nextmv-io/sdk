@@ -68,6 +68,9 @@ type BashConfig struct {
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// WorkingDir is the directory where the bash script(s) will be
+	// executed.
+	WorkingDir string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in

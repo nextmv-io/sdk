@@ -41,9 +41,15 @@ func BashTest(
 		t.Fatal("error walking over files: ", err)
 	}
 
-	// Execute a golden file test for each script.
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal("error getting current working directory: ", err)
+	}
+
+	// Execute a golden file test for each script. Make the script path
+	// absolute to avoid issues with custom working directories.
 	for _, script := range scripts {
-		BashTestFile(t, script, bashConfig)
+		BashTestFile(t, filepath.Join(cwd, script), bashConfig)
 	}
 
 	// Post-process files containing volatile data.
@@ -60,8 +66,21 @@ func BashTestFile(
 ) {
 	// Function run by the test.
 	f := func(t *testing.T) {
+		// Make script path absolute to avoid issues with custom working
+		// directories.
+		var err error
+		script, err = filepath.Abs(script)
+		if err != nil {
+			t.Fatal("error getting absolute path for script: ", script, ": ", err)
+		}
+
 		// Execute a bash command which consists of executing a .sh file.
 		cmd := exec.Command("bash", script)
+
+		// Set custom working directory if provided.
+		if bashConfig.WorkingDir != "" {
+			cmd.Dir = bashConfig.WorkingDir
+		}
 
 		// Run the command and gather the output bytes.
 		out, err := runCmd(cmd, bashConfig.DisplayStdout, bashConfig.DisplayStderr)
