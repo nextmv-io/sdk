@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 )
 
@@ -71,13 +72,14 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		if next.Config != nil {
 			config = *next.Config
 		}
-		channel := make(chan bool)
-		t.Run(next.Name, func(t *testing.T) {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go t.Run(next.Name, func(t *testing.T) {
+			defer wg.Done()
 			// Run the test case.
 			BashTestFile(t, next.Path, config)
-			channel <- true
 		})
-		<-channel
+		wg.Wait()
 		done[next.Name] = true
 
 		// Remove the case from the open list.
