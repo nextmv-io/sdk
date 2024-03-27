@@ -71,10 +71,13 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		if next.Config != nil {
 			config = *next.Config
 		}
+		channel := make(chan bool)
 		t.Run(next.Name, func(t *testing.T) {
 			// Run the test case.
 			BashTestFile(t, next.Path, config)
+			channel <- true
 		})
+		<-channel
 		done[next.Name] = true
 
 		// Remove the case from the open list.
