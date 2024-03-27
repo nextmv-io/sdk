@@ -75,6 +75,9 @@ type BashConfig struct {
 	// and perform additional operations on it. The functions are executed in the order
 	// they are defined and are not used for comparison.
 	PostProcessFunctions []func(goldenFile string) error
+	// WorkingDir is the directory where the bash script(s) will be
+	// executed.
+	WorkingDir string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
