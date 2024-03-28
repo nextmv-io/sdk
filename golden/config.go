@@ -68,6 +68,9 @@ type BashConfig struct {
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// WorkingDir is the directory where the bash script(s) will be
+	// executed.
+	WorkingDir string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
@@ -150,7 +153,9 @@ type OutputProcessConfig struct {
 	// golden file before comparison.
 	VolatileRegexReplacements []VolatileRegexReplacement
 	// VolatileDataFiles are files that contain volatile data and should get
-	// post-processed to be more stable.
+	// post-processed to be more stable. This is only supported in directory
+	// mode ([BashTest]) of golden bash testing, i.e., this will be ignored in
+	// single file mode ([BashTestFile]).
 	VolatileDataFiles []string
 	// RelativeDestination is the relative path to the directory where the
 	// output file will be stored. If not provided, then the output file is

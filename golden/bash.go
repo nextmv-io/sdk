@@ -41,61 +41,99 @@ func BashTest(
 		t.Fatal("error walking over files: ", err)
 	}
 
-	// Execute a golden file test for each script.
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal("error getting current working directory: ", err)
+	}
+
+	// Execute a golden file test for each script. Make the script path
+	// absolute to avoid issues with custom working directories.
 	for _, script := range scripts {
-		// Function run by the test.
-		f := func(t *testing.T) {
-			// Execute a bash command which consists of executing a .sh file.
-			cmd := exec.Command("bash", script)
+		BashTestFile(t, filepath.Join(cwd, script), bashConfig)
+	}
 
-			// Run the command and gather the output bytes.
-			out, err := runCmd(cmd, bashConfig.DisplayStdout, bashConfig.DisplayStderr)
-			if err != nil {
-				t.Fatal(err)
-			}
+	// Post-process files containing volatile data.
+	postProcessVolatileData(t, bashConfig)
+}
 
-			got := string(out)
-			if !bashConfig.OutputProcessConfig.KeepVolatileData {
-				// Replace default volatile content with a placeholder
-				got = regexReplaceAllDefault(got)
-			}
-			// Apply custom volatile regex replacements
-			for _, r := range bashConfig.OutputProcessConfig.VolatileRegexReplacements {
-				got = regexReplaceCustom(got, r.Replacement, r.Regex)
-			}
-			// Write the output bytes to a .golden file, if the test is being
-			// updated.
-			goldenFile := script + goldenExtension
-			if *update || bashConfig.OutputProcessConfig.AlwaysUpdate {
-				if err := os.WriteFile(goldenFile, []byte(got), 0o644); err != nil {
-					t.Fatal("error writing bash output to file: ", err)
-				}
-			}
+// BashTestFile executes a golden file test for a single bash script. The
+// script is executed and the expected output is compared with the actual
+// output.
+func BashTestFile(
+	t *testing.T,
+	script string,
+	bashConfig BashConfig,
+) {
+	// Function run by the test.
+	f := func(t *testing.T) {
+		// Make script path absolute to avoid issues with custom working
+		// directories.
+		var err error
+		script, err = filepath.Abs(script)
+		if err != nil {
+			t.Fatal("error getting absolute path for script: ", script, ": ", err)
+		}
 
-			// Read the .golden file.
-			outGolden, err := os.ReadFile(goldenFile)
-			if err != nil {
-				t.Fatal("error reading file: ", goldenFile, ": ", err)
-			}
+		// Execute a bash command which consists of executing a .sh file.
+		cmd := exec.Command("bash", script)
 
-			// Perform the golden file comparison.
-			expected := string(outGolden)
-			if got != expected {
-				dmp := diffmatchpatch.New()
-				diffs := dmp.DiffMain(got, expected, true)
-				t.Errorf(
-					"\ngot:\n%s\nexpected:\n%s\ndiffs (look for the colors):\n%s",
-					got,
-					expected,
-					dmp.DiffPrettyText(diffs),
-				)
+		// Set custom working directory if provided.
+		if bashConfig.WorkingDir != "" {
+			cmd.Dir = bashConfig.WorkingDir
+		}
+
+		// Run the command and gather the output bytes.
+		out, err := runCmd(cmd, bashConfig.DisplayStdout, bashConfig.DisplayStderr)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := string(out)
+		if !bashConfig.OutputProcessConfig.KeepVolatileData {
+			// Replace default volatile content with a placeholder
+			got = regexReplaceAllDefault(got)
+		}
+		// Apply custom volatile regex replacements
+		for _, r := range bashConfig.OutputProcessConfig.VolatileRegexReplacements {
+			got = regexReplaceCustom(got, r.Replacement, r.Regex)
+		}
+		// Write the output bytes to a .golden file, if the test is being
+		// updated.
+		goldenFile := script + goldenExtension
+		if *update || bashConfig.OutputProcessConfig.AlwaysUpdate {
+			if err := os.WriteFile(goldenFile, []byte(got), 0o644); err != nil {
+				t.Fatal("error writing bash output to file: ", err)
 			}
 		}
 
-		// Test is executed.
-		t.Run(script, f)
+		// Read the .golden file.
+		outGolden, err := os.ReadFile(goldenFile)
+		if err != nil {
+			t.Fatal("error reading file: ", goldenFile, ": ", err)
+		}
+
+		// Perform the golden file comparison.
+		expected := string(outGolden)
+		if got != expected {
+			dmp := diffmatchpatch.New()
+			diffs := dmp.DiffMain(got, expected, true)
+			t.Errorf(
+				"\ngot:\n%s\nexpected:\n%s\ndiffs (look for the colors):\n%s",
+				got,
+				expected,
+				dmp.DiffPrettyText(diffs),
+			)
+		}
 	}
 
+	// Test is executed.
+	t.Run(script, f)
+}
+
+func postProcessVolatileData(
+	t *testing.T,
+	bashConfig BashConfig,
+) {
 	// Post-process files containing volatile data.
 	for _, file := range bashConfig.OutputProcessConfig.VolatileDataFiles {
 		// Read the file.
