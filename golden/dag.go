@@ -4,14 +4,28 @@ import (
 	"fmt"
 	"sync"
 	"testing"
+	"time"
 )
 
 // DagTestCase represents a test case in a directed acyclic graph (DAG) test.
 type DagTestCase struct {
-	Name   string
-	Needs  []string
-	Config *BashConfig
-	Path   string
+	// Bash configuration for this test case in the DAG.
+	BashConfig *BashConfig
+	// Configuration for this DAG test case.
+	Config *DagTestCaseConfig
+	// Name of the test case. Must be unique within the DAG.
+	Name string
+	// List of test case names that this test case depends on. The test case
+	// will only be run after all of its dependencies have been run.
+	Needs []string
+	// Path to the Bash test case file.
+	Path string
+}
+
+// DagTestCaseConfig is a configuration for a step in a DAG.
+type DagTestCaseConfig struct {
+	// SleepBefore is the amount of time to sleep before running the test case.
+	SleepBefore *time.Duration
 }
 
 // DagTest runs a set of test cases in topological order.
@@ -23,16 +37,16 @@ type DagTestCase struct {
 //
 //	cases := []golden.DagTestCase{
 //	  {
-//	    name:   "app-create",
-//	    needs:  []string{},
-//	    config: BashConfig{ /**/ },
-//	    path:   "app-create",
+//	    Name:       "app-create",
+//	    Needs:      []string{},
+//	    BashConfig: BashConfig{ /**/ },
+//	    Path:       "app-create",
 //	  },
 //	  {
-//	    name:   "app-push",
-//	    needs:  []string{"app-create"},
-//	    config: BashConfig{ /**/ },
-//	    path:   "app-push",
+//	    Name:       "app-push",
+//	    needs:      []string{"app-create"},
+//	    BashConfig: BashConfig{ /**/ },
+//	    Path:       "app-push",
 //	  },
 //	}
 //	golden.DagTest(t, cases)
@@ -72,12 +86,17 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		for _, nextCase := range next {
 			wg.Add(1)
 			config := BashConfig{}
-			if nextCase.Config != nil {
-				config = *nextCase.Config
+			if nextCase.BashConfig != nil {
+				config = *nextCase.BashConfig
 			}
 
 			nextCase := nextCase
 			go func() {
+				// Check if we need to sleep before running the test case.
+				if nextCase.Config != nil && nextCase.Config.SleepBefore != nil {
+					time.Sleep(*nextCase.Config.SleepBefore)
+				}
+
 				// Run the test case.
 				BashTestFile(t, nextCase.Path, config)
 				wg.Done()
