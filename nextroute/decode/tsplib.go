@@ -33,7 +33,7 @@ const (
 	inPickupAndDelivery = iota
 )
 
-const LOWER_ROW = "LOWER_ROW"
+const lowerRow = "LOWER_ROW"
 
 // Decode a tsplib instance from the given reader to the nextroute input format.
 func (j TSPLIBDecoder) Decode(reader io.Reader, anyInput any) error {
@@ -135,8 +135,8 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			switch s[2] {
 			case "FULL_MATRIX":
 				edgeWeightFormat = "FULL_MATRIX"
-			case LOWER_ROW:
-				edgeWeightFormat = LOWER_ROW
+			case lowerRow:
+				edgeWeightFormat = lowerRow
 			default:
 				return fmt.Errorf("unsupported edge weight format: %s", s[2])
 			}
@@ -502,7 +502,7 @@ scanLoop: // Label scanner loop to break out of nested switch statements
 			if colIndex >= len(*matrix) {
 				colIndex = depotIndexInMatrix
 			}
-			if edgeWeightFormat == LOWER_ROW {
+			if edgeWeightFormat == lowerRow {
 				if colIndex > rowIndex {
 					colIndex, rowIndex = rowIndex, colIndex
 				}
