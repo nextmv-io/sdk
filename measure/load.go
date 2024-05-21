@@ -124,8 +124,6 @@ func (l *ByIndexLoader) UnmarshalJSON(b []byte) error {
 			measures[i] = l.To()
 		}
 		l.byIndex = Sum(measures...)
-	case "location":
-		l.byIndex, _ = Location(j.ByIndex.To(), j.Costs, nil)
 	case "matrix":
 		l.byIndex = Matrix(j.Matrix)
 	case "power":

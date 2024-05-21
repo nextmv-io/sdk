@@ -14,7 +14,7 @@ func SyncHTTPRequestHandler(
 	w http.ResponseWriter, req *http.Request,
 ) (Callback, IOProducer[HTTPRunnerConfig], error) {
 	return nil,
-		func(ctx context.Context, config HTTPRunnerConfig) (IOData, error) {
+		func(_ context.Context, _ HTTPRunnerConfig) (IOData, error) {
 			return NewIOData(
 				req.Body,
 				req.URL.Query(),
@@ -105,7 +105,7 @@ func (a asyncHTTPHandler) Handler(
 	}
 
 	return callbackFunc, func(
-		ctx context.Context, config HTTPRunnerConfig,
+		_ context.Context, _ HTTPRunnerConfig,
 	) (IOData, error) {
 		return NewIOData(
 			bytes.NewReader(body),

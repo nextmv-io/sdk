@@ -134,7 +134,7 @@ func Example_customProfile() {
 	}
 
 	// Defines a speed per OSM way tag.
-	speedMapper := func(_ int, tags map[string]string) int {
+	speedMapper := func(_ int, _ map[string]string) int {
 		return 10
 	}
 

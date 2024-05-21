@@ -1,13 +1,13 @@
 module github.com/nextmv-io/sdk/measure/routingkit
 
-go 1.19
+go 1.21
 
 replace github.com/nextmv-io/sdk => ../../.
 
 require (
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/nextmv-io/go-routingkit v0.1.18
-	github.com/nextmv-io/sdk v1.0.3
+	github.com/nextmv-io/sdk v1.6.0
 	github.com/twpayne/go-polyline v1.1.1
 )
 
@@ -23,5 +23,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	go.mongodb.org/mongo-driver v1.11.2 // indirect
 	golang.org/x/sys v0.5.0 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 )

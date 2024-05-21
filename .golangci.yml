@@ -1,7 +1,7 @@
 # Options for analysis running. Details: https://golangci-lint.run/usage/configuration/#run-configuration
 run:
   timeout: 5m
-  go: "1.19"
+  go: "1.22"
 
 # Configures linters. Details: https://golangci-lint.run/usage/linters
 linters-settings:
@@ -13,11 +13,6 @@ linters-settings:
     allowed:
       modules:
         - github.com/nextmv-io/sdk
-        - github.com/nextmv-io/sdk/route
-        - github.com/nextmv-io/sdk/route/osrm
-        - github.com/nextmv-io/sdk/route/here
-        - github.com/nextmv-io/sdk/route/google
-        - github.com/nextmv-io/sdk/route/routingkit
         - github.com/nextmv-io/sdk/measure/here
         - github.com/nextmv-io/sdk/measure/osrm
         - github.com/nextmv-io/sdk/measure/google
@@ -35,16 +30,17 @@ linters-settings:
         - github.com/google/uuid
         - github.com/xeipuuv/gojsonschema
         - github.com/danielgtaylor/huma
+        - github.com/sergi/go-diff
   # Functions cannot exceed this cyclomatic complexity.
   gocyclo:
     min-complexity: 20
   # Set correct go version.
   gosimple:
-    go: "1.19"
+    go: "1.22"
   staticcheck:
-    go: "1.19"
+    go: "1.22"
   stylecheck:
-    go: "1.19"
+    go: "1.22"
   # Check case of struct tags
   tagliatelle:
     case:
@@ -164,88 +160,13 @@ issues:
   # Disable default exclude patterns to surface commonly-ignored linting errors.
   exclude-use-default: false
   exclude-rules:
-    # Many individual router tests use the same base and this implies
-    # duplication. The code is not abstracted into a single function to keep the
-    # testable examples in a nice compact format with all information provided in
-    # a single snippet.
-    - path: route/example_option_test\.go
-      linters:
-        - dupl
-    - path: route/example_router_test\.go
-      linters:
-        - dupl
-    # Deactivate line length in solver.go because of go tags
-    - path: nextroute/solver\.go
-      linters:
-        - lll
-    # Deactivate line length in solver_parallel.go because of go tags
-    - path: nextroute/solver_parallel\.go
-      linters:
-        - lll
-    # Deactivate line length because of go tags
-    - path: nextroute/check/options\.go
-      linters:
-        - lll
-    # Deactivate lll in schema due to go tags.
-    - path: nextroute/schema
-      linters:
-        - lll
-    # Deactivate lll in route/example_option_test.go
-    - path: route/example_option_test\.go
-      linters:
-        - lll
-      # Deactivate lll in route/router.go
-    - path: route/router\.go
-      linters:
-        - lll
-    # Deactivate line length in model.go because of go tags
-    - path: nextroute/model\.go
-      linters:
-        - lll
-    # Deactivate line length in factory/model.go because of go tags
-    - path: nextroute/factory/model\.go
-      linters:
-        - lll
-    # Deactivate line length in construction.go because of go tags
-    - path: nextroute/factory/construction\.go
-      linters:
-        - lll
     # Tag should be 'measure' in both cases ByPoint and ByIndex
     - path: measure/load\.go
       linters:
         - tagliatelle
       text: measure
-    - path: route/load\.go
-      linters:
-        - tagliatelle
-      text: measure
-
-    # Complex nested block nesting is fine for now.
-    - path: alns/solver\.go
-      linters:
-        - nestif
-    # Cloud code for compatibility
-    - path: nextroute/schema/fleet_defaults\.go
-      linters:
-        - gocyclo
-
-    # Using math/rand is fine here
-    - path: common/alias_test\.go
-      linters:
-        - gosec
-      text: G404
     # Complexity is fine here because of the nature of the code
-    - path: common/boundingbox_test\.go
-      linters:
-        - gocyclo
-    - path: common/utils\.go
-      linters:
-        - gomodguard
     - path: measure/osrm/matrix_test\.go
-      linters:
-        - gosec
-      text: G404
-    - path: route/osrm/matrix_test\.go
       linters:
         - gosec
       text: G404
@@ -259,131 +180,6 @@ issues:
     # you look for uses of //nolint you will find the other linting issues
     # being excluided.
 
-    # TODO: fix cyclomatic complexity issues on these templates/legacy. This linter is
-    # ignored for expediency.
-    - path: templates/legacy/cloud-routing/helper\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/cloud-routing/schema\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/cloud-routing/solver\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/routing-informs/helper\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/routing-informs/schema\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/routing-informs/main\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/demo-routing/helper\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/demo-routing/schema\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/demo-routing/main\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/pager-duty/main\.go
-      linters:
-        - gocyclo
-    - path: templates/shift-scheduling/main\.go
-      linters:
-        - gocyclo
-        - nestif
-    # json tags are too long and unmarshal does not throw an error where one is
-    # needed for the signature of the function.
-    - path: templates/shift-scheduling/schema\.go
-      linters:
-        - lll
-        - unparam
-    - path: templates/legacy/sudoku/main\.go
-      linters:
-        - gocyclo
-    - path: templates/legacy/unique-matrix-measure/main\.go
-      linters:
-        - gocyclo
-
-    # TODO: figure out a better way to Marshal to JSON with some sort of error
-    # checking.
-    - path: templates/legacy/cloud-routing/schema\.go
-      linters:
-        - unparam
-      text: cloudDuration
-
-    # The linter suggests switching an if-elseif-else statement to use switch.
-    # This is not reasonable right now because the conditions are complex.
-    - path: templates/legacy/cloud-routing/helper\.go
-      linters:
-        - gocritic
-      text: ifElseChain
-    - path: templates/legacy/routing-informs/helper\.go
-      linters:
-        - gocritic
-      text: ifElseChain
-    - path: templates/legacy/demo-routing/helper\.go
-      linters:
-        - gocritic
-      text: ifElseChain
-    - path: templates/legacy/cluster-tsp/schema\.go
-      linters:
-        - unparam
-      text: cloudDuration
-
-    # Now that route, store and dataframes are deprecated
-    # we get staticcheck errors.
-    - path: templates/legacy
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: route
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: route/google/client\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: run/legacy_runner\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: run/simple_runner\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: run/runner_option_legacy\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: nextroute/schema/router\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: store
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: measure/location\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-    - path: measure/location_test\.go
-      linters:
-        - staticcheck
-      text: "SA1019:"
-
-    # The linter suggests switching an if-elseif-else statement to use switch.
-    # This is not reasonable right now because the conditions are complex.
-    - path: templates/legacy/cluster-tsp/helper\.go
-      linters:
-        - gocritic
-      text: ifElseChain
-
     # Deactivating gocritic because of a gocritic bug that was fixed on October
     # 6th, but the fix has not yet been released
     # https://github.com/go-critic/go-critic/pull/1273
@@ -395,22 +191,19 @@ issues:
     - path: run/http_runner_config\.go
       linters:
         - lll
-    # Deactivate line length because of go tags.
-    - path: mip/options\.go
+
+    # The golden file testing framework is only used internally and doesn't need
+    # to meet the same standards as the rest of the codebase for now.
+    - path: golden/.+\.go
       linters:
-        - lll
-    # Although the name stutters, we need to call it mip.MipOptions because the
-    # mip package can also handle linear programs, so potentially we may have
-    # mip.LpOptions.
-    - path: mip/options\.go
+        - gocyclo
+        - nestif
+        - gosec
+    # The test is only used internally and doesn't need
+    # to meet the same standards as the rest of the codebase for now.
+    - path: run/tests/http/async/main\.go
       linters:
-        - revive
-      text: "exported: type name will be used as mip.MipOptions by other packages, and that stutters"
-    # This tag is used by our validation engine and it is valid.
-    - path: nextroute/schema/input\.go
-      linters:
-        - govet
-      text: structtag
+        - gosec
     - path: nextroute/decode/tsplib\.go
       linters:
         - gocyclo

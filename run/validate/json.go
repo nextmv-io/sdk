@@ -15,6 +15,10 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
+// RecordedOutputKey is the key used to store the pre-recored output in the
+// input itself. It can be used to handle pre-computed runs.
+const RecordedOutputKey = "__recorded_output"
+
 // JSON creates a JSON validator. If nil is passed as schema, the validator will
 // try to read schema.json in the current directory. If that file does not
 // exist, no validation will be performed.
@@ -37,6 +41,12 @@ func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr err
 		s, err := humaSchema.Generate(reflect.TypeOf(new(Input)))
 		if err != nil {
 			log.Fatal(err)
+		}
+		if s.Properties == nil {
+			s.Properties = map[string]*humaSchema.Schema{}
+		}
+		if _, ok := s.Properties[RecordedOutputKey]; !ok {
+			s.Properties[RecordedOutputKey] = &humaSchema.Schema{}
 		}
 		// serialize s to json
 		schema, err := json.Marshal(s)

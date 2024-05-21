@@ -378,6 +378,15 @@ func (c *client) tableRequests( //nolint:gocyclo
 				path += strings.Join(annotations, ",")
 			}
 
+			if config.withApproachCurb {
+				path += "&approaches="
+				approaches := make([]string, len(resultingChunk))
+				for i := 0; i < len(approaches); i++ {
+					approaches[i] = "curb"
+				}
+				path += strings.Join(approaches, ";")
+			}
+
 			// Set scale factor. This only has an effect on durations.
 			if c.scaleFactor != 1.0 {
 				path += fmt.Sprintf("&scale_factor=%f", c.scaleFactor)
@@ -440,9 +449,10 @@ type TableOptions func(*tableConfig)
 
 // tableConfig defines options for the table configuration.
 type tableConfig struct {
-	withDistance bool
-	withDuration bool
-	parallelRuns int
+	withDistance     bool
+	withDuration     bool
+	parallelRuns     int
+	withApproachCurb bool
 }
 
 // WithDuration returns a TableOptions function for composing a tableConfig with
@@ -460,6 +470,14 @@ func WithDuration() TableOptions {
 func WithDistance() TableOptions {
 	return func(c *tableConfig) {
 		c.withDistance = true
+	}
+}
+
+// WithApproachCurb returns a TableOptions func for a tableConfig with the
+// approach curb set.
+func WithApproachCurb() TableOptions {
+	return func(c *tableConfig) {
+		c.withApproachCurb = true
 	}
 }
 

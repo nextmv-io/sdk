@@ -2,8 +2,6 @@ package run
 
 import (
 	"context"
-
-	"github.com/nextmv-io/sdk/store"
 )
 
 // CLI instantiates a CLIRunner and runs it. This is a wrapper function that
@@ -45,19 +43,4 @@ func HTTP[Input, Option, Output any](solver func(
 		return nil
 	}
 	return NewHTTPRunner(algorithm, options...)
-}
-
-// AllSolutions is a helper function that unwraps a (store.Solver,error) into
-// ([]store.Solution, error).
-func AllSolutions(
-	ctx context.Context,
-	solver store.Solver, err error,
-) (solutions []store.Solution, retErr error) {
-	if err != nil {
-		return nil, err
-	}
-	for solution := range solver.All(ctx) {
-		solutions = append(solutions, solution)
-	}
-	return solutions, nil
 }
