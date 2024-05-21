@@ -16,6 +16,9 @@ require (
 
 require (
 	github.com/iancoleman/strcase v0.2.0 // indirect
+	github.com/nextmv-io/nextroute v1.6.1 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
+	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
+	gonum.org/v1/gonum v0.14.0 // indirect
 )

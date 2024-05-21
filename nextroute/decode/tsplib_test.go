@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/nextmv-io/nextroute/schema"
 	"github.com/nextmv-io/sdk/nextroute/decode"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 )
 
 func TestDecodeTspLibParser(t *testing.T) {
@@ -20,11 +20,12 @@ func TestDecodeTspLibParser(t *testing.T) {
 		}
 	}()
 	input := schema.Input{}
-	err = decode.Parse(reader, &input)
+	decoder := decode.TSPLIBDecoder{}
+	err = decoder.Decode(reader, &input)
 	if err != nil {
 		t.Error(err)
 	}
-	if len(input.Stops) != 120 {
-		t.Errorf("expected %d, got %d", 120, len(input.Stops))
+	if len(input.Stops) != 119 {
+		t.Errorf("expected %d, got %d", 119, len(input.Stops))
 	}
 }

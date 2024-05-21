@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nextmv-io/nextroute/schema"
 	"github.com/nextmv-io/sdk/measure"
-	"github.com/nextmv-io/sdk/nextroute/schema"
 	"github.com/nextmv-io/sdk/run/decode"
 )
 
