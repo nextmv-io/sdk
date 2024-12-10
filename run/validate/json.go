@@ -15,7 +15,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-// RecordedOutputKey is the key used to store the pre-recored output in the
+// RecordedOutputKey is the key used to store the pre-recorded output in the
 // input itself. It can be used to handle pre-computed runs.
 const RecordedOutputKey = "__recorded_output"
 

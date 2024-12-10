@@ -82,7 +82,7 @@ type area struct {
 	West  float64 `json:"west"`
 }
 
-// BoundingBox represents a region using four cooordinates corresponding
+// BoundingBox represents a region using four coordinates corresponding
 // to the furthest points in each of the cardinal directions within that region.
 type BoundingBox struct {
 	North float64

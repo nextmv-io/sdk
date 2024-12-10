@@ -27,7 +27,7 @@ func (h haversineByPoint) Cost(p1, p2 Point) float64 {
 	x := 2.0 * radius * math.Atan2(math.Sqrt(a), math.Sqrt(1.0-a))
 
 	// on different architectures x is slightly different. we don't need perfect
-	// precision here, but we do care about reproducability, so we are fine with
+	// precision here, but we do care about reproducibility, so we are fine with
 	// a value that is precise up to millimeters
 	return math.Floor(x*1000.0) / 1000.0
 }
