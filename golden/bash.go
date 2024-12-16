@@ -65,7 +65,11 @@ func BashTestFile(
 	script string,
 	bashConfig BashConfig,
 ) {
-	goldenFilePath := script + goldenExtension
+	ext := goldenExtension
+	if bashConfig.GoldenExtension != "" {
+		ext = bashConfig.GoldenExtension
+	}
+	goldenFilePath := script + ext
 	// Function run by the test.
 	f := func(t *testing.T) {
 		// Make script path absolute to avoid issues with custom working

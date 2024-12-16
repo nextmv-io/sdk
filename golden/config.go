@@ -27,6 +27,9 @@ type Config struct {
 	CompareConfig CompareConfig
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// GoldenExtension is the file extension to use for the golden file. If not
+	// provided, then the default extension (.golden) is used.
+	GoldenExtension string
 	// SkipGoldenComparison skips the comparison against the golden file.
 	SkipGoldenComparison bool
 	// ExitCode defines the expected exit code of the command.
@@ -68,6 +71,9 @@ type BashConfig struct {
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// GoldenExtension is the file extension to use for the golden file. If not
+	// provided, then the default extension (.golden) is used.
+	GoldenExtension string
 	// Envs specifies the environment variables to set for execution.
 	Envs [][2]string
 	// PostProcessFunctions defines a list of functions to be executed after the bash
