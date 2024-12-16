@@ -156,7 +156,11 @@ func comparison(
 ) {
 	var err error
 
-	goldenPath := inputPath + goldenExtension
+	ext := goldenExtension
+	if config.GoldenExtension != "" {
+		ext = config.GoldenExtension
+	}
+	goldenPath := inputPath + ext
 	if config.OutputProcessConfig.RelativeDestination != "" {
 		goldenPath = filepath.Join(
 			config.OutputProcessConfig.RelativeDestination,
