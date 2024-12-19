@@ -429,12 +429,17 @@ func valuesAreEqual(config Config, key string, output, expected any) error {
 	}
 
 	if outputInt, IsInt := output.(int); IsInt {
+		expectedFloat, expectedIsFloat := expected.(float64) // JSON unmarshals numbers as float64
 		expectedInt, expectedIsInt := expected.(int)
-		if !expectedIsInt {
+		if !expectedIsInt && !expectedIsFloat {
 			return fmt.Errorf(
-				"key \"%s\": output value %v is int, expected value %v is not",
+				"key \"%s\": output value %v is int, expected value %v is not float64 (JSON unmarshals numbers as float64)",
 				key, outputInt, expected,
 			)
+		}
+
+		if expectedIsFloat {
+			expectedInt = int(expectedFloat)
 		}
 
 		threshold := config.Thresholds.Int
