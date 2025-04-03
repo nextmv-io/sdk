@@ -16,7 +16,7 @@ require (
 	github.com/datadog/czlib v0.0.0-20160811164712-4bc9a24e37f2 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/golang/geo v0.0.0-20230421003525-6adc56603217 // indirect
-	github.com/golang/glog v1.0.0 // indirect
+	github.com/golang/glog v1.2.4 // indirect
 	github.com/nextmv-io/osm v0.0.1 // indirect
 	github.com/paulmach/orb v0.9.0 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
