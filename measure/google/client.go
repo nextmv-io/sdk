@@ -382,7 +382,7 @@ func Polylines(
 			for i, leg := range route.Legs {
 				index++
 				for _, steps := range leg.Steps {
-					dec, err := steps.Polyline.Decode()
+					dec, err := steps.Decode()
 					if err != nil {
 						return "", []string{}, err
 					}

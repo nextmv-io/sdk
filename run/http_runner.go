@@ -110,7 +110,7 @@ func NewHTTPRunner[Input, Option, Solution any](
 		),
 	}
 
-	runnerConfig := runner.Runner.RunnerConfig()
+	runnerConfig := runner.RunnerConfig()
 	runner.maxParallel = make(chan struct{}, runnerConfig.Runner.HTTP.MaxParallel)
 
 	// default http server
@@ -173,7 +173,7 @@ func (h *httpRunner[Input, Option, Solution]) setRunnerOption(
 func (h *httpRunner[Input, Option, Solution]) Run(
 	_ context.Context,
 ) error {
-	httpRunnerConfig := h.Runner.RunnerConfig()
+	httpRunnerConfig := h.RunnerConfig()
 	if httpRunnerConfig.Runner.HTTP.Certificate != "" ||
 		httpRunnerConfig.Runner.HTTP.Key != "" {
 		return h.httpServer.ListenAndServeTLS(
@@ -200,7 +200,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 	// control mechanism to let the request by run async or not.
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go func() {
+	go func() { //nolint:contextcheck
 		defer func() { <-h.maxParallel }()
 		// configure how to turn the request and response into an IOProducer.
 		callbackFunc, producer, err := h.httpRequestHandler(w, req)
@@ -214,7 +214,7 @@ func (h *httpRunner[Input, Option, Solution]) ServeHTTP(
 		requestID := uuid.New().String()
 
 		// get content type from the encoder
-		contentTyper, ok := h.Runner.GetEncoder().(ContentTyper)
+		contentTyper, ok := h.GetEncoder().(ContentTyper)
 		if !ok {
 			handleError(h.httpServer.ErrorLog, async,
 				errors.New("encoder does not implement ContentTyper"), w)

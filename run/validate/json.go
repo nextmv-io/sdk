@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -81,7 +82,7 @@ func (j JSONValidator[Input]) Validate(_ context.Context, input any) (retErr err
 		for _, desc := range result.Errors() {
 			sb.WriteString(desc.String() + "\n")
 		}
-		return fmt.Errorf(sb.String())
+		return errors.New(sb.String())
 	}
 	return nil
 }

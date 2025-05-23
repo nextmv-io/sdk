@@ -497,7 +497,7 @@ func withinTolerance[T int | float64 | time.Duration](a, b, tolerance T) bool {
 // withinToleranceTime compares two values of type time.Time and returns true
 // if the difference between the two values is within the given tolerance.
 func withinToleranceTime(a, b time.Time, tolerance time.Duration) bool {
-	if a == b {
+	if a.Equal(b) {
 		return true
 	}
 
