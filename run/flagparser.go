@@ -42,10 +42,7 @@ func usage() {
 	fs := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	out := fs.Output()
 
-	fmt.Fprint(
-		out,
-		"Nextmv Hybrid Optimization Platform\n",
-	)
-	fmt.Fprint(out, "Usage:\n")
+	_, _ = fmt.Fprint(out, "Nextmv Hybrid Optimization Platform\n")
+	_, _ = fmt.Fprint(out, "Usage:\n")
 	flag.PrintDefaults()
 }
