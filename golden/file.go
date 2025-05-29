@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -278,6 +279,15 @@ func updateGoldenFile(
 		actualString := string(actualBytes)
 		actualString = regexReplaceAllDefault(actualString)
 		for _, r := range config.OutputProcessConfig.VolatileRegexReplacements {
+			if r.FileRegex != "" {
+				fileName := filepath.Base(goldenPath)
+				if r.FileRegexFullPath {
+					fileName = goldenPath
+				}
+				if !regexp.MustCompile(r.FileRegex).MatchString(fileName) {
+					continue
+				}
+			}
 			actualString = regexReplaceCustom(actualString, r.Replacement, r.Regex)
 		}
 
