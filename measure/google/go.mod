@@ -5,7 +5,7 @@ go 1.21
 replace github.com/nextmv-io/sdk => ../../.
 
 require (
-	github.com/nextmv-io/sdk v1.8.7-dev.0
+	github.com/nextmv-io/sdk v1.8.7
 	googlemaps.github.io/maps v1.4.0
 )
 
