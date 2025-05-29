@@ -284,7 +284,12 @@ func updateGoldenFile(
 				if r.FileRegexFullPath {
 					fileName = goldenPath
 				}
-				if !regexp.MustCompile(r.FileRegex).MatchString(fileName) {
+				re, compileErr := regexp.Compile(r.FileRegex)
+				if compileErr != nil {
+					t.Errorf("Invalid regex pattern '%s': %v", r.FileRegex, compileErr)
+					continue
+				}
+				if !re.MatchString(fileName) {
 					continue
 				}
 			}
