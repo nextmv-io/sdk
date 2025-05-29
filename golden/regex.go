@@ -12,6 +12,14 @@ type VolatileRegexReplacement struct {
 	Regex string
 	// Replacement to apply.
 	Replacement string
+	// FileRegex is an optional regex to match the file name. If it is not
+	// empty, the replacement is only applied to files that match the regex.
+	FileRegex string
+	// FileRegexFullPath decides whether the FileRegex should be applied to
+	// the full path of the file or just the file name. If it is true, the
+	// FileRegex is applied to the full path, otherwise it is applied to the
+	// file name only.
+	FileRegexFullPath bool
 }
 
 // regexReplaceAllDefault applies all default regex replacements to the given

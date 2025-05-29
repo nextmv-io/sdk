@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -278,6 +279,20 @@ func updateGoldenFile(
 		actualString := string(actualBytes)
 		actualString = regexReplaceAllDefault(actualString)
 		for _, r := range config.OutputProcessConfig.VolatileRegexReplacements {
+			if r.FileRegex != "" {
+				fileName := filepath.Base(goldenPath)
+				if r.FileRegexFullPath {
+					fileName = goldenPath
+				}
+				re, compileErr := regexp.Compile(r.FileRegex)
+				if compileErr != nil {
+					t.Errorf("Invalid regex pattern '%s': %v", r.FileRegex, compileErr)
+					continue
+				}
+				if !re.MatchString(fileName) {
+					continue
+				}
+			}
 			actualString = regexReplaceCustom(actualString, r.Replacement, r.Regex)
 		}
 
