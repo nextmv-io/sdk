@@ -349,7 +349,7 @@ func ValidateAgainstSchema(name string, docBytes, schemaBytes []byte) error {
 }
 
 // valuesAreEqual compares two values and returns an error if they are not.
-// Comparison is done based on a treshold value, which is defined in the
+// Comparison is done based on a threshold value, which is defined in the
 // GoldenConfig.
 func valuesAreEqual(config Config, key string, output, expected any) error {
 	if outputString, isString := output.(string); isString {
