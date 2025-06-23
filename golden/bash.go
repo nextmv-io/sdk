@@ -160,7 +160,6 @@ func processOutput(
 	config OutputProcessConfig,
 	out []byte,
 ) string {
-
 	// Apply JSON specific processing, if requested.
 	var err error
 	if len(config.TransientFields) > 0 || len(config.RoundingConfig) > 0 {
