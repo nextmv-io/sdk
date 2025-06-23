@@ -11,17 +11,26 @@ import (
 // the variadic list of transientFields. The replaced value has a stable value
 // according to the data type.
 func replaceTransient(
+	path string,
 	original map[string]any,
 	transientFields ...TransientField,
-) map[string]any {
+) (map[string]any, error) {
 	transientLookup := map[string]any{}
 	for _, field := range transientFields {
+		// See whether we should skip this replacement for the given path.
+		skip, err := skipFile(path, field.FileRegex, field.FileRegexFullPath)
+		if err != nil {
+			return nil, fmt.Errorf("error checking file regex: %w", err)
+		}
+		if skip {
+			continue
+		}
 		transientLookup[field.Key] = field.Replacement
 	}
 
 	replaced := map[string]any{}
 	for key, value := range original {
-		// Keep the original value.
+		// Check whether the // Keep the original value.
 		replaced[key] = value
 
 		// Check if the field is meant to be replaced. If not, continue.
@@ -78,13 +87,14 @@ func replaceTransient(
 		}
 	}
 
-	return replaced
+	return replaced, nil
 }
 
 // roundFields rounds all the values in a map whose key is contained in the
 // variadic list of roundingConfigs. The rounded value has a stable value
 // according to the data type.
 func roundFields(
+	path string,
 	original map[string]any,
 	roundedFields ...RoundingConfig,
 ) (map[string]any, error) {

@@ -25,23 +25,11 @@ type VolatileRegexReplacement struct {
 // regexReplaceAllDefault applies all default regex replacements to the given
 // text.
 func regexReplaceAllDefault(text string) string {
-	text = regexReplaceEndpoints(text)
 	text = regexReplaceGoSemverLike(text, StableVersion)
 	text = regexReplaceGUID(text, "00000000-0000-0000-0000-000000000000")
 	text = regexReplaceElapsed(text, StableDuration)
 	text = regexReplaceElapsedSeconds(text, StableFloat)
 	text = regexReplaceStart(text, StableTime)
-	return text
-}
-
-// regexReplaceEndpoints replaces all endpoints with the default endpoint.
-func regexReplaceEndpoints(text string) string {
-	text = regexp.
-		MustCompile(`us1.api.staging.nxmv.xyz`).
-		ReplaceAllString(text, "api.cloud.nextmv.io")
-	text = regexp.
-		MustCompile(`us1.api.development.nxmv.xyz`).
-		ReplaceAllString(text, "api.cloud.nextmv.io")
 	return text
 }
 

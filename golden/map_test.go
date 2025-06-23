@@ -103,7 +103,12 @@ func Test_replaceTransient(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := replaceTransient(tt.args.original, tt.args.transientFields...); !reflect.DeepEqual(got, tt.want) {
+			got, err := replaceTransient("test/path/to-file.golden", tt.args.original, tt.args.transientFields...)
+			if err != nil {
+				t.Errorf("replaceTransient() error = %v", err)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("replaceTransient() = %v, want %v", got, tt.want)
 			}
 		})

@@ -107,7 +107,7 @@ func BashTestFile(
 		}
 
 		// Process the output data before comparison.
-		got := processOutput(t, bashConfig.OutputProcessConfig, out)
+		got := processOutput(t, out, goldenFilePath, bashConfig.OutputProcessConfig)
 
 		// Write the output bytes to a .golden file, if the test is being
 		// updated
@@ -157,8 +157,9 @@ func BashTestFile(
 
 func processOutput(
 	t *testing.T,
-	config OutputProcessConfig,
 	out []byte,
+	goldenPath string,
+	config OutputProcessConfig,
 ) string {
 	// Apply JSON specific processing, if requested.
 	var err error
@@ -172,8 +173,11 @@ func processOutput(
 		// Flatten the map and apply the configured replacements /
 		// modifications.
 		flattenedOutput := flatmap.Do(output)
-		flattenedOutput = replaceTransient(flattenedOutput, config.TransientFields...)
-		flattenedOutput, err = roundFields(flattenedOutput, config.RoundingConfig...)
+		flattenedOutput, err = replaceTransient(goldenPath, flattenedOutput, config.TransientFields...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		flattenedOutput, err = roundFields(goldenPath, flattenedOutput, config.RoundingConfig...)
 		if err != nil {
 			t.Fatal(err)
 		}

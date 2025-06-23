@@ -110,7 +110,6 @@ type TransientField struct {
 	//
 	// [JSONPath]: https://goessner.net/articles/JsonPath/
 	Key string
-
 	// Replacement is optional, and it is the value that is used to stabilize
 	// the transient field. If a replacement is not provided for the key, the
 	// stabilization happens according to the data type. For example, a
@@ -118,6 +117,14 @@ type TransientField struct {
 	// replaced using [StableDuration], etc. You can use the constants provided
 	// by this package to stabilize the transient fields.
 	Replacement any
+	// FileRegex is an optional regex to match the file name. If it is not
+	// empty, the replacement is only applied to files that match the regex.
+	FileRegex string
+	// FileRegexFullPath decides whether the FileRegex should be applied to
+	// the full path of the file or just the file name. If it is true, the
+	// FileRegex is applied to the full path, otherwise it is applied to the
+	// file name only.
+	FileRegexFullPath bool
 }
 
 // Tresholds by data type to be used when comparing actual and expected. If the
@@ -195,6 +202,14 @@ type RoundingConfig struct {
 	Key string
 	// Precision is the number of decimal places to round to.
 	Precision int
+	// FileRegex is an optional regex to match the file name. If it is not
+	// empty, the rounding is only applied to files that match the regex.
+	FileRegex string
+	// FileRegexFullPath decides whether the FileRegex should be applied to
+	// the full path of the file or just the file name. If it is true, the
+	// FileRegex is applied to the full path, otherwise it is applied to the
+	// file name only.
+	FileRegexFullPath bool
 }
 
 // ExecutionConfig defines the configuration for non-SDK golden file tests.

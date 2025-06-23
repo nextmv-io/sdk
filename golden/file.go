@@ -180,8 +180,11 @@ func comparison(
 		flattenedOutput = flatmap.Do(output)
 		transientFields := config.TransientFields
 		transientFields = append(transientFields, config.OutputProcessConfig.TransientFields...)
-		flattenedOutput = replaceTransient(flattenedOutput, transientFields...)
-		flattenedOutput, err = roundFields(flattenedOutput, config.OutputProcessConfig.RoundingConfig...)
+		flattenedOutput, err = replaceTransient(goldenPath, flattenedOutput, transientFields...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		flattenedOutput, err = roundFields(goldenPath, flattenedOutput, config.OutputProcessConfig.RoundingConfig...)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -281,19 +284,12 @@ func updateGoldenFile(
 		actualString := string(actualBytes)
 		actualString = regexReplaceAllDefault(actualString)
 		for _, r := range config.OutputProcessConfig.VolatileRegexReplacements {
-			if r.FileRegex != "" {
-				fileName := filepath.Base(goldenPath)
-				if r.FileRegexFullPath {
-					fileName = goldenPath
-				}
-				re, compileErr := regexp.Compile(r.FileRegex)
-				if compileErr != nil {
-					t.Errorf("Invalid regex pattern '%s': %v", r.FileRegex, compileErr)
-					continue
-				}
-				if !re.MatchString(fileName) {
-					continue
-				}
+			skip, err := skipFile(goldenPath, r.FileRegex, r.FileRegexFullPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if skip {
+				continue
 			}
 			actualString = regexReplaceCustom(actualString, r.Replacement, r.Regex)
 		}
@@ -544,4 +540,25 @@ func validForFileComparison(fileInfo os.FileInfo) bool {
 	}
 
 	return true
+}
+
+func skipFile(
+	goldenPath string,
+	fileRegex string,
+	fileRegexFullPath bool,
+) (bool, error) {
+	if fileRegex != "" {
+		fileName := filepath.Base(goldenPath)
+		if fileRegexFullPath {
+			fileName = goldenPath
+		}
+		re, compileErr := regexp.Compile(fileRegex)
+		if compileErr != nil {
+			return false, fmt.Errorf("error compiling regex %q: %w", fileRegex, compileErr)
+		}
+		if !re.MatchString(fileName) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
