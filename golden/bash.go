@@ -166,7 +166,7 @@ func processOutput(
 		// Convert the output to a map[string]any for processing.
 		output := map[string]any{}
 		if err = json.Unmarshal(out, &output); err != nil {
-			t.Fatal("transient fields or rounding config provided, but output is not valid JSON: ", err)
+			t.Fatalf("transient fields or rounding config provided, but output is not valid JSON: %v", err)
 		}
 
 		// Flatten the map and apply the configured replacements /
