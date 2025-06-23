@@ -178,7 +178,9 @@ func comparison(
 		}
 
 		flattenedOutput = flatmap.Do(output)
-		flattenedOutput = replaceTransient(flattenedOutput, config.TransientFields...)
+		transientFields := config.TransientFields
+		transientFields = append(transientFields, config.OutputProcessConfig.TransientFields...)
+		flattenedOutput = replaceTransient(flattenedOutput, transientFields...)
 		flattenedOutput, err = roundFields(flattenedOutput, config.OutputProcessConfig.RoundingConfig...)
 		if err != nil {
 			t.Fatal(err)

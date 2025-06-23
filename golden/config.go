@@ -46,6 +46,8 @@ type Config struct {
 	// in nature, such as the elapsed time, version, start time, etc. Transient
 	// fields have a special parsing in the .golden file and they are
 	// stabilized in the comparison.
+	//
+	// Deprecated: Use OutputProcessConfig.TransientFields instead.
 	TransientFields []TransientField
 	// Tresholds by data type to be used when comparing actual and expected.
 	// This configuration is optional, and if not provided then the comparison
@@ -165,6 +167,11 @@ type OutputProcessConfig struct {
 	// KeepVolatileData indicates whether to keep or replace frequently
 	// changing data.
 	KeepVolatileData bool
+	// TransientFields are keys that hold values which are transient (dynamic)
+	// in nature, such as the elapsed time, version, start time, etc. Transient
+	// fields have a special parsing in the .golden file and they are
+	// stabilized in the comparison.
+	TransientFields []TransientField
 	// VolatileRegexReplacements defines regex replacements to be applied to the
 	// golden file before comparison.
 	VolatileRegexReplacements []VolatileRegexReplacement
