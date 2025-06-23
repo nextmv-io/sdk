@@ -100,6 +100,14 @@ func roundFields(
 ) (map[string]any, error) {
 	roundingLookup := map[string]int{}
 	for _, field := range roundedFields {
+		// See whether we should skip this rounding for the given path.
+		skip, err := skipFile(path, field.FileRegex, field.FileRegexFullPath)
+		if err != nil {
+			return nil, fmt.Errorf("error checking file regex: %w", err)
+		}
+		if skip {
+			continue
+		}
 		roundingLookup[field.Key] = field.Precision
 	}
 
