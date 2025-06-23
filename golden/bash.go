@@ -172,9 +172,7 @@ func processOutput(
 		// Flatten the map and apply the configured replacements /
 		// modifications.
 		flattenedOutput := flatmap.Do(output)
-		transientFields := config.TransientFields
-		transientFields = append(transientFields, config.TransientFields...)
-		flattenedOutput = replaceTransient(flattenedOutput, transientFields...)
+		flattenedOutput = replaceTransient(flattenedOutput, config.TransientFields...)
 		flattenedOutput, err = roundFields(flattenedOutput, config.RoundingConfig...)
 		if err != nil {
 			t.Fatal(err)
