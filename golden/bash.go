@@ -161,10 +161,33 @@ func processOutput(
 	goldenPath string,
 	config OutputProcessConfig,
 ) string {
-	// Apply JSON specific processing, if requested.
-	var err error
-	if len(config.TransientFields) > 0 || len(config.RoundingConfig) > 0 {
+	// Check whether any JSON modifications are requested.
+	jsonModifications := false
+	for _, field := range config.TransientFields {
+		skip, err := skipFile(goldenPath, field.FileRegex, field.FileRegexFullPath)
+		if err != nil {
+			t.Fatalf("error checking file regex: %v", err)
+		}
+		if !skip {
+			jsonModifications = true
+			break
+		}
+	}
+	for _, rounding := range config.RoundingConfig {
+		skip, err := skipFile(goldenPath, rounding.FileRegex, rounding.FileRegexFullPath)
+		if err != nil {
+			t.Fatalf("error checking file regex: %v", err)
+		}
+		if !skip {
+			jsonModifications = true
+			break
+		}
+	}
+
+	// Apply JSON specific processing (if any were found).
+	if jsonModifications {
 		// Convert the output to a map[string]any for processing.
+		var err error
 		output := map[string]any{}
 		if err = json.Unmarshal(out, &output); err != nil {
 			t.Fatalf("transient fields or rounding config provided, but output is not valid JSON: %v", err)
