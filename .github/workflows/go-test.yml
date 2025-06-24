@@ -1,5 +1,8 @@
 name: go test
-on: [push]
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   sdk-go-build-test:
     runs-on: ubuntu-latest

@@ -206,7 +206,7 @@ func Test_valuesAreEqual(t *testing.T) {
 			name: "int ok within threshold",
 			args: args{
 				config: Config{
-					Thresholds: Tresholds{
+					Thresholds: Thresholds{
 						Int: 4,
 					},
 				},
@@ -240,7 +240,7 @@ func Test_valuesAreEqual(t *testing.T) {
 			name: "float ok within threshold",
 			args: args{
 				config: Config{
-					Thresholds: Tresholds{
+					Thresholds: Thresholds{
 						Float: 0.1,
 					},
 				},
@@ -254,7 +254,7 @@ func Test_valuesAreEqual(t *testing.T) {
 			name: "float ok within custom threshold",
 			args: args{
 				config: Config{
-					Thresholds: Tresholds{
+					Thresholds: Thresholds{
 						Float: 0.1,
 						CustomThresholds: CustomThresholds{
 							Float: map[string]float64{
@@ -333,7 +333,7 @@ func Test_valuesAreEqual(t *testing.T) {
 			name: "time.Time ok with threshold",
 			args: args{
 				config: Config{
-					Thresholds: Tresholds{
+					Thresholds: Thresholds{
 						Time: 16 * time.Hour,
 					},
 				},
@@ -367,7 +367,7 @@ func Test_valuesAreEqual(t *testing.T) {
 			name: "time.Duration ok with threshold",
 			args: args{
 				config: Config{
-					Thresholds: Tresholds{
+					Thresholds: Thresholds{
 						Duration: 500 * time.Millisecond,
 					},
 				},

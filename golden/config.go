@@ -49,10 +49,10 @@ type Config struct {
 	//
 	// Deprecated: Use OutputProcessConfig.TransientFields instead.
 	TransientFields []TransientField
-	// Tresholds by data type to be used when comparing actual and expected.
+	// Thresholds by data type to be used when comparing actual and expected.
 	// This configuration is optional, and if not provided then the comparison
 	// between values is hard equality.
-	Thresholds Tresholds
+	Thresholds Thresholds
 	// When DedicatedComparison is defined, then the golden file test will only
 	// compare the keys that are defined in the slice. The keys are defined as
 	// a [JSONPath]-like key. In general, use a dot (.) to recursively enter
@@ -127,10 +127,10 @@ type TransientField struct {
 	FileRegexFullPath bool
 }
 
-// Tresholds by data type to be used when comparing actual and expected. If the
+// Thresholds by data type to be used when comparing actual and expected. If the
 // absolute difference between the two values is less than or equal to the
 // given threshold, then we consider the two values to be equal.
-type Tresholds struct {
+type Thresholds struct {
 	// Float is the threshold to be used when comparing floats.
 	Float float64
 	// Int is the threshold to be used when comparing ints.
