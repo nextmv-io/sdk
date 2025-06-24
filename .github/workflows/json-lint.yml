@@ -1,5 +1,8 @@
 name: json lint
-on: [push]
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   sdk-json-lint:
     runs-on: ubuntu-latest

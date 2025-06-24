@@ -1,5 +1,8 @@
 name: markdown lint
-on: [push]
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   sdk-markdown-lint:
     runs-on: ubuntu-latest
