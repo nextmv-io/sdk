@@ -158,7 +158,7 @@ func replaceTransient(
 
 		// Keep the first value found for potential type based fallback
 		// replacement.
-		var firstValue any = replaced[replacedKeys[0]]
+		firstValue := replaced[replacedKeys[0]]
 
 		// Remove the matched keys from the original map.
 		for _, key := range replacedKeys {
