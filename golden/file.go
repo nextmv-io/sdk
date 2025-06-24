@@ -178,8 +178,13 @@ func comparison(
 		}
 
 		flattenedOutput = flatmap.Do(output)
-		flattenedOutput = replaceTransient(flattenedOutput, config.TransientFields...)
-		flattenedOutput, err = roundFields(flattenedOutput, config.OutputProcessConfig.RoundingConfig...)
+		transientFields := config.TransientFields
+		transientFields = append(transientFields, config.OutputProcessConfig.TransientFields...)
+		flattenedOutput, err = replaceTransient(goldenPath, flattenedOutput, transientFields...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		flattenedOutput, err = roundFields(goldenPath, flattenedOutput, config.OutputProcessConfig.RoundingConfig...)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -279,19 +284,12 @@ func updateGoldenFile(
 		actualString := string(actualBytes)
 		actualString = regexReplaceAllDefault(actualString)
 		for _, r := range config.OutputProcessConfig.VolatileRegexReplacements {
-			if r.FileRegex != "" {
-				fileName := filepath.Base(goldenPath)
-				if r.FileRegexFullPath {
-					fileName = goldenPath
-				}
-				re, compileErr := regexp.Compile(r.FileRegex)
-				if compileErr != nil {
-					t.Errorf("Invalid regex pattern '%s': %v", r.FileRegex, compileErr)
-					continue
-				}
-				if !re.MatchString(fileName) {
-					continue
-				}
+			skip, err := skipFile(goldenPath, r.FileRegex, r.FileRegexFullPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if skip {
+				continue
 			}
 			actualString = regexReplaceCustom(actualString, r.Replacement, r.Regex)
 		}
@@ -542,4 +540,33 @@ func validForFileComparison(fileInfo os.FileInfo) bool {
 	}
 
 	return true
+}
+
+// skipFile checks whether a file should be skipped based on the provided
+// fileRegex and fileRegexFullPath. The file is skipped if the goldenPath does
+// not match the fileRegex. If the fileRegex is empty though, the file is not
+// skipped (i.e., it is processed / a catch-all).
+func skipFile(
+	goldenPath string,
+	fileRegex string,
+	fileRegexFullPath bool,
+) (bool, error) {
+	if !fileRegexFullPath {
+		goldenPath = filepath.Base(goldenPath)
+	}
+
+	if fileRegex != "" {
+		// Compile the regex and check if it matches the goldenPath.
+		// If it does not match, we skip the file.
+		re, compileErr := regexp.Compile(fileRegex)
+		if compileErr != nil {
+			return false, fmt.Errorf("error compiling regex %q: %w", fileRegex, compileErr)
+		}
+		if !re.MatchString(goldenPath) {
+			return true, nil
+		}
+	}
+
+	// By default, we do not skip files.
+	return false, nil
 }
