@@ -24,11 +24,13 @@ func TestGolden(t *testing.T) {
 			Args: []string{
 				"-duration=1s",
 			},
-			TransientFields: []golden.TransientField{
-				{Key: ".version.sdk", Replacement: golden.StableVersion},
-				{Key: ".solutions[0].statistics.time.elapsed", Replacement: golden.StableDuration},
-				{Key: ".solutions[0].statistics.time.elapsed_seconds", Replacement: golden.StableFloat},
-				{Key: ".solutions[0].statistics.time.start", Replacement: golden.StableTime},
+			OutputProcessConfig: golden.OutputProcessConfig{
+				TransientFields: []golden.TransientField{
+					{Key: ".version.sdk", Replacement: golden.StableVersion},
+					{Key: ".solutions[0].statistics.time.elapsed", Replacement: golden.StableDuration},
+					{Key: ".solutions[0].statistics.time.elapsed_seconds", Replacement: golden.StableFloat},
+					{Key: ".solutions[0].statistics.time.start", Replacement: golden.StableTime},
+				},
 			},
 		},
 	)

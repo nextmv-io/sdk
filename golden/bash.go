@@ -2,6 +2,7 @@ package golden
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/nextmv-io/sdk/flatmap"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -104,15 +106,9 @@ func BashTestFile(
 			t.Fatal(err)
 		}
 
-		got := string(out)
-		if !bashConfig.OutputProcessConfig.KeepVolatileData {
-			// Replace default volatile content with a placeholder
-			got = regexReplaceAllDefault(got)
-		}
-		// Apply custom volatile regex replacements
-		for _, r := range bashConfig.OutputProcessConfig.VolatileRegexReplacements {
-			got = regexReplaceCustom(got, r.Replacement, r.Regex)
-		}
+		// Process the output data before comparison.
+		got := processOutput(t, out, goldenFilePath, bashConfig.OutputProcessConfig)
+
 		// Write the output bytes to a .golden file, if the test is being
 		// updated
 		if *update || bashConfig.OutputProcessConfig.AlwaysUpdate {
@@ -157,6 +153,82 @@ func BashTestFile(
 			t.Fatalf("error running post-process function: %v", err)
 		}
 	}
+}
+
+func processOutput(
+	t *testing.T,
+	out []byte,
+	goldenPath string,
+	config OutputProcessConfig,
+) string {
+	// Check whether any JSON modifications are requested.
+	jsonModifications := false
+	for _, field := range config.TransientFields {
+		skip, err := skipFile(goldenPath, field.FileRegex, field.FileRegexFullPath)
+		if err != nil {
+			t.Fatalf("error checking file regex: %v", err)
+		}
+		if !skip {
+			jsonModifications = true
+			break
+		}
+	}
+	for _, rounding := range config.RoundingConfig {
+		skip, err := skipFile(goldenPath, rounding.FileRegex, rounding.FileRegexFullPath)
+		if err != nil {
+			t.Fatalf("error checking file regex: %v", err)
+		}
+		if !skip {
+			jsonModifications = true
+			break
+		}
+	}
+
+	// Apply JSON specific processing (if any were found).
+	if jsonModifications {
+		// Convert the output to a map[string]any for processing.
+		var err error
+		output := map[string]any{}
+		if err = json.Unmarshal(out, &output); err != nil {
+			t.Fatalf("transient fields or rounding config provided, but output is not valid JSON: %v", err)
+		}
+
+		// Flatten the map and apply the configured replacements /
+		// modifications.
+		flattenedOutput := flatmap.Do(output)
+		flattenedOutput, err = replaceTransient(goldenPath, flattenedOutput, config.TransientFields...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		flattenedOutput, err = roundFields(goldenPath, flattenedOutput, config.RoundingConfig...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		nestedOutput, err := flatmap.Undo(flattenedOutput)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Marshal the processed output back to JSON.
+		out, err = json.MarshalIndent(nestedOutput, "", "  ")
+		if err != nil {
+			t.Fatal("error marshaling output: ", err)
+		}
+	}
+
+	got := string(out)
+
+	// Apply regex replacements for volatile data.
+	if !config.KeepVolatileData {
+		// Replace default volatile content with a placeholder.
+		got = regexReplaceAllDefault(got)
+	}
+	// Apply custom regex replacements.
+	for _, r := range config.VolatileRegexReplacements {
+		got = regexReplaceCustom(got, r.Replacement, r.Regex)
+	}
+
+	return got
 }
 
 func postProcessVolatileData(
