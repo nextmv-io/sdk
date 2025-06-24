@@ -47,7 +47,7 @@ func filterMatchingJPaths(candidates []string, wildcard string) (result []string
 // ["grouped_summaries", "[0]", "foo", "[1]", "bar", "custom", "duration"].
 func parseJPath(jpath string) []string {
 	var parts []string
-	jpath = strings.TrimPrefix(jpath, ".")
+	jpath = strings.TrimPrefix(jpath, "$.")
 	var sb strings.Builder
 
 	inBracket := false
@@ -80,6 +80,7 @@ func parseJPath(jpath string) []string {
 // collapseJPath combines parts of a JPath into a single string.
 func collapseJPath(parts []string) string {
 	var sb strings.Builder
+	sb.WriteString("$")
 	for _, part := range parts {
 		if strings.HasPrefix(part, "[") && strings.HasSuffix(part, "]") {
 			sb.WriteString(part) // No dot prefix for brackets
@@ -175,28 +176,28 @@ func replaceTransient(
 			// (based on the type of the last value found).
 			if stringValue, isString := firstValue.(string); isString {
 				if _, err := time.Parse(time.RFC3339, stringValue); err == nil {
-					replaced[field.Key] = StableTime
+					replaced[key] = StableTime
 					continue
 				}
 
 				if _, err := time.ParseDuration(stringValue); err == nil {
-					replaced[field.Key] = StableDuration
+					replaced[key] = StableDuration
 					continue
 				}
 
-				replaced[field.Key] = StableText
+				replaced[key] = StableText
 				continue
 			}
 			if _, isFloat := firstValue.(float64); isFloat {
-				replaced[field.Key] = StableFloat
+				replaced[key] = StableFloat
 				continue
 			}
 			if _, isInt := firstValue.(int); isInt {
-				replaced[field.Key] = StableInt
+				replaced[key] = StableInt
 				continue
 			}
 			if _, isBool := firstValue.(bool); isBool {
-				replaced[field.Key] = StableBool
+				replaced[key] = StableBool
 				continue
 			}
 		}

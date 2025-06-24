@@ -20,119 +20,119 @@ func Test_replaceTransient(t *testing.T) {
 			name: "map with transient int",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": 2,
+					"$.a": "foo",
+					"$.b": 2,
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": 123,
+				"$.a": "foo",
+				"$.b": 123,
 			},
 		},
 		{
 			name: "map with transient float",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": 1.2,
+					"$.a": "foo",
+					"$.b": 1.2,
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": 0.123,
+				"$.a": "foo",
+				"$.b": 0.123,
 			},
 		},
 		{
 			name: "map with transient time",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": "2023-05-04T19:52:53Z",
+					"$.a": "foo",
+					"$.b": "2023-05-04T19:52:53Z",
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": "2023-01-01T00:00:00Z",
+				"$.a": "foo",
+				"$.b": "2023-01-01T00:00:00Z",
 			},
 		},
 		{
 			name: "map with transient time duration",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": "666ms",
+					"$.a": "foo",
+					"$.b": "666ms",
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": "123ms",
+				"$.a": "foo",
+				"$.b": "123ms",
 			},
 		},
 		{
 			name: "map with transient string",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": "bar",
+					"$.a": "foo",
+					"$.b": "bar",
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": "text",
+				"$.a": "foo",
+				"$.b": "text",
 			},
 		},
 		{
 			name: "map with transient bool",
 			args: args{
 				original: map[string]any{
-					".a": "foo",
-					".b": true,
+					"$.a": "foo",
+					"$.b": true,
 				},
 				transientFields: []TransientField{{Key: ".b"}},
 			},
 			want: map[string]any{
-				".a": "foo",
-				".b": true,
+				"$.a": "foo",
+				"$.b": true,
 			},
 		},
 		{
 			name: "map with array",
 			args: args{
 				original: map[string]any{
-					".a[0].b": "foo",
-					".a[0].c": 1.2,
-					".a[1].b": "bar",
-					".a[1].c": 3.4,
+					"$.a[0].b": "foo",
+					"$.a[0].c": 1.2,
+					"$.a[1].b": "bar",
+					"$.a[1].c": 3.4,
 				},
 				transientFields: []TransientField{
-					{Key: ".a[].b", Replacement: "text"},
+					{Key: "$.a[].b", Replacement: "text"},
 				},
 			},
 			want: map[string]any{
-				".a[0].b": "text",
-				".a[0].c": 1.2,
-				".a[1].b": "text",
-				".a[1].c": 3.4,
+				"$.a[0].b": "text",
+				"$.a[0].c": 1.2,
+				"$.a[1].b": "text",
+				"$.a[1].c": 3.4,
 			},
 		},
 		{
 			name: "map with replaced parent key",
 			args: args{
 				original: map[string]any{
-					".a.b": "foo",
-					".a.c": 1.2,
+					"$.a.b": "foo",
+					"$.a.c": 1.2,
 				},
 				transientFields: []TransientField{
 					{Key: ".a", Replacement: map[string]int{"foo": 123}},
 				},
 			},
 			want: map[string]any{
-				".a": map[string]int{
+				"$.a": map[string]int{
 					"foo": 123,
 				},
 			},
@@ -141,18 +141,18 @@ func Test_replaceTransient(t *testing.T) {
 			name: "map with multiple replaced parent keys",
 			args: args{
 				original: map[string]any{
-					".a[0].foo.b": 123,
-					".a[0].foo.c": 123,
-					".a[1].foo.b": 456,
-					".a[1].foo.c": 456,
+					"$.a[0].foo.b": 123,
+					"$.a[0].foo.c": 123,
+					"$.a[1].foo.b": 456,
+					"$.a[1].foo.c": 456,
 				},
 				transientFields: []TransientField{
 					{Key: ".a[].foo", Replacement: "replaced"},
 				},
 			},
 			want: map[string]any{
-				".a[0].foo": "replaced",
-				".a[1].foo": "replaced",
+				"$.a[0].foo": "replaced",
+				"$.a[1].foo": "replaced",
 			},
 		},
 	}
