@@ -542,23 +542,31 @@ func validForFileComparison(fileInfo os.FileInfo) bool {
 	return true
 }
 
+// skipFile checks whether a file should be skipped based on the provided
+// fileRegex and fileRegexFullPath. The file is skipped if the goldenPath does
+// not match the fileRegex. If the fileRegex is empty though, the file is not
+// skipped (i.e., it is processed / a catch-all).
 func skipFile(
 	goldenPath string,
 	fileRegex string,
 	fileRegexFullPath bool,
 ) (bool, error) {
+	if !fileRegexFullPath {
+		goldenPath = filepath.Base(goldenPath)
+	}
+
 	if fileRegex != "" {
-		fileName := filepath.Base(goldenPath)
-		if fileRegexFullPath {
-			fileName = goldenPath
-		}
+		// Compile the regex and check if it matches the goldenPath.
+		// If it does not match, we skip the file.
 		re, compileErr := regexp.Compile(fileRegex)
 		if compileErr != nil {
 			return false, fmt.Errorf("error compiling regex %q: %w", fileRegex, compileErr)
 		}
-		if !re.MatchString(fileName) {
+		if !re.MatchString(goldenPath) {
 			return true, nil
 		}
 	}
+
+	// By default, we do not skip files.
 	return false, nil
 }

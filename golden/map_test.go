@@ -100,6 +100,61 @@ func Test_replaceTransient(t *testing.T) {
 				".b": true,
 			},
 		},
+		{
+			name: "map with array",
+			args: args{
+				original: map[string]any{
+					".a[0].b": "foo",
+					".a[0].c": 1.2,
+					".a[1].b": "bar",
+					".a[1].c": 3.4,
+				},
+				transientFields: []TransientField{
+					{Key: ".a[].b", Replacement: "text"},
+				},
+			},
+			want: map[string]any{
+				".a[0].b": "text",
+				".a[0].c": 1.2,
+				".a[1].b": "text",
+				".a[1].c": 3.4,
+			},
+		},
+		{
+			name: "map with replaced parent key",
+			args: args{
+				original: map[string]any{
+					".a.b": "foo",
+					".a.c": 1.2,
+				},
+				transientFields: []TransientField{
+					{Key: ".a", Replacement: map[string]int{"foo": 123}},
+				},
+			},
+			want: map[string]any{
+				".a": map[string]int{
+					"foo": 123,
+				},
+			},
+		},
+		{
+			name: "map with multiple replaced parent keys",
+			args: args{
+				original: map[string]any{
+					".a[0].foo.b": 123,
+					".a[0].foo.c": 123,
+					".a[1].foo.b": 456,
+					".a[1].foo.c": 456,
+				},
+				transientFields: []TransientField{
+					{Key: ".a[].foo", Replacement: "replaced"},
+				},
+			},
+			want: map[string]any{
+				".a[0].foo": "replaced",
+				".a[1].foo": "replaced",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
