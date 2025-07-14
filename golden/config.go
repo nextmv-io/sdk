@@ -76,7 +76,10 @@ type ScriptConfig struct {
 	// ScriptExtensions is a list of script file extensions to be considered for
 	// golden file tests alongside their respective command to execute them.
 	// The key is the file extension, and the value is the command to execute
-	// the script. If not provided, it defaults to bash. I.e.: {".sh": "bash"}.
+	// the script. A typical definition for bash scripts looks like this:
+	// ScriptExtensions: map[string]string{
+	//     ".sh": "bash",
+	// }
 	ScriptExtensions map[string]string
 	// GoldenExtension is the file extension to use for the golden file. If not
 	// provided, then the default extension (.golden) is used.

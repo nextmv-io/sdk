@@ -37,6 +37,11 @@ func ScriptTest(
 		t.Fatalf("dir %s does not exist", goldenDir)
 	}
 
+	// If no script extensions are provided, we fail the test.
+	if len(scriptConfig.ScriptExtensions) == 0 {
+		t.Fatal("no script extensions provided in script config")
+	}
+
 	// Collect scripts.
 	extensions := make([]string, 0, len(scriptConfig.ScriptExtensions))
 	for ext := range scriptConfig.ScriptExtensions {
