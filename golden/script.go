@@ -35,11 +35,12 @@ func BashTest(
 	ScriptTest(t, goldenDir, scriptConfig)
 }
 
-// ScriptTest executes a golden file test for scripts. It walks over the
-// goldenDir to gather all .sh scripts present in the dir. It then executes each
-// of the scripts and compares expected vs. actual outputs. If displayStdout or
-// displayStderr are true, the output of each script will be composed of the
-// resulting stderr + stdout.
+// ScriptTest executes a golden file test for scripts defined via
+// ScriptExtensions in the config. It walks over the goldenDir to gather all
+// scripts present in the dir (based on the extensions given by
+// ScriptExtensions). It then executes each of the scripts and compares expected
+// vs. actual outputs. If displayStdout or displayStderr are true, the output of
+// each script will be composed of the resulting stderr + stdout.
 func ScriptTest(
 	t *testing.T,
 	goldenDir string,

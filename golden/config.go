@@ -11,6 +11,25 @@ import (
 
 const goldenExtension = ".golden"
 
+// NewConfig creates a new Config with default values.
+func NewConfig() Config {
+	return Config{
+		GoldenExtension: goldenExtension,
+	}
+}
+
+// NewScriptConfig creates a new ScriptConfig with default values.
+func NewScriptConfig() ScriptConfig {
+	return ScriptConfig{
+		DisplayStdout: true,
+		DisplayStderr: true,
+		ScriptExtensions: map[string]string{
+			".sh": "bash",
+		},
+		GoldenExtension: goldenExtension,
+	}
+}
+
 // Config lets a user configure the golden file tests.
 type Config struct {
 	// VerifyFunc is used to validate output against input, if provided.
