@@ -30,7 +30,7 @@ func BashTest(
 	scriptConfig ScriptConfig,
 ) {
 	scriptConfig.ScriptExtensions = []ScriptExtension{
-		ScriptExtension{Extension: ".sh", Command: "bash"},
+		{Extension: ".sh", Command: "bash"},
 	}
 	ScriptTest(t, goldenDir, scriptConfig)
 }
