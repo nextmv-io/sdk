@@ -23,8 +23,8 @@ func NewScriptConfig() ScriptConfig {
 	return ScriptConfig{
 		DisplayStdout: true,
 		DisplayStderr: true,
-		ScriptExtensions: map[string]string{
-			".sh": "bash",
+		ScriptExtensions: []ScriptExtension{
+			{Extension: ".sh", Command: "bash"},
 		},
 		GoldenExtension: goldenExtension,
 	}
@@ -94,12 +94,11 @@ type ScriptConfig struct {
 	OutputProcessConfig OutputProcessConfig
 	// ScriptExtensions is a list of script file extensions to be considered for
 	// golden file tests alongside their respective command to execute them.
-	// The key is the file extension, and the value is the command to execute
-	// the script. A typical definition for bash scripts looks like this:
-	// ScriptExtensions: map[string]string{
-	//     ".sh": "bash",
+	// A typical definition for bash scripts looks like this:
+	// ScriptExtensions: []ScriptExtension{
+	// 	 {Extension: ".sh", Command: "bash"},
 	// }
-	ScriptExtensions map[string]string
+	ScriptExtensions []ScriptExtension
 	// GoldenExtension is the file extension to use for the golden file. If not
 	// provided, then the default extension (.golden) is used.
 	GoldenExtension string
@@ -115,6 +114,16 @@ type ScriptConfig struct {
 	// WaitBefore adds a delay before running the script. This is useful when
 	// throttling is needed, e.g., when dealing with rate limiting.
 	WaitBefore time.Duration
+}
+
+// ScriptExtension defines a script file extension and the command to execute
+// it. This is used in the ScriptConfig to define which scripts should be
+// considered for golden file tests and how to execute them.
+type ScriptExtension struct {
+	// Extension is the file extension of the script, e.g., ".sh".
+	Extension string
+	// Command is the command to execute the script, e.g., "bash".
+	Command string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in

@@ -29,8 +29,8 @@ func BashTest(
 	goldenDir string,
 	scriptConfig ScriptConfig,
 ) {
-	scriptConfig.ScriptExtensions = map[string]string{
-		".sh": "bash",
+	scriptConfig.ScriptExtensions = []ScriptExtension{
+		ScriptExtension{Extension: ".sh", Command: "bash"},
 	}
 	ScriptTest(t, goldenDir, scriptConfig)
 }
@@ -58,8 +58,12 @@ func ScriptTest(
 
 	// Collect scripts.
 	extensions := make([]string, 0, len(scriptConfig.ScriptExtensions))
-	for ext := range scriptConfig.ScriptExtensions {
-		extensions = append(extensions, ext)
+	for _, ext := range scriptConfig.ScriptExtensions {
+		extensions = append(extensions, ext.Extension)
+	}
+	commands := make(map[string]string, len(scriptConfig.ScriptExtensions))
+	for _, ext := range scriptConfig.ScriptExtensions {
+		commands[ext.Extension] = ext.Command
 	}
 	var scripts []scriptTest
 	fn := func(path string, _ os.FileInfo, _ error) error {
@@ -68,7 +72,7 @@ func ScriptTest(
 		if slices.Contains(extensions, extension) {
 			scripts = append(scripts, scriptTest{
 				Path:    path,
-				Command: scriptConfig.ScriptExtensions[extension],
+				Command: commands[extension],
 			})
 		}
 		return nil
