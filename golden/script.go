@@ -22,11 +22,24 @@ type scriptTest struct {
 	Command string
 }
 
-// ScriptTest executes a golden file test for a script command. It walks over
-// the goldenDir to gather all .sh scripts present in the dir. It then executes
-// each of the scripts and compares expected vs. actual outputs. If
-// displayStdout or displayStderr are true, the output of each script will be
-// composed of the resulting stderr + stdout.
+// BashTest calls ScriptTest with bash as the command to execute the scripts and
+// the file extension .sh. This is a convenience function for bash scripts.
+func BashTest(
+	t *testing.T,
+	goldenDir string,
+	scriptConfig ScriptConfig,
+) {
+	scriptConfig.ScriptExtensions = map[string]string{
+		".sh": "bash",
+	}
+	ScriptTest(t, goldenDir, scriptConfig)
+}
+
+// ScriptTest executes a golden file test for scripts. It walks over the
+// goldenDir to gather all .sh scripts present in the dir. It then executes each
+// of the scripts and compares expected vs. actual outputs. If displayStdout or
+// displayStderr are true, the output of each script will be composed of the
+// resulting stderr + stdout.
 func ScriptTest(
 	t *testing.T,
 	goldenDir string,
