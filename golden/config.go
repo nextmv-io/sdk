@@ -65,29 +65,33 @@ type Config struct {
 	ExecutionConfig *ExecutionConfig
 }
 
-// BashConfig defines the configuration for a golden bash test.
-type BashConfig struct {
+// ScriptConfig defines the configuration for a golden script test.
+type ScriptConfig struct {
 	// DisplayStdout indicates whether to display or suppress stdout.
 	DisplayStdout bool
 	// DisplayStderr indicates whether to display or suppress stderr.
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// ScriptExtensions is a list of script file extensions to be considered for
+	// golden file tests alongside their respective command to execute them.
+	// The key is the file extension, and the value is the command to execute
+	// the script. If not provided, it defaults to bash. I.e.: {".sh": "bash"}.
+	ScriptExtensions map[string]string
 	// GoldenExtension is the file extension to use for the golden file. If not
 	// provided, then the default extension (.golden) is used.
 	GoldenExtension string
 	// Envs specifies the environment variables to set for execution.
 	Envs [][2]string
-	// PostProcessFunctions defines a list of functions to be executed after the bash
-	// script has been run. This can be used to make use of the output of the bash script
-	// and perform additional operations on it. The functions are executed in the order
-	// they are defined and are not used for comparison.
+	// PostProcessFunctions defines a list of functions to be executed after the
+	// script has been run. This can be used to make use of the output of the
+	// script and perform additional operations on it. The functions are
+	// executed in the order they are defined and are not used for comparison.
 	PostProcessFunctions []func(goldenFile string) error
-	// WorkingDir is the directory where the bash script(s) will be
-	// executed.
+	// WorkingDir is the directory where the script(s) will be executed.
 	WorkingDir string
-	// WaitBefore adds a delay before running the bash script. This is useful
-	// when throttling is needed, e.g., when dealing with rate limiting.
+	// WaitBefore adds a delay before running the script. This is useful when
+	// throttling is needed, e.g., when dealing with rate limiting.
 	WaitBefore time.Duration
 }
 

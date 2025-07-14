@@ -10,12 +10,12 @@ import (
 type DagTestCase struct {
 	Name   string
 	Needs  []string
-	Config *BashConfig
+	Config *ScriptConfig
 	Path   string
 }
 
 // DagTest runs a set of test cases in topological order.
-// Each test case is a BashTest, and the test cases are connected by their
+// Each test case is a ScriptTest, and the test cases are connected by their
 // dependencies. If a test case has dependencies, it will only be run after all
 // of its dependencies have been run.
 //
@@ -25,13 +25,13 @@ type DagTestCase struct {
 //	  {
 //	    name:   "app-create",
 //	    needs:  []string{},
-//	    config: BashConfig{ /**/ },
+//	    config: ScriptConfig{ /**/ },
 //	    path:   "app-create",
 //	  },
 //	  {
 //	    name:   "app-push",
 //	    needs:  []string{"app-create"},
-//	    config: BashConfig{ /**/ },
+//	    config: ScriptConfig{ /**/ },
 //	    path:   "app-push",
 //	  },
 //	}
@@ -71,7 +71,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		var wg sync.WaitGroup
 		for _, nextCase := range next {
 			wg.Add(1)
-			config := BashConfig{}
+			config := ScriptConfig{}
 			if nextCase.Config != nil {
 				config = *nextCase.Config
 			}

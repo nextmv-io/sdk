@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
+	"slices"
 	"testing"
 	"time"
 
@@ -15,61 +15,94 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
-// BashTest executes a golden file test for a bash command. It walks over
+type scriptTest struct {
+	// Path is the path to the script file.
+	Path string
+	// Command is the command to execute the script.
+	Command string
+}
+
+// ScriptTest executes a golden file test for a script command. It walks over
 // the goldenDir to gather all .sh scripts present in the dir. It then executes
 // each of the scripts and compares expected vs. actual outputs. If
 // displayStdout or displayStderr are true, the output of each script will be
 // composed of the resulting stderr + stdout.
-func BashTest(
+func ScriptTest(
 	t *testing.T,
 	goldenDir string,
-	bashConfig BashConfig,
+	scriptConfig ScriptConfig,
 ) {
 	// Fail immediately, if dir does not exist
 	if stat, err := os.Stat(goldenDir); err != nil || !stat.IsDir() {
 		t.Fatalf("dir %s does not exist", goldenDir)
 	}
 
-	// Collect bash scripts.
-	var scripts []string
+	// Collect scripts.
+	extensions := make([]string, 0, len(scriptConfig.ScriptExtensions))
+	for ext := range scriptConfig.ScriptExtensions {
+		extensions = append(extensions, ext)
+	}
+	var scripts []scriptTest
 	fn := func(path string, _ os.FileInfo, _ error) error {
-		// Only consider .sh files
-		if strings.HasSuffix(path, ".sh") {
-			scripts = append(scripts, path)
+		// Check if the file should be considered as a script to test.
+		extension := filepath.Ext(path)
+		if slices.Contains(extensions, extension) {
+			scripts = append(scripts, scriptTest{
+				Path:    path,
+				Command: scriptConfig.ScriptExtensions[extension],
+			})
 		}
-
 		return nil
 	}
 	if err := filepath.Walk(goldenDir, fn); err != nil {
 		t.Fatal("error walking over files: ", err)
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		t.Fatal("error getting current working directory: ", err)
+	// If no scripts were found, fail the test.
+	if len(scripts) == 0 {
+		t.Fatal("no scripts found in directory: ", goldenDir)
 	}
 
 	// Execute a golden file test for each script. Make the script path
 	// absolute to avoid issues with custom working directories.
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal("error getting current working directory: ", err)
+	}
 	for _, script := range scripts {
-		BashTestFile(t, filepath.Join(cwd, script), bashConfig)
+		ScriptTestFile(t, script.Command, filepath.Join(cwd, script.Path), scriptConfig)
 	}
 
 	// Post-process files containing volatile data.
-	postProcessVolatileData(t, bashConfig)
+	postProcessVolatileData(t, scriptConfig)
 }
 
-// BashTestFile executes a golden file test for a single bash script. The
-// script is executed and the expected output is compared with the actual
-// output.
+// BashTestFile executes a golden file test for a single bash script. The script
+// is executed and the expected output is compared with the actual output.
 func BashTestFile(
 	t *testing.T,
 	script string,
-	bashConfig BashConfig,
+	bashConfig ScriptConfig,
+) {
+	ScriptTestFile(
+		t,
+		"bash",
+		script,
+		bashConfig,
+	)
+}
+
+// ScriptTestFile executes a golden file test for a single script. The script is
+// executed and the expected output is compared with the actual output.
+func ScriptTestFile(
+	t *testing.T,
+	command string,
+	script string,
+	scriptConfig ScriptConfig,
 ) {
 	ext := goldenExtension
-	if bashConfig.GoldenExtension != "" {
-		ext = bashConfig.GoldenExtension
+	if scriptConfig.GoldenExtension != "" {
+		ext = scriptConfig.GoldenExtension
 	}
 	goldenFilePath := script + ext
 	// Function run by the test.
@@ -86,34 +119,34 @@ func BashTestFile(
 			t.Fatalf("script %s does not exist", script)
 		}
 
-		// Execute a bash command which consists of executing a .sh file.
-		cmd := exec.Command("bash", script)
+		// Execute the script using the provided command.
+		cmd := exec.Command(command, script)
 
 		// Pass environment and add custom environment variables
 		cmd.Env = os.Environ()
-		for _, e := range bashConfig.Envs {
+		for _, e := range scriptConfig.Envs {
 			cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%s", e[0], e[1]))
 		}
 
 		// Set custom working directory if provided.
-		if bashConfig.WorkingDir != "" {
-			cmd.Dir = bashConfig.WorkingDir
+		if scriptConfig.WorkingDir != "" {
+			cmd.Dir = scriptConfig.WorkingDir
 		}
 
 		// Run the command and gather the output bytes.
-		out, err := runCmd(cmd, bashConfig.DisplayStdout, bashConfig.DisplayStderr)
+		out, err := runCmd(cmd, scriptConfig.DisplayStdout, scriptConfig.DisplayStderr)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Process the output data before comparison.
-		got := processOutput(t, out, goldenFilePath, bashConfig.OutputProcessConfig)
+		got := processOutput(t, out, goldenFilePath, scriptConfig.OutputProcessConfig)
 
 		// Write the output bytes to a .golden file, if the test is being
 		// updated
-		if *update || bashConfig.OutputProcessConfig.AlwaysUpdate {
+		if *update || scriptConfig.OutputProcessConfig.AlwaysUpdate {
 			if err := os.WriteFile(goldenFilePath, []byte(got), 0o644); err != nil {
-				t.Fatal("error writing bash output to file: ", err)
+				t.Fatal("error writing script output to file: ", err)
 			}
 		}
 
@@ -138,16 +171,16 @@ func BashTestFile(
 	}
 
 	// Delay the execution of the test to adhere for rate limits.
-	if bashConfig.WaitBefore > 0 {
-		t.Logf("delaying test execution for %v", bashConfig.WaitBefore)
-		<-time.After(bashConfig.WaitBefore)
+	if scriptConfig.WaitBefore > 0 {
+		t.Logf("delaying test execution for %v", scriptConfig.WaitBefore)
+		<-time.After(scriptConfig.WaitBefore)
 	}
 
 	// Test is executed.
 	t.Run(script, f)
 
 	// Run post-process functions.
-	for _, f := range bashConfig.PostProcessFunctions {
+	for _, f := range scriptConfig.PostProcessFunctions {
 		err := f(goldenFilePath)
 		if err != nil {
 			t.Fatalf("error running post-process function: %v", err)
@@ -233,10 +266,10 @@ func processOutput(
 
 func postProcessVolatileData(
 	t *testing.T,
-	bashConfig BashConfig,
+	scriptConfig ScriptConfig,
 ) {
 	// Post-process files containing volatile data.
-	for _, file := range bashConfig.OutputProcessConfig.VolatileDataFiles {
+	for _, file := range scriptConfig.OutputProcessConfig.VolatileDataFiles {
 		// Read the file.
 		out, err := os.ReadFile(file)
 		if err != nil {
@@ -245,11 +278,11 @@ func postProcessVolatileData(
 		got := string(out)
 
 		// Replace default volatile content with a placeholder.
-		if !bashConfig.OutputProcessConfig.KeepVolatileData {
+		if !scriptConfig.OutputProcessConfig.KeepVolatileData {
 			got = regexReplaceAllDefault(got)
 		}
 		// Apply custom volatile regex replacements.
-		for _, r := range bashConfig.OutputProcessConfig.VolatileRegexReplacements {
+		for _, r := range scriptConfig.OutputProcessConfig.VolatileRegexReplacements {
 			got = regexReplaceCustom(got, r.Replacement, r.Regex)
 		}
 
