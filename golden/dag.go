@@ -71,7 +71,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		var wg sync.WaitGroup
 		for _, nextCase := range next {
 			wg.Add(1)
-			config := ScriptConfig{}
+			config := NewScriptConfig()
 			if nextCase.Config != nil {
 				config = *nextCase.Config
 			}
