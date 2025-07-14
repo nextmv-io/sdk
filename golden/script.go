@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"slices"
 	"testing"
 	"time"
 
@@ -20,6 +19,9 @@ type scriptTest struct {
 	Path string
 	// Command is the command to execute the script.
 	Command string
+	// PrefixArgs are the arguments to be passed to the command before the
+	// script file name.
+	PrefixArgs []string
 }
 
 // BashTest calls ScriptTest with bash as the command to execute the scripts and
@@ -57,24 +59,29 @@ func ScriptTest(
 	}
 
 	// Collect scripts.
-	extensions := make([]string, 0, len(scriptConfig.ScriptExtensions))
+	definitions := make(map[string]ScriptExtension)
 	for _, ext := range scriptConfig.ScriptExtensions {
-		extensions = append(extensions, ext.Extension)
-	}
-	commands := make(map[string]string, len(scriptConfig.ScriptExtensions))
-	for _, ext := range scriptConfig.ScriptExtensions {
-		commands[ext.Extension] = ext.Command
+		if ext.Extension == "" || ext.Command == "" {
+			t.Fatal("script extension has empty extension or command")
+		}
+		if _, exists := definitions[ext.Extension]; exists {
+			t.Fatalf("script extension %s already defined", ext.Extension)
+		}
+		definitions[ext.Extension] = ext
 	}
 	var scripts []scriptTest
 	fn := func(path string, _ os.FileInfo, _ error) error {
 		// Check if the file should be considered as a script to test.
 		extension := filepath.Ext(path)
-		if slices.Contains(extensions, extension) {
-			scripts = append(scripts, scriptTest{
-				Path:    path,
-				Command: commands[extension],
-			})
+		if _, exists := definitions[extension]; !exists {
+			return nil // Skip this file, it's not a script we want to test.
 		}
+		// Add to the list of scripts to test.
+		scripts = append(scripts, scriptTest{
+			Path:       path,
+			Command:    definitions[extension].Command,
+			PrefixArgs: definitions[extension].PrefixArgs,
+		})
 		return nil
 	}
 	if err := filepath.Walk(goldenDir, fn); err != nil {

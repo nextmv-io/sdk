@@ -124,6 +124,11 @@ type ScriptExtension struct {
 	Extension string
 	// Command is the command to execute the script, e.g., "bash".
 	Command string
+	// PrefixArgs are the arguments to be passed to the command before the
+	// script file name. This is useful for commands that require additional
+	// arguments, e.g., "powershell" requires "-File" before the script file
+	// name.
+	PrefixArgs []string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
