@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"path/filepath"
 	"sync"
 	"testing"
 )
@@ -76,11 +77,17 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 				config = *nextCase.Config
 			}
 
-			nextCase := nextCase
+			// Get the script extension for the test case.
+			ext, err := dagGetScriptExtension(nextCase.Path, config)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			nextCase := nextCase // Capture the variable for the goroutine.
 			go func() {
+				defer wg.Done()
 				// Run the test case.
-				BashTestFile(t, nextCase.Path, config)
-				wg.Done()
+				ScriptTestFile(t, ext.Command, nextCase.Path, config)
 			}()
 		}
 
@@ -98,6 +105,18 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 			}
 		}
 	}
+}
+
+func dagGetScriptExtension(path string, config ScriptConfig) (ScriptExtension, error) {
+	// Get extension from the path.
+	ext := filepath.Ext(path)
+	// Search for fitting script definition among config.ScriptExtensions.
+	for _, def := range config.ScriptExtensions {
+		if def.Extension == ext {
+			return def, nil
+		}
+	}
+	return ScriptExtension{}, fmt.Errorf("no script definition found for path %s with extension %s", path, ext)
 }
 
 func validate(cases []DagTestCase) error {
