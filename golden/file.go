@@ -169,6 +169,8 @@ func comparison(
 		)
 	}
 
+	actualBytes = convertNewLineStyle(actualBytes, config.OutputProcessConfig.NewLineStyle)
+
 	outputWithTransient := map[string]any{}
 	flattenedOutput := map[string]any{}
 	if !config.CompareConfig.TxtParse {

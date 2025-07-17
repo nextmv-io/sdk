@@ -279,6 +279,10 @@ func processOutput(
 		}
 	}
 
+	// Apply new line style (if specified).
+	out = convertNewLineStyle(out, config.NewLineStyle)
+
+	// Work on string from here on.
 	got := string(out)
 
 	// Apply regex replacements for volatile data.

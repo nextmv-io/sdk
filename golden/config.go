@@ -116,6 +116,24 @@ type ScriptConfig struct {
 	WaitBefore time.Duration
 }
 
+// NewLineStyle defines the style of new lines to be used on the output before
+// comparison.
+type NewLineStyle string
+
+const (
+	// NewLineStyleUntouched indicates that the output should be kept untouched
+	// and not modified.
+	NewLineStyleUntouched NewLineStyle = ""
+	// NewLineStyleLF indicates that the output should be converted to LF (Line
+	// Feed) before comparison. This is the default style used in Unix-like
+	// systems.
+	NewLineStyleLF NewLineStyle = "LF"
+	// NewLineStyleCRLF indicates that the output should be converted to CRLF
+	// (Carriage Return + Line Feed) before comparison. This is the default
+	// style used in Windows systems.
+	NewLineStyleCRLF NewLineStyle = "CRLF"
+)
+
 // ScriptExtension defines a script file extension and the command to execute
 // it. This is used in the ScriptConfig to define which scripts should be
 // considered for golden file tests and how to execute them.
@@ -214,6 +232,10 @@ type OutputProcessConfig struct {
 	// KeepVolatileData indicates whether to keep or replace frequently
 	// changing data.
 	KeepVolatileData bool
+	// NewLineStyle defines the new line style to be used on the output. I.e.,
+	// the output can be kept untouched, or converted to LF or CRLF before
+	// comparison.
+	NewLineStyle NewLineStyle
 	// TransientFields are keys that hold values which are transient (dynamic)
 	// in nature, such as the elapsed time, version, start time, etc. Transient
 	// fields have a special parsing in the .golden file and they are
