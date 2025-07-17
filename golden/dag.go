@@ -76,6 +76,10 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 			if nextCase.Config != nil {
 				config = *nextCase.Config
 			}
+			if len(config.ScriptExtensions) == 0 {
+				// Default script extension if none is provided.
+				config.ScriptExtensions = []ScriptExtension{{Extension: ".sh", Command: "bash"}}
+			}
 
 			// Get the script extension for the test case.
 			ext, err := dagGetScriptExtension(nextCase.Path, config)
