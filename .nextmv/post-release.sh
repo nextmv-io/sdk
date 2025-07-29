@@ -1,5 +1,7 @@
 export MODULES=$(cat workflow-configuration.yml | yq '.nested_modules[]' -r)
 
+git checkout -b feature/bump-nested-$VERSION
+
 for module in $MODULES; do
     echo "Bumping $module to $VERSION"
     pushd ../$module
@@ -9,7 +11,11 @@ for module in $MODULES; do
 done
 
 git add --all
-git checkout -b feature/bump-nested-$VERSION
 git commit -S -m "Bump nested modules after $VERSION release"
 git push origin --set-upstream feature/bump-nested-$VERSION
-gh pr create --base develop --title "Bump nested modules after $VERSION release" --body "Automated bump of nested modules to version $VERSION"
+
+OUTPUT=$(gh pr create --base $BRANCH --title "Bump nested modules after $VERSION release" --body "Automated bump of nested modules to version $VERSION")
+
+echo "# :rocket: PR created" >> $GITHUB_STEP_SUMMARY
+echo "" >> $GITHUB_STEP_SUMMARY
+echo "Bump nested modules :arrow_right: [PR Link](${OUTPUT})" >> $GITHUB_STEP_SUMMARY
