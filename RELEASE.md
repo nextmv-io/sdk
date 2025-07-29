@@ -12,9 +12,8 @@ Open a PR against the `develop` branch with the following change:
 After the PR is merged, the `release.yml` workflow will be triggered and it
 will automatically create a release.
 
-After the release is created, a new PR will be opened against `develop` bumping
-the nested modules to the new version. Make sure you approve and merge this new
-PR.
+After the release is created, a new PR will be opened bumping the nested
+modules to the new version. Make sure you approve and merge this new PR.
 
 ## Pre-release
 
@@ -22,6 +21,5 @@ Update the version in the `VERSION` file to a dev tag. When a commit is pushed,
 the `release.yml` workflow will be triggered and it will automatically create a
 release.
 
-After the release is created, a new PR will be opened against `develop` bumping
-the nested modules to the new version. Make sure you approve and merge this new
-PR.
+After the release is created, a new PR will be opened bumping the nested
+modules to the new version. Make sure you approve and merge this new PR.
