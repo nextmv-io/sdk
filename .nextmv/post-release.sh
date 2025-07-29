@@ -14,8 +14,8 @@ done
 git commit -S -m "Bump nested modules after $VERSION release"
 git push origin --set-upstream feature/bump-nested-$VERSION
 
-OUTPUT=$(gh pr create --base $BRANCH --title "Bump nested modules after $VERSION release" --body "Automated bump of nested modules to version $VERSION")
+OUTPUT=$(gh pr create --base $BRANCH --title "Bump nested modules after $VERSION release" --body "Automated bump of nested modules to version $VERSION" --reviewer $ACTOR)
 
 echo "# :rocket: PR created" >> $GITHUB_STEP_SUMMARY
 echo "" >> $GITHUB_STEP_SUMMARY
-echo "Bump nested modules :arrow_right: [PR Link](${OUTPUT})" >> $GITHUB_STEP_SUMMARY
+echo "Bump nested modules :arrow_right: [PR Link](${OUTPUT}). You are tagged as reviewer." >> $GITHUB_STEP_SUMMARY
