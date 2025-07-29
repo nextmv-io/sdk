@@ -1,119 +1,32 @@
 name: release
+run-name: Release by @${{ github.actor }} from ${{ github.ref_name }}
 
-on:
-  workflow_dispatch:
-    inputs:
-      VERSION:
-        description: "The version to release"
-        required: true
-      IS_PRE_RELEASE:
-        description: "It IS a pre-release"
-        required: true
-        default: true
-        type: boolean
+on: [push]
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ inputs.VERSION }}
-      GH_TOKEN: ${{ github.token }}
-      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-    permissions:
-      contents: write
-    steps:
-      - name: ensure proper tagging
-        run: |
-          echo "If it's a pre-release, the version should contain a hyphen"
-          if [ ${{ inputs.IS_PRE_RELEASE }} = true ]; then
-            if [[ $VERSION != *-* ]]; then
-              echo "Pre-release versions should contain a hyphen"
-              exit 1
-            fi
-          else
-            if [[ $VERSION == *-* ]]; then
-              echo "Release versions should not contain a hyphen"
-              exit 1
-            fi
-          fi
+    if: ${{ github.ref_type == 'branch' }}
+    uses: nextmv-io/release/.github/workflows/release.yml@feature/develop
+    with:
+      BRANCH: ${{ github.ref_name }}
+      REPOSITORY: sdk
+      LANGUAGE: go
+      PACKAGE_NAME: sdk
+      PACKAGE_LOCATION: ./
+      VERSION_FILE: VERSION
+      POST_RELEASE_COMMAND: bash .nextmv/post-release.sh
+    secrets: inherit
 
-      - name: configure git and clone
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.NEXTMVBOT_SSH_KEY }}"
-
-          echo "${{ secrets.NEXTMVBOT_SIGNING_KEY }}" > ~/.ssh/signing.key
-          chmod 600 ~/.ssh/signing.key
-
-          git config --global user.name "nextmv-bot"
-          git config --global user.email "tech+gh-nextmv-bot@nextmv.io"
-          git config --global gpg.format ssh
-          git config --global user.signingkey ~/.ssh/signing.key
-
-          git clone git@github.com:nextmv-io/sdk.git
-
-          cd sdk
-          git checkout ${{ github.ref_name }}
-
-          git rev-parse --short HEAD
-
-      - name: determine Go version
-        run: |
-          export GO_VERSION=$(cat workflow-configuration.yml | yq '.go-version' -r)
-          echo "Using Go version $GO_VERSION"
-          echo "GO_VERSION=${GO_VERSION}" >> $GITHUB_ENV
-        working-directory: ./sdk
-
-      - name: set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: |
-            **/go.sum
-            **/go.mod
-
-      - name: push release tag
-        run: |
-          git tag -s $VERSION -m "Release $VERSION"
-          git push origin $VERSION
-        working-directory: ./sdk
-
-      - name: bump and tag nested modules
-        run: |
-          export MODULES=$(cat workflow-configuration.yml | yq '.nested_modules[]' -r)
-          for module in $MODULES; do
-            echo "Bumping $module to $VERSION"
-            pushd $module
-            go get github.com/nextmv-io/sdk@$VERSION
-            go mod tidy
-            popd
-          done
-          git add --all
-          git commit -S -m "Bump nested modules to $VERSION"
-          git push
-          for module in $MODULES; do
-            git tag -s $module/$VERSION -m "Release $module/$VERSION"
-            git push origin $module/$VERSION
-          done
-        working-directory: ./sdk
-
-      - name: create release
-        run: |
-          PRERELEASE_FLAG=""
-          if [ ${{ inputs.IS_PRE_RELEASE }} = true ]; then
-            PRERELEASE_FLAG="--prerelease"
-          fi
-
-          gh release create $VERSION \
-          --verify-tag \
-          --generate-notes \
-          --title $VERSION $PRERELEASE_FLAG
-        working-directory: ./sdk
-
-      - name: notify slack
-        if: ${{ inputs.IS_PRE_RELEASE == false }}
-        run: |
-          export DATA="{\"text\":\"Release notification - sdk $VERSION (see <https://github.com/nextmv-io/sdk/releases/$VERSION|release notes>)\"}"
-          curl -X POST -H 'Content-type: application/json' --data "$DATA" ${{ secrets.SLACK_URL_MISSION_CONTROL }}
+  notify:
+    needs: [release]
+    if: ${{ needs.release.outputs.RELEASE_NEEDED == 'true' && needs.release.outputs.SHOULD_NOTIFY_SLACK == 'true' }}
+    uses: nextmv-io/release/.github/workflows/notify-slack.yml@develop
+    with:
+      PACKAGE_NAME: sdk
+      VERSION: ${{ needs.release.outputs.VERSION }}
+      REPOSITORY: sdk
+    secrets: inherit
