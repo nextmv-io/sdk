@@ -4,7 +4,7 @@ git checkout -b feature/bump-nested-$VERSION
 
 for module in $MODULES; do
     echo "Bumping $module to $VERSION"
-    pushd ../$module
+    pushd $module
     go get github.com/nextmv-io/sdk@$VERSION
     go mod tidy
     git add go.mod go.sum
