@@ -3,6 +3,10 @@ run-name: Release by @${{ github.actor }} from ${{ github.ref_name }}
 
 on: [push]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   release:
     if: ${{ github.ref_type == 'branch' }}
