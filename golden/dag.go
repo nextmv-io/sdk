@@ -45,7 +45,7 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 	}
 
 	// Print the DAG as a Mermaid diagram for visualization.
-	t.Logf("DAG diagram:\n%s", dagToMermaid(cases))
+	t.Logf("DAG diagram (mermaid):\n%s", dagToMermaid(cases))
 
 	open := cases
 	done := make(map[string]bool)
@@ -138,7 +138,7 @@ func validate(cases []DagTestCase) error {
 // This is useful for visualizing the dependencies between test cases.
 func dagToMermaid(cases []DagTestCase) string {
 	sb := &strings.Builder{}
-	sb.WriteString("graph TD (mermaid)\n")
+	sb.WriteString("graph TD\n")
 
 	// Collect all test case names and all referenced dependencies.
 	names := make(map[string]bool)
