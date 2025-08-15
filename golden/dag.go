@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"testing"
 )
@@ -42,6 +43,9 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// Print the DAG as a Mermaid diagram for visualization.
+	t.Logf("DAG diagram:\n%s", dagToMermaid(cases))
 
 	open := cases
 	done := make(map[string]bool)
@@ -128,4 +132,18 @@ func validate(cases []DagTestCase) error {
 	}
 
 	return nil
+}
+
+// dagToMermaid converts a set of DAG test cases to a Mermaid diagram format.
+// This is useful for visualizing the dependencies between test cases.
+func dagToMermaid(cases []DagTestCase) string {
+	// Convert the DAG to a Mermaid diagram format.
+	sb := &strings.Builder{}
+	sb.WriteString("graph TD\n")
+	for _, c := range cases {
+		for _, need := range c.Needs {
+			sb.WriteString(fmt.Sprintf("  %s --> %s\n", need, c.Name))
+		}
+	}
+	return sb.String()
 }
