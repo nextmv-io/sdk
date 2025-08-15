@@ -137,13 +137,27 @@ func validate(cases []DagTestCase) error {
 // dagToMermaid converts a set of DAG test cases to a Mermaid diagram format.
 // This is useful for visualizing the dependencies between test cases.
 func dagToMermaid(cases []DagTestCase) string {
-	// Convert the DAG to a Mermaid diagram format.
 	sb := &strings.Builder{}
 	sb.WriteString("graph TD (mermaid)\n")
+
+	// Collect all test case names and all referenced dependencies.
+	names := make(map[string]bool)
+	referenced := make(map[string]bool)
 	for _, c := range cases {
+		names[c.Name] = true
+		// Add dependency relationships.
 		for _, need := range c.Needs {
+			referenced[need] = true
 			fmt.Fprintf(sb, "  %s --> %s\n", need, c.Name)
 		}
 	}
+
+	// Add isolated nodes (not referenced and have no dependencies).
+	for _, c := range cases {
+		if len(c.Needs) == 0 && !referenced[c.Name] {
+			fmt.Fprintf(sb, "  %s\n", c.Name)
+		}
+	}
+
 	return sb.String()
 }
