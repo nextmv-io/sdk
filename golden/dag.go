@@ -142,7 +142,7 @@ func dagToMermaid(cases []DagTestCase) string {
 	sb.WriteString("graph TD\n")
 	for _, c := range cases {
 		for _, need := range c.Needs {
-			sb.WriteString(fmt.Sprintf("  %s --> %s\n", need, c.Name))
+			fmt.Fprintf(sb, "  %s --> %s\n", need, c.Name)
 		}
 	}
 	return sb.String()
