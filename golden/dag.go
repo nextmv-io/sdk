@@ -45,7 +45,11 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 	}
 
 	// Print the DAG as a Mermaid diagram for visualization.
-	t.Logf("DAG diagram (mermaid):\n%s", dagToMermaid(cases))
+	mermaid, err := dagToMermaid(cases)
+	if err != nil {
+		t.Fatal("error converting DAG to Mermaid format: ", err)
+	}
+	t.Logf("DAG diagram (mermaid):\n%s", mermaid)
 
 	open := cases
 	done := make(map[string]bool)
@@ -134,30 +138,56 @@ func validate(cases []DagTestCase) error {
 	return nil
 }
 
+type mermaidNode struct {
+	ID    string
+	Name  string
+	Needs []string
+}
+
 // dagToMermaid converts a set of DAG test cases to a Mermaid diagram format.
 // This is useful for visualizing the dependencies between test cases.
-func dagToMermaid(cases []DagTestCase) string {
+func dagToMermaid(cases []DagTestCase) (string, error) {
+	// Convert each test case to a Mermaid node.
+	nodesByName := make(map[string]mermaidNode)
+	ct := 0
+	for _, c := range cases {
+		nodesByName[c.Name] = mermaidNode{
+			ID:   fmt.Sprintf("node%d", ct),
+			Name: c.Name,
+		}
+		ct++
+	}
+	for _, c := range cases {
+		n, ok := nodesByName[c.Name]
+		if !ok {
+			return "", fmt.Errorf("case %s not found in nodes", c.Name)
+		}
+		n.Needs = make([]string, 0, len(c.Needs))
+		for _, need := range c.Needs {
+			needNode, ok := nodesByName[need]
+			if !ok {
+				return "", fmt.Errorf("dependency %s not found for case %s", need, c.Name)
+			}
+			n.Needs = append(n.Needs, needNode.ID)
+		}
+		nodesByName[c.Name] = n
+	}
+
+	// Init.
 	sb := &strings.Builder{}
 	sb.WriteString("graph TD\n")
 
-	// Collect all test case names and all referenced dependencies.
-	names := make(map[string]bool)
-	referenced := make(map[string]bool)
-	for _, c := range cases {
-		names[c.Name] = true
-		// Add dependency relationships.
-		for _, need := range c.Needs {
-			referenced[need] = true
-			fmt.Fprintf(sb, "  \"%s\" --> \"%s\"\n", need, c.Name)
+	// Add nodes themselves.
+	for _, n := range nodesByName {
+		fmt.Fprintf(sb, "  %s[%s]\n", n.ID, n.Name)
+	}
+
+	// Add dependency relationships.
+	for _, n := range nodesByName {
+		for _, needID := range n.Needs {
+			fmt.Fprintf(sb, "  %s --> %s\n", needID, n.ID)
 		}
 	}
 
-	// Add isolated nodes (not referenced and have no dependencies).
-	for _, c := range cases {
-		if len(c.Needs) == 0 && !referenced[c.Name] {
-			fmt.Fprintf(sb, "  \"%s\"\n", c.Name)
-		}
-	}
-
-	return sb.String()
+	return sb.String(), nil
 }
