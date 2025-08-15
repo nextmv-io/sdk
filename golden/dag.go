@@ -148,14 +148,14 @@ func dagToMermaid(cases []DagTestCase) string {
 		// Add dependency relationships.
 		for _, need := range c.Needs {
 			referenced[need] = true
-			fmt.Fprintf(sb, "  %s --> %s\n", need, c.Name)
+			fmt.Fprintf(sb, "  \"%s\" --> \"%s\"\n", need, c.Name)
 		}
 	}
 
 	// Add isolated nodes (not referenced and have no dependencies).
 	for _, c := range cases {
 		if len(c.Needs) == 0 && !referenced[c.Name] {
-			fmt.Fprintf(sb, "  %s\n", c.Name)
+			fmt.Fprintf(sb, "  \"%s\"\n", c.Name)
 		}
 	}
 
