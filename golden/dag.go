@@ -139,7 +139,7 @@ func validate(cases []DagTestCase) error {
 func dagToMermaid(cases []DagTestCase) string {
 	// Convert the DAG to a Mermaid diagram format.
 	sb := &strings.Builder{}
-	sb.WriteString("graph TD\n")
+	sb.WriteString("graph TD (mermaid)\n")
 	for _, c := range cases {
 		for _, need := range c.Needs {
 			fmt.Fprintf(sb, "  %s --> %s\n", need, c.Name)
