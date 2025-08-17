@@ -3,6 +3,8 @@ package golden
 import (
 	"fmt"
 	"path/filepath"
+
+	"strings"
 	"sync"
 	"testing"
 )
@@ -43,6 +45,13 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// Print the DAG as a Mermaid diagram for visualization.
+	mermaid, err := dagToMermaid(cases)
+	if err != nil {
+		t.Fatal("error converting DAG to Mermaid format: ", err)
+	}
+	t.Logf("DAG diagram (mermaid):\n%s", mermaid)
 
 	open := cases
 	done := make(map[string]bool)
@@ -151,4 +160,58 @@ func validate(cases []DagTestCase) error {
 	}
 
 	return nil
+}
+
+type mermaidNode struct {
+	ID    string
+	Name  string
+	Needs []string
+}
+
+// dagToMermaid converts a set of DAG test cases to a Mermaid diagram format.
+// This is useful for visualizing the dependencies between test cases.
+func dagToMermaid(cases []DagTestCase) (string, error) {
+	// Convert each test case to a Mermaid node.
+	nodesByName := make(map[string]mermaidNode)
+	ct := 0
+	for _, c := range cases {
+		nodesByName[c.Name] = mermaidNode{
+			ID:   fmt.Sprintf("node%d", ct),
+			Name: c.Name,
+		}
+		ct++
+	}
+	for _, c := range cases {
+		n, ok := nodesByName[c.Name]
+		if !ok {
+			return "", fmt.Errorf("case %s not found in nodes", c.Name)
+		}
+		n.Needs = make([]string, 0, len(c.Needs))
+		for _, need := range c.Needs {
+			needNode, ok := nodesByName[need]
+			if !ok {
+				return "", fmt.Errorf("dependency %s not found for case %s", need, c.Name)
+			}
+			n.Needs = append(n.Needs, needNode.ID)
+		}
+		nodesByName[c.Name] = n
+	}
+
+	// Init.
+	sb := &strings.Builder{}
+	sb.WriteString("graph TD\n")
+
+	// Add nodes themselves.
+	for _, n := range nodesByName {
+		fmt.Fprintf(sb, "  %s[%s]\n", n.ID, n.Name)
+	}
+
+	// Add dependency relationships.
+	for _, n := range nodesByName {
+		for _, needID := range n.Needs {
+			fmt.Fprintf(sb, "  %s --> %s\n", needID, n.ID)
+		}
+	}
+
+	return sb.String(), nil
 }

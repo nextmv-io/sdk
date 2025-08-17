@@ -6,6 +6,8 @@ on:
 jobs:
   sdk-go-lint:
     runs-on: ubuntu-latest
+    env:
+      GO_VERSION: 1.24
     # Use a matrix strategy to test all the modules simultaneously.
     strategy:
       fail-fast: false
@@ -21,12 +23,6 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v4
-
-      - name: determine Go version
-        run: |
-          export GO_VERSION=$(cat workflow-configuration.yml | yq '.go-version' -r)
-          echo "Using Go version $GO_VERSION"
-          echo "GO_VERSION=${GO_VERSION}" >> $GITHUB_ENV
 
       - name: set up go
         uses: actions/setup-go@v5
