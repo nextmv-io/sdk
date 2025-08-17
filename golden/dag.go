@@ -3,7 +3,6 @@ package golden
 import (
 	"fmt"
 	"path/filepath"
-
 	"strings"
 	"sync"
 	"testing"
