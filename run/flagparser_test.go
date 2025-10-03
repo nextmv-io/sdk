@@ -31,13 +31,14 @@ type SampleOption struct {
 
 func Test_FlagParser(t *testing.T) {
 	// Simulate command line arguments
+	origArgs := os.Args
 	os.Args = []string{
 		"cmd",
 		"-solve.iterations=10",
 		"-custom.solve.plateau.auto=true",
 		"-solve.duration=5m",
 	}
-	defer func() { os.Args = os.Args[:1] }()
+	defer func() { os.Args = origArgs }()
 
 	_, option, err := run.FlagParser[SampleOption, run.CLIRunnerConfig]()
 	if err != nil {
