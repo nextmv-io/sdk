@@ -3,14 +3,13 @@ run-name: Release by @${{ github.actor }} from ${{ github.ref_name }}
 
 on: [push]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   release:
     if: ${{ github.ref_type == 'branch' }}
     uses: nextmv-io/release/.github/workflows/release.yml@develop
+    permissions:
+      contents: write
+      pull-requests: write
     with:
       BRANCH: ${{ github.ref_name }}
       REPOSITORY: sdk
@@ -25,6 +24,8 @@ jobs:
     needs: [release]
     if: ${{ needs.release.outputs.RELEASE_NEEDED == 'true' && needs.release.outputs.SHOULD_NOTIFY_SLACK == 'true' }}
     uses: nextmv-io/release/.github/workflows/notify-slack.yml@develop
+    permissions:
+      contents: read
     with:
       PACKAGE_NAME: sdk
       VERSION: ${{ needs.release.outputs.VERSION }}
