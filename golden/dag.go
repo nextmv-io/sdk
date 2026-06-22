@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -11,12 +12,12 @@ import (
 type DagTestCase struct {
 	Name   string
 	Needs  []string
-	Config *BashConfig
+	Config *ScriptConfig
 	Path   string
 }
 
 // DagTest runs a set of test cases in topological order.
-// Each test case is a BashTest, and the test cases are connected by their
+// Each test case is a ScriptTest, and the test cases are connected by their
 // dependencies. If a test case has dependencies, it will only be run after all
 // of its dependencies have been run.
 //
@@ -26,13 +27,13 @@ type DagTestCase struct {
 //	  {
 //	    name:   "app-create",
 //	    needs:  []string{},
-//	    config: BashConfig{ /**/ },
+//	    config: ScriptConfig{ /**/ },
 //	    path:   "app-create",
 //	  },
 //	  {
 //	    name:   "app-push",
 //	    needs:  []string{"app-create"},
-//	    config: BashConfig{ /**/ },
+//	    config: ScriptConfig{ /**/ },
 //	    path:   "app-push",
 //	  },
 //	}
@@ -79,16 +80,26 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 		var wg sync.WaitGroup
 		for _, nextCase := range next {
 			wg.Add(1)
-			config := BashConfig{}
+			config := NewScriptConfig()
 			if nextCase.Config != nil {
 				config = *nextCase.Config
 			}
+			if len(config.ScriptExtensions) == 0 {
+				// Default script extension if none is provided.
+				config.ScriptExtensions = []ScriptExtension{{Extension: ".sh", Command: "bash"}}
+			}
 
-			nextCase := nextCase
+			// Get the script extension for the test case.
+			ext, err := dagGetScriptExtension(nextCase.Path, config)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			nextCase := nextCase // Capture the variable for the goroutine.
 			go func() {
+				defer wg.Done()
 				// Run the test case.
-				BashTestFile(t, nextCase.Path, config)
-				wg.Done()
+				ScriptTestFile(t, ext.Command, nextCase.Path, config)
 			}()
 		}
 
@@ -106,6 +117,18 @@ func DagTest(t *testing.T, cases []DagTestCase) {
 			}
 		}
 	}
+}
+
+func dagGetScriptExtension(path string, config ScriptConfig) (ScriptExtension, error) {
+	// Get extension from the path.
+	ext := filepath.Ext(path)
+	// Search for fitting script definition among config.ScriptExtensions.
+	for _, def := range config.ScriptExtensions {
+		if def.Extension == ext {
+			return def, nil
+		}
+	}
+	return ScriptExtension{}, fmt.Errorf("no script definition found for path %s with extension %s", path, ext)
 }
 
 func validate(cases []DagTestCase) error {
