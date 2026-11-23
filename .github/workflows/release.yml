@@ -6,10 +6,9 @@ on: [push]
 jobs:
   release:
     if: ${{ github.ref_type == 'branch' }}
-    uses: nextmv-io/release/.github/workflows/release.yml@f77be7bce0094b2c7cc09f80967f7e5bebb9491f  # develop
+    uses: nextmv-io/release/.github/workflows/release.yml@d45d5a3eb15690d9957a8695847e93fe3793e6db  # develop
     permissions:
       contents: write
-      pull-requests: write
     with:
       BRANCH: ${{ github.ref_name }}
       REPOSITORY: sdk
@@ -26,7 +25,7 @@ jobs:
   notify:
     needs: [release]
     if: ${{ needs.release.outputs.RELEASE_NEEDED == 'true' && needs.release.outputs.SHOULD_NOTIFY_SLACK == 'true' }}
-    uses: nextmv-io/release/.github/workflows/notify-slack.yml@f77be7bce0094b2c7cc09f80967f7e5bebb9491f  # develop
+    uses: nextmv-io/release/.github/workflows/notify-slack.yml@d45d5a3eb15690d9957a8695847e93fe3793e6db  # develop
     permissions:
       contents: read
     with:
