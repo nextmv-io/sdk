@@ -11,6 +11,25 @@ import (
 
 const goldenExtension = ".golden"
 
+// NewConfig creates a new Config with default values.
+func NewConfig() Config {
+	return Config{
+		GoldenExtension: goldenExtension,
+	}
+}
+
+// NewScriptConfig creates a new ScriptConfig with default values.
+func NewScriptConfig() ScriptConfig {
+	return ScriptConfig{
+		DisplayStdout: true,
+		DisplayStderr: true,
+		ScriptExtensions: []ScriptExtension{
+			{Extension: ".sh", Command: "bash"},
+		},
+		GoldenExtension: goldenExtension,
+	}
+}
+
 // Config lets a user configure the golden file tests.
 type Config struct {
 	// VerifyFunc is used to validate output against input, if provided.
@@ -65,30 +84,69 @@ type Config struct {
 	ExecutionConfig *ExecutionConfig
 }
 
-// BashConfig defines the configuration for a golden bash test.
-type BashConfig struct {
+// ScriptConfig defines the configuration for a golden script test.
+type ScriptConfig struct {
 	// DisplayStdout indicates whether to display or suppress stdout.
 	DisplayStdout bool
 	// DisplayStderr indicates whether to display or suppress stderr.
 	DisplayStderr bool
 	// OutputProcessConfig defines how to process the output before comparison.
 	OutputProcessConfig OutputProcessConfig
+	// ScriptExtensions is a list of script file extensions to be considered for
+	// golden file tests alongside their respective command to execute them.
+	// A typical definition for bash scripts looks like this:
+	// ScriptExtensions: []ScriptExtension{
+	// 	 {Extension: ".sh", Command: "bash"},
+	// }
+	ScriptExtensions []ScriptExtension
 	// GoldenExtension is the file extension to use for the golden file. If not
 	// provided, then the default extension (.golden) is used.
 	GoldenExtension string
 	// Envs specifies the environment variables to set for execution.
 	Envs [][2]string
-	// PostProcessFunctions defines a list of functions to be executed after the bash
-	// script has been run. This can be used to make use of the output of the bash script
-	// and perform additional operations on it. The functions are executed in the order
-	// they are defined and are not used for comparison.
+	// PostProcessFunctions defines a list of functions to be executed after the
+	// script has been run. This can be used to make use of the output of the
+	// script and perform additional operations on it. The functions are
+	// executed in the order they are defined and are not used for comparison.
 	PostProcessFunctions []func(goldenFile string) error
-	// WorkingDir is the directory where the bash script(s) will be
-	// executed.
+	// WorkingDir is the directory where the script(s) will be executed.
 	WorkingDir string
-	// WaitBefore adds a delay before running the bash script. This is useful
-	// when throttling is needed, e.g., when dealing with rate limiting.
+	// WaitBefore adds a delay before running the script. This is useful when
+	// throttling is needed, e.g., when dealing with rate limiting.
 	WaitBefore time.Duration
+}
+
+// NewLineStyle defines the style of new lines to be used on the output before
+// comparison.
+type NewLineStyle string
+
+const (
+	// NewLineStyleUntouched indicates that the output should be kept untouched
+	// and not modified.
+	NewLineStyleUntouched NewLineStyle = ""
+	// NewLineStyleLF indicates that the output should be converted to LF (Line
+	// Feed) before comparison. This is the default style used in Unix-like
+	// systems.
+	NewLineStyleLF NewLineStyle = "LF"
+	// NewLineStyleCRLF indicates that the output should be converted to CRLF
+	// (Carriage Return + Line Feed) before comparison. This is the default
+	// style used in Windows systems.
+	NewLineStyleCRLF NewLineStyle = "CRLF"
+)
+
+// ScriptExtension defines a script file extension and the command to execute
+// it. This is used in the ScriptConfig to define which scripts should be
+// considered for golden file tests and how to execute them.
+type ScriptExtension struct {
+	// Extension is the file extension of the script, e.g., ".sh".
+	Extension string
+	// Command is the command to execute the script, e.g., "bash".
+	Command string
+	// PrefixArgs are the arguments to be passed to the command before the
+	// script file name. This is useful for commands that require additional
+	// arguments, e.g., "powershell" requires "-File" before the script file
+	// name.
+	PrefixArgs []string
 }
 
 // TransientField represents a field that is transient, this is, dynamic in
@@ -174,6 +232,10 @@ type OutputProcessConfig struct {
 	// KeepVolatileData indicates whether to keep or replace frequently
 	// changing data.
 	KeepVolatileData bool
+	// NewLineStyle defines the new line style to be used on the output. I.e.,
+	// the output can be kept untouched, or converted to LF or CRLF before
+	// comparison.
+	NewLineStyle NewLineStyle
 	// TransientFields are keys that hold values which are transient (dynamic)
 	// in nature, such as the elapsed time, version, start time, etc. Transient
 	// fields have a special parsing in the .golden file and they are

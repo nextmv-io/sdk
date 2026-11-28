@@ -40,7 +40,7 @@ func TestGolden(t *testing.T) {
 // the output is compared against the expected one.
 func TestGoldenBash(t *testing.T) {
 	// Execute the rest of the bash commands.
-	golden.BashTest(t, "./bash", golden.BashConfig{
+	golden.BashTest(t, "./bash", golden.ScriptConfig{
 		DisplayStdout: true,
 		DisplayStderr: true,
 	})
